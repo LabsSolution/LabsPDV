@@ -17,7 +17,7 @@ namespace LabsPDV
 			if (Utils.IsValidNumberKey(e.KeyCode, out string key))
 			{
 				//Caso passe no teste, a tecla será listada;
-				keydebug.Text = key;
+				//keydebug.Text = key; //Comentei pois estou usando essa label como debug em outra parte
 			}
 			//Caso contrário, será listada o código com ?
 			else { keydebug.Text = key; }
@@ -27,18 +27,8 @@ namespace LabsPDV
 		{
 
 		}
-
-		private void OnCCC(object sender, EventArgs e)
-		{
-
-		}
-
-		private void label1_Click(object sender, EventArgs e)
-		{
-
-		}
-
-		private void textBox1_TextChanged(object sender, EventArgs e)
+		//
+		private void CodProdutoTextChange(object sender, EventArgs e)
 		{
 			string t = InputCodProduto.Text;
 			//Pegamos a entrada do código do produto e verificamos se possui um 'N'x'Código' para dividir;
@@ -48,14 +38,23 @@ namespace LabsPDV
 			{
 				//Somente para teste vamos deixar um label de debug para demonstar que a divisão está sendo computada corretamente;
 				string Cod = Splitted[1];
-				debuglabel.Text = $"{Qtd} Vezes o Produto {Cod}";
+				//Pegamos o produto baseado em seu código de registro
+				Modelos.Produto prod = Utils.GetProdutoByCode(Cod);
+				//
+				NomeProduto.Text = $"Produto: {prod.Nome} QTD: {Qtd}";
 			}
 			else
 			{
 				//caso não seja comprido os primeiros requisitos, jogamos um erro na tela
 				//por enquanto é somente debug;
-				debuglabel.Text = "Ocorreu um Erro ao Registrar o Produto, Tente Novamente!";
+				NomeProduto.Text = "Ocorreu um Erro na Leitura, Tente Novamente!";
 			}
+		}
+
+		private async void OnRDPClick(object sender, EventArgs e)
+		{
+			string res = await GTIN.SearchBarCode("789135011623");
+			keydebug.Text = res;
 		}
 	}
 }

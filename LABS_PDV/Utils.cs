@@ -18,6 +18,16 @@ namespace LabsPDV.LABS_PDV
 		//Verificadores de acesso público
 		//------------------------------------//
 		/// <summary>
+		/// Retorna um produto usando seu código de registro
+		/// </summary>
+		/// <param name="Cod">Código de registro do produto</param>
+		/// <returns>Retorna um produto (Struct)</returns>
+		public static Modelos.Produto GetProdutoByCode(string Cod)
+		{
+			Modelos.Produto produto = DataBase.GetProdutoByCodBarras(Cod);
+			return produto;
+		}
+		/// <summary>
 		/// Verifica se a tecla fornecida é uma tecla numérica válida
 		/// </summary>
 		/// <param name="keyCode">Código da tecla</param>
@@ -43,6 +53,25 @@ namespace LabsPDV.LABS_PDV
 			try
 			{
 				value = int.Parse(toParse);
+				return true;
+			}
+			catch (Exception)
+			{
+				value = -1;
+				return false;
+			}
+		}
+		/// <summary>
+		/// Recebe um valor em String e tenta passar para Double, caso não seja possível retornará falso
+		/// </summary>
+		/// <param name="toParse">Valor para conversão</param>
+		/// <param name="value">Valor convertido</param>
+		/// <returns>Booleano representando sucesso ou falha</returns>
+		public static bool TryParseToDouble(string toParse, out double value)
+		{
+			try
+			{
+				value = double.Parse(toParse);
 				return true;
 			}
 			catch (Exception)

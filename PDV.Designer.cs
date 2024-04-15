@@ -30,9 +30,10 @@
 		{
 			TituloPDV = new Label();
 			InputCodProduto = new TextBox();
-			debuglabel = new Label();
+			NomeProduto = new Label();
 			CodProdutoLabel = new Label();
 			keydebug = new Label();
+			RegistrarProdutos = new Button();
 			SuspendLayout();
 			// 
 			// TituloPDV
@@ -50,21 +51,21 @@
 			// InputCodProduto
 			// 
 			InputCodProduto.Font = new Font("Arial Black", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
-			InputCodProduto.Location = new Point(12, 129);
+			InputCodProduto.Location = new Point(155, 128);
 			InputCodProduto.Name = "InputCodProduto";
 			InputCodProduto.Size = new Size(347, 41);
 			InputCodProduto.TabIndex = 1;
-			InputCodProduto.TextChanged += textBox1_TextChanged;
+			InputCodProduto.TextChanged += CodProdutoTextChange;
 			// 
-			// debuglabel
+			// NomeProduto
 			// 
-			debuglabel.AutoSize = true;
-			debuglabel.Font = new Font("Arial", 15.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-			debuglabel.Location = new Point(12, 173);
-			debuglabel.Name = "debuglabel";
-			debuglabel.Size = new Size(71, 24);
-			debuglabel.TabIndex = 2;
-			debuglabel.Text = "label1";
+			NomeProduto.AutoSize = true;
+			NomeProduto.Font = new Font("Arial", 15.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+			NomeProduto.Location = new Point(155, 101);
+			NomeProduto.Name = "NomeProduto";
+			NomeProduto.Size = new Size(151, 24);
+			NomeProduto.TabIndex = 2;
+			NomeProduto.Text = "NomeProduto";
 			// 
 			// CodProdutoLabel
 			// 
@@ -73,7 +74,7 @@
 			CodProdutoLabel.BackColor = SystemColors.WindowFrame;
 			CodProdutoLabel.Font = new Font("Microsoft Sans Serif", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
 			CodProdutoLabel.ForeColor = SystemColors.Window;
-			CodProdutoLabel.Location = new Point(12, 102);
+			CodProdutoLabel.Location = new Point(16, 138);
 			CodProdutoLabel.Name = "CodProdutoLabel";
 			CodProdutoLabel.Size = new Size(133, 24);
 			CodProdutoLabel.TabIndex = 3;
@@ -89,15 +90,26 @@
 			keydebug.TabIndex = 4;
 			keydebug.Text = "label1";
 			// 
+			// RegistrarProdutos
+			// 
+			RegistrarProdutos.Location = new Point(16, 619);
+			RegistrarProdutos.Name = "RegistrarProdutos";
+			RegistrarProdutos.Size = new Size(242, 35);
+			RegistrarProdutos.TabIndex = 5;
+			RegistrarProdutos.Text = "Registrar Novos Produtos";
+			RegistrarProdutos.UseVisualStyleBackColor = true;
+			RegistrarProdutos.Click += OnRDPClick;
+			// 
 			// PDV
 			// 
 			AutoScaleDimensions = new SizeF(7F, 15F);
 			AutoScaleMode = AutoScaleMode.Font;
 			BackColor = SystemColors.WindowFrame;
 			ClientSize = new Size(1436, 666);
+			Controls.Add(RegistrarProdutos);
 			Controls.Add(keydebug);
 			Controls.Add(CodProdutoLabel);
-			Controls.Add(debuglabel);
+			Controls.Add(NomeProduto);
 			Controls.Add(InputCodProduto);
 			Controls.Add(TituloPDV);
 			KeyPreview = true;
@@ -112,8 +124,9 @@
 
 		private Label TituloPDV;
 		private TextBox InputCodProduto;
-		private Label debuglabel;
+		private Label NomeProduto;
 		private Label CodProdutoLabel;
 		private Label keydebug;
+		private Button RegistrarProdutos;
 	}
 }

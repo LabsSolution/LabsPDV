@@ -8,6 +8,6 @@ namespace LabsPDV.LABS_PDV
 {
 	internal class GerenciadorPDV
 	{
-
+		//GERENCIADOR GERAL DO PDV (AINDA VAI SER FEITO)
 	}
 }
