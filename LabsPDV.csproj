@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.44" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
+    <PackageReference Include="Unimake.DFe" Version="20240412.1552.43" />
   </ItemGroup>
 
   <ItemGroup>

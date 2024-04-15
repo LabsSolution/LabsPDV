@@ -51,9 +51,9 @@ namespace LabsPDV
 			}
 		}
 
-		private async void OnRDPClick(object sender, EventArgs e)
+		private void OnRDPClick(object sender, EventArgs e)
 		{
-			string res = await GTIN.SearchBarCode("789135011623");
+			string res = LabsGTIN.SearchBarCode("789135011623");
 			keydebug.Text = res;
 		}
 	}
