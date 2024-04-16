@@ -28,15 +28,20 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LabsMainApp));
 			SuspendLayout();
 			// 
 			// LabsMainApp
 			// 
 			AutoScaleDimensions = new SizeF(7F, 15F);
 			AutoScaleMode = AutoScaleMode.Font;
-			ClientSize = new Size(1447, 654);
+			BackColor = SystemColors.WindowFrame;
+			BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
+			BackgroundImageLayout = ImageLayout.Stretch;
+			ClientSize = new Size(1584, 1061);
 			Name = "LabsMainApp";
 			Text = "LabsMainApp";
+			WindowState = FormWindowState.Maximized;
 			ResumeLayout(false);
 		}
 
