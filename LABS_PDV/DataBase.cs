@@ -8,7 +8,7 @@ using System.Data;
 using System.Data.SQLite;
 using Dapper;
 
-namespace LabsPDV.LABS_PDV
+namespace Labs.LABS_PDV
 {
 	internal class DataBase
 	{

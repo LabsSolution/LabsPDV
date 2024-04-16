@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LabsPDV.LABS_PDV
+namespace Labs.LABS_PDV
 {
 	internal class GerenciadorPDV
 	{

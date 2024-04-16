@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LabsPDV.LABS_PDV
+namespace Labs.LABS_PDV
 {
 	internal class Modelos
 	{
@@ -15,7 +15,7 @@ namespace LabsPDV.LABS_PDV
 			public string Nome { get; set; }
 			public int Quantidade { get; set; }
 			public double Preco {  get; set; }
-			public int CodBarras {  get; set; }
+			public string CodBarras {  get; set; }
 		}
 		//
 	}
