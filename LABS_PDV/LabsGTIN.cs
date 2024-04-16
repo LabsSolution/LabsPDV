@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
-using Unimake.Business.DFe.Servicos;
-using Unimake.Business.DFe.Servicos.CCG;
-using Unimake.Business.DFe.Xml.CCG;
-using Unimake.Business.Security;
 
 namespace Labs.LABS_PDV
 {
@@ -40,7 +37,7 @@ namespace Labs.LABS_PDV
 
 				using (var client = new HttpClient(handler))
 				{
-					var content = new StringContent(soapEnvelope, System.Text.Encoding.UTF8, "text/xml");
+					var content = new StringContent(soapEnvelope, Encoding.UTF8, "text/xml");
 					content.Headers.Clear();
 					content.Headers.Add("SOAPAction", Action);
 

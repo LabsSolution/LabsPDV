@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using static LabsPDV.LABS_PDV.Modelos;
+using static Labs.LABS_PDV.Modelos;
 using System.Threading.Tasks;
 using System.Data;
 using System.Data.SQLite;
