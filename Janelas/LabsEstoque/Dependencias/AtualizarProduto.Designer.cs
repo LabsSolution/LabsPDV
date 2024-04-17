@@ -39,11 +39,53 @@
 			QuantEstoqueInput = new TextBox();
 			DescricaoManualInput = new TextBox();
 			DescricaoProdutoOutput = new TextBox();
+			label5 = new Label();
+			IDProduto = new Label();
 			label4 = new Label();
 			label3 = new Label();
 			label2 = new Label();
 			label1 = new Label();
 			SuspendLayout();
+			// 
+			// label4
+			// 
+			label4.AutoSize = true;
+			label4.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			label4.Location = new Point(12, 348);
+			label4.Name = "label4";
+			label4.Size = new Size(331, 50);
+			label4.TabIndex = 15;
+			label4.Text = "Código de Barras:";
+			// 
+			// label3
+			// 
+			label3.AutoSize = true;
+			label3.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			label3.Location = new Point(12, 235);
+			label3.Name = "label3";
+			label3.Size = new Size(284, 50);
+			label3.TabIndex = 14;
+			label3.Text = "Preço Unitário:";
+			// 
+			// label2
+			// 
+			label2.AutoSize = true;
+			label2.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			label2.Location = new Point(12, 122);
+			label2.Name = "label2";
+			label2.Size = new Size(383, 50);
+			label2.TabIndex = 13;
+			label2.Text = "Quant. Para Estoque:";
+			// 
+			// label1
+			// 
+			label1.AutoSize = true;
+			label1.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			label1.Location = new Point(12, 9);
+			label1.Name = "label1";
+			label1.Size = new Size(409, 50);
+			label1.TabIndex = 12;
+			label1.Text = "Descrição do Produto:";
 			// 
 			// SairButton
 			// 
@@ -55,6 +97,7 @@
 			SairButton.TabIndex = 23;
 			SairButton.Text = "Sair";
 			SairButton.UseVisualStyleBackColor = false;
+			SairButton.Click += SairButton_Click;
 			// 
 			// AtualizarButton
 			// 
@@ -66,6 +109,7 @@
 			AtualizarButton.TabIndex = 21;
 			AtualizarButton.Text = "Atualizar";
 			AtualizarButton.UseVisualStyleBackColor = false;
+			AtualizarButton.Click += AtualizarButton_Click;
 			// 
 			// CodBarras
 			// 
@@ -117,45 +161,26 @@
 			DescricaoProdutoOutput.TabIndex = 16;
 			DescricaoProdutoOutput.TextAlign = HorizontalAlignment.Center;
 			// 
-			// label4
+			// label5
 			// 
-			label4.AutoSize = true;
-			label4.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-			label4.Location = new Point(12, 348);
-			label4.Name = "label4";
-			label4.Size = new Size(331, 50);
-			label4.TabIndex = 15;
-			label4.Text = "Código de Barras:";
+			label5.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			label5.AutoSize = true;
+			label5.Font = new Font("Segoe UI Symbol", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			label5.Location = new Point(417, 464);
+			label5.Name = "label5";
+			label5.Size = new Size(42, 30);
+			label5.TabIndex = 24;
+			label5.Text = "ID:";
 			// 
-			// label3
+			// IDProduto
 			// 
-			label3.AutoSize = true;
-			label3.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-			label3.Location = new Point(12, 235);
-			label3.Name = "label3";
-			label3.Size = new Size(284, 50);
-			label3.TabIndex = 14;
-			label3.Text = "Preço Unitário:";
-			// 
-			// label2
-			// 
-			label2.AutoSize = true;
-			label2.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-			label2.Location = new Point(12, 122);
-			label2.Name = "label2";
-			label2.Size = new Size(383, 50);
-			label2.TabIndex = 13;
-			label2.Text = "Quant. Para Estoque:";
-			// 
-			// label1
-			// 
-			label1.AutoSize = true;
-			label1.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-			label1.Location = new Point(12, 9);
-			label1.Name = "label1";
-			label1.Size = new Size(409, 50);
-			label1.TabIndex = 12;
-			label1.Text = "Descrição do Produto:";
+			IDProduto.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			IDProduto.AutoSize = true;
+			IDProduto.Font = new Font("Segoe UI Symbol", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			IDProduto.Location = new Point(417, 497);
+			IDProduto.Name = "IDProduto";
+			IDProduto.Size = new Size(0, 30);
+			IDProduto.TabIndex = 25;
 			// 
 			// AtualizarProduto
 			// 
@@ -163,6 +188,8 @@
 			AutoScaleMode = AutoScaleMode.Font;
 			BackColor = SystemColors.WindowFrame;
 			ClientSize = new Size(884, 561);
+			Controls.Add(IDProduto);
+			Controls.Add(label5);
 			Controls.Add(SairButton);
 			Controls.Add(AtualizarButton);
 			Controls.Add(CodBarras);
@@ -189,5 +216,7 @@
 		private TextBox QuantEstoqueInput;
 		private TextBox DescricaoManualInput;
 		private TextBox DescricaoProdutoOutput;
+		private Label label5;
+		private Label IDProduto;
 	}
 }

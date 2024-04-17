@@ -99,6 +99,7 @@
 			// 
 			// DescricaoManualInput
 			// 
+			DescricaoManualInput.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 			DescricaoManualInput.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
 			DescricaoManualInput.Location = new Point(417, 17);
 			DescricaoManualInput.Name = "DescricaoManualInput";

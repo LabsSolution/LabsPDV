@@ -33,5 +33,13 @@ namespace Labs.LABS_PDV
 		{
 			MessageBox.Show(Info,Titulo,MessageBoxButtons.OK,MessageBoxIcon.Information);
 		}
+		/// <summary>
+		/// Mostra uma pergunta para o usuário
+		/// </summary>
+		/// <param name="Descricao">Pergunta a ser feita</param>
+		public static DialogResult MostrarPergunta(string Descricao)
+		{
+			return MessageBox.Show(Descricao,Titulo,MessageBoxButtons.YesNo,MessageBoxIcon.Question);
+		}
 	}
 }

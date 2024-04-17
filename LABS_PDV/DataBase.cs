@@ -28,6 +28,17 @@ namespace Labs.LABS_PDV
 			};
 		}
 		/// <summary>
+		/// Atualiza um produto na database usando o próprio objeto
+		/// </summary>
+		/// <param name="produto">O produto atualizado</param>
+		public static async void UpdateProduto(Produto produto)
+		{
+			using (IDbConnection cnn = new SQLiteConnection(DatabasePath))
+			{
+				await cnn.ExecuteAsync("UPDATE Produtos SET Descricao = @Descricao, Quantidade = @Quantidade, Preco = @Preco, CodBarras = @CodBarras WHERE ID= @ID ",produto);
+			}
+		}
+		/// <summary>
 		/// Registra um produto na database Local
 		/// </summary>
 		/// <param name="produto">Produto para registro</param>

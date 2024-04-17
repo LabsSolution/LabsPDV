@@ -19,6 +19,10 @@ namespace Labs.Janelas.LabsEstoque
 		{
 			InitializeComponent();
 		}
+		//---------------//
+		//    METODOS
+		//---------------//
+		//
 		/// <summary>
 		/// Adiciona um produto a lista de produtos no estoque (Chamado somente quando Iniciado)
 		/// </summary>
@@ -32,14 +36,10 @@ namespace Labs.Janelas.LabsEstoque
 			ListViewItem row = new([ID, Desc, QtdEstoque, $"R$ {Preco}", CodBarras]);
 			ListaProdutosEstoque.Items.Insert(ListaProdutosEstoque.Items.Count, row);
 		}
-
-
 		/// <summary>
-		/// Chamado quando a Janela de Estoque é Carregada
+		/// Atualiza a lista de produtos do estoque
 		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void OnLabsEstoqueLoad(object sender, EventArgs e)
+		private void AtualizarLista()
 		{
 			//
 			ListaProdutosEstoque.Items.Clear(); // Limpamos a lista antes de carregar
@@ -50,6 +50,23 @@ namespace Labs.Janelas.LabsEstoque
 				InserirProdutoNaLista(produto.ID.ToString(), produto.Descricao, produto.Quantidade.ToString(), produto.Preco, produto.CodBarras);
 			}
 		}
+
+		private void UpdateByEvent(object? sender, FormClosedEventArgs e)
+		{
+			AtualizarLista();
+			var form = sender as Form;
+			if (form != null) { form.FormClosed -= UpdateByEvent; }
+		}
+
+		/// <summary>
+		/// Chamado quando a Janela de Estoque é Carregada
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void OnLabsEstoqueLoad(object sender, EventArgs e)
+		{
+			AtualizarLista();
+		}
 		//------------------------//
 		//Eventos
 		//------------------------//
@@ -57,16 +74,38 @@ namespace Labs.Janelas.LabsEstoque
 		{
 			LABS_PDV_MAIN.IniciarDependencia<CadastrarProduto>();
 		}
-
+		//
 		private void AtualizarButton_Click(object sender, EventArgs e)
 		{
-			if(ListaProdutosEstoque.SelectedItems.Count == 0) { Modais.MostrarAviso("Você Precisa Selecionar um Produto da Lista Para Atualizar os Dados!"); return; }
-			LABS_PDV_MAIN.IniciarDependencia<AtualizarProduto>();
+			if (ListaProdutosEstoque.SelectedItems.Count == 0) { Modais.MostrarAviso("Você Precisa Selecionar um Produto da Lista Para Atualizar os Dados!"); return; }
+			//
+			ListViewItem item = ListaProdutosEstoque.SelectedItems[0]; // Retorna o produto que está selecionado na lista
+																	   //
+																	   //Pegamos o produto pelo código e retornamos através da database local (poderia ser da lista, mas to com preguiça) *Além da DataBase ser mais confiável*.
+			string Cod = item.SubItems[(int)ColunaEstoqueBD.CodBarras].Text;
+			Produto produto = Utils.GetProdutoByCode(Cod);
+			//
+			AtualizarProduto attProd = LABS_PDV_MAIN.IniciarDependencia<AtualizarProduto>();
+			//
+			//
+			attProd.SetarProduto(produto);
+			attProd.FormClosed += UpdateByEvent;
 		}
 
 		private void RemoverButton_Click(object sender, EventArgs e)
 		{
 
+		}
+
+		private void OnLabsEstoqueKeyUp(object sender, KeyEventArgs e)
+		{
+			//Se o Usuário pressionar F5, Atualiza a lista
+			if (e.KeyCode == Keys.F5) { AtualizarLista(); }
+		}
+
+		private void VoltarButton_Click(object sender, EventArgs e)
+		{
+			this.Close();
 		}
 	}
 }
