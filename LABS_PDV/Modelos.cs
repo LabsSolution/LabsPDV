@@ -12,10 +12,16 @@ namespace Labs.LABS_PDV
 		public struct Produto
 		{
 			public int ID { get; set; }
-			public string Nome { get; set; }
+			public string Descricao { get; set; }
 			public int Quantidade { get; set; }
-			public double Preco {  get; set; }
+			public string Preco {  get; set; }
 			public string CodBarras {  get; set; }
+			//Métodos
+			public readonly double GetPrecoAsDouble()
+			{
+				if(Utils.TryParseToDouble(this.Preco,out double value)) { return value; }
+				return 0.0;
+			}
 		}
 		//
 	}

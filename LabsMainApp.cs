@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Labs.Janelas.LabsEstoque;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,6 +15,7 @@ namespace Labs
 	{
 		//Referencia de Instância
 		public static LabsMainApp App { get; private set; } = null!; //Declaramos como anulável já que de inicio não terá uma intância na memória.
+		public static string AppName { get; private set; } = "JanelaPrincipal"; //Determinado o nome dessa janela para iteração caso necessário.
 		public LabsMainApp()
 		{
 			InitializeComponent();
@@ -25,6 +27,10 @@ namespace Labs
 		//---------------------------//
 		// EVENTOS
 		//---------------------------//
-		//
+		private void OnLabsEstoqueClick(object sender, EventArgs e)
+		{ 
+			//Iniciamos a Janela de Controle de estoque caso o usuário tenha permissão para isso;
+			LABS_PDV_MAIN.IniciarApp<LabsEstoque>();
+		}
 	}
 }

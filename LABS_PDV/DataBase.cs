@@ -35,7 +35,7 @@ namespace Labs.LABS_PDV
 		{
 			using (IDbConnection cnn = new SQLiteConnection(DatabasePath))
 			{
-				await cnn.ExecuteAsync("INSERT INTO Produtos (Nome, Quantidade, Preco, CodBarras) VALUES (@Nome, @Quantidade, @Preco, @CodBarras)",produto);
+				await cnn.ExecuteAsync("INSERT INTO Produtos (Descricao, Quantidade, Preco, CodBarras) VALUES (@Descricao, @Quantidade, @Preco, @CodBarras)",produto);
 			}
 		}
 		/// <summary>
