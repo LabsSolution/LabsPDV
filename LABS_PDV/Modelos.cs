@@ -6,8 +6,16 @@ using System.Threading.Tasks;
 
 namespace Labs.LABS_PDV
 {
-	internal class Modelos
+	public class Modelos
 	{
+		//ENUMERADORES
+		/// <summary>
+		/// Representa as colunas para pesquisa na lista do estoque.
+		/// </summary>
+		public enum ColunaEstoqueBD
+		{
+			ID,Descricao,Quantidade,Preco,CodBarras
+		}
 		//MODELOS DE Objetos (Structs)
 		public struct Produto
 		{

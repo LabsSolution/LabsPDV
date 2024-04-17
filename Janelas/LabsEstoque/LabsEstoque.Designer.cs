@@ -37,6 +37,7 @@
 			CadastrarButton = new Button();
 			AtualizarButton = new Button();
 			RemoverButton = new Button();
+			VoltarButton = new Button();
 			SuspendLayout();
 			// 
 			// ListaProdutosEstoque
@@ -119,20 +120,36 @@
 			RemoverButton.UseVisualStyleBackColor = false;
 			RemoverButton.Click += RemoverButton_Click;
 			// 
+			// VoltarButton
+			// 
+			VoltarButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+			VoltarButton.BackColor = Color.FromArgb(255, 255, 128);
+			VoltarButton.Font = new Font("Segoe UI", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			VoltarButton.Location = new Point(1418, 12);
+			VoltarButton.Name = "VoltarButton";
+			VoltarButton.Size = new Size(154, 51);
+			VoltarButton.TabIndex = 4;
+			VoltarButton.Text = "Voltar";
+			VoltarButton.UseVisualStyleBackColor = false;
+			VoltarButton.Click += VoltarButton_Click;
+			// 
 			// LabsEstoque
 			// 
 			AutoScaleDimensions = new SizeF(7F, 15F);
 			AutoScaleMode = AutoScaleMode.Font;
 			BackColor = SystemColors.WindowFrame;
 			ClientSize = new Size(1584, 1061);
+			Controls.Add(VoltarButton);
 			Controls.Add(RemoverButton);
 			Controls.Add(AtualizarButton);
 			Controls.Add(CadastrarButton);
 			Controls.Add(ListaProdutosEstoque);
+			KeyPreview = true;
 			Name = "LabsEstoque";
 			Text = "LabsEstoque";
 			WindowState = FormWindowState.Maximized;
 			Load += OnLabsEstoqueLoad;
+			KeyUp += OnLabsEstoqueKeyUp;
 			ResumeLayout(false);
 		}
 
@@ -147,5 +164,6 @@
 		private Button CadastrarButton;
 		private Button AtualizarButton;
 		private Button RemoverButton;
+		private Button VoltarButton;
 	}
 }
