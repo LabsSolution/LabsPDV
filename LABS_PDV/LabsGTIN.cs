@@ -34,7 +34,7 @@ namespace Labs.LABS_PDV
 				X509Certificate2 certificate = new X509Certificate2(@"C:\AssinadorRS\Certificados\Associacao de Moradores.pfx");
 				handler.ClientCertificates.Add(certificate);
 				handler.ClientCertificateOptions = ClientCertificateOption.Manual;
-
+				//
 				using (var client = new HttpClient(handler))
 				{
 					var content = new StringContent(soapEnvelope, Encoding.UTF8, "text/xml");

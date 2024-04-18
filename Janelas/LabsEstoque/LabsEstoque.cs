@@ -89,11 +89,10 @@ namespace Labs.Janelas.LabsEstoque
 			//
 			AtualizarProduto attProd = LABS_PDV_MAIN.IniciarDependencia<AtualizarProduto>();
 			//
-			//
 			attProd.SetarProduto(produto);
 			attProd.FormClosed += UpdateByEvent;
 		}
-
+		//
 		private void RemoverButton_Click(object sender, EventArgs e)
 		{
 			if(ListaProdutosEstoque.SelectedItems.Count == 0) { Modais.MostrarAviso("Você Precisa Selecionar um Produto da Lista Para Remover os Dados!"); return; }
