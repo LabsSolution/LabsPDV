@@ -149,6 +149,7 @@
 			DescricaoManualInput.PlaceholderText = "Insira Aqui a Descrição Manual";
 			DescricaoManualInput.Size = new Size(452, 39);
 			DescricaoManualInput.TabIndex = 17;
+			DescricaoManualInput.KeyUp += OnDescManualKeyDown;
 			// 
 			// DescricaoProdutoOutput
 			// 

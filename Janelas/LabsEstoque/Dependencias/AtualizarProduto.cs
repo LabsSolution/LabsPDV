@@ -29,15 +29,10 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 			CodBarras.Text = produto.CodBarras;
 		}
 		//
-		public void AtualizaProduto(Produto produto)
-		{
-
-		}
-		//
 		private void AtualizarButton_Click(object sender, EventArgs e)
 		{
 			string ID, Descricao, QuantEstoque, Preco, Cod; // Geramos as variaveis locais necessárias
-			//
+															//
 			ID = IDProduto.Text;
 			Descricao = DescricaoProdutoOutput.Text;
 			QuantEstoque = QuantEstoqueInput.Text;
@@ -45,7 +40,7 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 			Cod = CodBarras.Text;
 			//
 			//Se todos os Parâmetros são validos
-			if (Utils.TryParseToInt(ID,out int ID_Produto) && Descricao.Length > 0 && Utils.TryParseToInt(QuantEstoque, out int Qtd) && Preco.Length > 0 && Cod.Length > 0)
+			if (Utils.TryParseToInt(ID, out int ID_Produto) && Descricao.Length > 0 && Utils.TryParseToInt(QuantEstoque, out int Qtd) && Preco.Length > 0 && Cod.Length > 0)
 			{
 				//Montamos o produto atribuindo o ID para a busca
 				Produto produto = new()
@@ -53,7 +48,7 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 					ID = ID_Produto,
 					Descricao = Descricao,
 					Quantidade = Qtd,
-					Preco = PrecoInput.Text,
+					Preco = Preco,
 					CodBarras = Cod,
 				};
 				//Informamos para o Usuário que o Produto será atualizado
@@ -68,18 +63,28 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 					$"Cod. Barras Anterior: {Cod} | Agora: {produto.CodBarras}");
 				//
 				//Caso o Usuário Confirme a Ação, Seguimos em Frente
-				if(r == DialogResult.Yes)
+				if (r == DialogResult.Yes)
 				{
 					DataBase.UpdateProduto(produto);
 					Modais.MostrarInfo("Produto Atualizado Com Sucesso!");
 				}//
-				else{ Modais.MostrarInfo("Atualização Cancelada"); }
+				else { Modais.MostrarInfo("Atualização Cancelada"); }
 			}
 		}
 		//
 		private void SairButton_Click(object sender, EventArgs e)
 		{
 			this.Close();
+		}
+
+		private void OnDescManualKeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Enter)
+			{
+				if (Utils.TryParseToInt(DescricaoManualInput.Text, out _)) { MessageBox.Show("Não é Permitido a insersão de Código de barras na descrição", "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
+				DescricaoProdutoOutput.Text = DescricaoManualInput.Text;
+				DescricaoManualInput.Text = null;
+			}
 		}
 		//
 

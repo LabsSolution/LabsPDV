@@ -47,6 +47,7 @@ namespace Labs.Janelas.LabsEstoque
 			List<Produto> Produtos = DataBase.GetProdutos(); // Pegados todos os produtos cadastrados
 			foreach (Produto produto in Produtos) //Iteramos e adicionamos a lista
 			{
+
 				InserirProdutoNaLista(produto.ID.ToString(), produto.Descricao, produto.Quantidade.ToString(), produto.Preco, produto.CodBarras);
 			}
 		}
@@ -72,7 +73,8 @@ namespace Labs.Janelas.LabsEstoque
 		//------------------------//
 		private void CadastrarButton_Click(object sender, EventArgs e)
 		{
-			LABS_PDV_MAIN.IniciarDependencia<CadastrarProduto>();
+			CadastrarProduto app = LABS_PDV_MAIN.IniciarDependencia<CadastrarProduto>();
+			app.FormClosed += UpdateByEvent;
 		}
 		//
 		private void AtualizarButton_Click(object sender, EventArgs e)
@@ -94,7 +96,20 @@ namespace Labs.Janelas.LabsEstoque
 
 		private void RemoverButton_Click(object sender, EventArgs e)
 		{
-
+			if(ListaProdutosEstoque.SelectedItems.Count == 0) { Modais.MostrarAviso("Você Precisa Selecionar um Produto da Lista Para Remover os Dados!"); return; }
+			//
+			ListViewItem item = ListaProdutosEstoque.SelectedItems[0];
+			string Cod = item.SubItems[(int)ColunaEstoqueBD.CodBarras].Text;
+			Produto produto = Utils.GetProdutoByCode(Cod);
+			//
+			DataBase.RemoveProduto(produto); // Chamamos a DataBase para a remoção do item desejado
+			//Agora que deletamos da database, podemos remover da lista.
+			if (ListaProdutosEstoque.Items.Contains(item))
+			{
+				ListaProdutosEstoque.Items.Remove(item);
+			}
+		
+		
 		}
 
 		private void OnLabsEstoqueKeyUp(object sender, KeyEventArgs e)

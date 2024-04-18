@@ -28,6 +28,17 @@ namespace Labs.LABS_PDV
 			};
 		}
 		/// <summary>
+		/// Remove um produto na database usando o próprio objeto
+		/// </summary>
+		/// <param name="produto">Produto a ser Removido</param>
+		public static async void RemoveProduto(Produto produto)
+		{
+			using (IDbConnection cnn = new SQLiteConnection(DatabasePath))
+			{
+				await cnn.ExecuteAsync("DELETE FROM Produtos WHERE ID= @ID",produto);
+			}
+		}
+		/// <summary>
 		/// Atualiza um produto na database usando o próprio objeto
 		/// </summary>
 		/// <param name="produto">O produto atualizado</param>

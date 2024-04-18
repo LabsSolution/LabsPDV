@@ -43,14 +43,14 @@
 			// ListaProdutosEstoque
 			// 
 			ListaProdutosEstoque.AllowColumnReorder = true;
-			ListaProdutosEstoque.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+			ListaProdutosEstoque.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 			ListaProdutosEstoque.Columns.AddRange(new ColumnHeader[] { ColunaID, ColunaDescricao, ColunaEstoque, ColunaPreco, ColunaCodBarras });
 			ListaProdutosEstoque.FullRowSelect = true;
 			ListaProdutosEstoque.GridLines = true;
-			ListaProdutosEstoque.Location = new Point(12, 196);
+			ListaProdutosEstoque.Location = new Point(12, 168);
 			ListaProdutosEstoque.MultiSelect = false;
 			ListaProdutosEstoque.Name = "ListaProdutosEstoque";
-			ListaProdutosEstoque.Size = new Size(1560, 853);
+			ListaProdutosEstoque.Size = new Size(1346, 725);
 			ListaProdutosEstoque.TabIndex = 0;
 			ListaProdutosEstoque.UseCompatibleStateImageBehavior = false;
 			ListaProdutosEstoque.View = View.Details;
@@ -125,7 +125,7 @@
 			VoltarButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
 			VoltarButton.BackColor = Color.FromArgb(255, 255, 128);
 			VoltarButton.Font = new Font("Segoe UI", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-			VoltarButton.Location = new Point(1418, 12);
+			VoltarButton.Location = new Point(1204, 12);
 			VoltarButton.Name = "VoltarButton";
 			VoltarButton.Size = new Size(154, 51);
 			VoltarButton.TabIndex = 4;
@@ -138,7 +138,7 @@
 			AutoScaleDimensions = new SizeF(7F, 15F);
 			AutoScaleMode = AutoScaleMode.Font;
 			BackColor = SystemColors.WindowFrame;
-			ClientSize = new Size(1584, 1061);
+			ClientSize = new Size(1370, 749);
 			Controls.Add(VoltarButton);
 			Controls.Add(RemoverButton);
 			Controls.Add(AtualizarButton);
