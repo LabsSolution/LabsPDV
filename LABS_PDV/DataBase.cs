@@ -19,12 +19,18 @@ namespace Labs.LABS_PDV
 		/// </summary>
 		/// <param name="CodBarras">Código De Barras Para a Busca</param>
 		/// <returns>Retorna o produto como objeto (Struct)</returns>
-		public static Produto GetProdutoByCodBarras(string CodBarras)
+		public static bool GetProdutoByCodBarras(string CodBarras, out Produto produto)
 		{
 			using (IDbConnection cnn = new SQLiteConnection(DatabasePath))
 			{
-				var output = cnn.Query<Produto>($"Select * FROM Produtos WHERE CodBarras='{CodBarras}'", new DynamicParameters());
-				return output.FirstOrDefault();
+				var output = cnn.Query<Produto>($"Select * FROM Produtos WHERE CodBarras='{CodBarras}'", new DynamicParameters()).ToList();
+				if(output.Count > 0) 
+				{
+					produto = output[0];
+					return true;
+				}
+				produto = default;
+				return false;
 			};
 		}
 		/// <summary>

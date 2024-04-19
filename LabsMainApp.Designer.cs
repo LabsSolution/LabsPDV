@@ -29,20 +29,49 @@
 		private void InitializeComponent()
 		{
 			button1 = new Button();
+			LabsPDV = new Button();
+			SairButton = new Button();
 			SuspendLayout();
 			// 
 			// button1
 			// 
 			button1.BackColor = Color.Salmon;
 			button1.BackgroundImageLayout = ImageLayout.None;
-			button1.Font = new Font("Segoe UI Symbol", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			button1.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
 			button1.Location = new Point(12, 12);
 			button1.Name = "button1";
-			button1.Size = new Size(141, 81);
+			button1.Size = new Size(160, 80);
 			button1.TabIndex = 0;
 			button1.Text = "Labs Estoque";
 			button1.UseVisualStyleBackColor = false;
 			button1.Click += OnLabsEstoqueClick;
+			// 
+			// LabsPDV
+			// 
+			LabsPDV.BackColor = Color.Salmon;
+			LabsPDV.BackgroundImageLayout = ImageLayout.None;
+			LabsPDV.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
+			LabsPDV.Location = new Point(178, 12);
+			LabsPDV.Name = "LabsPDV";
+			LabsPDV.Size = new Size(160, 80);
+			LabsPDV.TabIndex = 1;
+			LabsPDV.Text = "Labs PDV";
+			LabsPDV.UseVisualStyleBackColor = false;
+			LabsPDV.Click += OnLabsPDVClick;
+			// 
+			// SairButton
+			// 
+			SairButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+			SairButton.BackColor = Color.Salmon;
+			SairButton.BackgroundImageLayout = ImageLayout.None;
+			SairButton.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
+			SairButton.Location = new Point(12, 671);
+			SairButton.Name = "SairButton";
+			SairButton.Size = new Size(160, 42);
+			SairButton.TabIndex = 2;
+			SairButton.Text = "Sair";
+			SairButton.UseVisualStyleBackColor = false;
+			SairButton.Click += SairButton_Click;
 			// 
 			// LabsMainApp
 			// 
@@ -50,10 +79,16 @@
 			AutoScaleMode = AutoScaleMode.Font;
 			BackColor = SystemColors.WindowFrame;
 			BackgroundImageLayout = ImageLayout.Stretch;
-			ClientSize = new Size(1584, 1061);
+			ClientSize = new Size(1346, 725);
+			ControlBox = false;
+			Controls.Add(SairButton);
+			Controls.Add(LabsPDV);
 			Controls.Add(button1);
+			FormBorderStyle = FormBorderStyle.FixedSingle;
+			MaximizeBox = false;
+			MinimizeBox = false;
 			Name = "LabsMainApp";
-			Text = "LabsMainApp";
+			Text = "Lab Soluções";
 			WindowState = FormWindowState.Maximized;
 			ResumeLayout(false);
 		}
@@ -61,5 +96,7 @@
 		#endregion
 
 		private Button button1;
+		private Button LabsPDV;
+		private Button SairButton;
 	}
 }

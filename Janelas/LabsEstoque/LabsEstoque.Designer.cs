@@ -50,7 +50,7 @@
 			ListaProdutosEstoque.Location = new Point(12, 168);
 			ListaProdutosEstoque.MultiSelect = false;
 			ListaProdutosEstoque.Name = "ListaProdutosEstoque";
-			ListaProdutosEstoque.Size = new Size(1346, 725);
+			ListaProdutosEstoque.Size = new Size(1324, 701);
 			ListaProdutosEstoque.TabIndex = 0;
 			ListaProdutosEstoque.UseCompatibleStateImageBehavior = false;
 			ListaProdutosEstoque.View = View.Details;
@@ -125,7 +125,7 @@
 			VoltarButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
 			VoltarButton.BackColor = Color.FromArgb(255, 255, 128);
 			VoltarButton.Font = new Font("Segoe UI", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-			VoltarButton.Location = new Point(1204, 12);
+			VoltarButton.Location = new Point(1182, 12);
 			VoltarButton.Name = "VoltarButton";
 			VoltarButton.Size = new Size(154, 51);
 			VoltarButton.TabIndex = 4;
@@ -138,13 +138,17 @@
 			AutoScaleDimensions = new SizeF(7F, 15F);
 			AutoScaleMode = AutoScaleMode.Font;
 			BackColor = SystemColors.WindowFrame;
-			ClientSize = new Size(1370, 749);
+			ClientSize = new Size(1348, 725);
+			ControlBox = false;
 			Controls.Add(VoltarButton);
 			Controls.Add(RemoverButton);
 			Controls.Add(AtualizarButton);
 			Controls.Add(CadastrarButton);
 			Controls.Add(ListaProdutosEstoque);
+			FormBorderStyle = FormBorderStyle.FixedSingle;
 			KeyPreview = true;
+			MaximizeBox = false;
+			MinimizeBox = false;
 			Name = "LabsEstoque";
 			Text = "LabsEstoque";
 			WindowState = FormWindowState.Maximized;

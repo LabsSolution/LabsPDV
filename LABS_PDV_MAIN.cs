@@ -1,5 +1,6 @@
 //Importação das Janelas
 using Labs.Janelas.LabsEstoque;
+using Labs.LABS_PDV;
 //
 namespace Labs
 {
@@ -18,16 +19,41 @@ namespace Labs
 			// To customize application configuration such as set high DPI settings or default font,
 			// see https://aka.ms/applicationconfiguration.
 			ApplicationConfiguration.Initialize();
-			Application.Run(new LabsMainApp());
+			LabsMainApp labsMainApp = new ();
+			labsMainApp.Resize += OnAppSizeChange;
+			labsMainApp.FormClosed += AppClosed;
+			Application.Run(labsMainApp);
 			//Inicializamos a lista de Aplicações
 		}
-
+		//EVENTOS//
+		//Previne o Cliente de Minimizar o sistema
+		private static void OnAppSizeChange(object? sender, EventArgs e)
+		{
+			if (sender is Form App)
+			{
+				App.WindowState = FormWindowState.Maximized;
+			}
+		}
+		//Método De Retorno Caso a janela seja fechada (Chamada somente nas janelas instanciadas pelo IniciarApp)
+		private static void AppClosed(object? sender, FormClosedEventArgs e)
+		{
+			if (e.CloseReason == CloseReason.UserClosing)
+			{
+				if (sender is Form App)
+				{
+					App.FormClosed -= AppClosed;
+					App.Resize -= OnAppSizeChange;
+					LabsMainApp.App.Show();
+				}
+			}
+		}
 		/// <summary>
 		/// Inicia uma dependencia em cima da janela que a requisitou (Não Esconde a janela anterior)
 		/// Caso queira iniciar uma janela Diretamente como foco use o método IniciarApp para melhor performance
 		/// </summary>
 		/// <typeparam name="T">Dependencia a ser Iniciada</typeparam>
-		public static T IniciarDependencia<T>() where T : Form, new()
+		/// <param name="SempreNoTopo">Mostrar Janela sempre no topo ou não</param>
+		public static T IniciarDependencia<T>(Action<T> config = null!, bool SempreNoTopo = true) where T : Form, new()
 		{
 			T App;
 			// Verifica se a aplicação já está rodando
@@ -49,8 +75,9 @@ namespace Labs
 				App = new T();
 				RunningApps[typeof(T).Name] = App;
 			}
-
+			config?.Invoke(App);
 			// Mostra a aplicação
+			if (SempreNoTopo) { App.ShowDialog(); return App; }
 			App.Show();
 			return App;
 		}
@@ -88,19 +115,8 @@ namespace Labs
 			// Quando uma nova Instância for Iniciada Escondemos a principal
 			LabsMainApp.App.Hide();
 			App.FormClosed += AppClosed;
+			App.Resize += OnAppSizeChange;
 			return App;
-		}
-		//Método De Retorno Caso a janela seja fechada (Chamada somente nas janelas instanciadas pelo IniciarApp)
-		private static void AppClosed(object? sender, FormClosedEventArgs e)
-		{
-			if (e.CloseReason == CloseReason.UserClosing)
-			{
-				if (sender is Form App)
-				{
-					App.FormClosed -= AppClosed;
-					LabsMainApp.App.Show();
-				}
-			}
 		}
 	}
 }

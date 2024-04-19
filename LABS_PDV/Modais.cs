@@ -8,7 +8,7 @@ namespace Labs.LABS_PDV
 {
 	internal class Modais
 	{
-		static string Titulo = "Lab Soluções";
+		public static string Titulo = "Lab Soluções";
 		/// <summary>
 		/// Mostra uma mensagem de erro para o usuário
 		/// </summary>

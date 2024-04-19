@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using static Labs.LABS_PDV.Modelos;
 
 namespace Labs.LABS_PDV
 {
@@ -22,11 +23,15 @@ namespace Labs.LABS_PDV
 		/// Retorna um produto usando seu código de registro
 		/// </summary>
 		/// <param name="Cod">Código de registro do produto</param>
-		/// <returns>Retorna um produto (Struct)</returns>
-		public static Modelos.Produto GetProdutoByCode(string Cod)
+		/// <param name="produto">Retorno (out) do produto cadastrado</param>
+		/// <returns>Retorna um booleano representado se a busca foi bem sucedida ou não</returns>
+		public static bool GetProdutoByCode(string Cod, out Produto produto)
 		{
-			Modelos.Produto produto = DataBase.GetProdutoByCodBarras(Cod);
-			return produto;
+			if (DataBase.GetProdutoByCodBarras(Cod,out produto))
+			{
+				return true;
+			}
+			return false;
 		}
 		/// <summary>
 		/// Verifica se a tecla fornecida é uma tecla numérica válida
@@ -59,6 +64,17 @@ namespace Labs.LABS_PDV
 			catch (Exception)
 			{
 				value = -1;
+				return false;
+			}
+		}
+		public static bool IsValidBarCode(string Cod) 
+		{
+			try
+			{
+				long.Parse(Cod); return true;
+			}
+			catch
+			{
 				return false;
 			}
 		}

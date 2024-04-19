@@ -189,6 +189,7 @@
 			AutoScaleMode = AutoScaleMode.Font;
 			BackColor = SystemColors.WindowFrame;
 			ClientSize = new Size(884, 561);
+			ControlBox = false;
 			Controls.Add(IDProduto);
 			Controls.Add(label5);
 			Controls.Add(SairButton);
@@ -202,6 +203,9 @@
 			Controls.Add(label3);
 			Controls.Add(label2);
 			Controls.Add(label1);
+			FormBorderStyle = FormBorderStyle.Fixed3D;
+			MaximizeBox = false;
+			MinimizeBox = false;
 			Name = "AtualizarProduto";
 			Text = "AtualizarProduto";
 			ResumeLayout(false);
