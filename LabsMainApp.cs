@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,16 @@ namespace Labs
 			//Caso tenha uma instância rodando, fechamos esta janela e jogamos um erro
 			//Dando a informação para que se o erro persistir, entrar em contato com o suporte técnico.
 			else { this.Close(); MessageBox.Show("ERRO-800 \n UMA INSTÂNCIA DO APLICATIVO JÁ ESTÁ EM EXECUCÃO\n Caso o erro persista recomendamos entrar em contato com o suporte.", "ERRO CRÍTICO-cod:800", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+			
+		}
+
+		void loadImpressoras()
+		{
+			var impressoras = PrinterSettings.InstalledPrinters;
+			foreach (var printer in impressoras)
+			{
+				ListaImpressoras.Items.Add(printer)
+			}
 		}
 		//
 		//---------------------------//
