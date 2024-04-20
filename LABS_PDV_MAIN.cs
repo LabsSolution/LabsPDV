@@ -1,6 +1,8 @@
 //Importação das Janelas
 using Labs.Janelas.LabsEstoque;
 using Labs.LABS_PDV;
+using static Dapper.SqlMapper;
+using System.Security.AccessControl;
 //
 namespace Labs
 {
@@ -19,12 +21,31 @@ namespace Labs
 			// To customize application configuration such as set high DPI settings or default font,
 			// see https://aka.ms/applicationconfiguration.
 			ApplicationConfiguration.Initialize();
-			LabsMainApp labsMainApp = new ();
+			LabsMainApp labsMainApp = new();
 			labsMainApp.Resize += OnAppSizeChange;
 			labsMainApp.FormClosed += AppClosed;
-			Application.Run(labsMainApp);
-			//Inicializamos a lista de Aplicações
+			INIT(labsMainApp);
 		}
+		static void INIT(LabsMainApp labsMainApp)
+		{
+			//Inicializamos as dependências obrigatórias
+			//Verifica a pasta config (se não tiver, vai criar uma)
+			bool init = JsonManager.InitializeJsonManager();
+			if (!init) 
+			{ 
+				//O Init só é falso caso dê algo de errado na pasta config e não seja possível inicializar
+				var r = Modais.MostrarErro("Não Foi Possivel Iniciar o Sistema Por Conter Erros Críticos!");
+				if(r == DialogResult.Ignore) { INIT(labsMainApp); return; }
+				if(r == DialogResult.Retry) { INIT(labsMainApp); return; }
+				return; 
+			}
+			Modais.MostrarInfo("Arquivos de Configuração Carregados com Sucesso!");
+			// Somente após o sistema verificar tudo é que inicializamos.
+			Application.Run(labsMainApp);
+			//
+		}
+
+
 		//EVENTOS//
 		//Previne o Cliente de Minimizar o sistema
 		private static void OnAppSizeChange(object? sender, EventArgs e)
@@ -55,7 +76,7 @@ namespace Labs
 		/// <param name="SempreNoTopo">Mostrar Janela sempre no topo ou não</param>
 		public static T IniciarDependencia<T>(Action<T> config = null!, bool SempreNoTopo = true) where T : Form, new()
 		{
-			T App;
+			T? App;
 			// Verifica se a aplicação já está rodando
 			if (RunningApps.TryGetValue(typeof(T).Name, out Form? existingApp))
 			{
@@ -88,7 +109,7 @@ namespace Labs
 		/// <typeparam name="T">Tipo de Janela que será iniciado</typeparam>
 		public static T IniciarApp<T>() where T : Form, new()
 		{
-			T App;
+			T? App;
 			// Verifica se a aplicação já está rodando
 			if (RunningApps.TryGetValue(typeof(T).Name, out Form? existingApp))
 			{

@@ -146,7 +146,7 @@ namespace Labs.Janelas.LabsPDV
 			// Atualizamos o pagamento total
 			PagamentoTotal = Math.Round(TotalHolder, 2);
 			PagamentoTotalBox.Text = PagamentoTotal.ToString();
-			SetPagamentoTotalBox();
+			SetPagamentoTotalBox(); // Essa função apenas atualiza o visor de preço pro cliente
 			// resetamos o foco novamente para o Input de Cod de Barras
 			ResetarFoco();
 		}
@@ -164,7 +164,7 @@ namespace Labs.Janelas.LabsPDV
 			{
 				//Atrelamos o evento para a finalização
 				app.FormClosed += JanelaDePagamento_FormClosed;
-				app.IniciarTelaDePagamento(Produtos,PagamentoTotal);
+				app.IniciarTelaDePagamento(PagamentoTotal);
 			});
 		}
 

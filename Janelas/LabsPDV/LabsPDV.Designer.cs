@@ -73,6 +73,7 @@
 			label1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
 			label1.AutoSize = true;
 			label1.Font = new Font("Segoe UI Black", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			label1.ForeColor = SystemColors.Window;
 			label1.Location = new Point(12, 380);
 			label1.Name = "label1";
 			label1.Size = new Size(139, 30);
@@ -85,6 +86,7 @@
 			label2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
 			label2.AutoSize = true;
 			label2.Font = new Font("Segoe UI Black", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			label2.ForeColor = SystemColors.Window;
 			label2.Location = new Point(198, 380);
 			label2.Name = "label2";
 			label2.Size = new Size(165, 30);
@@ -97,6 +99,7 @@
 			label3.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
 			label3.AutoSize = true;
 			label3.Font = new Font("Segoe UI Black", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			label3.ForeColor = SystemColors.Window;
 			label3.Location = new Point(395, 380);
 			label3.Name = "label3";
 			label3.Size = new Size(117, 30);
@@ -109,6 +112,7 @@
 			label4.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
 			label4.AutoSize = true;
 			label4.Font = new Font("Segoe UI Black", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			label4.ForeColor = SystemColors.Window;
 			label4.Location = new Point(198, 418);
 			label4.Name = "label4";
 			label4.Size = new Size(47, 30);
@@ -121,6 +125,7 @@
 			label5.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
 			label5.AutoSize = true;
 			label5.Font = new Font("Segoe UI Black", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			label5.ForeColor = SystemColors.Window;
 			label5.Location = new Point(395, 418);
 			label5.Name = "label5";
 			label5.Size = new Size(47, 30);
@@ -133,6 +138,7 @@
 			label6.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 			label6.AutoSize = true;
 			label6.Font = new Font("Segoe UI Black", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			label6.ForeColor = SystemColors.Window;
 			label6.Location = new Point(12, 504);
 			label6.Name = "label6";
 			label6.Size = new Size(175, 25);
@@ -145,6 +151,7 @@
 			label7.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 			label7.AutoSize = true;
 			label7.Font = new Font("Segoe UI Black", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			label7.ForeColor = SystemColors.Window;
 			label7.Location = new Point(219, 504);
 			label7.Name = "label7";
 			label7.Size = new Size(205, 30);

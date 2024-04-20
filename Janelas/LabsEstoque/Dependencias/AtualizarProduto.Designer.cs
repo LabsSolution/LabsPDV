@@ -51,6 +51,7 @@
 			// 
 			label4.AutoSize = true;
 			label4.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			label4.ForeColor = SystemColors.Window;
 			label4.Location = new Point(12, 348);
 			label4.Name = "label4";
 			label4.Size = new Size(331, 50);
@@ -61,6 +62,7 @@
 			// 
 			label3.AutoSize = true;
 			label3.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			label3.ForeColor = SystemColors.Window;
 			label3.Location = new Point(12, 235);
 			label3.Name = "label3";
 			label3.Size = new Size(284, 50);
@@ -71,6 +73,7 @@
 			// 
 			label2.AutoSize = true;
 			label2.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			label2.ForeColor = SystemColors.Window;
 			label2.Location = new Point(12, 122);
 			label2.Name = "label2";
 			label2.Size = new Size(383, 50);
@@ -81,6 +84,7 @@
 			// 
 			label1.AutoSize = true;
 			label1.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			label1.ForeColor = SystemColors.Window;
 			label1.Location = new Point(12, 9);
 			label1.Name = "label1";
 			label1.Size = new Size(409, 50);

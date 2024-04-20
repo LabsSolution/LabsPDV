@@ -9,6 +9,16 @@ namespace Labs.LABS_PDV
 	public class Modelos
 	{
 		//MODELOS DE Objetos (Structs)
+		public struct ModoDePagamento(string Modo, bool Ativo, int Parcelas = 1, double Taxa = 0.0)
+		{
+			public string Modo { get; private set; } = Modo;
+			public bool Ativo { get; private set; } = Ativo;
+			public int Parcelas { get; private set; } = Parcelas;
+			public double Taxa { get; private set; } = Taxa;
+		}
+		//
+		//
+		//
 		public struct Produto
 		{
 			public int ID { get; set; }

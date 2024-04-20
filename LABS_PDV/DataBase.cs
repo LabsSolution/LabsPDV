@@ -78,5 +78,8 @@ namespace Labs.LABS_PDV
 				return output.ToList();
 			}
 		}
+		//------------------------------//
+		//  METODOS GERAIS DE DATABASE -- Usado para Outros acessos a database
+		//------------------------------//
 	}
 }
