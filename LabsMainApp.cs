@@ -1,5 +1,6 @@
 ﻿using Labs.Janelas.LabsEstoque;
 using Labs.Janelas.LabsPDV;
+using Labs.Janelas.LabsPDV.Dependencias;
 using Labs.LABS_PDV;
 using System;
 using System.Collections.Generic;
@@ -28,15 +29,6 @@ namespace Labs
 			else { this.Close(); MessageBox.Show("ERRO-800 \n UMA INSTÂNCIA DO APLICATIVO JÁ ESTÁ EM EXECUCÃO\n Caso o erro persista recomendamos entrar em contato com o suporte.", "ERRO CRÍTICO-cod:800", MessageBoxButtons.OK, MessageBoxIcon.Error); }
 			
 		}
-
-		void loadImpressoras()
-		{
-			var impressoras = PrinterSettings.InstalledPrinters;
-			foreach (var printer in impressoras)
-			{
-				ListaImpressoras.Items.Add(printer)
-			}
-		}
 		//
 		//---------------------------//
 		// EVENTOS
@@ -51,7 +43,16 @@ namespace Labs
 		{
 			//Iniciamos a Janela Labs PDV. //Não precisa de permissão
 			//Depois fazer função caixa remoto!
-			LABS_PDV_MAIN.IniciarApp<LabsPDV>();
+			//Aqui definimos essa janela como persistente
+
+
+			JanelaDePagamento janelaDePagamento = LABS_PDV_MAIN.IniciarDependencia<JanelaDePagamento>(app =>
+			{
+				//Atrelamos o evento para a finalização
+				app.IniciarTelaDePagamento(12);
+			});
+
+			//LABS_PDV_MAIN.IniciarApp<LabsPDV>(true);//DEBUG
 		}
 
 		private void SairButton_Click(object sender, EventArgs e)

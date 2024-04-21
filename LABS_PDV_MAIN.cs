@@ -3,6 +3,7 @@ using Labs.Janelas.LabsEstoque;
 using Labs.LABS_PDV;
 using static Dapper.SqlMapper;
 using System.Security.AccessControl;
+using System.Security.Cryptography;
 //
 namespace Labs
 {
@@ -39,7 +40,6 @@ namespace Labs
 				if(r == DialogResult.Retry) { INIT(labsMainApp); return; }
 				return; 
 			}
-			Modais.MostrarInfo("Arquivos de Configuração Carregados com Sucesso!");
 			// Somente após o sistema verificar tudo é que inicializamos.
 			Application.Run(labsMainApp);
 			//
@@ -63,6 +63,20 @@ namespace Labs
 				if (sender is Form App)
 				{
 					App.FormClosed -= AppClosed;
+					App.Resize -= OnAppSizeChange;
+					LabsMainApp.App.Show();
+				}
+			}
+		}
+		//Método De Retorno caso a janela seja escondida (Também chamada somente nas janelas Instanciadas pelo InicarApp)
+		//Mas nesse caso, somente quando o parametro "Persistente for ativo"
+		private static void AppHidden(object? sender, EventArgs e)
+		{
+			if (sender is Form App)
+			{
+				if (!App.Visible)
+				{
+					App.VisibleChanged -= AppHidden;
 					App.Resize -= OnAppSizeChange;
 					LabsMainApp.App.Show();
 				}
@@ -107,7 +121,8 @@ namespace Labs
 		/// Inicia uma aplicação Onde o Tipo deve derivar de Form
 		/// </summary>
 		/// <typeparam name="T">Tipo de Janela que será iniciado</typeparam>
-		public static T IniciarApp<T>() where T : Form, new()
+		/// <param name="Persistente">Define se a janela permanece carregada até ser forçado seu fechamento ou não</param>
+		public static T IniciarApp<T>(bool Persistente = false) where T : Form, new()
 		{
 			T? App;
 			// Verifica se a aplicação já está rodando
@@ -135,9 +150,14 @@ namespace Labs
 
 			// Quando uma nova Instância for Iniciada Escondemos a principal
 			LabsMainApp.App.Hide();
-			App.FormClosed += AppClosed;
-			App.Resize += OnAppSizeChange;
-			return App;
+			//Aqui lidamos com qual evento queremos chamar (Dependendo do parametro de persistência)
+			//
+			// Aqui atrelamos os dois eventos porque em algum momento a janela será realmente fechada;
+			//
+			if (Persistente) { App.VisibleChanged += AppHidden; App.FormClosed += AppClosed; }
+			if (Persistente) { App.FormClosed += AppClosed; }
+			App.Resize += OnAppSizeChange; // O evento de SizeChange é global para qualquer janela;
+			return App; // Após isso tudo, retornamos a janela
 		}
 	}
 }

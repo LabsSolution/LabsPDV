@@ -174,7 +174,6 @@ namespace Labs.Janelas.LabsPDV
 			{
 				//Desatrelamos o evento para prevenir vazamento de memória e resetamos a interface
 				app.FormClosed -= JanelaDePagamento_FormClosed;
-				Modais.MostrarInfo("Venda Finalizada Com Sucesso!");
 				ResetarInterface();
 			}
 		}
@@ -277,7 +276,9 @@ namespace Labs.Janelas.LabsPDV
 		//
 		private void VoltarButton_Click(object sender, EventArgs e)
 		{
-			if (EstaAberto) { Modais.MostrarAviso("Você Precisa Fechar o Caixa Antes de Sair!"); return; }
+			// Bem simples, se o caixa estiver aberto, caso o cliente queira voltar pra tela anterior, ele será mantido rodando
+			// Caso contrário simplesmente fechamos para não consumir memória desnecessária;
+			if (EstaAberto) { this.Hide(); return; }
 			this.Close();
 		}
 
