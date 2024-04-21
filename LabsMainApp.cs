@@ -28,15 +28,6 @@ namespace Labs
 			else { this.Close(); MessageBox.Show("ERRO-800 \n UMA INSTÂNCIA DO APLICATIVO JÁ ESTÁ EM EXECUCÃO\n Caso o erro persista recomendamos entrar em contato com o suporte.", "ERRO CRÍTICO-cod:800", MessageBoxButtons.OK, MessageBoxIcon.Error); }
 			
 		}
-
-		void loadImpressoras()
-		{
-			var impressoras = PrinterSettings.InstalledPrinters;
-			foreach (var printer in impressoras)
-			{
-				ListaImpressoras.Items.Add(printer)
-			}
-		}
 		//
 		//---------------------------//
 		// EVENTOS
@@ -51,7 +42,8 @@ namespace Labs
 		{
 			//Iniciamos a Janela Labs PDV. //Não precisa de permissão
 			//Depois fazer função caixa remoto!
-			LABS_PDV_MAIN.IniciarApp<LabsPDV>();
+			//Iniciamos esse App com o parâmetro Persistente
+			LABS_PDV_MAIN.IniciarApp<LabsPDV>(true);
 		}
 
 		private void SairButton_Click(object sender, EventArgs e)

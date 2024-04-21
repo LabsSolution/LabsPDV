@@ -277,8 +277,8 @@ namespace Labs.Janelas.LabsPDV
 		//
 		private void VoltarButton_Click(object sender, EventArgs e)
 		{
-			if (EstaAberto) { Modais.MostrarAviso("Você Precisa Fechar o Caixa Antes de Sair!"); return; }
-			this.Close();
+			if (EstaAberto) { this.Hide(); return; }
+			if (!EstaAberto){ this.Close(); }
 		}
 
 		private void AbrirFecharCaixaButton_Click(object sender, EventArgs e)

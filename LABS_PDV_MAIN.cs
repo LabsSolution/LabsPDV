@@ -68,6 +68,20 @@ namespace Labs
 				}
 			}
 		}
+		//Método de Retorno caso a janela seja Escondida (Chamada somente nas janelas Instanciadas pelo iniciarApp)
+		//Esse Método é Somente disparado caso o termo (Persistente) seja atribuido a página iniciada
+		private static void AppHidden(object? sender, EventArgs e)
+		{
+			if(sender is Form App)
+			{
+				if (!App.Visible)
+				{
+					App.VisibleChanged -= AppHidden;
+					App.Resize -= OnAppSizeChange;
+					LabsMainApp.App.Show();
+				}
+			}
+		}
 		/// <summary>
 		/// Inicia uma dependencia em cima da janela que a requisitou (Não Esconde a janela anterior)
 		/// Caso queira iniciar uma janela Diretamente como foco use o método IniciarApp para melhor performance
@@ -106,8 +120,9 @@ namespace Labs
 		/// <summary>
 		/// Inicia uma aplicação Onde o Tipo deve derivar de Form
 		/// </summary>
+		/// <param name="Persintente">Mostrar Janela sempre no topo ou não</param>
 		/// <typeparam name="T">Tipo de Janela que será iniciado</typeparam>
-		public static T IniciarApp<T>() where T : Form, new()
+		public static T IniciarApp<T>(bool Persistente = false) where T : Form, new()
 		{
 			T? App;
 			// Verifica se a aplicação já está rodando
@@ -135,7 +150,10 @@ namespace Labs
 
 			// Quando uma nova Instância for Iniciada Escondemos a principal
 			LabsMainApp.App.Hide();
-			App.FormClosed += AppClosed;
+			//Definimos o tipo de evento atrelado pela declaração de persistência
+			if (Persistente) { App.VisibleChanged += AppHidden; }
+			if (!Persistente) { App.FormClosed += AppClosed; }
+			//
 			App.Resize += OnAppSizeChange;
 			return App;
 		}

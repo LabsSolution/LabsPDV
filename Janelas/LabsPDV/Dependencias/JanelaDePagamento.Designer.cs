@@ -37,14 +37,15 @@
 			ListaPagamentosEfetuados = new ListView();
 			ColunaPagamentoEfetuado = new ColumnHeader();
 			ColunaTaxaDoPagamento = new ColumnHeader();
-			button2 = new Button();
-			button1 = new Button();
+			CancelarButton = new Button();
+			FinalizarButton = new Button();
 			ValorRecebidoBox = new TextBox();
 			label1 = new Label();
 			label5 = new Label();
 			TrocoBox = new TextBox();
 			ListaMeioDePagamento = new ListView();
 			ColunaMeioDePagamento = new ColumnHeader();
+			ColunaMDPTaxa = new ColumnHeader();
 			textBox6 = new TextBox();
 			label6 = new Label();
 			label7 = new Label();
@@ -58,7 +59,6 @@
 			label10 = new Label();
 			label11 = new Label();
 			FaltaReceberValorBox = new TextBox();
-			ColunaMDPTaxa = new ColumnHeader();
 			SuspendLayout();
 			// 
 			// ValorTotalComDescontoBox
@@ -159,29 +159,31 @@
 			ColunaTaxaDoPagamento.TextAlign = HorizontalAlignment.Center;
 			ColunaTaxaDoPagamento.Width = 150;
 			// 
-			// button2
+			// CancelarButton
 			// 
-			button2.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-			button2.BackColor = Color.FromArgb(255, 128, 128);
-			button2.Font = new Font("Segoe UI Black", 15F, FontStyle.Bold);
-			button2.Location = new Point(707, 505);
-			button2.Name = "button2";
-			button2.Size = new Size(165, 50);
-			button2.TabIndex = 13;
-			button2.Text = "Cancelar (F3)";
-			button2.UseVisualStyleBackColor = false;
+			CancelarButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+			CancelarButton.BackColor = Color.FromArgb(255, 128, 128);
+			CancelarButton.Font = new Font("Segoe UI Black", 15F, FontStyle.Bold);
+			CancelarButton.Location = new Point(707, 505);
+			CancelarButton.Name = "CancelarButton";
+			CancelarButton.Size = new Size(165, 50);
+			CancelarButton.TabIndex = 13;
+			CancelarButton.Text = "Cancelar (F3)";
+			CancelarButton.UseVisualStyleBackColor = false;
+			CancelarButton.Click += OnCancelarButtonClick;
 			// 
-			// button1
+			// FinalizarButton
 			// 
-			button1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-			button1.BackColor = Color.FromArgb(128, 255, 128);
-			button1.Font = new Font("Segoe UI Black", 15F, FontStyle.Bold);
-			button1.Location = new Point(537, 505);
-			button1.Name = "button1";
-			button1.Size = new Size(165, 50);
-			button1.TabIndex = 14;
-			button1.Text = "Finalizar (F2)";
-			button1.UseVisualStyleBackColor = false;
+			FinalizarButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+			FinalizarButton.BackColor = Color.FromArgb(128, 255, 128);
+			FinalizarButton.Font = new Font("Segoe UI Black", 15F, FontStyle.Bold);
+			FinalizarButton.Location = new Point(537, 505);
+			FinalizarButton.Name = "FinalizarButton";
+			FinalizarButton.Size = new Size(165, 50);
+			FinalizarButton.TabIndex = 14;
+			FinalizarButton.Text = "Finalizar (F2)";
+			FinalizarButton.UseVisualStyleBackColor = false;
+			FinalizarButton.Click += FinalizarButton_Click;
 			// 
 			// ValorRecebidoBox
 			// 
@@ -251,6 +253,11 @@
 			// 
 			ColunaMeioDePagamento.Text = "Meio De Pagamento";
 			ColunaMeioDePagamento.Width = 170;
+			// 
+			// ColunaMDPTaxa
+			// 
+			ColunaMDPTaxa.Text = "Taxa";
+			ColunaMDPTaxa.Width = 130;
 			// 
 			// textBox6
 			// 
@@ -400,11 +407,6 @@
 			FaltaReceberValorBox.TabIndex = 32;
 			FaltaReceberValorBox.TextAlign = HorizontalAlignment.Center;
 			// 
-			// ColunaMDPTaxa
-			// 
-			ColunaMDPTaxa.Text = "Taxa";
-			ColunaMDPTaxa.Width = 130;
-			// 
 			// JanelaDePagamento
 			// 
 			AutoScaleDimensions = new SizeF(7F, 15F);
@@ -429,8 +431,8 @@
 			Controls.Add(label5);
 			Controls.Add(label1);
 			Controls.Add(ValorRecebidoBox);
-			Controls.Add(button1);
-			Controls.Add(button2);
+			Controls.Add(FinalizarButton);
+			Controls.Add(CancelarButton);
 			Controls.Add(ListaPagamentosEfetuados);
 			Controls.Add(label4);
 			Controls.Add(label3);
@@ -459,8 +461,8 @@
 		private Label label3;
 		private Label label4;
 		private ListView ListaPagamentosEfetuados;
-		private Button button2;
-		private Button button1;
+		private Button CancelarButton;
+		private Button FinalizarButton;
 		private TextBox ValorRecebidoBox;
 		private Label label1;
 		private Label label5;

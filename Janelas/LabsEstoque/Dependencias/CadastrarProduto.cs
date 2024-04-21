@@ -23,7 +23,7 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 		{
 			if (e.KeyCode == Keys.Enter)
 			{
-				if (Utils.TryParseToInt(DescricaoManualInput.Text, out _)) { MessageBox.Show("Não é Permitido a insersão de Código de barras na descrição", "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
+				if (Utils.IsValidBarCode(DescricaoManualInput.Text)) { MessageBox.Show("Não é Permitido a insersão de Código de barras na descrição", "AVISO", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
 				DescricaoProdutoOutput.Text = DescricaoManualInput.Text;
 				DescricaoManualInput.Text = null;
 			}
@@ -47,7 +47,7 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 			Preco = PrecoInput.Text;
 			Cod = CodBarras.Text;
 			//Se todos os Parâmetros são validos
-			if(Descricao.Length > 0 && Utils.TryParseToInt(QuantEstoque,out int Qtd) && Preco.Length > 0 && Cod.Length > 0)
+			if (Descricao.Length > 0 && Utils.TryParseToInt(QuantEstoque, out int Qtd) && Preco.Length > 0 && Cod.Length > 0)
 			{
 				Produto produto = new()
 				{
@@ -73,6 +73,11 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 		{
 			//Não tem muuuito o que fazer além de fechar kk
 			this.Close();
+		}
+
+		private void CadastrarProduto_Load(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

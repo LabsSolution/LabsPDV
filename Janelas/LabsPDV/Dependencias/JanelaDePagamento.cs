@@ -51,12 +51,13 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 			foreach (ModoDePagamento modo in ModosDePagamento)
 			{
 				//
-				ListViewItem item = new([modo.Modo,$"%{modo.Taxa}"]);
+				ListViewItem item = new([modo.Modo, $"%{modo.Taxa}"]);
 				//
 				if (modo.Ativo) { ListaMeioDePagamento.Items.Add(item); }
 			}
 			//
 		}
+
 		//--------------------------//
 		//		   EVENTOS
 		//--------------------------//
@@ -65,7 +66,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 			switch (e.KeyCode)
 			{
 				case Keys.F1:
-
+					PagamentoBoxInput.Focus();
 					break;
 				case Keys.F2:
 
@@ -77,6 +78,25 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 
 					break;
 			}
+		}
+		//
+		private void FinalizarVenda()
+		{
+			
+		}
+		//
+		void CancelarVenda()
+		{
+			this.Close();
+		}
+		private void OnCancelarButtonClick(object sender, EventArgs e)
+		{
+			this.Close();
+		}
+
+		private void FinalizarButton_Click(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

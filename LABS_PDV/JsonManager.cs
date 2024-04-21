@@ -58,9 +58,6 @@ namespace Labs.LABS_PDV
 					AllListedFilesExist = false;
 					Modais.MostrarErro($"{path}\n O Caminho Especificado Não Foi Encontrado!");
 					//
-					File.WriteAllText(path,"");
-					Modais.MostrarAviso("Foi Gerado um novo Arquivo de Configuração\nPor Favor Reinicie o Sistema!");
-					//
 				}
 			}
 			return AllListedFilesExist;
