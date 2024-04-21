@@ -123,7 +123,6 @@ namespace Labs.LABS_PDV
 		public static bool ChecarConfig(string NomeDoArquivo)
 		{
 			var path = $@"{ConfigFolder}\{NomeDoArquivo}{ExtensaoArquivo}";
-			Modais.MostrarInfo(path);
 			return RegisteredPaths.Contains(path);
 		}
 	}

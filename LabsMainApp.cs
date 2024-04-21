@@ -1,5 +1,6 @@
 ﻿using Labs.Janelas.LabsEstoque;
 using Labs.Janelas.LabsPDV;
+using Labs.Janelas.LabsPDV.Dependencias;
 using Labs.LABS_PDV;
 using System;
 using System.Collections.Generic;
@@ -42,8 +43,16 @@ namespace Labs
 		{
 			//Iniciamos a Janela Labs PDV. //Não precisa de permissão
 			//Depois fazer função caixa remoto!
-			//Iniciamos esse App com o parâmetro Persistente
-			LABS_PDV_MAIN.IniciarApp<LabsPDV>(true);
+			//Aqui definimos essa janela como persistente
+
+
+			JanelaDePagamento janelaDePagamento = LABS_PDV_MAIN.IniciarDependencia<JanelaDePagamento>(app =>
+			{
+				//Atrelamos o evento para a finalização
+				app.IniciarTelaDePagamento(12);
+			});
+
+			//LABS_PDV_MAIN.IniciarApp<LabsPDV>(true);//DEBUG
 		}
 
 		private void SairButton_Click(object sender, EventArgs e)

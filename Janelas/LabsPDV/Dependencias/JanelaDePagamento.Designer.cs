@@ -29,36 +29,38 @@
 		private void InitializeComponent()
 		{
 			ValorTotalComDescontoBox = new TextBox();
-			PorcentagemDescontoBoxInput = new TextBox();
+			DescontoBoxInput = new TextBox();
 			ValorTotalBox = new TextBox();
 			label2 = new Label();
 			label3 = new Label();
 			label4 = new Label();
 			ListaPagamentosEfetuados = new ListView();
 			ColunaPagamentoEfetuado = new ColumnHeader();
-			ColunaTaxaDoPagamento = new ColumnHeader();
+			ColunaValorPago = new ColumnHeader();
 			CancelarButton = new Button();
 			FinalizarButton = new Button();
 			ValorRecebidoBox = new TextBox();
 			label1 = new Label();
 			label5 = new Label();
 			TrocoBox = new TextBox();
-			ListaMeioDePagamento = new ListView();
-			ColunaMeioDePagamento = new ColumnHeader();
-			ColunaMDPTaxa = new ColumnHeader();
 			textBox6 = new TextBox();
-			label6 = new Label();
 			label7 = new Label();
 			textBox7 = new TextBox();
 			label8 = new Label();
 			label9 = new Label();
 			textBox8 = new TextBox();
-			listView1 = new ListView();
-			ColunaParcelas = new ColumnHeader();
 			PagamentoBoxInput = new TextBox();
 			label10 = new Label();
 			label11 = new Label();
 			FaltaReceberValorBox = new TextBox();
+			MeioDePagamentoComboBox = new ComboBox();
+			BandeiraComboBox = new ComboBox();
+			ParcelasComboBox = new ComboBox();
+			label12 = new Label();
+			label6 = new Label();
+			label13 = new Label();
+			label14 = new Label();
+			comboBox1 = new ComboBox();
 			SuspendLayout();
 			// 
 			// ValorTotalComDescontoBox
@@ -73,16 +75,16 @@
 			ValorTotalComDescontoBox.TabIndex = 5;
 			ValorTotalComDescontoBox.TextAlign = HorizontalAlignment.Center;
 			// 
-			// PorcentagemDescontoBoxInput
+			// DescontoBoxInput
 			// 
-			PorcentagemDescontoBoxInput.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-			PorcentagemDescontoBoxInput.Font = new Font("Segoe UI Black", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-			PorcentagemDescontoBoxInput.Location = new Point(537, 119);
-			PorcentagemDescontoBoxInput.Name = "PorcentagemDescontoBoxInput";
-			PorcentagemDescontoBoxInput.PlaceholderText = "% 0,00";
-			PorcentagemDescontoBoxInput.Size = new Size(335, 44);
-			PorcentagemDescontoBoxInput.TabIndex = 6;
-			PorcentagemDescontoBoxInput.TextAlign = HorizontalAlignment.Center;
+			DescontoBoxInput.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+			DescontoBoxInput.Font = new Font("Segoe UI Black", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			DescontoBoxInput.Location = new Point(537, 119);
+			DescontoBoxInput.Name = "DescontoBoxInput";
+			DescontoBoxInput.PlaceholderText = "% 0,00";
+			DescontoBoxInput.Size = new Size(335, 44);
+			DescontoBoxInput.TabIndex = 6;
+			DescontoBoxInput.TextAlign = HorizontalAlignment.Center;
 			// 
 			// ValorTotalBox
 			// 
@@ -136,10 +138,9 @@
 			// 
 			ListaPagamentosEfetuados.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
 			ListaPagamentosEfetuados.BorderStyle = BorderStyle.FixedSingle;
-			ListaPagamentosEfetuados.Columns.AddRange(new ColumnHeader[] { ColunaPagamentoEfetuado, ColunaTaxaDoPagamento });
+			ListaPagamentosEfetuados.Columns.AddRange(new ColumnHeader[] { ColunaPagamentoEfetuado, ColunaValorPago });
 			ListaPagamentosEfetuados.Enabled = false;
 			ListaPagamentosEfetuados.GridLines = true;
-			ListaPagamentosEfetuados.HeaderStyle = ColumnHeaderStyle.Nonclickable;
 			ListaPagamentosEfetuados.Location = new Point(12, 362);
 			ListaPagamentosEfetuados.MultiSelect = false;
 			ListaPagamentosEfetuados.Name = "ListaPagamentosEfetuados";
@@ -153,11 +154,11 @@
 			ColunaPagamentoEfetuado.Text = "Pagamento Efetuado";
 			ColunaPagamentoEfetuado.Width = 300;
 			// 
-			// ColunaTaxaDoPagamento
+			// ColunaValorPago
 			// 
-			ColunaTaxaDoPagamento.Text = "Taxa Adicional";
-			ColunaTaxaDoPagamento.TextAlign = HorizontalAlignment.Center;
-			ColunaTaxaDoPagamento.Width = 150;
+			ColunaValorPago.Text = "Valor Pago";
+			ColunaValorPago.TextAlign = HorizontalAlignment.Center;
+			ColunaValorPago.Width = 150;
 			// 
 			// CancelarButton
 			// 
@@ -170,7 +171,6 @@
 			CancelarButton.TabIndex = 13;
 			CancelarButton.Text = "Cancelar (F3)";
 			CancelarButton.UseVisualStyleBackColor = false;
-			CancelarButton.Click += OnCancelarButtonClick;
 			// 
 			// FinalizarButton
 			// 
@@ -183,7 +183,6 @@
 			FinalizarButton.TabIndex = 14;
 			FinalizarButton.Text = "Finalizar (F2)";
 			FinalizarButton.UseVisualStyleBackColor = false;
-			FinalizarButton.Click += FinalizarButton_Click;
 			// 
 			// ValorRecebidoBox
 			// 
@@ -233,32 +232,6 @@
 			TrocoBox.TabIndex = 18;
 			TrocoBox.TextAlign = HorizontalAlignment.Center;
 			// 
-			// ListaMeioDePagamento
-			// 
-			ListaMeioDePagamento.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-			ListaMeioDePagamento.BorderStyle = BorderStyle.FixedSingle;
-			ListaMeioDePagamento.Columns.AddRange(new ColumnHeader[] { ColunaMeioDePagamento, ColunaMDPTaxa });
-			ListaMeioDePagamento.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-			ListaMeioDePagamento.FullRowSelect = true;
-			ListaMeioDePagamento.GridLines = true;
-			ListaMeioDePagamento.Location = new Point(12, 166);
-			ListaMeioDePagamento.MultiSelect = false;
-			ListaMeioDePagamento.Name = "ListaMeioDePagamento";
-			ListaMeioDePagamento.Size = new Size(304, 190);
-			ListaMeioDePagamento.TabIndex = 19;
-			ListaMeioDePagamento.UseCompatibleStateImageBehavior = false;
-			ListaMeioDePagamento.View = View.Details;
-			// 
-			// ColunaMeioDePagamento
-			// 
-			ColunaMeioDePagamento.Text = "Meio De Pagamento";
-			ColunaMeioDePagamento.Width = 170;
-			// 
-			// ColunaMDPTaxa
-			// 
-			ColunaMDPTaxa.Text = "Taxa";
-			ColunaMDPTaxa.Width = 130;
-			// 
 			// textBox6
 			// 
 			textBox6.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -268,18 +241,6 @@
 			textBox6.Size = new Size(304, 29);
 			textBox6.TabIndex = 20;
 			textBox6.TextAlign = HorizontalAlignment.Center;
-			// 
-			// label6
-			// 
-			label6.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-			label6.AutoSize = true;
-			label6.Font = new Font("Segoe UI Black", 16F, FontStyle.Bold);
-			label6.ForeColor = SystemColors.Window;
-			label6.Location = new Point(12, 131);
-			label6.Name = "label6";
-			label6.Size = new Size(303, 30);
-			label6.TabIndex = 21;
-			label6.Text = "Formas de Pagamento (F4)";
 			// 
 			// label7
 			// 
@@ -337,29 +298,6 @@
 			textBox8.TabIndex = 26;
 			textBox8.TextAlign = HorizontalAlignment.Center;
 			// 
-			// listView1
-			// 
-			listView1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-			listView1.BorderStyle = BorderStyle.FixedSingle;
-			listView1.Columns.AddRange(new ColumnHeader[] { ColunaParcelas });
-			listView1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-			listView1.FullRowSelect = true;
-			listView1.GridLines = true;
-			listView1.HeaderStyle = ColumnHeaderStyle.Nonclickable;
-			listView1.Location = new Point(322, 166);
-			listView1.MultiSelect = false;
-			listView1.Name = "listView1";
-			listView1.Size = new Size(209, 190);
-			listView1.TabIndex = 27;
-			listView1.UseCompatibleStateImageBehavior = false;
-			listView1.View = View.Details;
-			listView1.Visible = false;
-			// 
-			// ColunaParcelas
-			// 
-			ColunaParcelas.Text = "Parcelas";
-			ColunaParcelas.Width = 200;
-			// 
 			// PagamentoBoxInput
 			// 
 			PagamentoBoxInput.Anchor = AnchorStyles.Top | AnchorStyles.Right;
@@ -407,6 +345,90 @@
 			FaltaReceberValorBox.TabIndex = 32;
 			FaltaReceberValorBox.TextAlign = HorizontalAlignment.Center;
 			// 
+			// MeioDePagamentoComboBox
+			// 
+			MeioDePagamentoComboBox.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			MeioDePagamentoComboBox.FormattingEnabled = true;
+			MeioDePagamentoComboBox.Location = new Point(11, 166);
+			MeioDePagamentoComboBox.Name = "MeioDePagamentoComboBox";
+			MeioDePagamentoComboBox.Size = new Size(135, 31);
+			MeioDePagamentoComboBox.TabIndex = 33;
+			// 
+			// BandeiraComboBox
+			// 
+			BandeiraComboBox.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
+			BandeiraComboBox.FormattingEnabled = true;
+			BandeiraComboBox.Location = new Point(293, 166);
+			BandeiraComboBox.Name = "BandeiraComboBox";
+			BandeiraComboBox.Size = new Size(121, 31);
+			BandeiraComboBox.TabIndex = 34;
+			// 
+			// ParcelasComboBox
+			// 
+			ParcelasComboBox.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
+			ParcelasComboBox.FormattingEnabled = true;
+			ParcelasComboBox.Location = new Point(422, 167);
+			ParcelasComboBox.Name = "ParcelasComboBox";
+			ParcelasComboBox.Size = new Size(110, 31);
+			ParcelasComboBox.TabIndex = 35;
+			// 
+			// label12
+			// 
+			label12.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+			label12.AutoSize = true;
+			label12.Font = new Font("Segoe UI Black", 14F, FontStyle.Bold);
+			label12.ForeColor = SystemColors.Window;
+			label12.Location = new Point(12, 138);
+			label12.Name = "label12";
+			label12.Size = new Size(134, 25);
+			label12.TabIndex = 36;
+			label12.Text = "Meio de Pag:";
+			// 
+			// label6
+			// 
+			label6.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+			label6.AutoSize = true;
+			label6.Font = new Font("Segoe UI Black", 14F, FontStyle.Bold);
+			label6.ForeColor = SystemColors.Window;
+			label6.Location = new Point(293, 138);
+			label6.Name = "label6";
+			label6.Size = new Size(102, 25);
+			label6.TabIndex = 37;
+			label6.Text = "Bandeira:";
+			// 
+			// label13
+			// 
+			label13.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+			label13.AutoSize = true;
+			label13.Font = new Font("Segoe UI Black", 14F, FontStyle.Bold);
+			label13.ForeColor = SystemColors.Window;
+			label13.Location = new Point(422, 138);
+			label13.Name = "label13";
+			label13.Size = new Size(95, 25);
+			label13.TabIndex = 38;
+			label13.Text = "Parcelas:";
+			// 
+			// label14
+			// 
+			label14.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+			label14.AutoSize = true;
+			label14.Font = new Font("Segoe UI Black", 14F, FontStyle.Bold);
+			label14.ForeColor = SystemColors.Window;
+			label14.Location = new Point(152, 138);
+			label14.Name = "label14";
+			label14.Size = new Size(73, 25);
+			label14.TabIndex = 39;
+			label14.Text = "Modo:";
+			// 
+			// comboBox1
+			// 
+			comboBox1.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			comboBox1.FormattingEnabled = true;
+			comboBox1.Location = new Point(152, 166);
+			comboBox1.Name = "comboBox1";
+			comboBox1.Size = new Size(135, 31);
+			comboBox1.TabIndex = 40;
+			// 
 			// JanelaDePagamento
 			// 
 			AutoScaleDimensions = new SizeF(7F, 15F);
@@ -414,19 +436,24 @@
 			BackColor = SystemColors.WindowFrame;
 			ClientSize = new Size(884, 561);
 			ControlBox = false;
+			Controls.Add(comboBox1);
+			Controls.Add(label14);
+			Controls.Add(label13);
+			Controls.Add(label6);
+			Controls.Add(label12);
+			Controls.Add(ParcelasComboBox);
+			Controls.Add(BandeiraComboBox);
+			Controls.Add(MeioDePagamentoComboBox);
 			Controls.Add(FaltaReceberValorBox);
 			Controls.Add(label11);
 			Controls.Add(label10);
 			Controls.Add(PagamentoBoxInput);
-			Controls.Add(listView1);
 			Controls.Add(textBox8);
 			Controls.Add(label9);
 			Controls.Add(label8);
 			Controls.Add(textBox7);
 			Controls.Add(label7);
-			Controls.Add(label6);
 			Controls.Add(textBox6);
-			Controls.Add(ListaMeioDePagamento);
 			Controls.Add(TrocoBox);
 			Controls.Add(label5);
 			Controls.Add(label1);
@@ -438,7 +465,7 @@
 			Controls.Add(label3);
 			Controls.Add(label2);
 			Controls.Add(ValorTotalBox);
-			Controls.Add(PorcentagemDescontoBoxInput);
+			Controls.Add(DescontoBoxInput);
 			Controls.Add(ValorTotalComDescontoBox);
 			Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
 			FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -455,7 +482,7 @@
 
 		#endregion
 		private TextBox ValorTotalComDescontoBox;
-		private TextBox PorcentagemDescontoBoxInput;
+		private TextBox DescontoBoxInput;
 		private TextBox ValorTotalBox;
 		private Label label2;
 		private Label label3;
@@ -467,23 +494,25 @@
 		private Label label1;
 		private Label label5;
 		private TextBox TrocoBox;
-		private ListView ListaMeioDePagamento;
 		private TextBox textBox6;
-		private Label label6;
-		private ColumnHeader ColunaMeioDePagamento;
 		private Label label7;
 		private TextBox textBox7;
 		private Label label8;
 		private Label label9;
 		private TextBox textBox8;
 		private ColumnHeader ColunaPagamentoEfetuado;
-		private ColumnHeader ColunaTaxaDoPagamento;
-		private ListView listView1;
-		private ColumnHeader ColunaParcelas;
+		private ColumnHeader ColunaValorPago;
 		private TextBox PagamentoBoxInput;
 		private Label label10;
 		private Label label11;
 		private TextBox FaltaReceberValorBox;
-		private ColumnHeader ColunaMDPTaxa;
+		private ComboBox MeioDePagamentoComboBox;
+		private ComboBox BandeiraComboBox;
+		private ComboBox ParcelasComboBox;
+		private Label label12;
+		private Label label6;
+		private Label label13;
+		private Label label14;
+		private ComboBox comboBox1;
 	}
 }

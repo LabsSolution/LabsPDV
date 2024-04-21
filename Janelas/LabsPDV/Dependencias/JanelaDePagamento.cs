@@ -17,7 +17,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 		//
 		public const string NomeArquivoConfig = "ModosDePagamento";
 		//
-		List<ModoDePagamento> ModosDePagamento = new();
+		List<MeioDePagamento> MeiosDePagamento = new();
 		//
 		public JanelaDePagamento()
 		{
@@ -29,7 +29,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 				Modais.MostrarAviso("Não foi Encontrado o Arquivo Contendo os Modos de Pagamento!");
 			}
 			// Caso seja encontrado, carrega o arquivo
-			else { ModosDePagamento = JsonManager.CarregarConfig<List<ModoDePagamento>>(NomeArquivoConfig); }
+			else { MeiosDePagamento = JsonManager.CarregarConfig<List<MeioDePagamento>>(NomeArquivoConfig); }
 			//
 		}
 		//
@@ -48,16 +48,13 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 			//
 			SetPagamentoTotalBox(ValorTotal);
 			//Lista os modos de pagamento
-			foreach (ModoDePagamento modo in ModosDePagamento)
+			foreach (MeioDePagamento Meio in MeiosDePagamento)
 			{
-				//
-				ListViewItem item = new([modo.Modo, $"%{modo.Taxa}"]);
-				//
-				if (modo.Ativo) { ListaMeioDePagamento.Items.Add(item); }
+				if (Meio.Ativo) { MeioDePagamentoComboBox.Items.Add(Meio.Meio); }
+
 			}
 			//
 		}
-
 		//--------------------------//
 		//		   EVENTOS
 		//--------------------------//
@@ -66,7 +63,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 			switch (e.KeyCode)
 			{
 				case Keys.F1:
-					PagamentoBoxInput.Focus();
+
 					break;
 				case Keys.F2:
 
@@ -78,25 +75,6 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 
 					break;
 			}
-		}
-		//
-		private void FinalizarVenda()
-		{
-			
-		}
-		//
-		void CancelarVenda()
-		{
-			this.Close();
-		}
-		private void OnCancelarButtonClick(object sender, EventArgs e)
-		{
-			this.Close();
-		}
-
-		private void FinalizarButton_Click(object sender, EventArgs e)
-		{
-
 		}
 	}
 }
