@@ -22,10 +22,10 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 		//
 		public void SetarProduto(Produto produto)
 		{
-			IDProduto.Text = produto.ID.ToString();
+			IDProduto.Text = produto.ID;
 			DescricaoProdutoOutput.Text = produto.Descricao;
 			QuantEstoqueInput.Text = produto.Quantidade.ToString();
-			PrecoInput.Text = produto.Preco;
+			PrecoInput.Text = produto.Preco.ToString();
 			CodBarras.Text = produto.CodBarras;
 		}
 		//
@@ -40,15 +40,15 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 			Cod = CodBarras.Text;
 			//
 			//Se todos os Parâmetros são validos
-			if (Utils.TryParseToInt(ID, out int ID_Produto) && Descricao.Length > 0 && Utils.TryParseToInt(QuantEstoque, out int Qtd) && Preco.Length > 0 && Cod.Length > 0)
+			if (Descricao.Length > 0 && Utils.TryParseToInt(QuantEstoque, out int Qtd) && Utils.TryParseToDouble(Preco,out double dPreco) && Cod.Length > 0)
 			{
 				//Montamos o produto atribuindo o ID para a busca
 				Produto produto = new()
 				{
-					ID = ID_Produto,
+					ID = IDProduto.Text,
 					Descricao = Descricao,
 					Quantidade = Qtd,
-					Preco = Preco,
+					Preco = Math.Round(dPreco,2),
 					CodBarras = Cod,
 				};
 				//Informamos para o Usuário que o Produto será atualizado
@@ -65,7 +65,7 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 				//Caso o Usuário Confirme a Ação, Seguimos em Frente
 				if (r == DialogResult.Yes)
 				{
-					DataBase.UpdateProduto(produto);
+					CloudDataBase.UpdateProdutoAsync(produto);
 					Modais.MostrarInfo("Produto Atualizado Com Sucesso!");
 				}//
 				else { Modais.MostrarInfo("Atualização Cancelada"); }

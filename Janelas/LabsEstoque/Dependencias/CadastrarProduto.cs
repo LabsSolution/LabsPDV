@@ -47,17 +47,17 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 			Preco = PrecoInput.Text;
 			Cod = CodBarras.Text;
 			//Se todos os Parâmetros são validos
-			if (Descricao.Length > 0 && Utils.TryParseToInt(QuantEstoque, out int Qtd) && Preco.Length > 0 && Cod.Length > 0)
+			if (Descricao.Length > 0 && Utils.TryParseToInt(QuantEstoque, out int Qtd) && Utils.TryParseToDouble(Preco,out double dPreco) && Cod.Length > 0)
 			{
 				Produto produto = new()
 				{
 					Descricao = Descricao,
 					Quantidade = Qtd,
-					Preco = PrecoInput.Text,
+					Preco = Math.Round(dPreco,2),
 					CodBarras = Cod,
 				};
 				//Depois de ter o produto Pronto, registramos ele :D
-				DataBase.RegisterProduto(produto);
+				CloudDataBase.RegisterProdutoAsync(produto);
 				Modais.MostrarInfo("Produto Cadastrado Com Sucesso!");
 				//
 				LimparCampos();

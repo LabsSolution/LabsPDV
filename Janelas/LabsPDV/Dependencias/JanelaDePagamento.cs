@@ -101,7 +101,6 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 				MeioDePagamentoComboBox.Items.Add(Meio.Meio);
 			}
 			//
-			Modais.MostrarInfo("Update");
 			UpdateInterface();
 		}
 		//
@@ -174,14 +173,19 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 				//
 				int index = MeioDePagamentoComboBox.SelectedIndex;
 				MeioDePagamento meio = MeiosDePagamento[index];
-				ModoDePagamento modo = meio.Modos[ModoDePagamentoComboBox.SelectedIndex];
+				ModoDePagamento modo = default;
 				//
 				PagamentoEfetuado = $"{MeioDePagamentoComboBox.Text} ";
+				//
 				if (meio.PossuiModos && ModoDePagamentoComboBox.Text.Length == 0) { Modais.MostrarAviso("Selecione um Modo Para o Meio de Pagamento Selecionado!"); ModoDePagamentoComboBox.Focus(); return; }
+				if (meio.PossuiModos) { modo = meio.Modos[ModoDePagamentoComboBox.SelectedIndex]; }
+				//
 				else { PagamentoEfetuado += $"{ModoDePagamentoComboBox.Text} "; }
 				if (modo.PossuiBandeira && BandeiraComboBox.Text.Length == 0) { Modais.MostrarAviso("Selecione uma Bandeira Para o Modo de Pagamento Selecionado!"); BandeiraComboBox.Focus(); return; }
+				//
 				else { PagamentoEfetuado += $"{BandeiraComboBox.Text}"; }
 				if (modo.PossuiParcelas && ParcelasComboBox.Text.Length == 0) { Modais.MostrarAviso("Selecione a Quantidade de Parcelas!"); ParcelasComboBox.Focus(); return; }
+				//
 				if (PagamentoBoxInput.Text.Length == 0) { Modais.MostrarAviso("Você Deve Informar o Valor Para a Atualização"); ResetFocus(); return; }
 				//
 				ListViewItem item = new([PagamentoEfetuado, $"R$ {value}"]);

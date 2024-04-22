@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -64,19 +66,17 @@ namespace Labs.LABS_PDV
 		//
 		//
 		//
-		public struct Produto
+		public class Produto(string Descricao = null!, int Quantidade = 0, double Preco = 0, string CodBarras = null!)
 		{
-			public int ID { get; set; }
-			public string Descricao { get; set; }
-			public int Quantidade { get; set; }
-			public string Preco {  get; set; }
-			public string CodBarras {  get; set; }
-			//Métodos
-			public readonly double GetPrecoAsDouble()
-			{
-				if(Utils.TryParseToDouble(this.Preco,out double value)) { return value; }
-				return 0.0;
-			}
+			//Identificador na database
+			[BsonId]
+			[BsonRepresentation(BsonType.ObjectId)]
+			public string ID { get; set; } = null!;
+			//Parâmetros
+			public string Descricao { get; set; } = Descricao;
+			public int Quantidade { get; set; } = Quantidade;
+			public double Preco { get; set; } = Preco;
+			public string CodBarras { get; set; } = CodBarras;
 		}
 		//
 	}

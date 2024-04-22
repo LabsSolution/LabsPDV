@@ -155,7 +155,7 @@ namespace Labs
 			// Aqui atrelamos os dois eventos porque em algum momento a janela será realmente fechada;
 			//
 			if (Persistente) { App.VisibleChanged += AppHidden; App.FormClosed += AppClosed; }
-			if (Persistente) { App.FormClosed += AppClosed; }
+			if (!Persistente) { App.FormClosed += AppClosed; }
 			App.Resize += OnAppSizeChange; // O evento de SizeChange é global para qualquer janela;
 			return App; // Após isso tudo, retornamos a janela
 		}

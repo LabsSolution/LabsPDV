@@ -12,7 +12,7 @@ namespace Labs.LABS_PDV
 {
 	internal class DataBase
 	{
-		public static string DatabasePath { get; private set; } = @"Data Source=.\LABS_PDV\DB\DataBase.db";
+		public static string DataBaseConnection { get; private set; } = @"Data Source=.\LABS_PDV\DB\DataBase.db";
 
 		/// <summary>
 		/// Retorna um Produto (Struct) Pelo Cód.Barras Fornecido
@@ -21,7 +21,7 @@ namespace Labs.LABS_PDV
 		/// <returns>Retorna o produto como objeto (Struct)</returns>
 		public static bool GetProdutoByCodBarras(string CodBarras, out Produto produto)
 		{
-			using (IDbConnection cnn = new SQLiteConnection(DatabasePath))
+			using (var cnn = new SQLiteConnection(DataBaseConnection))
 			{
 				var output = cnn.Query<Produto>($"Select * FROM Produtos WHERE CodBarras='{CodBarras}'", new DynamicParameters()).ToList();
 				if(output.Count > 0) 
@@ -39,7 +39,7 @@ namespace Labs.LABS_PDV
 		/// <param name="produto">Produto a ser Removido</param>
 		public static async void RemoveProduto(Produto produto)
 		{
-			using (IDbConnection cnn = new SQLiteConnection(DatabasePath))
+			using (var cnn = new SQLiteConnection(DataBaseConnection))
 			{
 				await cnn.ExecuteAsync("DELETE FROM Produtos WHERE ID= @ID",produto);
 			}
@@ -50,7 +50,7 @@ namespace Labs.LABS_PDV
 		/// <param name="produto">O produto atualizado</param>
 		public static async void UpdateProduto(Produto produto)
 		{
-			using (IDbConnection cnn = new SQLiteConnection(DatabasePath))
+			using (var cnn = new SQLiteConnection(DataBaseConnection))
 			{
 				await cnn.ExecuteAsync("UPDATE Produtos SET Descricao = @Descricao, Quantidade = @Quantidade, Preco = @Preco, CodBarras = @CodBarras WHERE ID= @ID ",produto);
 			}
@@ -61,7 +61,7 @@ namespace Labs.LABS_PDV
 		/// <param name="produto">Produto para registro</param>
 		public static async void RegisterProduto(Produto produto)
 		{
-			using (IDbConnection cnn = new SQLiteConnection(DatabasePath))
+			using (var cnn = new SQLiteConnection(DataBaseConnection))
 			{
 				await cnn.ExecuteAsync("INSERT INTO Produtos (Descricao, Quantidade, Preco, CodBarras) VALUES (@Descricao, @Quantidade, @Preco, @CodBarras)",produto);
 			}
@@ -72,7 +72,7 @@ namespace Labs.LABS_PDV
 		/// <returns>Retorna um List<Produtos></returns>
 		public static List<Produto> GetProdutos()
 		{
-			using (IDbConnection cnn = new SQLiteConnection(DatabasePath))
+			using (var cnn = new SQLiteConnection(DataBaseConnection))
 			{
 				var output = cnn.Query<Produto>($"SELECT * FROM Produtos",new DynamicParameters());
 				return output.ToList();

@@ -1,4 +1,5 @@
-﻿using Labs.Janelas.LabsEstoque;
+﻿using Labs.Janelas.Configuracoes;
+using Labs.Janelas.LabsEstoque;
 using Labs.Janelas.LabsPDV;
 using Labs.Janelas.LabsPDV.Dependencias;
 using Labs.LABS_PDV;
@@ -12,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static Labs.LABS_PDV.Modelos;
 
 namespace Labs
 {
@@ -27,21 +29,6 @@ namespace Labs
 			//Caso tenha uma instância rodando, fechamos esta janela e jogamos um erro
 			//Dando a informação para que se o erro persistir, entrar em contato com o suporte técnico.
 			else { this.Close(); MessageBox.Show("ERRO-800 \n UMA INSTÂNCIA DO APLICATIVO JÁ ESTÁ EM EXECUCÃO\n Caso o erro persista recomendamos entrar em contato com o suporte.", "ERRO CRÍTICO-cod:800", MessageBoxButtons.OK, MessageBoxIcon.Error); }
-			ListarImpressoras();
-		}
-		void ListarImpressoras()
-		{
-			ListaImpressoras.Items.Clear();
-			//
-			foreach (var printer in PrinterSettings.InstalledPrinters)
-			{
-				ListaImpressoras.Items.Add(printer);
-			}
-		}
-		private void imprimirButton_Click(object sender, EventArgs e)
-		{
-			PrintManager manager = new();
-			manager.EXECUTA(ListaImpressoras.Text);
 		}
 
 		//
@@ -51,7 +38,7 @@ namespace Labs
 		private void OnLabsEstoqueClick(object sender, EventArgs e)
 		{
 			//Iniciamos a Janela de Controle de estoque caso o usuário tenha permissão para isso;
-			LABS_PDV_MAIN.IniciarApp<LabsEstoque>();
+			LABS_PDV_MAIN.IniciarApp<LabsEstoque>(false);
 		}
 
 		private void OnLabsPDVClick(object sender, EventArgs e)
@@ -60,14 +47,13 @@ namespace Labs
 			//Depois fazer função caixa remoto!
 			//Aqui definimos essa janela como persistente
 
+			LABS_PDV_MAIN.IniciarApp<LabsPDV>(true);
+		}
 
-			JanelaDePagamento janelaDePagamento = LABS_PDV_MAIN.IniciarDependencia<JanelaDePagamento>(app =>
-			{
-				//Atrelamos o evento para a finalização
-				app.IniciarTelaDePagamento(12);
-			});
 
-			//LABS_PDV_MAIN.IniciarApp<LabsPDV>(true);//DEBUG
+		private void OnLabsConfigClick(object sender, EventArgs e)
+		{
+			LABS_PDV_MAIN.IniciarApp<LabsConfig>(false);
 		}
 
 		private void SairButton_Click(object sender, EventArgs e)

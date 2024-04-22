@@ -22,34 +22,33 @@ namespace Labs.Janelas.LabsEstoque
 		/// <param name="QtdEstoque">Quantidade no estoque</param>
 		/// <param name="Preco">Preco Unitário</param>
 		/// <param name="CodBarras">Código de Barras</param>
-		private void InserirProdutoNaLista(string ID, string Desc, string QtdEstoque, string Preco, string CodBarras)
-		{
-			ListViewItem row = new([ID, Desc, QtdEstoque, $"R$ {Preco}", CodBarras]);
-			ListaProdutosEstoque.Items.Insert(ListaProdutosEstoque.Items.Count, row);
+		private  void InserirProdutoNaLista(string ID, string Desc, string QtdEstoque, string Preco, string CodBarras)
+		{ 
+			ListaProdutosEstoque.Items.Insert(ListaProdutosEstoque.Items.Count, new ListViewItem([ID, Desc, QtdEstoque, $"R$ {Preco}", CodBarras]));
 		}
 		/// <summary>
 		/// Atualiza a lista de produtos do estoque
 		/// </summary>
-		private void AtualizarLista()
+		private async void AtualizarLista()
 		{
 			//
 			ListaProdutosEstoque.Items.Clear(); // Limpamos a lista antes de carregar
 												//
-			List<Produto> Produtos = DataBase.GetProdutos(); // Pegados todos os produtos cadastrados
+			List<Produto> Produtos = await CloudDataBase.GetProdutosAsync(); // Pegados todos os produtos cadastrados
+			
 			foreach (Produto produto in Produtos) //Iteramos e adicionamos a lista
 			{
-
-				InserirProdutoNaLista(produto.ID.ToString(), produto.Descricao, produto.Quantidade.ToString(), produto.Preco, produto.CodBarras);
+				InserirProdutoNaLista(produto.ID.ToString(), produto.Descricao, produto.Quantidade.ToString(), produto.Preco.ToString(), produto.CodBarras);
+				await Task.Delay(1);
 			}
 		}
-
+		//
 		private void UpdateByEvent(object? sender, FormClosedEventArgs e)
 		{
 			AtualizarLista();
 			var form = sender as Form;
 			if (form != null) { form.FormClosed -= UpdateByEvent; }
 		}
-
 		/// <summary>
 		/// Chamado quando a Janela de Estoque é Carregada
 		/// </summary>
@@ -64,49 +63,61 @@ namespace Labs.Janelas.LabsEstoque
 		//------------------------//
 		private void CadastrarButton_Click(object sender, EventArgs e)
 		{
-			CadastrarProduto app = LABS_PDV_MAIN.IniciarDependencia<CadastrarProduto>();
-			app.FormClosed += UpdateByEvent;
+			CadastrarProduto app = LABS_PDV_MAIN.IniciarDependencia<CadastrarProduto>(app =>
+			{
+				app.FormClosed += UpdateByEvent;
+			});
 		}
 		//
-		private void AtualizarButton_Click(object sender, EventArgs e)
+		private async void AtualizarProduto()
 		{
 			if (ListaProdutosEstoque.SelectedItems.Count == 0) { Modais.MostrarAviso("Você Precisa Selecionar um Produto da Lista Para Atualizar os Dados!"); return; }
 			//
 			ListViewItem item = ListaProdutosEstoque.SelectedItems[0]; // Retorna o produto que está selecionado na lista
-			//
-			//Pegamos o produto pelo código e retornamos através da database local (poderia ser da lista, mas to com preguiça) *Além da DataBase ser mais confiável*.
+																	   //
+																	   //Pegamos o produto pelo código e retornamos através da database local (poderia ser da lista, mas to com preguiça) *Além da DataBase ser mais confiável*.
 			string Cod = item.SubItems[ColunaCodBarras.Index].Text;
-			if (Utils.GetProdutoByCode(Cod, out Produto produto))//se conseguirmos achar o produto, prosseguimos
+			Produto produto = await Utils.GetProdutoByCode(Cod);
+			if (produto != null)//se conseguirmos achar o produto, prosseguimos
 			{
 				//
-				AtualizarProduto attProd = LABS_PDV_MAIN.IniciarDependencia<AtualizarProduto>(app => 
-				{ 
-					app.SetarProduto(produto); 
-					app.FormClosed += UpdateByEvent; 
-				}) ;
+				AtualizarProduto attProd = LABS_PDV_MAIN.IniciarDependencia<AtualizarProduto>(app =>
+				{
+					app.SetarProduto(produto);
+					app.FormClosed += UpdateByEvent;
+				});
 				//
 			}
 		}
-
-		//
-		private void RemoverButton_Click(object sender, EventArgs e)
+		private async void RemoverProduto()
 		{
-			if(ListaProdutosEstoque.SelectedItems.Count == 0) { Modais.MostrarAviso("Você Precisa Selecionar um Produto da Lista Para Remover os Dados!"); return; }
+			if (ListaProdutosEstoque.SelectedItems.Count == 0) { Modais.MostrarAviso("Você Precisa Selecionar um Produto da Lista Para Remover os Dados!"); return; }
 			//
 			ListViewItem item = ListaProdutosEstoque.SelectedItems[0];
 			string Cod = item.SubItems[ColunaCodBarras.Index].Text;
-			if(Utils.GetProdutoByCode(Cod,out Produto produto)) // se o produto existe seguimos
+			Produto produto = await Utils.GetProdutoByCode(Cod);
+			if (produto != null) // se o produto existe seguimos
 			{
 				//
-				DataBase.RemoveProduto(produto); // Chamamos a DataBase para a remoção do item desejado
-				//Fazemos essa proteção para que não haja Bugs ou travamentos caso não seja encontrado nada na database
-				//O que pode acontecer caso haja alguma falha no espelhamento da lista com a database.
+				CloudDataBase.RemoveProdutoAsync(produto); // Chamamos a DataBase para a remoção do item desejado
+													  //Fazemos essa proteção para que não haja Bugs ou travamentos caso não seja encontrado nada na database
+													  //O que pode acontecer caso haja alguma falha no espelhamento da lista com a database.
 			}
 			//Agora que deletamos da database, podemos remover da lista.
 			if (ListaProdutosEstoque.Items.Contains(item))
 			{
 				ListaProdutosEstoque.Items.Remove(item);
 			}
+		}
+		private void AtualizarButton_Click(object sender, EventArgs e)
+		{
+			AtualizarProduto();
+		}
+
+		//
+		private void RemoverButton_Click(object sender, EventArgs e)
+		{
+			RemoverProduto();
 		}
 
 		private void OnLabsEstoqueKeyUp(object sender, KeyEventArgs e)

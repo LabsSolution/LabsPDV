@@ -31,8 +31,7 @@
 			button1 = new Button();
 			LabsPDV = new Button();
 			SairButton = new Button();
-			ListaImpressoras = new ComboBox();
-			d = new Button();
+			ConfiguracaoButton = new Button();
 			SuspendLayout();
 			// 
 			// button1
@@ -75,26 +74,19 @@
 			SairButton.UseVisualStyleBackColor = false;
 			SairButton.Click += SairButton_Click;
 			// 
-			// ListaImpressoras
+			// ConfiguracaoButton
 			// 
-			ListaImpressoras.FormattingEnabled = true;
-			ListaImpressoras.Location = new Point(51, 186);
-			ListaImpressoras.Name = "ListaImpressoras";
-			ListaImpressoras.Size = new Size(176, 23);
-			ListaImpressoras.TabIndex = 3;
-			// 
-			// d
-			// 
-			d.BackColor = Color.Salmon;
-			d.BackgroundImageLayout = ImageLayout.None;
-			d.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
-			d.Location = new Point(326, 151);
-			d.Name = "d";
-			d.Size = new Size(160, 80);
-			d.TabIndex = 4;
-			d.Text = "adad";
-			d.UseVisualStyleBackColor = false;
-			d.Click += imprimirButton_Click;
+			ConfiguracaoButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+			ConfiguracaoButton.BackColor = Color.FromArgb(128, 128, 255);
+			ConfiguracaoButton.BackgroundImageLayout = ImageLayout.None;
+			ConfiguracaoButton.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
+			ConfiguracaoButton.Location = new Point(178, 671);
+			ConfiguracaoButton.Name = "ConfiguracaoButton";
+			ConfiguracaoButton.Size = new Size(190, 42);
+			ConfiguracaoButton.TabIndex = 3;
+			ConfiguracaoButton.Text = "Configurações";
+			ConfiguracaoButton.UseVisualStyleBackColor = false;
+			ConfiguracaoButton.Click += OnLabsConfigClick;
 			// 
 			// LabsMainApp
 			// 
@@ -104,8 +96,7 @@
 			BackgroundImageLayout = ImageLayout.Stretch;
 			ClientSize = new Size(1346, 725);
 			ControlBox = false;
-			Controls.Add(d);
-			Controls.Add(ListaImpressoras);
+			Controls.Add(ConfiguracaoButton);
 			Controls.Add(SairButton);
 			Controls.Add(LabsPDV);
 			Controls.Add(button1);
@@ -123,7 +114,6 @@
 		private Button button1;
 		private Button LabsPDV;
 		private Button SairButton;
-		private ComboBox ListaImpressoras;
-		private Button d;
+		private Button ConfiguracaoButton;
 	}
 }

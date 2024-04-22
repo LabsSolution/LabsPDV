@@ -93,7 +93,7 @@ namespace Labs.Janelas.LabsPDV
 			//// Geramos o numero apresentado na tela (Começando por 1 já que a maioria não iria entender se começar por 0).
 			string Numero = (ListaDeVenda.Items.Count + 1).ToString();
 			//
-			TotalItem = Math.Round(produto.Quantidade * produto.GetPrecoAsDouble(), 2); ; // geramos o total do item fazendo Quant * valor.
+			TotalItem = Math.Round(produto.Quantidade * produto.Preco, 2); ; // geramos o total do item fazendo Quant * valor.
 			//Colocamos os valores em suas respectivas colunas
 			ListViewItem item = new(
 			[   Numero,
@@ -141,7 +141,7 @@ namespace Labs.Janelas.LabsPDV
 				//
 				var p = Produtos[produto.Index];
 				//
-				TotalHolder += p.Quantidade * p.GetPrecoAsDouble();
+				TotalHolder += p.Quantidade * p.Preco;
 			}
 			// Atualizamos o pagamento total
 			PagamentoTotal = Math.Round(TotalHolder, 2);
@@ -223,31 +223,31 @@ namespace Labs.Janelas.LabsPDV
 			else { Modais.MostrarErro("Somente Números!"); }
 		}
 		//Chamado quando alguma tecla é pressionada na área de cód de barras
-		private void OnCodBarrasKeyUp(object sender, KeyEventArgs e)
+		private async void OnAddCodBarras()
 		{
-			if (e.KeyCode != Keys.Enter) { return; } // se não for enter não seguimos
 			//
-			if(QuantidadeBox.TextLength < 1) { QuantidadeBox.Text = "1"; }
+			if (QuantidadeBox.TextLength < 1) { QuantidadeBox.Text = "1"; }
 			//
 			if (Utils.IsValidBarCode(CodBarrasInput.Text))
 			{
-				if (Utils.GetProdutoByCode(CodBarrasInput.Text,out Produto produto)) 
+				Produto produto = await Utils.GetProdutoByCode(CodBarrasInput.Text);
+				if (produto != null)
 				{
 					// só prosseguimos com a adição na lista de venda, caso o produto exista
 					// no banco de dados
 					//
 					// Alteramos a quantidade porque não queremos vender o estoque inteiro de uma vez só KKK
 					produto.Quantidade = int.Parse(QuantidadeBox.Text);
-					AddProduto(produto,out double TotalItem);
+					AddProduto(produto, out double TotalItem);
 					// Ao Adicionar o produto na lista, limpamos o código de barras e resetamos a quantidade para somente 1 (para evitar de replicar a quantidade anterior);
 					CodBarrasInput.Text = null;
 					QuantidadeBox.Text = "1";
 					//
-					PrecoUnitarioBox.Text = produto.Preco;
+					PrecoUnitarioBox.Text = $"{produto.Preco}";
 					SubTotalBox.Text = TotalItem.ToString();
 					//
 					PagamentoTotal += TotalItem;
-					PagamentoTotal = Math.Round(PagamentoTotal,2);
+					PagamentoTotal = Math.Round(PagamentoTotal, 2);
 					//
 					SetPagamentoTotalBox();
 				}
@@ -256,6 +256,11 @@ namespace Labs.Janelas.LabsPDV
 					Modais.MostrarAviso("Produto Não Cadastrado no Estoque!");
 				}
 			}
+		}
+		private void OnCodBarrasKeyUp(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode != Keys.Enter) { return; } // se não for enter não seguimos
+			OnAddCodBarras();
 			//
 		}
 		//

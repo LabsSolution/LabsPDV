@@ -25,13 +25,9 @@ namespace Labs.LABS_PDV
 		/// <param name="Cod">Código de registro do produto</param>
 		/// <param name="produto">Retorno (out) do produto cadastrado</param>
 		/// <returns>Retorna um booleano representado se a busca foi bem sucedida ou não</returns>
-		public static bool GetProdutoByCode(string Cod, out Produto produto)
+		public static async Task<Produto> GetProdutoByCode(string Cod)
 		{
-			if (DataBase.GetProdutoByCodBarras(Cod,out produto))
-			{
-				return true;
-			}
-			return false;
+			return await CloudDataBase.GetProdutoByCodBarrasAsync(Cod);
 		}
 		/// <summary>
 		/// Verifica se a tecla fornecida é uma tecla numérica válida
