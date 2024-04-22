@@ -60,7 +60,9 @@
 			label6 = new Label();
 			label13 = new Label();
 			label14 = new Label();
-			comboBox1 = new ComboBox();
+			ModoDePagamentoComboBox = new ComboBox();
+			AtualizarPagamentoButton = new Button();
+			ExcluirPagamento = new Button();
 			SuspendLayout();
 			// 
 			// ValorTotalComDescontoBox
@@ -85,6 +87,7 @@
 			DescontoBoxInput.Size = new Size(335, 44);
 			DescontoBoxInput.TabIndex = 6;
 			DescontoBoxInput.TextAlign = HorizontalAlignment.Center;
+			DescontoBoxInput.KeyUp += OnBoxKeyUp;
 			// 
 			// ValorTotalBox
 			// 
@@ -116,11 +119,11 @@
 			label3.AutoSize = true;
 			label3.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
 			label3.ForeColor = SystemColors.Window;
-			label3.Location = new Point(726, 84);
+			label3.Location = new Point(668, 84);
 			label3.Name = "label3";
-			label3.Size = new Size(146, 32);
+			label3.Size = new Size(208, 32);
 			label3.TabIndex = 9;
-			label3.Text = "Desconto%";
+			label3.Text = "(F4) Desconto %";
 			// 
 			// label4
 			// 
@@ -139,7 +142,7 @@
 			ListaPagamentosEfetuados.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
 			ListaPagamentosEfetuados.BorderStyle = BorderStyle.FixedSingle;
 			ListaPagamentosEfetuados.Columns.AddRange(new ColumnHeader[] { ColunaPagamentoEfetuado, ColunaValorPago });
-			ListaPagamentosEfetuados.Enabled = false;
+			ListaPagamentosEfetuados.FullRowSelect = true;
 			ListaPagamentosEfetuados.GridLines = true;
 			ListaPagamentosEfetuados.Location = new Point(12, 362);
 			ListaPagamentosEfetuados.MultiSelect = false;
@@ -308,6 +311,7 @@
 			PagamentoBoxInput.Size = new Size(209, 44);
 			PagamentoBoxInput.TabIndex = 29;
 			PagamentoBoxInput.TextAlign = HorizontalAlignment.Center;
+			PagamentoBoxInput.KeyUp += OnBoxKeyUp;
 			// 
 			// label10
 			// 
@@ -347,29 +351,32 @@
 			// 
 			// MeioDePagamentoComboBox
 			// 
-			MeioDePagamentoComboBox.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			MeioDePagamentoComboBox.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
 			MeioDePagamentoComboBox.FormattingEnabled = true;
 			MeioDePagamentoComboBox.Location = new Point(11, 166);
 			MeioDePagamentoComboBox.Name = "MeioDePagamentoComboBox";
-			MeioDePagamentoComboBox.Size = new Size(135, 31);
+			MeioDePagamentoComboBox.Size = new Size(135, 25);
 			MeioDePagamentoComboBox.TabIndex = 33;
+			MeioDePagamentoComboBox.SelectedIndexChanged += OnMeioDePagamentoSelect;
 			// 
 			// BandeiraComboBox
 			// 
-			BandeiraComboBox.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
+			BandeiraComboBox.Enabled = false;
+			BandeiraComboBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
 			BandeiraComboBox.FormattingEnabled = true;
 			BandeiraComboBox.Location = new Point(293, 166);
 			BandeiraComboBox.Name = "BandeiraComboBox";
-			BandeiraComboBox.Size = new Size(121, 31);
+			BandeiraComboBox.Size = new Size(121, 25);
 			BandeiraComboBox.TabIndex = 34;
 			// 
 			// ParcelasComboBox
 			// 
-			ParcelasComboBox.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
+			ParcelasComboBox.Enabled = false;
+			ParcelasComboBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
 			ParcelasComboBox.FormattingEnabled = true;
 			ParcelasComboBox.Location = new Point(422, 167);
 			ParcelasComboBox.Name = "ParcelasComboBox";
-			ParcelasComboBox.Size = new Size(110, 31);
+			ParcelasComboBox.Size = new Size(110, 25);
 			ParcelasComboBox.TabIndex = 35;
 			// 
 			// label12
@@ -420,14 +427,42 @@
 			label14.TabIndex = 39;
 			label14.Text = "Modo:";
 			// 
-			// comboBox1
+			// ModoDePagamentoComboBox
 			// 
-			comboBox1.Font = new Font("Segoe UI", 13F, FontStyle.Bold, GraphicsUnit.Point, 0);
-			comboBox1.FormattingEnabled = true;
-			comboBox1.Location = new Point(152, 166);
-			comboBox1.Name = "comboBox1";
-			comboBox1.Size = new Size(135, 31);
-			comboBox1.TabIndex = 40;
+			ModoDePagamentoComboBox.Enabled = false;
+			ModoDePagamentoComboBox.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
+			ModoDePagamentoComboBox.FormattingEnabled = true;
+			ModoDePagamentoComboBox.Location = new Point(152, 166);
+			ModoDePagamentoComboBox.Name = "ModoDePagamentoComboBox";
+			ModoDePagamentoComboBox.Size = new Size(135, 25);
+			ModoDePagamentoComboBox.TabIndex = 40;
+			ModoDePagamentoComboBox.SelectedIndexChanged += OnModoDePagamentoSelect;
+			// 
+			// AtualizarPagamentoButton
+			// 
+			AtualizarPagamentoButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+			AtualizarPagamentoButton.BackColor = Color.FromArgb(255, 255, 128);
+			AtualizarPagamentoButton.Font = new Font("Segoe UI Black", 15F, FontStyle.Bold);
+			AtualizarPagamentoButton.Location = new Point(12, 323);
+			AtualizarPagamentoButton.Name = "AtualizarPagamentoButton";
+			AtualizarPagamentoButton.Size = new Size(298, 39);
+			AtualizarPagamentoButton.TabIndex = 41;
+			AtualizarPagamentoButton.Text = "Atualizar Pagamento (F5)";
+			AtualizarPagamentoButton.UseVisualStyleBackColor = false;
+			AtualizarPagamentoButton.Click += AtualizarPagamentoButton_Click;
+			// 
+			// ExcluirPagamento
+			// 
+			ExcluirPagamento.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+			ExcluirPagamento.BackColor = Color.FromArgb(255, 128, 128);
+			ExcluirPagamento.Font = new Font("Segoe UI Black", 12F, FontStyle.Bold);
+			ExcluirPagamento.Location = new Point(316, 323);
+			ExcluirPagamento.Name = "ExcluirPagamento";
+			ExcluirPagamento.Size = new Size(215, 39);
+			ExcluirPagamento.TabIndex = 42;
+			ExcluirPagamento.Text = "Excluir Pagamento (F6)";
+			ExcluirPagamento.UseVisualStyleBackColor = false;
+			ExcluirPagamento.Click += ExcluirPagamento_Click;
 			// 
 			// JanelaDePagamento
 			// 
@@ -436,7 +471,9 @@
 			BackColor = SystemColors.WindowFrame;
 			ClientSize = new Size(884, 561);
 			ControlBox = false;
-			Controls.Add(comboBox1);
+			Controls.Add(ExcluirPagamento);
+			Controls.Add(AtualizarPagamentoButton);
+			Controls.Add(ModoDePagamentoComboBox);
 			Controls.Add(label14);
 			Controls.Add(label13);
 			Controls.Add(label6);
@@ -513,6 +550,8 @@
 		private Label label6;
 		private Label label13;
 		private Label label14;
-		private ComboBox comboBox1;
+		private ComboBox ModoDePagamentoComboBox;
+		private Button AtualizarPagamentoButton;
+		private Button ExcluirPagamento;
 	}
 }

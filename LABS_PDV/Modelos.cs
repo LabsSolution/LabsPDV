@@ -8,35 +8,46 @@ namespace Labs.LABS_PDV
 {
 	public class Modelos
 	{
+		public struct PagamentoEfetuado(string DescPagamento, double valor)
+		{
+			/// <summary>
+			/// Descrição do pagamento efetuado
+			/// </summary>
+			public string DescPagamento { get; private set; } = DescPagamento;
+			/// <summary>
+			/// Valor do pagamento efetuado
+			/// </summary>
+			public double Valor { get; private set; } = valor;
+		}
 		//MODELOS DE Objetos (Structs)
-		public struct MeioDePagamento(string Meio, bool Ativo = false, List<ModoDePagamento> Modos = default!)
+		public struct MeioDePagamento(string Meio, bool PodeUltrapassarOValorTotal = false, bool PossuiModos = false, List<ModoDePagamento> Modos = default!)
 		{
 			/// <summary>
 			/// Nome do Meio de Pagamento (Grupo Utilizado como biblioteca para o Modo)
 			/// </summary>
 			public string Meio { get; private set; } = Meio;
 			/// <summary>
-			/// Indica se esse meio de pagamento está ativo
+			/// Determinador se esse meio de pagamento possui mais de um modo.
 			/// </summary>
-			public bool Ativo { get; private set; } = Ativo;
-			//
+			public bool PossuiModos { get; private set; } = PossuiModos;
+			public bool PodeUltrapassarOValorTotal { get; private set; } = PodeUltrapassarOValorTotal;
 			public List<ModoDePagamento> Modos { get; private set; } = Modos;
 		}
 		//
-		public struct ModoDePagamento(string Modo,string Bandeira, bool Ativo,bool PossuiParcelas = false, int Parcelas = 1, double Taxa = 0.0)
+		public struct ModoDePagamento(string Modo,bool PossuiBandeira,List<string> Bandeiras = default!,bool PossuiParcelas = false, int Parcelas = 1, double Taxa = 0.0)
 		{
 			/// <summary>
 			/// Nome do Modo de Pagamento (Usado Para a Biblioteca de Meios de Pagamento)
 			/// </summary>
 			public string Modo { get; private set; } = Modo;
 			/// <summary>
+			/// Diz se esse modo de pagamento Possui Bandeira
+			/// </summary>
+			public bool PossuiBandeira { get; private set; } = PossuiBandeira;
+			/// <summary>
 			/// Bandeira Representante do Modo de Pagamento (Usado em Cartões)
 			/// </summary>
-			public string Bandeira {  get; private set; } = Bandeira;
-			/// <summary>
-			/// Indica se o Modo está ativo ou não
-			/// </summary>
-			public bool Ativo { get; private set; } = Ativo;
+			public List<string> Bandeiras {  get; private set; } = Bandeiras;
 			/// <summary>
 			/// Indicador se Possui Parcelas
 			/// </summary>

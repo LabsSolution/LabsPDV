@@ -32,6 +32,7 @@
 			LabsPDV = new Button();
 			SairButton = new Button();
 			ListaImpressoras = new ComboBox();
+			d = new Button();
 			SuspendLayout();
 			// 
 			// button1
@@ -79,8 +80,21 @@
 			ListaImpressoras.FormattingEnabled = true;
 			ListaImpressoras.Location = new Point(51, 186);
 			ListaImpressoras.Name = "ListaImpressoras";
-			ListaImpressoras.Size = new Size(121, 23);
+			ListaImpressoras.Size = new Size(176, 23);
 			ListaImpressoras.TabIndex = 3;
+			// 
+			// d
+			// 
+			d.BackColor = Color.Salmon;
+			d.BackgroundImageLayout = ImageLayout.None;
+			d.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
+			d.Location = new Point(326, 151);
+			d.Name = "d";
+			d.Size = new Size(160, 80);
+			d.TabIndex = 4;
+			d.Text = "adad";
+			d.UseVisualStyleBackColor = false;
+			d.Click += imprimirButton_Click;
 			// 
 			// LabsMainApp
 			// 
@@ -90,6 +104,7 @@
 			BackgroundImageLayout = ImageLayout.Stretch;
 			ClientSize = new Size(1346, 725);
 			ControlBox = false;
+			Controls.Add(d);
 			Controls.Add(ListaImpressoras);
 			Controls.Add(SairButton);
 			Controls.Add(LabsPDV);
@@ -109,5 +124,6 @@
 		private Button LabsPDV;
 		private Button SairButton;
 		private ComboBox ListaImpressoras;
+		private Button d;
 	}
 }
