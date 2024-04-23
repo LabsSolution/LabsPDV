@@ -31,19 +31,21 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 		{
 			InitializeComponent();
 			this.FormClosed += LimpaEstaJanela;
-			// Carrega a lista de Modos de Pagamento presente nas configs;
-
-			//MeiosDePagamento.Add(new MeioDePagamento("AAAA", new([new ModoDePagamento("a",true,new(),true,10,0)])));
-			//JsonManager.SalvarConfig(MeiosDePagamento,NomeArquivoConfig);
-
-			if (!JsonManager.ChecarConfig(NomeArquivoConfig))
-			{
-				Modais.MostrarAviso("Não foi Encontrado o Arquivo Contendo os Modos de Pagamento!");
-			}
-			// Caso seja encontrado, carrega o arquivo
-			else { MeiosDePagamento = JsonManager.CarregarConfig<List<MeioDePagamento>>(NomeArquivoConfig); }
+			// Carrega a lista de Modos de Pagamento presente na DataBase;
 			//
 		}
+
+		async void GetMeios()
+		{
+			MeiosDePagamento = await CloudDataBase.GetMeiosDePagamentoAsync();
+			//Lista os modos de pagamento
+			MeioDePagamentoComboBox.Items.Clear();
+			foreach (MeioDePagamento Meio in MeiosDePagamento)
+			{
+				MeioDePagamentoComboBox.Items.Add(Meio.Meio);
+			}
+		}
+
 		//--------------------------//
 		//		   METODOS
 		//--------------------------//
@@ -91,16 +93,11 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 		//
 		public void IniciarTelaDePagamento(double ValorTotal)
 		{
-			MeioDePagamentoComboBox.Items.Clear();
 			//
 			SetPagamentoTotalBox(ValorTotal);
 			this.ValorTotal = ValorTotal;
-			//Lista os modos de pagamento
-			foreach (MeioDePagamento Meio in MeiosDePagamento)
-			{
-				MeioDePagamentoComboBox.Items.Add(Meio.Meio);
-			}
 			//
+			GetMeios();
 			UpdateInterface();
 		}
 		//
@@ -283,10 +280,9 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 				{
 					ParcelasComboBox.Enabled = true;
 					//
-					for (int i = 1; i <= modo.Parcelas; i++)
+					foreach (string Parcela in modo.Parcelas)
 					{
-						if (i == 1) { ParcelasComboBox.Items.Add($"{i} Vez"); }
-						else { ParcelasComboBox.Items.Add($"{i} Vezes"); }
+						ParcelasComboBox.Items.Add(Parcela);
 					}
 				}
 				//

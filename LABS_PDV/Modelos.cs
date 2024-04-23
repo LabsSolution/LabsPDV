@@ -22,46 +22,52 @@ namespace Labs.LABS_PDV
 			public double Valor { get; private set; } = valor;
 		}
 		//MODELOS DE Objetos (Structs)
-		public struct MeioDePagamento(string Meio, bool PodeUltrapassarOValorTotal = false, bool PossuiModos = false, List<ModoDePagamento> Modos = default!)
+		public class MeioDePagamento(string Meio, bool PodeUltrapassarOValorTotal = false, bool PossuiModos = false, List<ModoDePagamento> Modos = default!)
 		{
+			[BsonId]
+			[BsonRepresentation(BsonType.ObjectId)]
+			public string ID { get; set; } = null!;
 			/// <summary>
 			/// Nome do Meio de Pagamento (Grupo Utilizado como biblioteca para o Modo)
 			/// </summary>
-			public string Meio { get; private set; } = Meio;
+			public string Meio { get; set; } = Meio;
 			/// <summary>
 			/// Determinador se esse meio de pagamento possui mais de um modo.
 			/// </summary>
-			public bool PossuiModos { get; private set; } = PossuiModos;
-			public bool PodeUltrapassarOValorTotal { get; private set; } = PodeUltrapassarOValorTotal;
-			public List<ModoDePagamento> Modos { get; private set; } = Modos;
+			public bool PossuiModos { get; set; } = PossuiModos;
+			public bool PodeUltrapassarOValorTotal { get; set; } = PodeUltrapassarOValorTotal;
+			public List<ModoDePagamento> Modos { get; set; } = Modos;
 		}
 		//
-		public struct ModoDePagamento(string Modo,bool PossuiBandeira,List<string> Bandeiras = default!,bool PossuiParcelas = false, int Parcelas = 1, double Taxa = 0.0)
+		public class ModoDePagamento(string Modo,bool PossuiBandeira,List<string> Bandeiras = default!,bool PossuiParcelas = false, List<string> Parcelas = default!, double Taxa = 0.0)
 		{
+			[BsonId]
+			[BsonRepresentation(BsonType.ObjectId)]
+			public string ID { get; set; }
 			/// <summary>
 			/// Nome do Modo de Pagamento (Usado Para a Biblioteca de Meios de Pagamento)
 			/// </summary>
-			public string Modo { get; private set; } = Modo;
+			public string Modo { get; set; } = Modo;
 			/// <summary>
 			/// Diz se esse modo de pagamento Possui Bandeira
 			/// </summary>
-			public bool PossuiBandeira { get; private set; } = PossuiBandeira;
+			public bool PossuiBandeira { get; set; } = PossuiBandeira;
 			/// <summary>
 			/// Bandeira Representante do Modo de Pagamento (Usado em Cartões)
 			/// </summary>
-			public List<string> Bandeiras {  get; private set; } = Bandeiras;
+			public List<string> Bandeiras {  get; set; } = Bandeiras;
 			/// <summary>
 			/// Indicador se Possui Parcelas
 			/// </summary>
-			public bool PossuiParcelas { get; private set; } = PossuiParcelas;
+			public bool PossuiParcelas { get; set; } = PossuiParcelas;
 			/// <summary>
 			/// Quantidade de Parcelas do Modo de pagamento
 			/// </summary>
-			public int Parcelas { get; private set; } = Parcelas;
+			public List<string> Parcelas { get; set; } = Parcelas;
 			/// <summary>
 			/// Taxa Adicional do Modo de Pagamento (Geralmente Cartão de Crédito faz isso).
 			/// </summary>
-			public double Taxa { get; private set; } = Taxa;
+			public double Taxa { get; set; } = Taxa;
 		}
 		//
 		//

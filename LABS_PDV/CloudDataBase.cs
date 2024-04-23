@@ -25,14 +25,16 @@ namespace Labs.LABS_PDV
 	{
 		const string CloudConnectionURI = "mongodb+srv://solutionlab:solution%402024@labsolutions.p94r7be.mongodb.net/"; // link para a database na nuvem
 		const string LocalConnectionString = "mongodb://localhost:27017/"; // o servidor local servirá para configurações
+		//
 		const string DataBase = "DataBaseCentral";
 		//Lista de Coleções de DataBase (Constantes)
 		const string ProdutosCollection = "Produtos";
+		const string MeiosDePagamentoCollection = "MeiosDePagamento";
 		
 		//Implementação de Interface Para Busca de Coleções dentro da CloudDataBase
 		private static IMongoCollection<T> ConnectToMongo<T>(in string collection)
 		{
-			var client = new MongoClient(LocalConnectionString);
+			var client = new MongoClient(CloudConnectionURI);
 			var db = client.GetDatabase(DataBase);
 			return db.GetCollection<T>(collection);
 		}
@@ -70,5 +72,30 @@ namespace Labs.LABS_PDV
 			return prodList.ToList().FirstOrDefault()!;
 		}
 		//
+		public static async void RegisterMeioDePagamentoAsync(MeioDePagamento MDP)
+		{
+			var MDPS = ConnectToMongo<MeioDePagamento>(MeiosDePagamentoCollection);
+			await MDPS.InsertOneAsync(MDP);
+		}
+		//
+		public static async void UpdateMeioDePagamentoAsync(MeioDePagamento MDP)
+		{
+			var MDPS = ConnectToMongo<MeioDePagamento>(MeiosDePagamentoCollection);
+			var filter = Builders<MeioDePagamento>.Filter.Eq("ID",MDP.ID);
+			await MDPS.ReplaceOneAsync(filter,MDP,new ReplaceOptions { IsUpsert = true });
+		}
+		//
+		public static async void RemoveMeioDePagamentoAsync(MeioDePagamento MDP)
+		{
+			var MDPS = ConnectToMongo<MeioDePagamento>(MeiosDePagamentoCollection);
+			await MDPS.DeleteOneAsync(c => c.ID == MDP.ID);
+		}
+		//
+		public static async Task<List<MeioDePagamento>> GetMeiosDePagamentoAsync()
+		{
+			var MDPS = ConnectToMongo<MeioDePagamento>(MeiosDePagamentoCollection);
+			var MDPSList = await MDPS.FindAsync(_ => true);
+			return MDPSList.ToList();
+		}
 	}
 }

@@ -29,7 +29,7 @@ namespace Labs.LABS_PDV
 					produto = output[0];
 					return true;
 				}
-				produto = default;
+				produto = default!;
 				return false;
 			};
 		}
