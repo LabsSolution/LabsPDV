@@ -33,17 +33,25 @@
 			label1 = new Label();
 			ListaMeiosRegistrados = new ListView();
 			ColunaMeioDePagamento = new ColumnHeader();
+			ColunaNumModos = new ColumnHeader();
+			ColunaNumBandeiras = new ColumnHeader();
+			ColunaNumParcelas = new ColumnHeader();
 			ModosDePagamentoLabel = new Label();
 			PossuiModosCheckBox = new CheckBox();
 			PossuiBandeirasCheckBox = new CheckBox();
 			BandeirasLabel = new Label();
 			PossuiParcelasCheckBox = new CheckBox();
 			ParcelasLabel = new Label();
-			UU = new Button();
 			button1 = new Button();
 			ModosPagamentoDropDown = new ComboBox();
 			BandeirasDropDown = new ComboBox();
 			ParcelasDropDown = new ComboBox();
+			RemoverModoButton = new Button();
+			RemoverBandeiraButton = new Button();
+			RemoverParcelasButton = new Button();
+			SemLimiteDeValor = new CheckBox();
+			label2 = new Label();
+			label3 = new Label();
 			SuspendLayout();
 			// 
 			// SairButton
@@ -65,7 +73,7 @@
 			MeioDePagamentoBoxInput.Location = new Point(12, 36);
 			MeioDePagamentoBoxInput.Name = "MeioDePagamentoBoxInput";
 			MeioDePagamentoBoxInput.PlaceholderText = "Nome do Meio";
-			MeioDePagamentoBoxInput.Size = new Size(181, 29);
+			MeioDePagamentoBoxInput.Size = new Size(272, 29);
 			MeioDePagamentoBoxInput.TabIndex = 1;
 			MeioDePagamentoBoxInput.KeyUp += MeioDePagamentoBoxInput_KeyUp;
 			// 
@@ -73,6 +81,7 @@
 			// 
 			label1.AutoSize = true;
 			label1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			label1.ForeColor = SystemColors.Window;
 			label1.Location = new Point(12, 12);
 			label1.Name = "label1";
 			label1.Size = new Size(168, 21);
@@ -82,23 +91,47 @@
 			// ListaMeiosRegistrados
 			// 
 			ListaMeiosRegistrados.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-			ListaMeiosRegistrados.Columns.AddRange(new ColumnHeader[] { ColunaMeioDePagamento });
-			ListaMeiosRegistrados.Location = new Point(12, 327);
+			ListaMeiosRegistrados.BackColor = SystemColors.Window;
+			ListaMeiosRegistrados.Columns.AddRange(new ColumnHeader[] { ColunaMeioDePagamento, ColunaNumModos, ColunaNumBandeiras, ColunaNumParcelas });
+			ListaMeiosRegistrados.FullRowSelect = true;
+			ListaMeiosRegistrados.GridLines = true;
+			ListaMeiosRegistrados.Location = new Point(12, 348);
+			ListaMeiosRegistrados.MultiSelect = false;
 			ListaMeiosRegistrados.Name = "ListaMeiosRegistrados";
-			ListaMeiosRegistrados.Size = new Size(860, 176);
+			ListaMeiosRegistrados.Size = new Size(860, 155);
 			ListaMeiosRegistrados.TabIndex = 3;
 			ListaMeiosRegistrados.UseCompatibleStateImageBehavior = false;
 			ListaMeiosRegistrados.View = View.Details;
+			ListaMeiosRegistrados.Click += OnListaMeiosRegistradosClick;
 			// 
 			// ColunaMeioDePagamento
 			// 
-			ColunaMeioDePagamento.Text = "Meios de Pagamento Registrados";
-			ColunaMeioDePagamento.Width = 300;
+			ColunaMeioDePagamento.Text = "Meios Registrados";
+			ColunaMeioDePagamento.Width = 150;
+			// 
+			// ColunaNumModos
+			// 
+			ColunaNumModos.Text = "Num. Modos";
+			ColunaNumModos.TextAlign = HorizontalAlignment.Center;
+			ColunaNumModos.Width = 100;
+			// 
+			// ColunaNumBandeiras
+			// 
+			ColunaNumBandeiras.Text = "Num. Bandeiras";
+			ColunaNumBandeiras.TextAlign = HorizontalAlignment.Center;
+			ColunaNumBandeiras.Width = 120;
+			// 
+			// ColunaNumParcelas
+			// 
+			ColunaNumParcelas.Text = "Num. Parcelas";
+			ColunaNumParcelas.TextAlign = HorizontalAlignment.Center;
+			ColunaNumParcelas.Width = 100;
 			// 
 			// ModosDePagamentoLabel
 			// 
 			ModosDePagamentoLabel.AutoSize = true;
 			ModosDePagamentoLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			ModosDePagamentoLabel.ForeColor = SystemColors.Window;
 			ModosDePagamentoLabel.Location = new Point(12, 68);
 			ModosDePagamentoLabel.Name = "ModosDePagamentoLabel";
 			ModosDePagamentoLabel.Size = new Size(181, 21);
@@ -109,6 +142,7 @@
 			// 
 			PossuiModosCheckBox.AutoSize = true;
 			PossuiModosCheckBox.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			PossuiModosCheckBox.ForeColor = SystemColors.Window;
 			PossuiModosCheckBox.Location = new Point(199, 68);
 			PossuiModosCheckBox.Name = "PossuiModosCheckBox";
 			PossuiModosCheckBox.Size = new Size(85, 25);
@@ -121,6 +155,7 @@
 			// 
 			PossuiBandeirasCheckBox.AutoSize = true;
 			PossuiBandeirasCheckBox.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			PossuiBandeirasCheckBox.ForeColor = SystemColors.Window;
 			PossuiBandeirasCheckBox.Location = new Point(441, 68);
 			PossuiBandeirasCheckBox.Name = "PossuiBandeirasCheckBox";
 			PossuiBandeirasCheckBox.Size = new Size(85, 25);
@@ -134,6 +169,7 @@
 			// 
 			BandeirasLabel.AutoSize = true;
 			BandeirasLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			BandeirasLabel.ForeColor = SystemColors.Window;
 			BandeirasLabel.Location = new Point(345, 68);
 			BandeirasLabel.Name = "BandeirasLabel";
 			BandeirasLabel.Size = new Size(89, 21);
@@ -145,6 +181,7 @@
 			// 
 			PossuiParcelasCheckBox.AutoSize = true;
 			PossuiParcelasCheckBox.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			PossuiParcelasCheckBox.ForeColor = SystemColors.Window;
 			PossuiParcelasCheckBox.Location = new Point(696, 68);
 			PossuiParcelasCheckBox.Name = "PossuiParcelasCheckBox";
 			PossuiParcelasCheckBox.Size = new Size(85, 25);
@@ -158,22 +195,13 @@
 			// 
 			ParcelasLabel.AutoSize = true;
 			ParcelasLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			ParcelasLabel.ForeColor = SystemColors.Window;
 			ParcelasLabel.Location = new Point(600, 68);
 			ParcelasLabel.Name = "ParcelasLabel";
 			ParcelasLabel.Size = new Size(77, 21);
 			ParcelasLabel.TabIndex = 11;
 			ParcelasLabel.Text = "Parcelas:";
 			ParcelasLabel.Visible = false;
-			// 
-			// UU
-			// 
-			UU.Location = new Point(311, 509);
-			UU.Name = "UU";
-			UU.Size = new Size(75, 23);
-			UU.TabIndex = 16;
-			UU.Text = "UU";
-			UU.UseVisualStyleBackColor = true;
-			UU.Click += UU_Click;
 			// 
 			// button1
 			// 
@@ -186,6 +214,7 @@
 			button1.TabIndex = 17;
 			button1.Text = "Adicionar Meio";
 			button1.UseVisualStyleBackColor = false;
+			button1.Click += AdicionarMeioDePagamento_Click;
 			// 
 			// ModosPagamentoDropDown
 			// 
@@ -194,7 +223,7 @@
 			ModosPagamentoDropDown.FormattingEnabled = true;
 			ModosPagamentoDropDown.Location = new Point(12, 92);
 			ModosPagamentoDropDown.Name = "ModosPagamentoDropDown";
-			ModosPagamentoDropDown.Size = new Size(272, 218);
+			ModosPagamentoDropDown.Size = new Size(272, 197);
 			ModosPagamentoDropDown.TabIndex = 18;
 			ModosPagamentoDropDown.Visible = false;
 			ModosPagamentoDropDown.SelectedIndexChanged += OnDropDownIndexChange;
@@ -207,7 +236,7 @@
 			BandeirasDropDown.FormattingEnabled = true;
 			BandeirasDropDown.Location = new Point(345, 92);
 			BandeirasDropDown.Name = "BandeirasDropDown";
-			BandeirasDropDown.Size = new Size(181, 218);
+			BandeirasDropDown.Size = new Size(181, 197);
 			BandeirasDropDown.TabIndex = 19;
 			BandeirasDropDown.Visible = false;
 			BandeirasDropDown.SelectedIndexChanged += OnDropDownIndexChange;
@@ -220,11 +249,88 @@
 			ParcelasDropDown.FormattingEnabled = true;
 			ParcelasDropDown.Location = new Point(600, 92);
 			ParcelasDropDown.Name = "ParcelasDropDown";
-			ParcelasDropDown.Size = new Size(181, 218);
+			ParcelasDropDown.Size = new Size(181, 197);
 			ParcelasDropDown.TabIndex = 20;
 			ParcelasDropDown.Visible = false;
 			ParcelasDropDown.SelectedIndexChanged += OnDropDownIndexChange;
 			ParcelasDropDown.KeyUp += OnDropDownKeyUP;
+			// 
+			// RemoverModoButton
+			// 
+			RemoverModoButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+			RemoverModoButton.BackColor = Color.FromArgb(255, 128, 128);
+			RemoverModoButton.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			RemoverModoButton.Location = new Point(12, 285);
+			RemoverModoButton.Name = "RemoverModoButton";
+			RemoverModoButton.Size = new Size(105, 36);
+			RemoverModoButton.TabIndex = 21;
+			RemoverModoButton.Text = "Remover";
+			RemoverModoButton.UseVisualStyleBackColor = false;
+			RemoverModoButton.Visible = false;
+			RemoverModoButton.Click += OnRemoverButtonClick;
+			// 
+			// RemoverBandeiraButton
+			// 
+			RemoverBandeiraButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+			RemoverBandeiraButton.BackColor = Color.FromArgb(255, 128, 128);
+			RemoverBandeiraButton.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			RemoverBandeiraButton.Location = new Point(345, 285);
+			RemoverBandeiraButton.Name = "RemoverBandeiraButton";
+			RemoverBandeiraButton.Size = new Size(105, 36);
+			RemoverBandeiraButton.TabIndex = 22;
+			RemoverBandeiraButton.Text = "Remover";
+			RemoverBandeiraButton.UseVisualStyleBackColor = false;
+			RemoverBandeiraButton.Visible = false;
+			RemoverBandeiraButton.Click += OnRemoverButtonClick;
+			// 
+			// RemoverParcelasButton
+			// 
+			RemoverParcelasButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+			RemoverParcelasButton.BackColor = Color.FromArgb(255, 128, 128);
+			RemoverParcelasButton.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			RemoverParcelasButton.Location = new Point(600, 285);
+			RemoverParcelasButton.Name = "RemoverParcelasButton";
+			RemoverParcelasButton.Size = new Size(105, 36);
+			RemoverParcelasButton.TabIndex = 23;
+			RemoverParcelasButton.Text = "Remover";
+			RemoverParcelasButton.UseVisualStyleBackColor = false;
+			RemoverParcelasButton.Visible = false;
+			RemoverParcelasButton.Click += OnRemoverButtonClick;
+			// 
+			// SemLimiteDeValor
+			// 
+			SemLimiteDeValor.AutoSize = true;
+			SemLimiteDeValor.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			SemLimiteDeValor.ForeColor = SystemColors.Window;
+			SemLimiteDeValor.Location = new Point(208, 12);
+			SemLimiteDeValor.Name = "SemLimiteDeValor";
+			SemLimiteDeValor.Size = new Size(76, 25);
+			SemLimiteDeValor.TabIndex = 24;
+			SemLimiteDeValor.Text = "SLDV?";
+			SemLimiteDeValor.UseVisualStyleBackColor = true;
+			SemLimiteDeValor.CheckedChanged += OnPossuiCheckChange;
+			// 
+			// label2
+			// 
+			label2.AutoSize = true;
+			label2.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			label2.ForeColor = SystemColors.Window;
+			label2.Location = new Point(618, 9);
+			label2.Name = "label2";
+			label2.Size = new Size(254, 21);
+			label2.TabIndex = 25;
+			label2.Text = "SLDV : (Sem Limitador De Valor)";
+			// 
+			// label3
+			// 
+			label3.AutoSize = true;
+			label3.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			label3.ForeColor = SystemColors.Window;
+			label3.Location = new Point(12, 324);
+			label3.Name = "label3";
+			label3.Size = new Size(153, 21);
+			label3.TabIndex = 26;
+			label3.Text = "Meios Registrados:";
 			// 
 			// MeiosDePagamentoConfig
 			// 
@@ -233,11 +339,13 @@
 			BackColor = SystemColors.WindowFrame;
 			ClientSize = new Size(884, 561);
 			ControlBox = false;
+			Controls.Add(label3);
+			Controls.Add(label2);
+			Controls.Add(SemLimiteDeValor);
 			Controls.Add(ParcelasDropDown);
 			Controls.Add(BandeirasDropDown);
 			Controls.Add(ModosPagamentoDropDown);
 			Controls.Add(button1);
-			Controls.Add(UU);
 			Controls.Add(PossuiParcelasCheckBox);
 			Controls.Add(ParcelasLabel);
 			Controls.Add(PossuiBandeirasCheckBox);
@@ -248,7 +356,11 @@
 			Controls.Add(label1);
 			Controls.Add(MeioDePagamentoBoxInput);
 			Controls.Add(SairButton);
+			Controls.Add(RemoverParcelasButton);
+			Controls.Add(RemoverBandeiraButton);
+			Controls.Add(RemoverModoButton);
 			FormBorderStyle = FormBorderStyle.FixedSingle;
+			KeyPreview = true;
 			MaximizeBox = false;
 			MinimizeBox = false;
 			Name = "MeiosDePagamentoConfig";
@@ -271,10 +383,18 @@
 		private Label BandeirasLabel;
 		private CheckBox PossuiParcelasCheckBox;
 		private Label ParcelasLabel;
-		private Button UU;
 		private Button button1;
 		private ComboBox ModosPagamentoDropDown;
 		private ComboBox BandeirasDropDown;
 		private ComboBox ParcelasDropDown;
+		private Button RemoverModoButton;
+		private Button RemoverBandeiraButton;
+		private Button RemoverParcelasButton;
+		private ColumnHeader ColunaNumModos;
+		private ColumnHeader ColunaNumBandeiras;
+		private ColumnHeader ColunaNumParcelas;
+		private CheckBox SemLimiteDeValor;
+		private Label label2;
+		private Label label3;
 	}
 }

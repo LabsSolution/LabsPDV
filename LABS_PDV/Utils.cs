@@ -19,6 +19,10 @@ namespace Labs.LABS_PDV
 		//------------------------------------//
 		//Verificadores de acesso público
 		//------------------------------------//
+		public static bool IsNotValidString(string text)
+		{
+			return string.IsNullOrWhiteSpace(text);
+		}
 		/// <summary>
 		/// Retorna um produto usando seu código de registro
 		/// </summary>

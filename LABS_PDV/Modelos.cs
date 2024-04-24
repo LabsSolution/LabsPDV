@@ -39,11 +39,11 @@ namespace Labs.LABS_PDV
 			public List<ModoDePagamento> Modos { get; set; } = Modos;
 		}
 		//
-		public class ModoDePagamento(string Modo,bool PossuiBandeira,List<string> Bandeiras = default!,bool PossuiParcelas = false, List<string> Parcelas = default!, double Taxa = 0.0)
+		public class ModoDePagamento(string Modo,bool PossuiBandeira = false,List<string> Bandeiras = default!,bool PossuiParcelas = false, List<string> Parcelas = default!, double Taxa = 0.0)
 		{
 			[BsonId]
 			[BsonRepresentation(BsonType.ObjectId)]
-			public string ID { get; set; }
+			public string ID { get; set; } = null!;
 			/// <summary>
 			/// Nome do Modo de Pagamento (Usado Para a Biblioteca de Meios de Pagamento)
 			/// </summary>

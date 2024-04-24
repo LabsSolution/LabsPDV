@@ -24,7 +24,10 @@ namespace Labs.Janelas.Configuracoes
 		// Essa classe só dispõe de Paineis de Configuração, então aqui só terá chamadas de evento
 		private void MeiosDePagamentoConfigButton_Click(object sender, EventArgs e)
 		{
-			LABS_PDV_MAIN.IniciarDependencia<MeiosDePagamentoConfig>();
+			LABS_PDV_MAIN.IniciarDependencia<MeiosDePagamentoConfig>(app =>
+			{
+				app.LoadFromDataBase();
+			});
 		}
 		//
 		//PREVENÇÃO DE MOVIMENTO DE JANELA // Qualquer janela que tiver a propriedade de prevenção de movimento deve herdar esse Método

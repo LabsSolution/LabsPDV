@@ -81,7 +81,7 @@ namespace Labs.LABS_PDV
 		public static async void UpdateMeioDePagamentoAsync(MeioDePagamento MDP)
 		{
 			var MDPS = ConnectToMongo<MeioDePagamento>(MeiosDePagamentoCollection);
-			var filter = Builders<MeioDePagamento>.Filter.Eq("ID",MDP.ID);
+			var filter = Builders<MeioDePagamento>.Filter.Eq("Meio",MDP.Meio);
 			await MDPS.ReplaceOneAsync(filter,MDP,new ReplaceOptions { IsUpsert = true });
 		}
 		//
