@@ -52,6 +52,7 @@
 			SemLimiteDeValor = new CheckBox();
 			label2 = new Label();
 			label3 = new Label();
+			button2 = new Button();
 			SuspendLayout();
 			// 
 			// SairButton
@@ -332,6 +333,19 @@
 			label3.TabIndex = 26;
 			label3.Text = "Meios Registrados:";
 			// 
+			// button2
+			// 
+			button2.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+			button2.BackColor = Color.FromArgb(255, 255, 128);
+			button2.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			button2.Location = new Point(290, 509);
+			button2.Name = "button2";
+			button2.Size = new Size(272, 40);
+			button2.TabIndex = 27;
+			button2.Text = "Remover Meio";
+			button2.UseVisualStyleBackColor = false;
+			button2.Click += RemoverMeioDePagamentoClick;
+			// 
 			// MeiosDePagamentoConfig
 			// 
 			AutoScaleDimensions = new SizeF(7F, 15F);
@@ -339,6 +353,7 @@
 			BackColor = SystemColors.WindowFrame;
 			ClientSize = new Size(884, 561);
 			ControlBox = false;
+			Controls.Add(button2);
 			Controls.Add(label3);
 			Controls.Add(label2);
 			Controls.Add(SemLimiteDeValor);
@@ -396,5 +411,6 @@
 		private CheckBox SemLimiteDeValor;
 		private Label label2;
 		private Label label3;
+		private Button button2;
 	}
 }

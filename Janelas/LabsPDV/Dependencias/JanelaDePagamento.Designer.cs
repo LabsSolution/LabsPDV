@@ -174,6 +174,7 @@
 			CancelarButton.TabIndex = 13;
 			CancelarButton.Text = "Cancelar (F3)";
 			CancelarButton.UseVisualStyleBackColor = false;
+			CancelarButton.Click += CancelarButton_Click;
 			// 
 			// FinalizarButton
 			// 
@@ -186,6 +187,7 @@
 			FinalizarButton.TabIndex = 14;
 			FinalizarButton.Text = "Finalizar (F2)";
 			FinalizarButton.UseVisualStyleBackColor = false;
+			FinalizarButton.Click += FinalizarButton_Clicks;
 			// 
 			// ValorRecebidoBox
 			// 

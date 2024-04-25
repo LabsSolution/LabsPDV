@@ -138,7 +138,7 @@ namespace Labs.Janelas.Configuracoes.Dependencias
 			CheckBox? check = sender as CheckBox;
 			//
 			//Manipulação de dados
-			if(check == SemLimiteDeValor)
+			if (check == SemLimiteDeValor)
 			{
 				MeioDePagamentoModel.PodeUltrapassarOValorTotal = SemLimiteDeValor.Checked;
 			}
@@ -316,19 +316,27 @@ namespace Labs.Janelas.Configuracoes.Dependencias
 
 		private void OnListaMeiosRegistradosClick(object sender, EventArgs e)
 		{
-			if(ListaMeiosRegistrados.SelectedIndices.Count > 0)
+			if (ListaMeiosRegistrados.SelectedIndices.Count > 0)
 			{
 				var index = ListaMeiosRegistrados.SelectedIndices[0];
-				if(MeiosDePagamento.Count > index)
+				if (MeiosDePagamento.Count > index)
 				{
-					MeioDePagamentoModel = MeiosDePagamento[index];
+					var nm = MeiosDePagamento[index];
+					//
+					MeioDePagamentoModel = new MeioDePagamento(nm.Meio)
+					{
+						PossuiModos = nm.PossuiModos,
+						PodeUltrapassarOValorTotal = nm.PodeUltrapassarOValorTotal,
+						Modos = nm.Modos,
+					};
+					//
 					SemLimiteDeValor.Checked = MeioDePagamentoModel.PodeUltrapassarOValorTotal;
-					if(MeioDePagamentoModel != null)
+					if (MeioDePagamentoModel != null)
 					{
 						MeioDePagamentoBoxInput.Text = MeioDePagamentoModel.Meio;
 						//
 						PossuiModosCheckBox.Checked = MeioDePagamentoModel.PossuiModos;
-						// a chamada é depois pois o resetModos depende da variável acima
+						// a chamada é depois pois o ResetModos depende da variável acima
 						ResetModos();
 						if (MeioDePagamentoModel.PossuiModos)
 						{
@@ -348,13 +356,21 @@ namespace Labs.Janelas.Configuracoes.Dependencias
 		}
 		//
 		//
-		private void AdicionarMeioDePagamento_Click(object sender, EventArgs e)
+		private async void AdicionarMeioDePagamento_Click(object sender, EventArgs e)
 		{
+			if (Utils.IsNotValidString(MeioDePagamentoBoxInput.Text))
+			{
+				Modais.MostrarAviso("Não é Possivel Adicionar um Meio com Nome Inválido");
+				return;
+			}
 			//
 			MeioDePagamentoModel.Meio = MeioDePagamentoBoxInput.Text;
 			//
-			if (MeiosDePagamento.Contains(MeioDePagamentoModel))
+			var t = MeiosDePagamento.FindAll(x => x.Meio == MeioDePagamentoBoxInput.Text);
+			if (t.Count > 0)
 			{
+				var ID = await CloudDataBase.GetMeioDePagamentoIDByNameAsync(MeioDePagamentoModel.Meio);
+				MeioDePagamentoModel.ID = ID;
 				CloudDataBase.UpdateMeioDePagamentoAsync(MeioDePagamentoModel);
 				Modais.MostrarInfo("Meio de Pagamento Atualizado Com Sucesso!");
 				LoadFromDataBase();
@@ -362,11 +378,24 @@ namespace Labs.Janelas.Configuracoes.Dependencias
 			else
 			{
 				CloudDataBase.RegisterMeioDePagamentoAsync(MeioDePagamentoModel);
-				MeiosDePagamento.Add(MeioDePagamentoModel);
 				Modais.MostrarInfo("Meio de Pagamento Adicionado Com Sucesso!");
+				LoadFromDataBase();
 			}
 			Reset();
 		}
 
+		private void RemoverMeioDePagamentoClick(object sender, EventArgs e)
+		{
+			if(ListaMeiosRegistrados.SelectedIndices.Count <= 0) { Modais.MostrarAviso("Você Precisa selecionar um meio para remover!"); return; }
+			var r = Modais.MostrarPergunta("Você Realmente Deseja Remover o Meio de Pagamento Selecionado?");
+			if (r == DialogResult.Yes)
+			{
+				var index = ListaMeiosRegistrados.SelectedIndices[0];
+				var mSelec = MeiosDePagamento[index];
+				CloudDataBase.RemoveMeioDePagamentoAsync(mSelec);
+				Modais.MostrarInfo("Meio de Pagamento Removido com Sucesso!");
+				LoadFromDataBase();
+			}
+		}
 	}
 }

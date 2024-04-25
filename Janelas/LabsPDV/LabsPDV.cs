@@ -164,7 +164,7 @@ namespace Labs.Janelas.LabsPDV
 			{
 				//Atrelamos o evento para a finalização
 				app.FormClosed += JanelaDePagamento_FormClosed;
-				app.IniciarTelaDePagamento(PagamentoTotal);
+				app.IniciarTelaDePagamento(PagamentoTotal,Produtos);
 			});
 		}
 

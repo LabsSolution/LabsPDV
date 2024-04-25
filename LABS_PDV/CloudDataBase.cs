@@ -59,6 +59,23 @@ namespace Labs.LABS_PDV
 			await produtos.ReplaceOneAsync(filter, produto, new ReplaceOptions { IsUpsert = true }); // IsUpsert Garante que o produto será atualizado;
 		}
 		//
+		public static async Task AbaterProdutosEmEstoqueAsync(List<Produto> produtos)
+		{
+			//Atualiza a lista com os valores de estoque alterados
+			var pColl = ConnectToMongo<Produto>(ProdutosCollection);
+			//
+			foreach (var p in produtos)
+			{
+				//
+				var pr = await GetProdutoByCodBarrasAsync(p.CodBarras);
+				//
+				pr.Quantidade -= p.Quantidade;
+				//
+				var filter = Builders<Produto>.Filter.Eq("ID", p.ID);
+				await pColl.ReplaceOneAsync(filter, pr, new ReplaceOptions { IsUpsert = true });
+			}
+		}
+		//
 		public static async void RemoveProdutoAsync(Produto produto)
 		{
 			var produtos = ConnectToMongo<Produto>(ProdutosCollection);
@@ -96,6 +113,13 @@ namespace Labs.LABS_PDV
 			var MDPS = ConnectToMongo<MeioDePagamento>(MeiosDePagamentoCollection);
 			var MDPSList = await MDPS.FindAsync(_ => true);
 			return MDPSList.ToList();
+		}
+		//
+		public static async Task<string> GetMeioDePagamentoIDByNameAsync(string Name)
+		{
+			var MDPS = ConnectToMongo<MeioDePagamento>(MeiosDePagamentoCollection);
+			var MDPSList = await MDPS.FindAsync(x => x.Meio == Name);
+			return MDPSList.FirstOrDefault().ID;
 		}
 	}
 }
