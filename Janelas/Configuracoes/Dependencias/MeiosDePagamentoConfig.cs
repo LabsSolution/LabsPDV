@@ -41,7 +41,7 @@ namespace Labs.Janelas.Configuracoes.Dependencias
 				//
 				if (meio.PossuiModos)
 				{
-					meio.Modos.ForEach(x => { nBandeiras = x.Bandeiras.Count; nParcelas = x.Parcelas.Count; });
+					meio.Modos.ForEach(x => { nBandeiras = x.Bandeiras.Count; nParcelas = x.Parcelas; });
 				}
 				//
 				var item = new ListViewItem([$"{meio.Meio}", $"{nModos}", $"{nBandeiras}", $"{nParcelas}"]);
@@ -56,7 +56,7 @@ namespace Labs.Janelas.Configuracoes.Dependencias
 		void ResetModos()
 		{
 			BandeirasDropDown.Items.Clear();
-			ParcelasDropDown.Items.Clear();
+			ParcelasBoxInput.Text = null;
 			//Esconde os campos
 			BandeirasLabel.Visible = PossuiModosCheckBox.Checked;
 			PossuiBandeirasCheckBox.Visible = PossuiModosCheckBox.Checked;
@@ -67,8 +67,8 @@ namespace Labs.Janelas.Configuracoes.Dependencias
 			ParcelasLabel.Visible = PossuiModosCheckBox.Checked;
 			PossuiParcelasCheckBox.Visible = PossuiModosCheckBox.Checked;
 			PossuiParcelasCheckBox.Checked = false;
-			ParcelasDropDown.Visible = false;
-			RemoverParcelasButton.Visible = false;
+			ParcelasBoxInput.Visible = false;
+			NParcelaLabel.Visible = false;
 		}
 		//
 		void Reset()
@@ -78,7 +78,7 @@ namespace Labs.Janelas.Configuracoes.Dependencias
 			PossuiModosCheckBox.Checked = false;
 			RemoverModoButton.Visible = false;
 			BandeirasDropDown.Items.Clear();
-			ParcelasDropDown.Items.Clear();
+			ParcelasBoxInput.Text= null;
 			MeioDePagamentoModel = new("");
 			MeioDePagamentoModel.Modos = new();
 			ResetModos();
@@ -108,20 +108,6 @@ namespace Labs.Janelas.Configuracoes.Dependencias
 				}
 			}
 			else { Modais.MostrarAviso("Selecione uma Bandeira Para Remover"); }
-		}
-		void RemoveParcela()
-		{
-			int index = ParcelasDropDown.SelectedIndex;
-			if (index != -1)
-			{
-				var modo = MeioDePagamentoModel.Modos[index];
-				if (modo.Parcelas.Contains(ParcelasDropDown.Items[index]))
-				{
-					ParcelasDropDown.Items.RemoveAt(index);
-					modo.Parcelas.RemoveAt(index);
-				}
-			}
-			else { Modais.MostrarAviso("Selecione uma Parcela Para Remover"); }
 		}
 		//-------------------------//
 		//         EVENTOS
@@ -188,11 +174,9 @@ namespace Labs.Janelas.Configuracoes.Dependencias
 					{
 						t.PossuiParcelas = PossuiParcelasCheckBox.Checked;
 						//
-						ParcelasDropDown.Visible = check.Checked;
-						ParcelasDropDown.Enabled = check.Checked;
+						NParcelaLabel.Visible = check.Checked;
 						//
-						RemoverParcelasButton.Visible = check.Checked;
-						RemoverParcelasButton.BringToFront();
+						ParcelasBoxInput.Visible = check.Checked;
 					}
 				}
 			}
@@ -245,21 +229,15 @@ namespace Labs.Janelas.Configuracoes.Dependencias
 						BandeirasDropDown.Text = null;
 					}
 				}
-				if (sender == ParcelasDropDown) // Aqui manejamos a adição de Parcelas
+				if (sender == ParcelasBoxInput) // Aqui manejamos a adição de Parcelas
 				{
-					if (Utils.IsNotValidString(ParcelasDropDown.Text)) { return; }// se não tem nada escrito não tem porque continuar
+					if (!Utils.TryParseToInt(ParcelasBoxInput.Text, out int value)) { return; }// se não tem nada escrito não tem porque continuar
 																				  //
 					var t = MeioDePagamentoModel.Modos.Find(x => x.Modo == ModosPagamentoDropDown.Text);
 					if (t != null)
 					{
-						var tt = t.Parcelas.Find(x => x == ParcelasDropDown.Text);
-						if (tt != null) { return; } // Mesma lógica das bandeiras
-													//
-						t.Parcelas.Add(ParcelasDropDown.Text);
 						//
-						ParcelasDropDown.Items.Add(ParcelasDropDown.Text);
-						//Limpamos o texto
-						ParcelasDropDown.Text = null;
+						t.Parcelas = value;
 					}
 				}
 			}
@@ -277,12 +255,11 @@ namespace Labs.Janelas.Configuracoes.Dependencias
 					{
 						//Limpamos os dois drop downs para poder atualizar
 						BandeirasDropDown.Items.Clear();
-						ParcelasDropDown.Items.Clear();
+						ParcelasBoxInput.Text = null;
 						//
 						// Fazemos com foreach imbutido para economizar espaço ;D
 						modo.Bandeiras.ForEach(x => BandeirasDropDown.Items.Add(x));
-						modo.Parcelas.ForEach(x => ParcelasDropDown.Items.Add(x));
-						//
+						ParcelasBoxInput.Text = $"{modo.Parcelas}";
 						//
 						BandeirasDropDown.Visible = modo.PossuiBandeira;
 						RemoverBandeiraButton.Visible = modo.PossuiBandeira;
@@ -290,9 +267,8 @@ namespace Labs.Janelas.Configuracoes.Dependencias
 						PossuiBandeirasCheckBox.Checked = modo.PossuiBandeira;
 						//
 						//
-						ParcelasDropDown.Visible = modo.PossuiParcelas;
-						RemoverParcelasButton.Visible = modo.PossuiParcelas;
-						RemoverParcelasButton.BringToFront();
+						ParcelasBoxInput.Visible = modo.PossuiParcelas;
+						NParcelaLabel.Visible = modo.PossuiParcelas;
 						PossuiParcelasCheckBox.Checked = modo.PossuiParcelas;
 					}
 				}
@@ -311,7 +287,6 @@ namespace Labs.Janelas.Configuracoes.Dependencias
 		{
 			if (sender == RemoverModoButton) { RemoveModo(); }
 			if (sender == RemoverBandeiraButton) { RemoveBandeira(); }
-			if (sender == RemoverParcelasButton) { RemoveParcela(); }
 		}
 
 		private void OnListaMeiosRegistradosClick(object sender, EventArgs e)
@@ -346,7 +321,8 @@ namespace Labs.Janelas.Configuracoes.Dependencias
 								ModosPagamentoDropDown.Items.Add(x.Modo);
 								//
 								x.Bandeiras.ForEach(x => { BandeirasDropDown.Items.Add(x); });
-								x.Parcelas.ForEach(x => { ParcelasDropDown.Items.Add(x); });
+								//
+								// Adiciona o numero de parcelas na tela de config
 								//
 							});
 						}

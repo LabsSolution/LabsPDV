@@ -45,14 +45,14 @@
 			button1 = new Button();
 			ModosPagamentoDropDown = new ComboBox();
 			BandeirasDropDown = new ComboBox();
-			ParcelasDropDown = new ComboBox();
 			RemoverModoButton = new Button();
 			RemoverBandeiraButton = new Button();
-			RemoverParcelasButton = new Button();
 			SemLimiteDeValor = new CheckBox();
 			label2 = new Label();
 			label3 = new Label();
 			button2 = new Button();
+			ParcelasBoxInput = new TextBox();
+			NParcelaLabel = new Label();
 			SuspendLayout();
 			// 
 			// SairButton
@@ -243,19 +243,6 @@
 			BandeirasDropDown.SelectedIndexChanged += OnDropDownIndexChange;
 			BandeirasDropDown.KeyUp += OnDropDownKeyUP;
 			// 
-			// ParcelasDropDown
-			// 
-			ParcelasDropDown.DropDownStyle = ComboBoxStyle.Simple;
-			ParcelasDropDown.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-			ParcelasDropDown.FormattingEnabled = true;
-			ParcelasDropDown.Location = new Point(600, 92);
-			ParcelasDropDown.Name = "ParcelasDropDown";
-			ParcelasDropDown.Size = new Size(181, 197);
-			ParcelasDropDown.TabIndex = 20;
-			ParcelasDropDown.Visible = false;
-			ParcelasDropDown.SelectedIndexChanged += OnDropDownIndexChange;
-			ParcelasDropDown.KeyUp += OnDropDownKeyUP;
-			// 
 			// RemoverModoButton
 			// 
 			RemoverModoButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
@@ -283,20 +270,6 @@
 			RemoverBandeiraButton.UseVisualStyleBackColor = false;
 			RemoverBandeiraButton.Visible = false;
 			RemoverBandeiraButton.Click += OnRemoverButtonClick;
-			// 
-			// RemoverParcelasButton
-			// 
-			RemoverParcelasButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-			RemoverParcelasButton.BackColor = Color.FromArgb(255, 128, 128);
-			RemoverParcelasButton.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-			RemoverParcelasButton.Location = new Point(600, 285);
-			RemoverParcelasButton.Name = "RemoverParcelasButton";
-			RemoverParcelasButton.Size = new Size(105, 36);
-			RemoverParcelasButton.TabIndex = 23;
-			RemoverParcelasButton.Text = "Remover";
-			RemoverParcelasButton.UseVisualStyleBackColor = false;
-			RemoverParcelasButton.Visible = false;
-			RemoverParcelasButton.Click += OnRemoverButtonClick;
 			// 
 			// SemLimiteDeValor
 			// 
@@ -346,6 +319,28 @@
 			button2.UseVisualStyleBackColor = false;
 			button2.Click += RemoverMeioDePagamentoClick;
 			// 
+			// ParcelasBoxInput
+			// 
+			ParcelasBoxInput.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+			ParcelasBoxInput.Location = new Point(706, 92);
+			ParcelasBoxInput.Name = "ParcelasBoxInput";
+			ParcelasBoxInput.Size = new Size(75, 29);
+			ParcelasBoxInput.TabIndex = 28;
+			ParcelasBoxInput.Visible = false;
+			ParcelasBoxInput.KeyUp += OnDropDownKeyUP;
+			// 
+			// NParcelaLabel
+			// 
+			NParcelaLabel.AutoSize = true;
+			NParcelaLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			NParcelaLabel.ForeColor = SystemColors.Window;
+			NParcelaLabel.Location = new Point(600, 92);
+			NParcelaLabel.Name = "NParcelaLabel";
+			NParcelaLabel.Size = new Size(100, 21);
+			NParcelaLabel.TabIndex = 29;
+			NParcelaLabel.Text = "N° Parcelas:";
+			NParcelaLabel.Visible = false;
+			// 
 			// MeiosDePagamentoConfig
 			// 
 			AutoScaleDimensions = new SizeF(7F, 15F);
@@ -353,11 +348,12 @@
 			BackColor = SystemColors.WindowFrame;
 			ClientSize = new Size(884, 561);
 			ControlBox = false;
+			Controls.Add(NParcelaLabel);
+			Controls.Add(ParcelasBoxInput);
 			Controls.Add(button2);
 			Controls.Add(label3);
 			Controls.Add(label2);
 			Controls.Add(SemLimiteDeValor);
-			Controls.Add(ParcelasDropDown);
 			Controls.Add(BandeirasDropDown);
 			Controls.Add(ModosPagamentoDropDown);
 			Controls.Add(button1);
@@ -371,7 +367,6 @@
 			Controls.Add(label1);
 			Controls.Add(MeioDePagamentoBoxInput);
 			Controls.Add(SairButton);
-			Controls.Add(RemoverParcelasButton);
 			Controls.Add(RemoverBandeiraButton);
 			Controls.Add(RemoverModoButton);
 			FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -401,10 +396,8 @@
 		private Button button1;
 		private ComboBox ModosPagamentoDropDown;
 		private ComboBox BandeirasDropDown;
-		private ComboBox ParcelasDropDown;
 		private Button RemoverModoButton;
 		private Button RemoverBandeiraButton;
-		private Button RemoverParcelasButton;
 		private ColumnHeader ColunaNumModos;
 		private ColumnHeader ColunaNumBandeiras;
 		private ColumnHeader ColunaNumParcelas;
@@ -412,5 +405,7 @@
 		private Label label2;
 		private Label label3;
 		private Button button2;
+		private TextBox ParcelasBoxInput;
+		private Label NParcelaLabel;
 	}
 }

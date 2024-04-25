@@ -39,8 +39,6 @@
 			QuantEstoqueInput = new TextBox();
 			DescricaoManualInput = new TextBox();
 			DescricaoProdutoOutput = new TextBox();
-			label5 = new Label();
-			IDProduto = new Label();
 			label4 = new Label();
 			label3 = new Label();
 			label2 = new Label();
@@ -95,7 +93,7 @@
 			// 
 			SairButton.BackColor = Color.FromArgb(255, 128, 128);
 			SairButton.Font = new Font("Segoe UI", 27.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-			SairButton.Location = new Point(592, 464);
+			SairButton.Location = new Point(588, 465);
 			SairButton.Name = "SairButton";
 			SairButton.Size = new Size(281, 84);
 			SairButton.TabIndex = 23;
@@ -166,27 +164,6 @@
 			DescricaoProdutoOutput.TabIndex = 16;
 			DescricaoProdutoOutput.TextAlign = HorizontalAlignment.Center;
 			// 
-			// label5
-			// 
-			label5.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-			label5.AutoSize = true;
-			label5.Font = new Font("Segoe UI Symbol", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-			label5.Location = new Point(417, 464);
-			label5.Name = "label5";
-			label5.Size = new Size(42, 30);
-			label5.TabIndex = 24;
-			label5.Text = "ID:";
-			// 
-			// IDProduto
-			// 
-			IDProduto.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-			IDProduto.AutoSize = true;
-			IDProduto.Font = new Font("Segoe UI Symbol", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-			IDProduto.Location = new Point(417, 497);
-			IDProduto.Name = "IDProduto";
-			IDProduto.Size = new Size(0, 30);
-			IDProduto.TabIndex = 25;
-			// 
 			// AtualizarProduto
 			// 
 			AutoScaleDimensions = new SizeF(7F, 15F);
@@ -194,8 +171,6 @@
 			BackColor = SystemColors.WindowFrame;
 			ClientSize = new Size(884, 561);
 			ControlBox = false;
-			Controls.Add(IDProduto);
-			Controls.Add(label5);
 			Controls.Add(SairButton);
 			Controls.Add(AtualizarButton);
 			Controls.Add(CodBarras);
@@ -225,7 +200,5 @@
 		private TextBox QuantEstoqueInput;
 		private TextBox DescricaoManualInput;
 		private TextBox DescricaoProdutoOutput;
-		private Label label5;
-		private Label IDProduto;
 	}
 }

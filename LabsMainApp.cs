@@ -1,8 +1,10 @@
-﻿using Labs.Janelas.Configuracoes;
+﻿using Labs.Janelas;
+using Labs.Janelas.Configuracoes;
 using Labs.Janelas.LabsEstoque;
 using Labs.Janelas.LabsPDV;
 using Labs.Janelas.LabsPDV.Dependencias;
 using Labs.LABS_PDV;
+using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,6 +24,7 @@ namespace Labs
 		//Referencia de Instância
 		public static LabsMainApp App { get; private set; } = null!; //Declaramos como anulável já que de inicio não terá uma intância na memória.
 		public static string AppName { get; private set; } = "JanelaPrincipal"; //Determinado o nome dessa janela para iteração caso necessário.
+		public static int QMDP { get; private set; } = 50;
 		public LabsMainApp()
 		{
 			InitializeComponent();
@@ -30,7 +33,27 @@ namespace Labs
 			//Dando a informação para que se o erro persistir, entrar em contato com o suporte técnico.
 			else { this.Close(); MessageBox.Show("ERRO-800 \n UMA INSTÂNCIA DO APLICATIVO JÁ ESTÁ EM EXECUCÃO\n Caso o erro persista recomendamos entrar em contato com o suporte.", "ERRO CRÍTICO-cod:800", MessageBoxButtons.OK, MessageBoxIcon.Error); }
 		}
-
+		static async void VerificaEstoqueOnLoad()
+		{
+			var ProdutosCount = await CloudDataBase.GetProdutosCountAsync();
+			var PBFDS = await CloudDataBase.GetProdutosAsync();
+			int ProdutosEmBaixa = 0;
+			//
+			var JDC = LABS_PDV_MAIN.IniciarApp<JanelaCarregamento>(true);
+			JDC.SetTextoFrontEnd("VERIFICANDO ESTOQUE");
+			JDC.ConfigBarraDeCarregamento(0, (int)ProdutosCount);
+			JDC.BringToFront();
+			//
+			foreach (Produto produto in PBFDS)
+			{
+				if(produto.Quantidade <= QMDP) {  ProdutosEmBaixa++; }
+				JDC.AumentarBarraDeCarregamento(1);
+				await Task.Delay(1);
+			}
+			//
+			if (ProdutosEmBaixa > 0) { Modais.MostrarAviso("UM OU MAIS PRODUTOS ESTÃO EM BAIXA NO ESTOQUE!"); }
+			JDC.Close();
+		}
 		//
 		//---------------------------//
 		// EVENTOS
@@ -40,13 +63,11 @@ namespace Labs
 			//Iniciamos a Janela de Controle de estoque caso o usuário tenha permissão para isso;
 			LABS_PDV_MAIN.IniciarApp<LabsEstoque>(false);
 		}
-
 		private void OnLabsPDVClick(object sender, EventArgs e)
 		{
 			//Iniciamos a Janela Labs PDV. //Não precisa de permissão
 			//Depois fazer função caixa remoto!
 			//Aqui definimos essa janela como persistente
-
 			LABS_PDV_MAIN.IniciarApp<LabsPDV>(true);
 		}
 
@@ -77,6 +98,11 @@ namespace Labs
 			}
 
 			base.WndProc(ref m);
+		}
+
+		private void LabsMainApp_Load(object sender, EventArgs e)
+		{
+			VerificaEstoqueOnLoad();
 		}
 	}
 }

@@ -15,6 +15,7 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 
 	public partial class AtualizarProduto : Form
 	{
+		private string IDProduto = null!;
 		public AtualizarProduto()
 		{
 			InitializeComponent();
@@ -22,7 +23,7 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 		//
 		public void SetarProduto(Produto produto)
 		{
-			IDProduto.Text = produto.ID;
+			IDProduto = produto.ID;
 			DescricaoProdutoOutput.Text = produto.Descricao;
 			QuantEstoqueInput.Text = produto.Quantidade.ToString();
 			PrecoInput.Text = produto.Preco.ToString();
@@ -32,8 +33,7 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 		private void AtualizarButton_Click(object sender, EventArgs e)
 		{
 			string ID, Descricao, QuantEstoque, Preco, Cod; // Geramos as variaveis locais necessárias
-															//
-			ID = IDProduto.Text;
+			ID = IDProduto;												//
 			Descricao = DescricaoProdutoOutput.Text;
 			QuantEstoque = QuantEstoqueInput.Text;
 			Preco = PrecoInput.Text;
@@ -45,7 +45,7 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 				//Montamos o produto atribuindo o ID para a busca
 				Produto produto = new()
 				{
-					ID = IDProduto.Text,
+					ID = ID,
 					Descricao = Descricao,
 					Quantidade = Qtd,
 					Preco = Math.Round(dPreco,2),

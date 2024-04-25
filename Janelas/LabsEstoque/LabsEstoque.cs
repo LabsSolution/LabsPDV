@@ -22,9 +22,12 @@ namespace Labs.Janelas.LabsEstoque
 		/// <param name="QtdEstoque">Quantidade no estoque</param>
 		/// <param name="Preco">Preco Unitário</param>
 		/// <param name="CodBarras">Código de Barras</param>
-		private  void InserirProdutoNaLista(string ID, string Desc, string QtdEstoque, string Preco, string CodBarras)
-		{ 
-			ListaProdutosEstoque.Items.Insert(ListaProdutosEstoque.Items.Count, new ListViewItem([ID, Desc, QtdEstoque, $"R$ {Preco}", CodBarras]));
+		/// <param name="EmFalta">Indicador se o Produto está quase acabando</param>
+		private void InserirProdutoNaLista(string ID, string Desc, string QtdEstoque, string Preco, string CodBarras, bool EmFalta = false)
+		{
+			var item = new ListViewItem([ID, Desc, QtdEstoque, $"R$ {Preco}", CodBarras]);
+			if (EmFalta) { item.BackColor = Color.IndianRed; item.ForeColor = Color.Black; } else {  item.BackColor = Color.LightGreen; item.ForeColor = Color.Black; }
+			ListaProdutosEstoque.Items.Insert(ListaProdutosEstoque.Items.Count, item);
 		}
 		/// <summary>
 		/// Atualiza a lista de produtos do estoque
@@ -38,7 +41,7 @@ namespace Labs.Janelas.LabsEstoque
 			
 			foreach (Produto produto in Produtos) //Iteramos e adicionamos a lista
 			{
-				InserirProdutoNaLista(produto.ID.ToString(), produto.Descricao, produto.Quantidade.ToString(), produto.Preco.ToString(), produto.CodBarras);
+				InserirProdutoNaLista(produto.ID.ToString(), produto.Descricao, produto.Quantidade.ToString(), produto.Preco.ToString(), produto.CodBarras,produto.Quantidade <= LabsMainApp.QMDP);
 				await Task.Delay(1);
 			}
 		}
@@ -99,15 +102,23 @@ namespace Labs.Janelas.LabsEstoque
 			if (produto != null) // se o produto existe seguimos
 			{
 				//
-				CloudDataBase.RemoveProdutoAsync(produto); // Chamamos a DataBase para a remoção do item desejado
-													  //Fazemos essa proteção para que não haja Bugs ou travamentos caso não seja encontrado nada na database
-													  //O que pode acontecer caso haja alguma falha no espelhamento da lista com a database.
+				var r = Modais.MostrarPergunta("Deseja Remover o Produto Selecionado?\n\n" +
+											   "ESSA OPERAÇÃO NÃO PODE SER DESFEITA!");
+				if(r == DialogResult.Yes)
+				{
+					CloudDataBase.RemoveProdutoAsync(produto);
+					// Chamamos a DataBase para a remoção do item desejado
+					//Fazemos essa proteção para que não haja Bugs ou travamentos caso não seja encontrado nada na database
+					//O que pode acontecer caso haja alguma falha no espelhamento da lista com a database.
+					//Agora que deletamos da database, podemos remover da lista.
+					if (ListaProdutosEstoque.Items.Contains(item))
+					{
+						ListaProdutosEstoque.Items.Remove(item);
+					}
+					Modais.MostrarInfo("Produto Removido Com Sucesso!");
+				}
 			}
-			//Agora que deletamos da database, podemos remover da lista.
-			if (ListaProdutosEstoque.Items.Contains(item))
-			{
-				ListaProdutosEstoque.Items.Remove(item);
-			}
+			
 		}
 		private void AtualizarButton_Click(object sender, EventArgs e)
 		{

@@ -106,6 +106,7 @@
 			Name = "LabsMainApp";
 			Text = "Lab Soluções";
 			WindowState = FormWindowState.Maximized;
+			Load += LabsMainApp_Load;
 			ResumeLayout(false);
 		}
 

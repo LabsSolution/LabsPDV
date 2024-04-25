@@ -45,6 +45,7 @@
 			ListaProdutosEstoque.AllowColumnReorder = true;
 			ListaProdutosEstoque.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 			ListaProdutosEstoque.Columns.AddRange(new ColumnHeader[] { ColunaID, ColunaDescricao, ColunaEstoque, ColunaPreco, ColunaCodBarras });
+			ListaProdutosEstoque.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
 			ListaProdutosEstoque.FullRowSelect = true;
 			ListaProdutosEstoque.GridLines = true;
 			ListaProdutosEstoque.Location = new Point(12, 168);

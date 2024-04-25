@@ -1,10 +1,13 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Labs.LABS_PDV
 {
@@ -45,6 +48,21 @@ namespace Labs.LABS_PDV
 					return await response.Content.ReadAsStringAsync();
 				}
 			}
+		}
+		public static async void SearchNameByCode(string CodBarras)
+		{
+			Modais.MostrarInfo("Tentando Fazer Acontecer");
+			string url = "https://cosmos.bluesoft.com.br/produtos/7896227800799";
+			HttpClient webClient = new();
+			webClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537");
+			string pageContent = await webClient.GetStringAsync(url);
+			HtmlAgilityPack.HtmlDocument pageDocument = new();
+			pageDocument.LoadHtml(pageContent);
+
+			HtmlNode productNameNode = pageDocument.DocumentNode.SelectSingleNode("//span[@id='product_description']");
+			string productName = productNameNode.InnerText;
+
+			Modais.MostrarInfo(productName);
 		}
 	}
 }

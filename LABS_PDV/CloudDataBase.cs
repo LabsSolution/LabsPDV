@@ -39,6 +39,8 @@ namespace Labs.LABS_PDV
 			return db.GetCollection<T>(collection);
 		}
 		//
+		//
+		//
 		public static async Task<List<Produto>> GetProdutosAsync()
 		{
 			var produtos = ConnectToMongo<Produto>(ProdutosCollection);
@@ -88,6 +90,15 @@ namespace Labs.LABS_PDV
 			var prodList = await produtos.FindAsync(c => c.CodBarras == CodBarras);
 			return prodList.ToList().FirstOrDefault()!;
 		}
+		//
+		public static async Task<long> GetProdutosCountAsync()
+		{
+			var produtos = ConnectToMongo<Produto>(ProdutosCollection);
+			var filter = Builders<Produto>.Filter.Empty;
+			return await produtos.CountDocumentsAsync(filter);
+		}
+		//
+		// MEIO DE PAGAMENTO
 		//
 		public static async void RegisterMeioDePagamentoAsync(MeioDePagamento MDP)
 		{

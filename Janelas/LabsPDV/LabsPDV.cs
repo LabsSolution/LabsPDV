@@ -154,7 +154,7 @@ namespace Labs.Janelas.LabsPDV
 		// dos métodos abaixo
 		private void Pagamento()
 		{
-			if (!EstaAberto) { Modais.MostrarAviso("Realize a abertura do caixa primeiro!"); return; }
+			if (!EstaAberto) { Modais.MostrarAviso("Realize a Abertura do Caixa Primeiro!"); return; }
 			if (!RealizandoVenda) { Modais.MostrarAviso("Você não está realizando nenhuma venda no momento!"); return; }
 			
 			//AS ETAPAS ACIMA DEVEM SER DESABILITADAS PARA AGILIZAR O PROCESSO DE DEV
@@ -237,6 +237,9 @@ namespace Labs.Janelas.LabsPDV
 					// no banco de dados
 					//
 					// Alteramos a quantidade porque não queremos vender o estoque inteiro de uma vez só KKK
+					int QTD = int.Parse(QuantidadeBox.Text);
+					if(QTD > produto.Quantidade) { Modais.MostrarAviso("Produto Esgotado!"); return; } // caso a quantidade que estamos passando for maior que a disponível no estoque;
+					//
 					produto.Quantidade = int.Parse(QuantidadeBox.Text);
 					AddProduto(produto, out double TotalItem);
 					// Ao Adicionar o produto na lista, limpamos o código de barras e resetamos a quantidade para somente 1 (para evitar de replicar a quantidade anterior);

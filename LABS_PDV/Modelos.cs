@@ -39,7 +39,7 @@ namespace Labs.LABS_PDV
 			public List<ModoDePagamento> Modos { get; set; } = Modos;
 		}
 		//
-		public class ModoDePagamento(string Modo,bool PossuiBandeira = false,List<string> Bandeiras = default!,bool PossuiParcelas = false, List<string> Parcelas = default!, double Taxa = 0.0)
+		public class ModoDePagamento(string Modo,bool PossuiBandeira = false,List<string> Bandeiras = default!,bool PossuiParcelas = false, int Parcelas = 0, double Taxa = 0.0)
 		{
 			[BsonId]
 			[BsonRepresentation(BsonType.ObjectId)]
@@ -63,7 +63,7 @@ namespace Labs.LABS_PDV
 			/// <summary>
 			/// Quantidade de Parcelas do Modo de pagamento
 			/// </summary>
-			public List<string> Parcelas { get; set; } = Parcelas;
+			public int Parcelas { get; set; } = Parcelas;
 			/// <summary>
 			/// Taxa Adicional do Modo de Pagamento (Geralmente Cartão de Crédito faz isso).
 			/// </summary>

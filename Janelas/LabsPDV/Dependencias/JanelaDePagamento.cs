@@ -117,10 +117,12 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 		async void Finalizar()
 		{
 			await CloudDataBase.AbaterProdutosEmEstoqueAsync(Produtos);
+			Reset();
 			this.Close();
 		}
 		void Cancelar()
 		{
+			Reset();
 			this.Close();
 		}
 		void AdicionarPagamento()
@@ -168,7 +170,6 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 							//
 							UpdateInterface();
 							//
-							Reset();
 						}
 					}
 				}
@@ -300,9 +301,10 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 				{
 					ParcelasComboBox.Enabled = true;
 					//
-					foreach (string Parcela in modo.Parcelas)
+					for (int i = 1; i <= modo.Parcelas; i++)
 					{
-						ParcelasComboBox.Items.Add(Parcela);
+						if(i == 1) { ParcelasComboBox.Items.Add($"{i} Vez"); }
+						else { ParcelasComboBox.Items.Add($"{i} Vezes"); }
 					}
 				}
 				//
