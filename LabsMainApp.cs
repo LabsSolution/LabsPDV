@@ -35,11 +35,12 @@ namespace Labs
 		}
 		static async void VerificaEstoqueOnLoad()
 		{
+			var JDC = LABS_PDV_MAIN.IniciarApp<JanelaCarregamento>(true);
+			//
 			var ProdutosCount = await CloudDataBase.GetProdutosCountAsync();
 			var PBFDS = await CloudDataBase.GetProdutosAsync();
 			int ProdutosEmBaixa = 0;
 			//
-			var JDC = LABS_PDV_MAIN.IniciarApp<JanelaCarregamento>(true);
 			JDC.SetTextoFrontEnd("VERIFICANDO ESTOQUE");
 			JDC.ConfigBarraDeCarregamento(0, (int)ProdutosCount);
 			JDC.BringToFront();
