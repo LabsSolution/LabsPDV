@@ -11,9 +11,12 @@
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.44" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.60" />
+    <PackageReference Include="Krypton.Docking" Version="80.24.3.64" />
+    <PackageReference Include="Krypton.Navigator" Version="80.24.3.64" />
+    <PackageReference Include="Krypton.Ribbon" Version="80.24.3.64" />
     <PackageReference Include="Krypton.Toolkit" Version="80.24.3.64" />
+    <PackageReference Include="Krypton.Workspace" Version="80.24.3.64" />
     <PackageReference Include="MongoDB.Driver" Version="2.25.0" />
-    <PackageReference Include="Svg" Version="3.4.7" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
     <PackageReference Include="Unimake.DFe" Version="20240419.1002.12" />
   </ItemGroup>
