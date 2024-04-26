@@ -22,12 +22,11 @@ namespace Labs
 			// To customize application configuration such as set high DPI settings or default font,
 			// see https://aka.ms/applicationconfiguration.
 			ApplicationConfiguration.Initialize();
-			LabsMainApp labsMainApp = new();
-			labsMainApp.Resize += OnAppSizeChange;
-			labsMainApp.FormClosed += AppClosed;
-			INIT(labsMainApp);
+			PainelLogin PainelDeLogin = new();
+			PainelDeLogin.Resize += OnAppSizeChange;
+			INIT(PainelDeLogin);
 		}
-		static void INIT(LabsMainApp labsMainApp)
+		static void INIT(PainelLogin PainelDeLogin)
 		{
 			//Inicializamos as dependências obrigatórias
 			//Verifica a pasta config (se não tiver, vai criar uma)
@@ -36,12 +35,12 @@ namespace Labs
 			{ 
 				//O Init só é falso caso dê algo de errado na pasta config e não seja possível inicializar
 				var r = Modais.MostrarErro("Não Foi Possivel Iniciar o Sistema Por Conter Erros Críticos!");
-				if(r == DialogResult.Ignore) { INIT(labsMainApp); return; }
-				if(r == DialogResult.Retry) { INIT(labsMainApp); return; }
+				if(r == DialogResult.Ignore) { INIT(PainelDeLogin); return; }
+				if(r == DialogResult.Retry) { INIT(PainelDeLogin); return; }
 				return; 
 			}
 			// Somente após o sistema verificar tudo é que inicializamos.
-			Application.Run(labsMainApp);
+			Application.Run(PainelDeLogin);
 			//
 		}
 
