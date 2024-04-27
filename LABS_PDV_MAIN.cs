@@ -22,11 +22,11 @@ namespace Labs
 			// To customize application configuration such as set high DPI settings or default font,
 			// see https://aka.ms/applicationconfiguration.
 			ApplicationConfiguration.Initialize();
-			PainelLogin PainelDeLogin = new();
+			LabsMainApp PainelDeLogin = new();
 			PainelDeLogin.Resize += OnAppSizeChange;
 			INIT(PainelDeLogin);
 		}
-		static void INIT(PainelLogin PainelDeLogin)
+		static void INIT(LabsMainApp PainelDeLogin)
 		{
 			//Inicializamos as dependências obrigatórias
 			//Verifica a pasta config (se não tiver, vai criar uma)

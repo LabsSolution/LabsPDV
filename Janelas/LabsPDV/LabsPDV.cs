@@ -39,6 +39,7 @@ namespace Labs.Janelas.LabsPDV
 			QuantidadeInput.Text = "1";
 			CodBarrasInput.Focus();
 			//
+			//FAZER JANELINHA DE ABERTURA DE CAIXA // Gestão de Fluxo
 			Modais.MostrarInfo("Caixa Aberto com Sucesso! \nBOAS VENDAS!");
 		}
 		//
@@ -56,6 +57,7 @@ namespace Labs.Janelas.LabsPDV
 			//
 			QuantidadeInput.Text = null;
 			//
+			//Fazer Janelinha de Fechamento de caixa
 			Modais.MostrarInfo("Caixa Fechado com Sucesso!");
 		}
 		//----------------------------//
