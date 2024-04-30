@@ -30,6 +30,7 @@
         {
             MeiosDePagamentoConfigButton = new Button();
             SairButton = new Button();
+            DataBaseConfigsButton = new Button();
             SuspendLayout();
             // 
             // MeiosDePagamentoConfigButton
@@ -56,18 +57,33 @@
             SairButton.UseVisualStyleBackColor = false;
             SairButton.Click += SairButton_Click;
             // 
+            // DataBaseConfigsButton
+            // 
+            DataBaseConfigsButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            DataBaseConfigsButton.BackColor = Color.LightSkyBlue;
+            DataBaseConfigsButton.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            DataBaseConfigsButton.Location = new Point(637, 12);
+            DataBaseConfigsButton.Name = "DataBaseConfigsButton";
+            DataBaseConfigsButton.Size = new Size(235, 50);
+            DataBaseConfigsButton.TabIndex = 2;
+            DataBaseConfigsButton.Text = "Database Configs";
+            DataBaseConfigsButton.UseVisualStyleBackColor = false;
+            DataBaseConfigsButton.Click += DataBaseConfig_Click;
+            // 
             // LabsConfig
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.WindowFrame;
             ClientSize = new Size(884, 561);
+            Controls.Add(DataBaseConfigsButton);
             Controls.Add(SairButton);
             Controls.Add(MeiosDePagamentoConfigButton);
             FormBorderStyle = FormBorderStyle.None;
             Name = "LabsConfig";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "LabsConfig";
+            Load += LabsConfig_Load;
             ResumeLayout(false);
         }
 
@@ -75,5 +91,6 @@
 
         private Button MeiosDePagamentoConfigButton;
         private Button SairButton;
+        private Button DataBaseConfigsButton;
     }
 }

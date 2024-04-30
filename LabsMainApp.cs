@@ -8,6 +8,7 @@ using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Printing;
@@ -23,8 +24,11 @@ namespace Labs
 	{
 		//Referencia de Instância
 		public static LabsMainApp App { get; private set; } = null!; //Declaramos como anulável já que de inicio não terá uma intância na memória.
-		public static string AppName { get; private set; } = "JanelaPrincipal"; //Determinado o nome dessa janela para iteração caso necessário.
-		public static int QMDP { get; private set; } = 50;
+		public static int QMDP { get; private set; } = -1;
+		/// <summary>
+		/// Habilitado Somente Caso Algum Erro Crítico de Inicialização for Detectado
+		/// </summary>
+		public static bool ModoSegurança { get; private set; } = false;
 		public LabsMainApp()
 		{
 			InitializeComponent();
@@ -32,7 +36,40 @@ namespace Labs
 			//Caso tenha uma instância rodando, fechamos esta janela e jogamos um erro
 			//Dando a informação para que se o erro persistir, entrar em contato com o suporte técnico.
 			else { this.Close(); MessageBox.Show("ERRO-800 \n UMA INSTÂNCIA DO APLICATIVO JÁ ESTÁ EM EXECUCÃO\n Caso o erro persista recomendamos entrar em contato com o suporte.", "ERRO CRÍTICO-cod:800", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+			//Carrega a imagem de fundo
+			//
+			LoadConfigs();
 		}
+		//
+		bool VerifyDataBases()
+		{
+			bool canProceed = true;
+			if(LABS_PDV_MAIN.CloudDataBase == null) 
+			{ 
+				Modais.MostrarErro("ERRO CRÍTICO!\nNão foi Possível Encontrar o Caminho Para a DataBase Remota!");
+				LabsPDV.Enabled = false;
+				LabsEstoqueButton.Enabled = false;
+				canProceed = false;
+			}
+			if(LABS_PDV_MAIN.LocalDataBase == null) 
+			{
+				Modais.MostrarErro("ERRO CRÍTICO\nNão Foi Possível Encontrar o Caminho Para a Database Local!");
+                LabsPDV.Enabled = false;
+                LabsEstoqueButton.Enabled = false;
+				canProceed = false;
+            }
+			return canProceed;
+		}
+		//
+		void LoadConfigs()
+		{
+            //Aqui Lemos as Configs do App.Config;
+            if (Utils.TryParseToInt(ConfigurationManager.AppSettings["QMDP"]!, out int value))
+            {
+                QMDP = value;
+            }
+        }
+		//
 		static async void VerificaEstoqueOnLoad()
 		{
 			var JDC = LABS_PDV_MAIN.IniciarApp<JanelaCarregamento>(true);
@@ -103,7 +140,8 @@ namespace Labs
 
 		private void LabsMainApp_Load(object sender, EventArgs e)
 		{
-			VerificaEstoqueOnLoad();
+			if (!VerifyDataBases()) { ModoSegurança = true; Modais.MostrarAviso("MODO DE SEGURANÇA HABILITADO!\nPara Sair Desse Modo, Os Conflitos Devem ser Resolvidos\ne Logo Após o Sistema Deve Ser Reiniciado!"); return; }
+            VerificaEstoqueOnLoad();
 		}
 	}
 }

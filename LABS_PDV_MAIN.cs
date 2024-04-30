@@ -4,6 +4,7 @@ using Labs.LABS_PDV;
 using static Dapper.SqlMapper;
 using System.Security.AccessControl;
 using System.Security.Cryptography;
+using System.Configuration;
 //
 namespace Labs
 {
@@ -12,21 +13,32 @@ namespace Labs
 	{
 		//Controle de Instâncias (Endereçamento de memória)
 		private static Dictionary<string, Form> RunningApps = new();
-
+		// Acessores Públicos para a database
+		public static string CloudDataBase = null!;
+		public static string LocalDataBase = null!;
+		//
 		/// <summary>
 		///  The main entry point for the application.
 		/// </summary>
-		[MTAThread]
+		[STAThread]
 		static void Main()
-		{
-			// To customize application configuration such as set high DPI settings or default font,
-			// see https://aka.ms/applicationconfiguration.
-			ApplicationConfiguration.Initialize();
-			LabsMainApp PainelDeLogin = new();
-			PainelDeLogin.Resize += OnAppSizeChange;
-			INIT(PainelDeLogin);
+		{	
+			//A Criptografia é algo essencial para a segurança dos nossos clientes!
+			// Politica LGPD
+			//Descriptografa a database local
+			if(LabsCripto.Decript("L_Data",out string LDecripted)) { LocalDataBase = LDecripted; }
+			//Descriptograda a Datavbase Remota
+			if(LabsCripto.Decript("C_Data",out string CDecripted)) { CloudDataBase = CDecripted; }
+			//
+            // To customize application configuration such as set high DPI settings or default font,
+            // see https://aka.ms/applicationconfiguration.
+            ApplicationConfiguration.Initialize();
+			//PainelLogin App = new();
+			LabsMainApp App = new();
+			App.Resize += OnAppSizeChange;
+			INIT(App);
 		}
-		static void INIT(LabsMainApp PainelDeLogin)
+		static void INIT<T>(T App) where T : Form
 		{
 			//Inicializamos as dependências obrigatórias
 			//Verifica a pasta config (se não tiver, vai criar uma)
@@ -35,12 +47,12 @@ namespace Labs
 			{ 
 				//O Init só é falso caso dê algo de errado na pasta config e não seja possível inicializar
 				var r = Modais.MostrarErro("Não Foi Possivel Iniciar o Sistema Por Conter Erros Críticos!");
-				if(r == DialogResult.Ignore) { INIT(PainelDeLogin); return; }
-				if(r == DialogResult.Retry) { INIT(PainelDeLogin); return; }
+				if(r == DialogResult.Ignore) { INIT(App); return; }
+				if(r == DialogResult.Retry) { INIT(App); return; }
 				return; 
 			}
 			// Somente após o sistema verificar tudo é que inicializamos.
-			Application.Run(PainelDeLogin);
+			Application.Run(App);
 			//
 		}
 

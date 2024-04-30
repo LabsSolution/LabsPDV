@@ -28,28 +28,28 @@
         /// </summary>
         private void InitializeComponent()
         {
-            button1 = new Button();
+            LabsEstoqueButton = new Button();
             LabsPDV = new Button();
             SairButton = new Button();
             ConfiguracaoButton = new Button();
             SuspendLayout();
             // 
-            // button1
+            // LabsEstoqueButton
             // 
-            button1.BackColor = Color.Salmon;
-            button1.BackgroundImageLayout = ImageLayout.None;
-            button1.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
-            button1.Location = new Point(12, 12);
-            button1.Name = "button1";
-            button1.Size = new Size(160, 80);
-            button1.TabIndex = 0;
-            button1.Text = "Labs Estoque";
-            button1.UseVisualStyleBackColor = false;
-            button1.Click += OnLabsEstoqueClick;
+            LabsEstoqueButton.BackColor = SystemColors.Window;
+            LabsEstoqueButton.BackgroundImageLayout = ImageLayout.None;
+            LabsEstoqueButton.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
+            LabsEstoqueButton.Location = new Point(12, 12);
+            LabsEstoqueButton.Name = "LabsEstoqueButton";
+            LabsEstoqueButton.Size = new Size(160, 80);
+            LabsEstoqueButton.TabIndex = 0;
+            LabsEstoqueButton.Text = "Labs Estoque";
+            LabsEstoqueButton.UseVisualStyleBackColor = false;
+            LabsEstoqueButton.Click += OnLabsEstoqueClick;
             // 
             // LabsPDV
             // 
-            LabsPDV.BackColor = Color.Salmon;
+            LabsPDV.BackColor = SystemColors.Window;
             LabsPDV.BackgroundImageLayout = ImageLayout.None;
             LabsPDV.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
             LabsPDV.Location = new Point(178, 12);
@@ -62,11 +62,11 @@
             // 
             // SairButton
             // 
-            SairButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            SairButton.BackColor = Color.Salmon;
+            SairButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            SairButton.BackColor = SystemColors.Window;
             SairButton.BackgroundImageLayout = ImageLayout.None;
             SairButton.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
-            SairButton.Location = new Point(12, 671);
+            SairButton.Location = new Point(990, 671);
             SairButton.Name = "SairButton";
             SairButton.Size = new Size(160, 42);
             SairButton.TabIndex = 2;
@@ -76,11 +76,11 @@
             // 
             // ConfiguracaoButton
             // 
-            ConfiguracaoButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            ConfiguracaoButton.BackColor = Color.FromArgb(128, 128, 255);
+            ConfiguracaoButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            ConfiguracaoButton.BackColor = SystemColors.Window;
             ConfiguracaoButton.BackgroundImageLayout = ImageLayout.None;
             ConfiguracaoButton.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
-            ConfiguracaoButton.Location = new Point(178, 671);
+            ConfiguracaoButton.Location = new Point(1156, 671);
             ConfiguracaoButton.Name = "ConfiguracaoButton";
             ConfiguracaoButton.Size = new Size(190, 42);
             ConfiguracaoButton.TabIndex = 3;
@@ -99,7 +99,7 @@
             Controls.Add(ConfiguracaoButton);
             Controls.Add(SairButton);
             Controls.Add(LabsPDV);
-            Controls.Add(button1);
+            Controls.Add(LabsEstoqueButton);
             FormBorderStyle = FormBorderStyle.None;
             MaximizeBox = false;
             MinimizeBox = false;
@@ -112,7 +112,7 @@
 
         #endregion
 
-        private Button button1;
+        private Button LabsEstoqueButton;
 		private Button LabsPDV;
 		private Button SairButton;
 		private Button ConfiguracaoButton;

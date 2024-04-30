@@ -30,6 +30,20 @@ namespace Labs.Janelas.Configuracoes
             });
         }
         //
+        private async void DataBaseConfig()
+        {
+            bool isAdmin = await PainelLogin.RealizarLoginAdmin();
+            if (isAdmin)
+            {
+                LABS_PDV_MAIN.IniciarDependencia<DatabaseConfig>();
+            }
+        }
+
+        private void DataBaseConfig_Click(object sender, EventArgs e)
+        {
+            DataBaseConfig();
+        }
+        //
         //PREVENÇÃO DE MOVIMENTO DE JANELA // Qualquer janela que tiver a propriedade de prevenção de movimento deve herdar esse Método
         protected override void WndProc(ref Message m)
         {
@@ -51,6 +65,11 @@ namespace Labs.Janelas.Configuracoes
         private void SairButton_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void LabsConfig_Load(object sender, EventArgs e)
+        {
+            if (LabsMainApp.ModoSegurança) { MeiosDePagamentoConfigButton.Enabled = false; }
         }
     }
 }

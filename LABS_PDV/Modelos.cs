@@ -10,6 +10,39 @@ namespace Labs.LABS_PDV
 {
 	public class Modelos
 	{
+		//Admin
+		public class AdminLabs(string Auth0ID, bool AdminAtivo = false, int PermLevel = 0)
+		{
+			[BsonId]
+			[BsonRepresentation(BsonType.ObjectId)]
+			public string DataBaseID { get; set; } = null!;
+			public string Auth0ID { get; set; } = Auth0ID;
+			public bool AdminAtivo { get; set; } = AdminAtivo;
+			public int PermLevel { get; set;} = PermLevel;
+		}
+		//Clientes
+		public class Cliente(string Auth0ID, bool ClienteAtivo = false)
+		{
+			/// <summary>
+			/// ID deste Objeto na Database
+			/// </summary>
+			[BsonId]
+			[BsonRepresentation(BsonType.ObjectId)]
+			public string DataBaseID { get; set; } = null!;
+			//
+			/// <summary>
+			/// ID De Autenticação do Usuário Dentro do Auth0
+			/// </summary>
+			public string Auth0ID { get; private set; } = Auth0ID;
+			/// <summary>
+			/// Identifica se o Cliente é ativo ou não
+			/// Padrão é false pois vai ser ativado somente depois do pagamento da assinatura
+			/// </summary>
+			public bool ClienteAtivo { get; private set; } = ClienteAtivo;
+		}
+
+
+		//MODELOS DE Objetos (Structs)
 		public struct PagamentoEfetuado(string DescPagamento, double valor)
 		{
 			/// <summary>
@@ -21,7 +54,6 @@ namespace Labs.LABS_PDV
 			/// </summary>
 			public double Valor { get; private set; } = valor;
 		}
-		//MODELOS DE Objetos (Structs)
 		public class MeioDePagamento(string Meio, bool PodeUltrapassarOValorTotal = false, bool PossuiModos = false, List<ModoDePagamento> Modos = default!)
 		{
 			[BsonId]
