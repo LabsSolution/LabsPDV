@@ -34,7 +34,8 @@ namespace Labs
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
 			//PainelLogin App = new();
-			LabsMainApp App = new();
+			//LabsMainApp App = new();
+			svgtest App = new();
 			App.Resize += OnAppSizeChange;
 			INIT(App);
 		}

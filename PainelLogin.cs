@@ -38,6 +38,7 @@ namespace Labs
             ClientOptions.PostLogoutRedirectUri = ClientOptions.RedirectUri;
             //
             //Colocar método para chamada do login
+            RealizarLogin();
         }
         //
         private void SairButton_Click(object sender, EventArgs e)
