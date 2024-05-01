@@ -32,7 +32,8 @@ namespace Labs.Janelas.Configuracoes
         //
         private async void DataBaseConfig()
         {
-            bool isAdmin = await PainelLogin.RealizarLoginAdmin();
+            Login painel = new();
+            bool isAdmin = await painel.RealizarLoginAdmin();
             if (isAdmin)
             {
                 LABS_PDV_MAIN.IniciarDependencia<DatabaseConfig>();

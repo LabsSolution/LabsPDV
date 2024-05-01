@@ -16,45 +16,36 @@ using IdentityModel.OidcClient;
 using Labs.Janelas.Configuracoes.Dependencias;
 using Labs.Janelas.LabsPDV;
 using Labs.LABS_PDV;
-using Unimake.Business.DFe.Xml.NFe;
 using static Labs.LABS_PDV.Modelos;
 
 namespace Labs
 {
-    public partial class PainelLogin : Form
+    public partial class Login
     {
         readonly static Auth0ClientOptions ClientOptions = new() { Domain = "solucaeslab.us.auth0.com", LoadProfile = true, Scope = "read:role", ClientId = "00hKMs1GjChBpf0bMo9WVrPNXXe2ycGv"};
-        readonly static Auth0Client Client = new Auth0Client(ClientOptions);
+        readonly static Auth0Client Client = new (ClientOptions);
         //
-        private Dictionary<string,string> extraParameters = new Dictionary<string,string> ();
+        private static Dictionary<string,string> extraParameters = new();
         //
-        public PainelLogin()
+        public Login()
         {
             //
             extraParameters.Add("audience", "https://LabsAPI");
             //
-            InitializeComponent();
-            //
             ClientOptions.PostLogoutRedirectUri = ClientOptions.RedirectUri;
             //
-            //Colocar método para chamada do login
-            RealizarLogin();
         }
         //
-        private void SairButton_Click(object sender, EventArgs e)
+        private async Task<bool> VerificarUsuário(Cliente cliente)
         {
-            this.Close();
-        }
-        //
-        private void VerificarUsuário(Cliente cliente)
-        {
-            if (cliente.ClienteAtivo) { LABS_PDV_MAIN.IniciarApp<LabsMainApp>(true); return; }
+            if (cliente.ClienteAtivo) { await Task.Delay(1); return true; }
             //Se não for cliente ativo
             Modais.MostrarAviso("Que Pena!\nParece Que você Ainda não é um Cliente Labs!");
-            //
-            RealizarLogin();
+            await Task.Delay(1);
+            return false;
         }
-        private static async Task<bool> VerificarAdmin(AdminLabs admin)
+        //
+        private async Task<bool> VerificarAdmin(AdminLabs admin)
         {
             if (admin.AdminAtivo && admin.PermLevel > 0) { LABS_PDV_MAIN.IniciarDependencia<DatabaseConfig>(); await Task.Delay(1); return true; }
             //Se não for cliente ativo
@@ -64,7 +55,7 @@ namespace Labs
             return false;
         }
         //
-        public static async Task<bool> RealizarLoginAdmin()
+        public async Task<bool> RealizarLoginAdmin()
         {
             LoginResult result = await Client.LoginAsync();
             if (result.IsError) { return false; }
@@ -82,10 +73,10 @@ namespace Labs
             return false;
         }
         //
-        private async void RealizarLogin()
+        public async Task<bool> RealizarLoginCliente()
         {
             LoginResult result = await Client.LoginAsync(extraParameters: extraParameters);
-            if (result.IsError) { this.Close(); return; }
+            if (result.IsError) { return false; }
             // Se o Cliente Não existir no nosso Banco de Dados, Adicionamos, mas não Ativamos de imediato
             //
             foreach (Claim claim in result.User.Claims)
@@ -95,10 +86,10 @@ namespace Labs
                     Cliente cliente = await CloudDataBase.GetClienteAsync(claim.Value);
                     if(cliente == null) { cliente = new(claim.Value,false); CloudDataBase.RegisterClienteAsync(cliente); }
                     //Verifica o usuário
-                    VerificarUsuário(cliente);
-                    break;
+                    return await VerificarUsuário(cliente);
                 }
             }
+            return false;
         }
     }
 }

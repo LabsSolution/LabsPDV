@@ -20,7 +20,7 @@ namespace Labs
 		/// <summary>
 		///  The main entry point for the application.
 		/// </summary>
-		[STAThread]
+		[MTAThread]
 		static void Main()
 		{	
 			//A Criptografia é algo essencial para a segurança dos nossos clientes!
@@ -33,13 +33,13 @@ namespace Labs
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-			//PainelLogin App = new();
-			//LabsMainApp App = new();
-			svgtest App = new();
+			PainelDeLogin App = new();
+			//svgtest App = new();
 			App.Resize += OnAppSizeChange;
 			INIT(App);
-		}
-		static void INIT<T>(T App) where T : Form
+        }
+        //
+        static void INIT<T>(T App) where T : Form
 		{
 			//Inicializamos as dependências obrigatórias
 			//Verifica a pasta config (se não tiver, vai criar uma)
@@ -54,13 +54,11 @@ namespace Labs
 			}
 			// Somente após o sistema verificar tudo é que inicializamos.
 			Application.Run(App);
-			//
-		}
-
-
-		//EVENTOS//
-		//Previne o Cliente de Minimizar o sistema
-		private static void OnAppSizeChange(object? sender, EventArgs e)
+            //
+        }
+        //EVENTOS//
+        //Previne o Cliente de Minimizar o sistema
+        private static void OnAppSizeChange(object? sender, EventArgs e)
 		{
 			if (sender is Form App)
 			{

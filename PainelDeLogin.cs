@@ -12,15 +12,15 @@ using System.Windows.Forms;
 
 namespace Labs
 {
-    public partial class svgtest : Form
+    public partial class PainelDeLogin : Form
     {
 
 
-        public svgtest()
+        public PainelDeLogin()
         {
             InitializeComponent();
 			//
-			SvgDocument svg = SvgDocument.Open($@"C:\Users\PC\source\repos\LabsSolution\LabsPDV\LabsBin\test.svg");
+			SvgDocument svg = SvgDocument.Open($@".\LabsBin\test.svg");
 			//svg = AdjustSize(svg);
 			Image img = svg.Draw();
 			testeBox.Image = img;
