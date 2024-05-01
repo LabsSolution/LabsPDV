@@ -35,7 +35,9 @@
             // 
             // MeiosDePagamentoConfigButton
             // 
-            MeiosDePagamentoConfigButton.BackColor = Color.LightSkyBlue;
+            MeiosDePagamentoConfigButton.BackColor = SystemColors.Window;
+            MeiosDePagamentoConfigButton.FlatAppearance.BorderSize = 0;
+            MeiosDePagamentoConfigButton.FlatStyle = FlatStyle.Flat;
             MeiosDePagamentoConfigButton.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             MeiosDePagamentoConfigButton.Location = new Point(12, 12);
             MeiosDePagamentoConfigButton.Name = "MeiosDePagamentoConfigButton";
@@ -47,7 +49,9 @@
             // 
             // SairButton
             // 
-            SairButton.BackColor = Color.FromArgb(255, 128, 128);
+            SairButton.BackColor = SystemColors.Window;
+            SairButton.FlatAppearance.BorderSize = 0;
+            SairButton.FlatStyle = FlatStyle.Flat;
             SairButton.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             SairButton.Location = new Point(792, 499);
             SairButton.Name = "SairButton";
@@ -60,7 +64,9 @@
             // DataBaseConfigsButton
             // 
             DataBaseConfigsButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            DataBaseConfigsButton.BackColor = Color.LightSkyBlue;
+            DataBaseConfigsButton.BackColor = SystemColors.Window;
+            DataBaseConfigsButton.FlatAppearance.BorderSize = 0;
+            DataBaseConfigsButton.FlatStyle = FlatStyle.Flat;
             DataBaseConfigsButton.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             DataBaseConfigsButton.Location = new Point(637, 12);
             DataBaseConfigsButton.Name = "DataBaseConfigsButton";
@@ -75,6 +81,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.WindowFrame;
+            BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(884, 561);
             Controls.Add(DataBaseConfigsButton);
             Controls.Add(SairButton);

@@ -19,30 +19,19 @@ namespace Labs
         public PainelDeLogin()
         {
             InitializeComponent();
-			//
-			SvgDocument svg = SvgDocument.Open($@".\LabsBin\test.svg");
-			//svg = AdjustSize(svg);
-			Image img = svg.Draw();
-			testeBox.Image = img;
         }
 
+        private async void RealizarLoginButton_Click(object sender, EventArgs e)
+        {
+            Login login = new();
+            var r = await login.RealizarLoginCliente();
+            if (!r) { Modais.MostrarAviso("Que Pena!\nParece Que você Ainda não é um Cliente Labs!"); return; }
+            LABS_PDV_MAIN.IniciarApp<LabsMainApp>(true);
+        }
 
-
-
-
-		/// <summary>
-		/// Makes sure that the image does not exceed the maximum size, while preserving aspect ratio.
-		/// </summary>
-		/// <param name="document">The SVG document to resize.</param>
-		/// <returns>Returns a resized or the original document depending on the document.</returns>
-		private SvgDocument AdjustSize(SvgDocument document)
-		{
-			if (document.Height > MaximumSize.Height)
-			{
-				document.Width = (int)((document.Width / (double)document.Height) * MaximumSize.Height);
-				document.Height = MaximumSize.Height;
-			}
-			return document;
-		}
-	}
+        private void SairButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using Labs.Janelas.Configuracoes.Dependencias;
 using Labs.Janelas.LabsPDV.Dependencias;
+using Labs.LABS_PDV;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

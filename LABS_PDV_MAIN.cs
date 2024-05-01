@@ -5,6 +5,7 @@ using static Dapper.SqlMapper;
 using System.Security.AccessControl;
 using System.Security.Cryptography;
 using System.Configuration;
+using Labs.Janelas.Configuracoes.Dependencias;
 //
 namespace Labs
 {
@@ -20,7 +21,7 @@ namespace Labs
 		/// <summary>
 		///  The main entry point for the application.
 		/// </summary>
-		[MTAThread]
+		[STAThread]
 		static void Main()
 		{	
 			//A Criptografia é algo essencial para a segurança dos nossos clientes!
@@ -33,10 +34,11 @@ namespace Labs
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-			PainelDeLogin App = new();
+			LabsMainApp App = new();
 			//svgtest App = new();
 			App.Resize += OnAppSizeChange;
-			INIT(App);
+            App.Load += OnAppLoad;
+            INIT(App);
         }
         //
         static void INIT<T>(T App) where T : Form
@@ -52,10 +54,23 @@ namespace Labs
 				if(r == DialogResult.Retry) { INIT(App); return; }
 				return; 
 			}
-			// Somente após o sistema verificar tudo é que inicializamos.
-			Application.Run(App);
+            // Somente após o sistema verificar tudo é que inicializamos.
+            Application.Run(App);
             //
         }
+
+        private static void OnAppLoad(object? sender, EventArgs e)
+        {
+            if(sender is Form App)
+			{
+                SVGParser parser = new();
+				App.BackgroundImageLayout = ImageLayout.Stretch;
+                App.BackgroundImage = parser.GetImageFromSVG();
+            }
+        }
+
+        //
+
         //EVENTOS//
         //Previne o Cliente de Minimizar o sistema
         private static void OnAppSizeChange(object? sender, EventArgs e)
@@ -74,7 +89,8 @@ namespace Labs
 				{
 					App.FormClosed -= AppClosed;
 					App.Resize -= OnAppSizeChange;
-					LabsMainApp.App.Show();
+                    App.Load -= OnAppLoad;
+                    LabsMainApp.App.Show();
 				}
 			}
 		}
@@ -88,7 +104,8 @@ namespace Labs
 				{
 					App.VisibleChanged -= AppHidden;
 					App.Resize -= OnAppSizeChange;
-					LabsMainApp.App.Show();
+                    App.Load -= OnAppLoad;
+                    LabsMainApp.App.Show();
 				}
 			}
 		}
@@ -122,7 +139,10 @@ namespace Labs
 			}
 			config?.Invoke(App);
 			// Mostra a aplicação
-			if (SempreNoTopo) { App.ShowDialog(); return App; }
+			//
+            if (SempreNoTopo) { App.Load += OnAppLoad; App.ShowDialog(); return App; }
+			//Retornamos o App
+			App.Load += OnAppLoad;
 			App.Show();
 			return App;
 		}
@@ -155,8 +175,6 @@ namespace Labs
 				RunningApps[typeof(T).Name] = App;
 			}
 
-			// Mostra a aplicação
-			App.Show();
 
 			// Quando uma nova Instância for Iniciada Escondemos a principal
 			LabsMainApp.App.Hide();
@@ -167,7 +185,10 @@ namespace Labs
 			if (Persistente) { App.VisibleChanged += AppHidden; App.FormClosed += AppClosed; }
 			if (!Persistente) { App.FormClosed += AppClosed; }
 			App.Resize += OnAppSizeChange; // O evento de SizeChange é global para qualquer janela;
-			return App; // Após isso tudo, retornamos a janela
+            App.Load += OnAppLoad; // o mesmo para o OnAppLoad
+			// Mostra a aplicação
+			App.Show();
+            return App; // Após isso tudo, retornamos a janela
 		}
 	}
 }

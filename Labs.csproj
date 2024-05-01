@@ -45,7 +45,7 @@
     <None Update="LabsBin\init.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="LabsBin\test.svg">
+    <None Update="LabsBin\Background.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="LABS_PDV\DB\DataBase.db">

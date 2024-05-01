@@ -38,6 +38,8 @@
             // 
             LabsEstoqueButton.BackColor = SystemColors.Window;
             LabsEstoqueButton.BackgroundImageLayout = ImageLayout.None;
+            LabsEstoqueButton.FlatAppearance.BorderSize = 0;
+            LabsEstoqueButton.FlatStyle = FlatStyle.Flat;
             LabsEstoqueButton.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
             LabsEstoqueButton.Location = new Point(12, 12);
             LabsEstoqueButton.Name = "LabsEstoqueButton";
@@ -51,6 +53,8 @@
             // 
             LabsPDV.BackColor = SystemColors.Window;
             LabsPDV.BackgroundImageLayout = ImageLayout.None;
+            LabsPDV.FlatAppearance.BorderSize = 0;
+            LabsPDV.FlatStyle = FlatStyle.Flat;
             LabsPDV.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
             LabsPDV.Location = new Point(178, 12);
             LabsPDV.Name = "LabsPDV";
@@ -65,10 +69,12 @@
             SairButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             SairButton.BackColor = SystemColors.Window;
             SairButton.BackgroundImageLayout = ImageLayout.None;
+            SairButton.FlatAppearance.BorderSize = 0;
+            SairButton.FlatStyle = FlatStyle.Flat;
             SairButton.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
-            SairButton.Location = new Point(990, 671);
+            SairButton.Location = new Point(978, 663);
             SairButton.Name = "SairButton";
-            SairButton.Size = new Size(160, 42);
+            SairButton.Size = new Size(160, 50);
             SairButton.TabIndex = 2;
             SairButton.Text = "Sair";
             SairButton.UseVisualStyleBackColor = false;
@@ -79,10 +85,12 @@
             ConfiguracaoButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             ConfiguracaoButton.BackColor = SystemColors.Window;
             ConfiguracaoButton.BackgroundImageLayout = ImageLayout.None;
+            ConfiguracaoButton.FlatAppearance.BorderSize = 0;
+            ConfiguracaoButton.FlatStyle = FlatStyle.Flat;
             ConfiguracaoButton.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
-            ConfiguracaoButton.Location = new Point(1156, 671);
+            ConfiguracaoButton.Location = new Point(1144, 663);
             ConfiguracaoButton.Name = "ConfiguracaoButton";
-            ConfiguracaoButton.Size = new Size(190, 42);
+            ConfiguracaoButton.Size = new Size(190, 50);
             ConfiguracaoButton.TabIndex = 3;
             ConfiguracaoButton.Text = "Configurações";
             ConfiguracaoButton.UseVisualStyleBackColor = false;

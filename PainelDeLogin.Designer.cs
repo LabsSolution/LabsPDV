@@ -28,37 +28,65 @@
         /// </summary>
         private void InitializeComponent()
         {
-            testeBox = new PictureBox();
-            ((System.ComponentModel.ISupportInitialize)testeBox).BeginInit();
+            RealizarLoginButton = new Button();
+            SairButton = new Button();
             SuspendLayout();
             // 
-            // testeBox
+            // RealizarLoginButton
             // 
-            testeBox.BackColor = SystemColors.WindowFrame;
-            testeBox.Dock = DockStyle.Fill;
-            testeBox.Location = new Point(0, 0);
-            testeBox.Name = "testeBox";
-            testeBox.Size = new Size(800, 600);
-            testeBox.SizeMode = PictureBoxSizeMode.StretchImage;
-            testeBox.TabIndex = 0;
-            testeBox.TabStop = false;
+            RealizarLoginButton.BackColor = Color.Transparent;
+            RealizarLoginButton.FlatAppearance.BorderColor = SystemColors.Window;
+            RealizarLoginButton.FlatAppearance.BorderSize = 2;
+            RealizarLoginButton.FlatAppearance.MouseDownBackColor = SystemColors.ButtonShadow;
+            RealizarLoginButton.FlatAppearance.MouseOverBackColor = SystemColors.GrayText;
+            RealizarLoginButton.FlatStyle = FlatStyle.Flat;
+            RealizarLoginButton.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            RealizarLoginButton.ForeColor = SystemColors.Window;
+            RealizarLoginButton.Location = new Point(462, 528);
+            RealizarLoginButton.Name = "RealizarLoginButton";
+            RealizarLoginButton.Size = new Size(160, 60);
+            RealizarLoginButton.TabIndex = 0;
+            RealizarLoginButton.Text = "Realizar Login";
+            RealizarLoginButton.UseVisualStyleBackColor = false;
+            RealizarLoginButton.Click += RealizarLoginButton_Click;
+            // 
+            // SairButton
+            // 
+            SairButton.BackColor = Color.Transparent;
+            SairButton.FlatAppearance.BorderColor = SystemColors.Window;
+            SairButton.FlatAppearance.BorderSize = 2;
+            SairButton.FlatAppearance.MouseDownBackColor = SystemColors.ButtonShadow;
+            SairButton.FlatAppearance.MouseOverBackColor = SystemColors.GrayText;
+            SairButton.FlatStyle = FlatStyle.Flat;
+            SairButton.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            SairButton.ForeColor = SystemColors.Window;
+            SairButton.Location = new Point(628, 528);
+            SairButton.Name = "SairButton";
+            SairButton.Size = new Size(160, 60);
+            SairButton.TabIndex = 1;
+            SairButton.Text = "Sair";
+            SairButton.UseVisualStyleBackColor = false;
+            SairButton.Click += SairButton_Click;
             // 
             // PainelDeLogin
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.WindowFrame;
+            BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(800, 600);
-            Controls.Add(testeBox);
+            Controls.Add(SairButton);
+            Controls.Add(RealizarLoginButton);
             FormBorderStyle = FormBorderStyle.None;
             Name = "PainelDeLogin";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Labs Login";
-            ((System.ComponentModel.ISupportInitialize)testeBox).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private PictureBox testeBox;
-	}
+        private Button RealizarLoginButton;
+        private Button SairButton;
+    }
 }

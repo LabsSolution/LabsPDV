@@ -25,12 +25,8 @@ namespace Labs
         readonly static Auth0ClientOptions ClientOptions = new() { Domain = "solucaeslab.us.auth0.com", LoadProfile = true, Scope = "read:role", ClientId = "00hKMs1GjChBpf0bMo9WVrPNXXe2ycGv"};
         readonly static Auth0Client Client = new (ClientOptions);
         //
-        private static Dictionary<string,string> extraParameters = new();
-        //
         public Login()
         {
-            //
-            extraParameters.Add("audience", "https://LabsAPI");
             //
             ClientOptions.PostLogoutRedirectUri = ClientOptions.RedirectUri;
             //
@@ -40,14 +36,14 @@ namespace Labs
         {
             if (cliente.ClienteAtivo) { await Task.Delay(1); return true; }
             //Se não for cliente ativo
-            Modais.MostrarAviso("Que Pena!\nParece Que você Ainda não é um Cliente Labs!");
+            
             await Task.Delay(1);
             return false;
         }
         //
         private async Task<bool> VerificarAdmin(AdminLabs admin)
         {
-            if (admin.AdminAtivo && admin.PermLevel > 0) { LABS_PDV_MAIN.IniciarDependencia<DatabaseConfig>(); await Task.Delay(1); return true; }
+            if (admin.AdminAtivo && admin.PermLevel > 0) { await Task.Delay(1); return true; }
             //Se não for cliente ativo
             Modais.MostrarAviso("Você Não é Um Técnico Labs ou Não Possui o Nível de Permissão Necessário");
             //
@@ -58,7 +54,7 @@ namespace Labs
         public async Task<bool> RealizarLoginAdmin()
         {
             LoginResult result = await Client.LoginAsync();
-            if (result.IsError) { return false; }
+            if (result.IsError) { Modais.MostrarErro($"ERRO DURANTE LOGIN\n{result.Error}"); return false; }
             //
             foreach (Claim claim in result.User.Claims)
             {
@@ -75,7 +71,7 @@ namespace Labs
         //
         public async Task<bool> RealizarLoginCliente()
         {
-            LoginResult result = await Client.LoginAsync(extraParameters: extraParameters);
+            LoginResult result = await Client.LoginAsync();
             if (result.IsError) { return false; }
             // Se o Cliente Não existir no nosso Banco de Dados, Adicionamos, mas não Ativamos de imediato
             //

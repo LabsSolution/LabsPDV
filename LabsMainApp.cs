@@ -40,20 +40,13 @@ namespace Labs
 			//
 			LoadConfigs();
 		}
-		//
-		bool VerifyDataBases()
+        //
+        bool VerifyDataBases()
 		{
 			bool canProceed = true;
-			if(LABS_PDV_MAIN.CloudDataBase == null) 
-			{ 
-				Modais.MostrarErro("ERRO CRÍTICO!\nNão foi Possível Encontrar o Caminho Para a DataBase Remota!");
-				LabsPDV.Enabled = false;
-				LabsEstoqueButton.Enabled = false;
-				canProceed = false;
-			}
-			if(LABS_PDV_MAIN.LocalDataBase == null) 
+			if(!CloudDataBase.CheckDataBaseConnection())
 			{
-				Modais.MostrarErro("ERRO CRÍTICO\nNão Foi Possível Encontrar o Caminho Para a Database Local!");
+				Modais.MostrarErro("ERRO CRÍTICO\nNão Foi Possivel Estabelecer Conexão com os Bancos de Dados!");
                 LabsPDV.Enabled = false;
                 LabsEstoqueButton.Enabled = false;
 				canProceed = false;
