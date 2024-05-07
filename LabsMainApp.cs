@@ -94,12 +94,18 @@ namespace Labs
 			//Iniciamos a Janela de Controle de estoque caso o usuário tenha permissão para isso;
 			LABS_PDV_MAIN.IniciarApp<LabsEstoque>(false);
 		}
+		//
+		private void PdvLogin() //Realiza o login do Operador se possível, caso contrário, não permite a abertura
+		{
+            LABS_PDV_MAIN.IniciarApp<LabsPDV>(true);
+        }
+		//
 		private void OnLabsPDVClick(object sender, EventArgs e)
 		{
 			//Iniciamos a Janela Labs PDV. //Não precisa de permissão
 			//Depois fazer função caixa remoto!
 			//Aqui definimos essa janela como persistente
-			LABS_PDV_MAIN.IniciarApp<LabsPDV>(true);
+			
 		}
 
 

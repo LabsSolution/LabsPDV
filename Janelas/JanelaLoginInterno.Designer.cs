@@ -1,6 +1,6 @@
 ﻿namespace Labs.Janelas
 {
-    partial class JanelaLoginOperador
+    partial class JanelaLoginInterno
     {
         /// <summary>
         /// Required designer variable.
@@ -33,7 +33,7 @@
             UsernameInputBox = new TextBox();
             label3 = new Label();
             PasswordInputBox = new TextBox();
-            button1 = new Button();
+            LoginButton = new Button();
             SuspendLayout();
             // 
             // label2
@@ -86,39 +86,41 @@
             PasswordInputBox.Font = new Font("Segoe UI", 16F);
             PasswordInputBox.Location = new Point(12, 166);
             PasswordInputBox.Name = "PasswordInputBox";
+            PasswordInputBox.PasswordChar = '•';
             PasswordInputBox.Size = new Size(320, 36);
             PasswordInputBox.TabIndex = 5;
             // 
-            // button1
+            // LoginButton
             // 
-            button1.FlatAppearance.BorderColor = SystemColors.Window;
-            button1.FlatAppearance.BorderSize = 3;
-            button1.FlatAppearance.MouseDownBackColor = SystemColors.ButtonShadow;
-            button1.FlatAppearance.MouseOverBackColor = SystemColors.GrayText;
-            button1.FlatStyle = FlatStyle.Flat;
-            button1.Font = new Font("Segoe UI", 25F, FontStyle.Bold);
-            button1.ForeColor = SystemColors.Window;
-            button1.Location = new Point(12, 261);
-            button1.Name = "button1";
-            button1.Size = new Size(320, 67);
-            button1.TabIndex = 6;
-            button1.Text = "Login";
-            button1.UseVisualStyleBackColor = true;
+            LoginButton.FlatAppearance.BorderColor = SystemColors.Window;
+            LoginButton.FlatAppearance.BorderSize = 3;
+            LoginButton.FlatAppearance.MouseDownBackColor = SystemColors.ButtonShadow;
+            LoginButton.FlatAppearance.MouseOverBackColor = SystemColors.GrayText;
+            LoginButton.FlatStyle = FlatStyle.Flat;
+            LoginButton.Font = new Font("Segoe UI", 25F, FontStyle.Bold);
+            LoginButton.ForeColor = SystemColors.Window;
+            LoginButton.Location = new Point(12, 261);
+            LoginButton.Name = "LoginButton";
+            LoginButton.Size = new Size(320, 67);
+            LoginButton.TabIndex = 6;
+            LoginButton.Text = "Login";
+            LoginButton.UseVisualStyleBackColor = true;
+            LoginButton.Click += LoginButton_Click;
             // 
-            // JanelaLoginOperador
+            // JanelaLoginInterno
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.WindowFrame;
             ClientSize = new Size(344, 336);
-            Controls.Add(button1);
+            Controls.Add(LoginButton);
             Controls.Add(PasswordInputBox);
             Controls.Add(label3);
             Controls.Add(UsernameInputBox);
             Controls.Add(label1);
             Controls.Add(label2);
             FormBorderStyle = FormBorderStyle.None;
-            Name = "JanelaLoginOperador";
+            Name = "JanelaLoginInterno";
             Text = "Login de Operador";
             ResumeLayout(false);
             PerformLayout();
@@ -131,6 +133,6 @@
         private TextBox UsernameInputBox;
         private Label label3;
         private TextBox PasswordInputBox;
-        private Button button1;
+        private Button LoginButton;
     }
 }

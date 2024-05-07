@@ -4,8 +4,10 @@ using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Unimake.Business.DFe.Xml.NFe;
 using static Labs.LABS_PDV.Modelos;
 
 namespace Labs.LABS_PDV
@@ -92,7 +94,241 @@ namespace Labs.LABS_PDV
 			}
         }
 		//
-		public static async Task<AdminLabs> GetAdminLabsAsync(string Auth0ID)
+		//---------------------------------------------------//
+		//------------METODOLOGIA GENÉRICA-------------------//
+		//-----TROCAR TODOS OS USOS PELOS MÉTODOS ABAIXO-----//
+		//---------------------------------------------------//
+
+		//--------------------MÉTODOS DE ACESSO AO BANCO DE DADOS LOCAL-------------------//
+
+		/// <summary>
+		/// Método para Retornar um objeto da DataBase Local Dentro de uma coleção Esperada
+		/// </summary>
+		/// <typeparam name="T">Tipo de Objeto a ser Retornado (Precisa derivar Diretamente de BSONID)</typeparam>
+		/// <param name="collectionName">Nome da Coleção para a busca</param>
+		/// <param name="predicate">Expressão Lambda para Requisição, default = "(_ => true)"</param>
+		/// <returns>Objeto Requisitado ou Nulo</returns>
+		public static async Task<T> GetLocalAsync<T>(string collectionName,Expression<Func<T,bool>> predicate)
+		{
+			try
+			{
+				var collection = ConnectToMongoLocal<T>(collectionName);
+				var results = await collection.FindAsync(predicate);
+				return results.ToList().FirstOrDefault()!;
+			}
+			catch (Exception ex)
+			{
+                Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
+                return default!;
+            }
+		}
+		//
+		/// <summary>
+		/// Registra um Objeto na database local em uma coleção determinada
+		/// </summary>
+		/// <typeparam name="T">Tipo de objeto para registro</typeparam>
+		/// <param name="collectionName">Nome da coleção</param>
+		/// <param name="ToRegisterObject">Objeto para registro (Respeitando o tipo)</param>
+		public static async void RegisterLocalAsync<T>(string collectionName,T ToRegisterObject)
+		{
+			try
+			{
+                var collection = ConnectToMongoLocal<T>(collectionName);
+                await collection.InsertOneAsync(ToRegisterObject);
+            }
+			catch (Exception ex)
+			{
+                Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
+                throw null!;
+            }
+		}
+		/// <summary>
+		/// Atualiza um objeto na database local utilizando um filtro
+		/// </summary>
+		/// <typeparam name="T">Tipo de objeto para ser atualizado</typeparam>
+		/// <param name="collectionName">Nome da coleção</param>
+		/// <param name="toUpdateObject">Objeto para atualização</param>
+		/// <param name="filter">Filtro para ser aplicado</param>
+		public static async void UpdateLocalAsync<T>(string collectionName, T toUpdateObject,FilterDefinition<T> filter)
+		{
+			try
+			{
+                var collection = ConnectToMongoLocal<T>(collectionName);
+                await collection.ReplaceOneAsync(filter, toUpdateObject, new ReplaceOptions { IsUpsert = true });
+            }
+			catch (Exception ex)
+			{
+                Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
+                throw null!;
+            }
+		}
+		/// <summary>
+		/// Remove um objeto na database local utilizando um predicado
+		/// </summary>
+		/// <typeparam name="T">Tipo de objeto para remoção</typeparam>
+		/// <param name="collectionName">Nome da coleção alvo</param>
+		/// <param name="predicate">Comparativo para remoção ex: "(x => x.ID == obj.ID)"</param>
+		public static async void RemoveLocalAsync<T>(string collectionName,Expression<Func<T,bool>> predicate)
+		{
+            try
+            {
+                var collection = ConnectToMongoLocal<T>(collectionName);
+                await collection.DeleteOneAsync(predicate);
+            }
+            catch (Exception ex)
+            {
+                Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
+                throw null!;
+            }
+        }
+		/// <summary>
+		/// Pega a quantidade de objetos presentes em uma coleção (Não itera em subgrupos)
+		/// </summary>
+		/// <typeparam name="T">Tipo de objeto</typeparam>
+		/// <param name="collectionName">Nome da coleção</param>
+		/// <returns>Retorna a quantidade de objetos do Tipo especificado dentro da coleção</returns>
+		public static async Task<long> GetLocalCountAsync<T>(string collectionName)
+		{
+            try
+            {
+                var collection = ConnectToMongoLocal<T>(collectionName);
+                if (collection != null)
+                {
+                    var filter = Builders<T>.Filter.Empty;
+                    return await collection.CountDocumentsAsync(filter);
+                }
+                return -1;
+            }
+            catch (Exception ex)
+            {
+                Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
+                return -1;
+            }
+        }
+        //--------------MÉTODOS PARA BANCO DE DADOS EM NUVEM-------------------------------//
+        /// <summary>
+        /// Método para Retornar um objeto da DataBase Cloud Dentro de uma coleção Esperada
+        /// </summary>
+        /// <typeparam name="T">Tipo de Objeto a ser Retornado (Precisa derivar Diretamente de BSONID)</typeparam>
+        /// <param name="collectionName">Nome da Coleção para a busca</param>
+        /// <param name="predicate">Expressão Lambda para Requisição, default = "(_ => true)"</param>
+        /// <returns>Objeto Requisitado ou Nulo</returns>
+        public static async Task<T> GetCloudAsync<T>(string collectionName, Expression<Func<T, bool>> predicate)
+        {
+            try
+            {
+                var collection = ConnectToMongoCloud<T>(collectionName);
+                var results = await collection.FindAsync(predicate);
+                return results.ToList().FirstOrDefault()!;
+            }
+            catch (Exception ex)
+            {
+                Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
+                return default!;
+            }
+        }
+        //
+        /// <summary>
+        /// Registra um Objeto na database Cloud em uma coleção determinada
+        /// </summary>
+        /// <typeparam name="T">Tipo de objeto para registro</typeparam>
+        /// <param name="collectionName">Nome da coleção</param>
+        /// <param name="ToRegisterObject">Objeto para registro (Respeitando o tipo)</param>
+        public static async void RegisterCloudAsync<T>(string collectionName, T ToRegisterObject)
+        {
+            try
+            {
+                var collection = ConnectToMongoCloud<T>(collectionName);
+                await collection.InsertOneAsync(ToRegisterObject);
+            }
+            catch (Exception ex)
+            {
+                Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
+                throw null!;
+            }
+        }
+        /// <summary>
+        /// Atualiza um objeto na database Cloud utilizando um filtro
+        /// </summary>
+        /// <typeparam name="T">Tipo de objeto para ser atualizado</typeparam>
+        /// <param name="collectionName">Nome da coleção</param>
+        /// <param name="toUpdateObject">Objeto para atualização</param>
+        /// <param name="filter">Filtro para ser aplicado</param>
+        public static async void UpdateCloudAsync<T>(string collectionName, T toUpdateObject, FilterDefinition<T> filter)
+        {
+            try
+            {
+                var collection = ConnectToMongoCloud<T>(collectionName);
+                await collection.ReplaceOneAsync(filter, toUpdateObject, new ReplaceOptions { IsUpsert = true });
+            }
+            catch (Exception ex)
+            {
+                Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
+                throw null!;
+            }
+        }
+        /// <summary>
+        /// Remove um objeto na database Cloud utilizando um predicado
+        /// </summary>
+        /// <typeparam name="T">Tipo de objeto para remoção</typeparam>
+        /// <param name="collectionName">Nome da coleção alvo</param>
+        /// <param name="predicate">Comparativo para remoção ex: "(x => x.ID == obj.ID)"</param>
+        public static async void RemoveCloudAsync<T>(string collectionName, Expression<Func<T, bool>> predicate)
+        {
+            try
+            {
+                var collection = ConnectToMongoLocal<T>(collectionName);
+                await collection.DeleteOneAsync(predicate);
+            }
+            catch (Exception ex)
+            {
+                Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
+                throw null!;
+            }
+        }
+        /// <summary>
+        /// Pega a quantidade de objetos presentes em uma coleção (Não itera em subgrupos)
+        /// </summary>
+        /// <typeparam name="T">Tipo de objeto</typeparam>
+        /// <param name="collectionName">Nome da coleção</param>
+        /// <returns>Retorna a quantidade de objetos do Tipo especificado dentro da coleção</returns>
+        public static async Task<long> GetCloudCountAsync<T>(string collectionName)
+        {
+            try
+            {
+                var collection = ConnectToMongoCloud<T>(collectionName);
+                if (collection != null)
+                {
+                    var filter = Builders<T>.Filter.Empty;
+                    return await collection.CountDocumentsAsync(filter);
+                }
+                return -1;
+            }
+            catch (Exception ex)
+            {
+                Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
+                return -1;
+            }
+        }
+        //---------------------MÉTODOS DE ACESSO AO BANCO DE DADOS LABS------------------------------//
+        public static async Task<T> GetLabsCloudAsync<T>(string collectionName, Expression<Func<T, bool>> predicate)
+        {
+            try
+            {
+                var collection = ConnectToLabsMongoCloud<T>(collectionName);
+                var results = await collection.FindAsync(predicate);
+                return results.ToList().FirstOrDefault()!;
+            }
+            catch (Exception ex)
+            {
+                Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
+                return default!;
+            }
+        }
+		//----------------MÉTODOS DE ACESSO ESPECÍFICOS (NÃO PODEM SER GENERALIZADOS!)--------------------------------//
+
+
+        public static async Task<AdminLabs> GetAdminLabsAsync(string Auth0ID)
 		{
 			try
 			{
@@ -236,7 +472,7 @@ namespace Labs.LABS_PDV
 			}
 			
 		}
-		//
+		//REMOVER ESSA FUNÇÃO ABAIXO E MOVER PARA OUTRO PONTO
 		public static async Task AbaterProdutosEmEstoqueAsync(List<Produto> produtos)
 		{
             try
