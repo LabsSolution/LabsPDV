@@ -7,9 +7,55 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Labs.LABS_PDV
-{
+{ 
+	/// <summary>
+	/// ATENÇÃO!!!! TODOS OS MODELOS ABAIXO SÃO DE ALTO NÍVEL DE IMPORTÂNCIA!!!!, QUALQUER ALTERAÇÃO DESCUIDADA PODE OCASIONAR PROBLEMAS!!!
+	/// ANTES DE ALTERAR QUALQUER VALOR, CERTIFIQUE-SE DE CONFIRMAR A NÃO UTILIZAÇÃO DO ITEM NO CÓDIGO!!!
+	/// </summary>
 	public class Modelos
 	{
+		public class MeioPagamento
+		{
+			public static string DINHEIRO { get; set; } = "DINHEIRO";
+			public static string PIX { get; set; } = "PIX";
+			public static string CARTAODEBITO { get; set; } = "CARTAO-DEBITO";
+			public static string CARTAOCREDITO { get; set; } = "CARTAO-CREDITO";
+		}
+		/// <summary>
+		/// Operador de Caixa, Salvo Internamente No Banco de Dados (Registrado pelo Próprio sistema,
+		/// Sem Uso do Auth0).
+		/// </summary>
+		public class OperadorCaixa(string NomeDoOperador,string UserName, string Password)
+		{
+			[BsonId]
+			[BsonRepresentation(BsonType.ObjectId)]
+			public string DataBaseID { get; set; } = null!;
+			/// <summary>
+			/// Nome do Operador de Caixa
+			/// </summary>
+			public string NomeDoOperador { get; set; } = NomeDoOperador;
+			/// <summary>
+			/// Nome de Usuário para Login
+			/// </summary>
+			public string UsernameOperador { get; set; } = UserName;
+			/// <summary>
+			/// Senha do Operador
+			/// </summary>
+			public string PasswordOperador { get; set; } = Password;
+			//
+		}
+		/// <summary>
+		/// Supervisor de Caixa, Salvo Internamente no Banco de Dados (Registrado pelo próprio Sistema,
+		/// Sem Uso do Auth0).
+		/// </summary>
+		public class SupervisorCaixa(string NomeSupervisor, string SenhaSupervisor)
+		{
+			[BsonId]
+			[BsonRepresentation(BsonType.ObjectId)]
+			public string DataBaseID { get; set; } = null!;
+			public string NomeSupervisor { get; } = NomeSupervisor;
+			public string SenhaSupervisor { get; } = SenhaSupervisor;
+		}
 		//Admin
 		public class AdminLabs(string Auth0ID, bool AdminAtivo = false, int PermLevel = 0)
 		{
@@ -54,6 +100,7 @@ namespace Labs.LABS_PDV
 			/// </summary>
 			public double Valor { get; private set; } = valor;
 		}
+		//
 		public class MeioDePagamento(string Meio, bool PodeUltrapassarOValorTotal = false, bool PossuiModos = false, List<ModoDePagamento> Modos = default!)
 		{
 			[BsonId]

@@ -13,20 +13,46 @@ namespace Labs.Janelas.LabsPDV
 		const string AbrirCaixaText = "ABRIR CAIXA";
 		const string FecharCaixaText = "FECHAR CAIXA";
 		//
-		private static bool EstaAberto { get; set; } = true; // deixar isso como false por padrão
+		private static bool EstaAberto { get; set; } = false; // deixar isso como false por padrão
 		private static bool RealizandoVenda { get; set; } = false;
 		//
 		private protected List<Produto> Produtos = []; // Usado para o gerenciamento do valor total
 		private protected double PagamentoTotal = 0.0; // registro do pagamento total
+													   //
+		private protected CaixaLabs CaixaLabs { get; private set; } = null!;
+		//
 		public LabsPDV()
 		{
 			InitializeComponent();
 			if (!EstaAberto) { FecharCaixa(); } else { ResetarFoco(); }
 			//
 		}
-		// Creio que esses dois métodos abaixo sejam auto-explicativos.
+		/// <summary>
+		/// Chamado quando a janela de abertura de caixa é "finalizada";
+		/// </summary>
+		/// <param name="ValorDeAbertura">Valor total com que o caixa está abrindo</param>
+		/// <param name="Janela">Retorno da Própria janela</param>
+		private void RealizarAbertura(double ValorDeAbertura,JanelaAberturaDeCaixa Janela)
+		{
+			if(CaixaLabs == null) { Modais.MostrarErro("ERRO CRÍTICO!\nA Comunicação com um módulo interno foi Interrompida!"); return; }
+			CaixaLabs.RealizarAbertura();
+			Janela.Close();
+		}
+		//
 		public void AbrirCaixa()
 		{
+			//
+
+
+
+
+			//
+			var JDAC = LABS_PDV_MAIN.IniciarDependencia<JanelaAberturaDeCaixa>(App => 
+			{ 
+				App.onJDACClose += RealizarAbertura;
+			},true,false);
+			//
+			//FAZER JANELINHA DE ABERTURA DE CAIXA // Gestão de Fluxo
 			EstaAberto = true;
 			CaixaStateLabel.Text = CaixaAberto;
 			AbrirFecharCaixaButton.Text = FecharCaixaText;
@@ -39,7 +65,6 @@ namespace Labs.Janelas.LabsPDV
 			QuantidadeInput.Text = "1";
 			CodBarrasInput.Focus();
 			//
-			//FAZER JANELINHA DE ABERTURA DE CAIXA // Gestão de Fluxo
 			Modais.MostrarInfo("Caixa Aberto com Sucesso! \nBOAS VENDAS!");
 		}
 		//

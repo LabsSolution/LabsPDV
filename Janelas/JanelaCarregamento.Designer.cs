@@ -41,11 +41,15 @@
             // 
             // TituloLabel
             // 
+            TituloLabel.BackColor = Color.Transparent;
+            TituloLabel.FlatStyle = FlatStyle.Flat;
             TituloLabel.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            TituloLabel.ForeColor = SystemColors.Window;
             TituloLabel.Location = new Point(12, 9);
             TituloLabel.Name = "TituloLabel";
             TituloLabel.Size = new Size(260, 214);
             TituloLabel.TabIndex = 1;
+            TituloLabel.Text = "dwqdwq";
             TituloLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // JanelaCarregamento

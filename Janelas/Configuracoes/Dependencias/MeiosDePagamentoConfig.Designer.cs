@@ -81,6 +81,7 @@
             // label1
             // 
             label1.AutoSize = true;
+            label1.BackColor = Color.Transparent;
             label1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.ForeColor = SystemColors.Window;
             label1.Location = new Point(12, 12);
@@ -131,6 +132,7 @@
             // ModosDePagamentoLabel
             // 
             ModosDePagamentoLabel.AutoSize = true;
+            ModosDePagamentoLabel.BackColor = Color.Transparent;
             ModosDePagamentoLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             ModosDePagamentoLabel.ForeColor = SystemColors.Window;
             ModosDePagamentoLabel.Location = new Point(12, 68);
@@ -142,6 +144,7 @@
             // PossuiModosCheckBox
             // 
             PossuiModosCheckBox.AutoSize = true;
+            PossuiModosCheckBox.BackColor = Color.Transparent;
             PossuiModosCheckBox.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             PossuiModosCheckBox.ForeColor = SystemColors.Window;
             PossuiModosCheckBox.Location = new Point(199, 68);
@@ -149,12 +152,13 @@
             PossuiModosCheckBox.Size = new Size(85, 25);
             PossuiModosCheckBox.TabIndex = 6;
             PossuiModosCheckBox.Text = "Possui?";
-            PossuiModosCheckBox.UseVisualStyleBackColor = true;
+            PossuiModosCheckBox.UseVisualStyleBackColor = false;
             PossuiModosCheckBox.CheckedChanged += OnPossuiCheckChange;
             // 
             // PossuiBandeirasCheckBox
             // 
             PossuiBandeirasCheckBox.AutoSize = true;
+            PossuiBandeirasCheckBox.BackColor = Color.Transparent;
             PossuiBandeirasCheckBox.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             PossuiBandeirasCheckBox.ForeColor = SystemColors.Window;
             PossuiBandeirasCheckBox.Location = new Point(441, 68);
@@ -162,13 +166,14 @@
             PossuiBandeirasCheckBox.Size = new Size(85, 25);
             PossuiBandeirasCheckBox.TabIndex = 9;
             PossuiBandeirasCheckBox.Text = "Possui?";
-            PossuiBandeirasCheckBox.UseVisualStyleBackColor = true;
+            PossuiBandeirasCheckBox.UseVisualStyleBackColor = false;
             PossuiBandeirasCheckBox.Visible = false;
             PossuiBandeirasCheckBox.CheckedChanged += OnPossuiCheckChange;
             // 
             // BandeirasLabel
             // 
             BandeirasLabel.AutoSize = true;
+            BandeirasLabel.BackColor = Color.Transparent;
             BandeirasLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             BandeirasLabel.ForeColor = SystemColors.Window;
             BandeirasLabel.Location = new Point(345, 68);
@@ -181,6 +186,7 @@
             // PossuiParcelasCheckBox
             // 
             PossuiParcelasCheckBox.AutoSize = true;
+            PossuiParcelasCheckBox.BackColor = Color.Transparent;
             PossuiParcelasCheckBox.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             PossuiParcelasCheckBox.ForeColor = SystemColors.Window;
             PossuiParcelasCheckBox.Location = new Point(696, 68);
@@ -188,13 +194,14 @@
             PossuiParcelasCheckBox.Size = new Size(85, 25);
             PossuiParcelasCheckBox.TabIndex = 12;
             PossuiParcelasCheckBox.Text = "Possui?";
-            PossuiParcelasCheckBox.UseVisualStyleBackColor = true;
+            PossuiParcelasCheckBox.UseVisualStyleBackColor = false;
             PossuiParcelasCheckBox.Visible = false;
             PossuiParcelasCheckBox.CheckedChanged += OnPossuiCheckChange;
             // 
             // ParcelasLabel
             // 
             ParcelasLabel.AutoSize = true;
+            ParcelasLabel.BackColor = Color.Transparent;
             ParcelasLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             ParcelasLabel.ForeColor = SystemColors.Window;
             ParcelasLabel.Location = new Point(600, 68);
@@ -274,6 +281,7 @@
             // SemLimiteDeValor
             // 
             SemLimiteDeValor.AutoSize = true;
+            SemLimiteDeValor.BackColor = Color.Transparent;
             SemLimiteDeValor.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             SemLimiteDeValor.ForeColor = SystemColors.Window;
             SemLimiteDeValor.Location = new Point(208, 12);
@@ -281,12 +289,13 @@
             SemLimiteDeValor.Size = new Size(76, 25);
             SemLimiteDeValor.TabIndex = 24;
             SemLimiteDeValor.Text = "SLDV?";
-            SemLimiteDeValor.UseVisualStyleBackColor = true;
+            SemLimiteDeValor.UseVisualStyleBackColor = false;
             SemLimiteDeValor.CheckedChanged += OnPossuiCheckChange;
             // 
             // label2
             // 
             label2.AutoSize = true;
+            label2.BackColor = Color.Transparent;
             label2.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label2.ForeColor = SystemColors.Window;
             label2.Location = new Point(618, 9);
@@ -298,6 +307,7 @@
             // label3
             // 
             label3.AutoSize = true;
+            label3.BackColor = Color.Transparent;
             label3.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label3.ForeColor = SystemColors.Window;
             label3.Location = new Point(12, 324);
@@ -332,6 +342,7 @@
             // NParcelaLabel
             // 
             NParcelaLabel.AutoSize = true;
+            NParcelaLabel.BackColor = Color.Transparent;
             NParcelaLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             NParcelaLabel.ForeColor = SystemColors.Window;
             NParcelaLabel.Location = new Point(600, 92);

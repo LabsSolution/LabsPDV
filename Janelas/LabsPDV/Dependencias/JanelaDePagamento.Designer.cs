@@ -105,6 +105,7 @@
             // 
             label2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label2.AutoSize = true;
+            label2.BackColor = Color.Transparent;
             label2.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
             label2.ForeColor = SystemColors.Window;
             label2.Location = new Point(552, 166);
@@ -117,6 +118,7 @@
             // 
             label3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label3.AutoSize = true;
+            label3.BackColor = Color.Transparent;
             label3.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
             label3.ForeColor = SystemColors.Window;
             label3.Location = new Point(668, 84);
@@ -129,6 +131,7 @@
             // 
             label4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label4.AutoSize = true;
+            label4.BackColor = Color.Transparent;
             label4.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
             label4.ForeColor = SystemColors.Window;
             label4.Location = new Point(729, 3);
@@ -205,6 +208,7 @@
             // 
             label1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label1.AutoSize = true;
+            label1.BackColor = Color.Transparent;
             label1.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
             label1.ForeColor = SystemColors.Window;
             label1.Location = new Point(752, 248);
@@ -217,6 +221,7 @@
             // 
             label5.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label5.AutoSize = true;
+            label5.BackColor = Color.Transparent;
             label5.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
             label5.ForeColor = SystemColors.Window;
             label5.Location = new Point(791, 420);
@@ -251,6 +256,7 @@
             // 
             label7.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label7.AutoSize = true;
+            label7.BackColor = Color.Transparent;
             label7.Font = new Font("Segoe UI Black", 14F, FontStyle.Bold);
             label7.ForeColor = SystemColors.Window;
             label7.Location = new Point(12, 9);
@@ -273,6 +279,7 @@
             // 
             label8.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label8.AutoSize = true;
+            label8.BackColor = Color.Transparent;
             label8.Font = new Font("Segoe UI Black", 14F, FontStyle.Bold);
             label8.ForeColor = SystemColors.Window;
             label8.Location = new Point(322, 9);
@@ -285,6 +292,7 @@
             // 
             label9.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label9.AutoSize = true;
+            label9.BackColor = Color.Transparent;
             label9.Font = new Font("Segoe UI Black", 14F, FontStyle.Bold);
             label9.ForeColor = SystemColors.Window;
             label9.Location = new Point(12, 70);
@@ -319,6 +327,7 @@
             // 
             label10.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label10.AutoSize = true;
+            label10.BackColor = Color.Transparent;
             label10.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
             label10.ForeColor = SystemColors.Window;
             label10.Location = new Point(12, 513);
@@ -331,6 +340,7 @@
             // 
             label11.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label11.AutoSize = true;
+            label11.BackColor = Color.Transparent;
             label11.Font = new Font("Segoe UI Black", 18F, FontStyle.Bold);
             label11.ForeColor = SystemColors.Window;
             label11.Location = new Point(707, 330);
@@ -385,6 +395,7 @@
             // 
             label12.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label12.AutoSize = true;
+            label12.BackColor = Color.Transparent;
             label12.Font = new Font("Segoe UI Black", 14F, FontStyle.Bold);
             label12.ForeColor = SystemColors.Window;
             label12.Location = new Point(12, 138);
@@ -397,6 +408,7 @@
             // 
             label6.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label6.AutoSize = true;
+            label6.BackColor = Color.Transparent;
             label6.Font = new Font("Segoe UI Black", 14F, FontStyle.Bold);
             label6.ForeColor = SystemColors.Window;
             label6.Location = new Point(293, 138);
@@ -409,6 +421,7 @@
             // 
             label13.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label13.AutoSize = true;
+            label13.BackColor = Color.Transparent;
             label13.Font = new Font("Segoe UI Black", 14F, FontStyle.Bold);
             label13.ForeColor = SystemColors.Window;
             label13.Location = new Point(422, 138);
@@ -421,6 +434,7 @@
             // 
             label14.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label14.AutoSize = true;
+            label14.BackColor = Color.Transparent;
             label14.Font = new Font("Segoe UI Black", 14F, FontStyle.Bold);
             label14.ForeColor = SystemColors.Window;
             label14.Location = new Point(152, 138);

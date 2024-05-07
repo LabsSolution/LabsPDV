@@ -1,11 +1,12 @@
 //Importação das Janelas
 using Labs.Janelas.LabsEstoque;
 using Labs.LABS_PDV;
-using static Dapper.SqlMapper;
 using System.Security.AccessControl;
 using System.Security.Cryptography;
 using System.Configuration;
 using Labs.Janelas.Configuracoes.Dependencias;
+using Labs.Janelas.LabsPDV.Dependencias;
+using Labs.Janelas.LabsPDV;
 //
 namespace Labs
 {
@@ -34,7 +35,7 @@ namespace Labs
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-			LabsMainApp App = new();
+			LabsPDV App = new();
 			//svgtest App = new();
 			App.Resize += OnAppSizeChange;
             App.Load += OnAppLoad;
@@ -115,7 +116,7 @@ namespace Labs
 		/// </summary>
 		/// <typeparam name="T">Dependencia a ser Iniciada</typeparam>
 		/// <param name="SempreNoTopo">Mostrar Janela sempre no topo ou não</param>
-		public static T IniciarDependencia<T>(Action<T> config = null!, bool SempreNoTopo = true) where T : Form, new()
+		public static T IniciarDependencia<T>(Action<T> config = null!, bool SempreNoTopo = true, bool BackgroundImage = true) where T : Form, new()
 		{
 			T? App;
 			// Verifica se a aplicação já está rodando
@@ -140,9 +141,9 @@ namespace Labs
 			config?.Invoke(App);
 			// Mostra a aplicação
 			//
-            if (SempreNoTopo) { App.Load += OnAppLoad; App.ShowDialog(); return App; }
+            if (SempreNoTopo) { if (BackgroundImage == true) { App.Load += OnAppLoad; } App.ShowDialog(); return App; }
 			//Retornamos o App
-			App.Load += OnAppLoad;
+			if (BackgroundImage == true) { App.Load += OnAppLoad; }
 			App.Show();
 			return App;
 		}
@@ -152,7 +153,8 @@ namespace Labs
 		/// </summary>
 		/// <typeparam name="T">Tipo de Janela que será iniciado</typeparam>
 		/// <param name="Persistente">Define se a janela permanece carregada até ser forçado seu fechamento ou não</param>
-		public static T IniciarApp<T>(bool Persistente = false) where T : Form, new()
+		/// <param name="BackgroundImage">Define se a janela Carrega a imagem de Background ou não, padrão = true</param>
+		public static T IniciarApp<T>(bool Persistente = false, bool BackgroundImage = true) where T : Form, new()
 		{
 			T? App;
 			// Verifica se a aplicação já está rodando
@@ -184,8 +186,8 @@ namespace Labs
 			//
 			if (Persistente) { App.VisibleChanged += AppHidden; App.FormClosed += AppClosed; }
 			if (!Persistente) { App.FormClosed += AppClosed; }
+			if (BackgroundImage == true) { App.Load += OnAppLoad; }
 			App.Resize += OnAppSizeChange; // O evento de SizeChange é global para qualquer janela;
-            App.Load += OnAppLoad; // o mesmo para o OnAppLoad
 			// Mostra a aplicação
 			App.Show();
             return App; // Após isso tudo, retornamos a janela
