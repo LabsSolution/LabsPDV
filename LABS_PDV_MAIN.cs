@@ -19,10 +19,11 @@ namespace Labs
 		public static string CloudDataBase = null!;
 		public static string LocalDataBase = null!;
 		//
-		/// <summary>
-		///  The main entry point for the application.
-		/// </summary>
-		[STAThread]
+		static SVGParser parser = new();
+        /// <summary>
+        ///  The main entry point for the application.
+        /// </summary>
+        [STAThread]
 		static void Main()
 		{	
 			//A Criptografia é algo essencial para a segurança dos nossos clientes!
@@ -35,7 +36,9 @@ namespace Labs
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-			LabsPDV App = new();
+			//
+			LabsPDV App = new(); // Altere esse campo para modificar a primeira janela a ser aberta (Utilizar somente para debug)
+			//
 			//svgtest App = new();
 			App.Resize += OnAppSizeChange;
             App.Load += OnAppLoad;
@@ -64,9 +67,8 @@ namespace Labs
         {
             if(sender is Form App)
 			{
-                SVGParser parser = new();
 				App.BackgroundImageLayout = ImageLayout.Stretch;
-                App.BackgroundImage = parser.GetImageFromSVG();
+				App.BackgroundImage = parser.GetImageFromSVG(); ;
             }
         }
 
@@ -91,6 +93,10 @@ namespace Labs
 					App.FormClosed -= AppClosed;
 					App.Resize -= OnAppSizeChange;
                     App.Load -= OnAppLoad;
+                    App.BackgroundImage?.Dispose();
+                    //
+                    if (RunningApps.TryGetValue(App.Name, out Form? closingApp)) { RunningApps.Remove(App.Name); }
+					//
                     LabsMainApp.App.Show();
 				}
 			}
@@ -106,10 +112,43 @@ namespace Labs
 					App.VisibleChanged -= AppHidden;
 					App.Resize -= OnAppSizeChange;
                     App.Load -= OnAppLoad;
+                    App.BackgroundImage?.Dispose();
+                    //
                     LabsMainApp.App.Show();
 				}
 			}
 		}
+		//
+		private static void DepAppClosed(object? sender, FormClosedEventArgs e)
+		{
+			if(e.CloseReason == CloseReason.UserClosing)
+			{
+                if (sender is Form App)
+                {
+                    App.VisibleChanged -= AppHidden;
+                    App.Resize -= OnAppSizeChange;
+                    App.Load -= OnAppLoad;
+                    App.BackgroundImage?.Dispose();
+                    //
+                    if (RunningApps.TryGetValue(App.Name, out Form? closingApp)) { RunningApps.Remove(App.Name); }
+                }
+            }
+        }
+		//
+		private static void DepAppHidden(object? sender, EventArgs e)
+		{
+            if (sender is Form App)
+            {
+                if (!App.Visible)
+                {
+                    App.VisibleChanged -= AppHidden;
+                    App.Resize -= OnAppSizeChange;
+					App.Load -= OnAppLoad;
+					App.BackgroundImage?.Dispose();
+					App.Dispose();
+                }
+            }
+        }
 		/// <summary>
 		/// Inicia uma dependencia em cima da janela que a requisitou (Não Esconde a janela anterior)
 		/// Caso queira iniciar uma janela Diretamente como foco use o método IniciarApp para melhor performance
@@ -141,9 +180,10 @@ namespace Labs
 			config?.Invoke(App);
 			// Mostra a aplicação
 			//
-            if (SempreNoTopo) { if (BackgroundImage == true) { App.Load += OnAppLoad; } App.ShowDialog(); return App; }
+            if (SempreNoTopo) { if (BackgroundImage == true) { App.Load += OnAppLoad; } App.FormClosed += DepAppClosed; App.VisibleChanged += DepAppHidden; App.ShowDialog(); return App; }
 			//Retornamos o App
 			if (BackgroundImage == true) { App.Load += OnAppLoad; }
+			App.FormClosed += DepAppClosed;
 			App.Show();
 			return App;
 		}
@@ -176,7 +216,7 @@ namespace Labs
 				App = new T();
 				RunningApps[typeof(T).Name] = App;
 			}
-
+			//
 
 			// Quando uma nova Instância for Iniciada Escondemos a principal
 			LabsMainApp.App.Hide();
@@ -184,12 +224,12 @@ namespace Labs
 			//
 			// Aqui atrelamos os dois eventos porque em algum momento a janela será realmente fechada;
 			//
-			if (Persistente) { App.VisibleChanged += AppHidden; App.FormClosed += AppClosed; }
-			if (!Persistente) { App.FormClosed += AppClosed; }
+			if (Persistente) { App.VisibleChanged += AppHidden;  }
 			if (BackgroundImage == true) { App.Load += OnAppLoad; }
 			App.Resize += OnAppSizeChange; // O evento de SizeChange é global para qualquer janela;
-			// Mostra a aplicação
-			App.Show();
+            App.FormClosed += AppClosed; // Global
+            // Mostra a aplicação
+            App.Show();
             return App; // Após isso tudo, retornamos a janela
 		}
 	}

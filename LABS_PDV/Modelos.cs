@@ -14,13 +14,38 @@ namespace Labs.LABS_PDV
 	/// </summary>
 	public class Modelos
 	{
-		public class MeioPagamento
+		/// <summary>
+		/// Essa classe precisa ser instanciada como objeto para poder funcionar corretamente!
+		/// </summary>
+		public class MeiosPagamento
 		{
-			public static string DINHEIRO { get; set; } = "DINHEIRO";
-			public static string PIX { get; set; } = "PIX";
-			public static string CARTAODEBITO { get; set; } = "CARTAO-DEBITO";
-			public static string CARTAOCREDITO { get; set; } = "CARTAO-CREDITO";
+			/// <summary>
+			/// ID Para Representação no banco de dados
+			/// </summary>
+			[BsonId]
+			[BsonRepresentation(BsonType.ObjectId)]
+			public string ID { get; set; } = null!;
+			//
+			/// <summary>
+			/// Lista contendo todos os Nomes de Meios de pagamento
+			/// </summary>
+			public List<Meio> Meios { get; private set; } = null!;
+			/// <summary>
+			/// Construtor Padrão
+			/// </summary>
+			public MeiosPagamento() { Meios = [new("DINHEIRO",false)]; }
 		}
+		//
+		public class Meio(string NomeDoMeio,bool SLDV = false)
+		{
+			[BsonId]
+			[BsonRepresentation(BsonType.ObjectId)]
+			public string ID { get; set; } = null!;
+			//
+			public string Item1 { get; set; } = NomeDoMeio;
+			public bool Item2 { get; set; } = SLDV;
+		}
+		//----------------------------------------------------------------------------------------//
 		/// <summary>
 		/// Operador de Caixa, Salvo Internamente No Banco de Dados (Registrado pelo Próprio sistema,
 		/// Sem Uso do Auth0).

@@ -27,7 +27,7 @@ namespace Labs.Janelas.Configuracoes
         {
             LABS_PDV_MAIN.IniciarDependencia<MeiosDePagamentoConfig>(app =>
             {
-                app.LoadFromDataBase();
+
             });
         }
         //

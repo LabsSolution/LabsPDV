@@ -105,7 +105,7 @@ namespace Labs
 			//Iniciamos a Janela Labs PDV. //Não precisa de permissão
 			//Depois fazer função caixa remoto!
 			//Aqui definimos essa janela como persistente
-			
+			LABS_PDV_MAIN.IniciarApp<LabsPDV>(true);
 		}
 
 

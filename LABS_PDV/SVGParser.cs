@@ -17,8 +17,7 @@ namespace Labs.LABS_PDV
         public Image GetImageFromSVG()
         {
             SvgDocument svg = SvgDocument.Open($@".\LabsBin\Background.svg");
-            Image img = svg.Draw();
-            return img;
+            return svg.Draw();
         }
     }
 }

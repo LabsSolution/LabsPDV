@@ -9,8 +9,10 @@ namespace Labs.LABS_PDV
     /// <summary>
     /// Registro Interno De Pagamentos (RIDP).
     /// </summary>
-    public class RIDP(string NomeDoRegistro,double CapitalDeGiroInicial = 0)
+    public class RIDP(string NomeDoRegistro,double CapitalDeGiroInicial = 0,bool SemLimiteDeValor = false)
     {
+        //
+        public bool SemLimiteDeValor { get; private set; } = SemLimiteDeValor;
         public string NomeDoRegistro { get; set; } = NomeDoRegistro;
         public double CapitalDeGiro { get { return Math.Round(CapitalDeGiro, 2); } set => Math.Round(CapitalDeGiroInicial, 2); }
         //

@@ -110,7 +110,6 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                 AdicionarCapital();
             }
         }
-
         private void AbrirCaixaButton_Click(object sender, EventArgs e)
         {
             if(onJDACClose != null) // se tiver alguém ouvindo o evento, disparamos

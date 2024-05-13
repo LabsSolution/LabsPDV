@@ -129,17 +129,18 @@ namespace Labs.LABS_PDV
 		/// <typeparam name="T">Tipo de objeto para registro</typeparam>
 		/// <param name="collectionName">Nome da coleção</param>
 		/// <param name="ToRegisterObject">Objeto para registro (Respeitando o tipo)</param>
-		public static async void RegisterLocalAsync<T>(string collectionName,T ToRegisterObject)
+		/// <param name="filter">Filtro para registro</param>
+		public static async void RegisterLocalAsync<T>(string collectionName,T ToRegisterObject,FilterDefinition<T> filter)
 		{
 			try
 			{
                 var collection = ConnectToMongoLocal<T>(collectionName);
-                await collection.InsertOneAsync(ToRegisterObject);
+                await collection.ReplaceOneAsync(filter, ToRegisterObject, new ReplaceOptions() { IsUpsert = true });
             }
 			catch (Exception ex)
 			{
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw null!;
+                throw;
             }
 		}
 		/// <summary>
@@ -159,7 +160,7 @@ namespace Labs.LABS_PDV
 			catch (Exception ex)
 			{
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw null!;
+                throw;
             }
 		}
 		/// <summary>
@@ -178,7 +179,7 @@ namespace Labs.LABS_PDV
             catch (Exception ex)
             {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw null!;
+                throw;
             }
         }
 		/// <summary>
@@ -234,17 +235,18 @@ namespace Labs.LABS_PDV
         /// <typeparam name="T">Tipo de objeto para registro</typeparam>
         /// <param name="collectionName">Nome da coleção</param>
         /// <param name="ToRegisterObject">Objeto para registro (Respeitando o tipo)</param>
-        public static async void RegisterCloudAsync<T>(string collectionName, T ToRegisterObject)
+        /// <param name="filter">filtro Para Registro</param>
+        public static async void RegisterCloudAsync<T>(string collectionName, T ToRegisterObject, FilterDefinition<T> filter)
         {
             try
             {
                 var collection = ConnectToMongoCloud<T>(collectionName);
-                await collection.InsertOneAsync(ToRegisterObject);
+                await collection.ReplaceOneAsync(filter, ToRegisterObject, new ReplaceOptions() { IsUpsert = true });
             }
             catch (Exception ex)
             {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw null!;
+                throw;
             }
         }
         /// <summary>
@@ -264,7 +266,7 @@ namespace Labs.LABS_PDV
             catch (Exception ex)
             {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw null!;
+                throw;
             }
         }
         /// <summary>
@@ -283,7 +285,7 @@ namespace Labs.LABS_PDV
             catch (Exception ex)
             {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw null!;
+                throw;
             }
         }
         /// <summary>
@@ -353,7 +355,7 @@ namespace Labs.LABS_PDV
 			catch (Exception ex)
 			{
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw null!;
+                throw;
 			}
 		}
         //
@@ -390,7 +392,7 @@ namespace Labs.LABS_PDV
 			catch (Exception ex)
 			{
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw null!;
+                throw;
 			}
 		}
 		//
@@ -405,7 +407,7 @@ namespace Labs.LABS_PDV
 			catch (Exception ex)
 			{
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw null!;
+                throw;
 			}
 			
 		}
@@ -420,7 +422,7 @@ namespace Labs.LABS_PDV
 			catch (Exception ex)
 			{
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw null!;
+                throw;
 			}
             
         }
@@ -452,7 +454,7 @@ namespace Labs.LABS_PDV
 			catch (Exception ex)
 			{
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw null!;
+                throw;
 			}
 			
 		}
@@ -468,7 +470,7 @@ namespace Labs.LABS_PDV
 			catch (Exception ex)
 			{
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw null!;
+                throw;
 			}
 			
 		}
@@ -494,7 +496,7 @@ namespace Labs.LABS_PDV
             catch (Exception ex)
             {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw null!;
+                throw;
             }
 		}
 		//
@@ -508,7 +510,7 @@ namespace Labs.LABS_PDV
             catch (Exception ex)
             {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw null!;
+                throw;
             }
             
 		}
@@ -560,7 +562,7 @@ namespace Labs.LABS_PDV
 			catch (Exception ex)
 			{
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw null!;
+                throw;
 			}
 		}
 		//
@@ -575,7 +577,7 @@ namespace Labs.LABS_PDV
             catch (Exception ex)
             {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw null!;
+                throw;
             }
 		}
 		//
@@ -589,7 +591,7 @@ namespace Labs.LABS_PDV
             catch (Exception ex)
             {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw null!;
+                throw;
             }
 		}
 		//

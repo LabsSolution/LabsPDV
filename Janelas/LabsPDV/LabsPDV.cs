@@ -1,5 +1,6 @@
 ﻿using Labs.Janelas.LabsPDV.Dependencias;
 using Labs.LABS_PDV;
+using Unimake.Business.DFe.Xml.EFDReinf;
 using static Labs.LABS_PDV.Modelos;
 
 namespace Labs.Janelas.LabsPDV
@@ -18,8 +19,8 @@ namespace Labs.Janelas.LabsPDV
 		//
 		private protected List<Produto> Produtos = []; // Usado para o gerenciamento do valor total
 		private protected double PagamentoTotal = 0.0; // registro do pagamento total
-													   //
-		private protected CaixaLabs CaixaLabs { get; private set; } = null!;
+		//
+		public CaixaLabs CaixaLabs { get; private set; } = null!;
 		//
 		public LabsPDV()
 		{
@@ -27,46 +28,48 @@ namespace Labs.Janelas.LabsPDV
 			if (!EstaAberto) { FecharCaixa(); } else { ResetarFoco(); }
 			//
 		}
-		/// <summary>
-		/// Chamado quando a janela de abertura de caixa é "finalizada";
-		/// </summary>
-		/// <param name="ValorDeAbertura">Valor total com que o caixa está abrindo</param>
-		/// <param name="Janela">Retorno da Própria janela</param>
-		private void RealizarAbertura(double ValorDeAbertura,JanelaAberturaDeCaixa Janela)
+		//
+        public void AbrirCaixa()
+        {
+            //
+            //FAZER JANELINHA DE ABERTURA DE CAIXA // Gestão de Fluxo
+            var JDAC = LABS_PDV_MAIN.IniciarDependencia<JanelaAberturaDeCaixa>(App =>
+            {
+                App.onJDACClose += RealizarAbertura;
+            }, true, false);
+        }
+		//
+        /// <summary>
+        /// Chamado quando a janela de abertura de caixa é "finalizada";
+        /// </summary>
+        /// <param name="ValorDeAbertura">Valor total com que o caixa está abrindo</param>
+        /// <param name="Janela">Retorno da Própria janela</param>
+        private void RealizarAbertura(double ValorDeAbertura,JanelaAberturaDeCaixa Janela)
 		{
+			//Iniciamos o CaixaLabs, se não conseguirmos lançamos um erro
+			CaixaLabs = new(ValorDeAbertura,new OperadorCaixa("Operador Teste","User","Pass")); // Aqui estamos iniciando na maluquice
+			//
 			if(CaixaLabs == null) { Modais.MostrarErro("ERRO CRÍTICO!\nA Comunicação com um módulo interno foi Interrompida!"); return; }
 			CaixaLabs.RealizarAbertura();
 			Janela.Close();
-		}
+            //
+            //
+            EstaAberto = true;
+            CaixaStateLabel.Text = CaixaAberto;
+            AbrirFecharCaixaButton.Text = FecharCaixaText;
+            AbrirFecharCaixaButton.BackColor = Color.DarkSalmon;
+            CaixaStateLabel.BackColor = Color.LightGreen;
+            //
+            QuantidadeInput.Enabled = true;
+            CodBarrasInput.Enabled = true;
+            //
+            QuantidadeInput.Text = "1";
+            CodBarrasInput.Focus();
+            //
+            Modais.MostrarInfo("Caixa Aberto com Sucesso! \nBOAS VENDAS!");
+        }
 		//
-		public void AbrirCaixa()
-		{
-			//
-
-
-
-
-			//
-			var JDAC = LABS_PDV_MAIN.IniciarDependencia<JanelaAberturaDeCaixa>(App => 
-			{ 
-				App.onJDACClose += RealizarAbertura;
-			},true,false);
-			//
-			//FAZER JANELINHA DE ABERTURA DE CAIXA // Gestão de Fluxo
-			EstaAberto = true;
-			CaixaStateLabel.Text = CaixaAberto;
-			AbrirFecharCaixaButton.Text = FecharCaixaText;
-			AbrirFecharCaixaButton.BackColor = Color.DarkSalmon;
-			CaixaStateLabel.BackColor = Color.LightGreen;
-			//
-			QuantidadeInput.Enabled = true;
-			CodBarrasInput.Enabled = true;
-			//
-			QuantidadeInput.Text = "1";
-			CodBarrasInput.Focus();
-			//
-			Modais.MostrarInfo("Caixa Aberto com Sucesso! \nBOAS VENDAS!");
-		}
+		
 		//
 		public void FecharCaixa()
 		{
@@ -83,7 +86,7 @@ namespace Labs.Janelas.LabsPDV
 			QuantidadeInput.Text = null;
 			//
 			//Fazer Janelinha de Fechamento de caixa
-			Modais.MostrarInfo("Caixa Fechado com Sucesso!");
+			//Modais.MostrarInfo("Caixa Fechado com Sucesso!");
 		}
 		//----------------------------//
 		//			METODOS
@@ -191,7 +194,7 @@ namespace Labs.Janelas.LabsPDV
 			{
 				//Atrelamos o evento para a finalização
 				app.FormClosed += JanelaDePagamento_FormClosed;
-				app.IniciarTelaDePagamento(PagamentoTotal,Produtos);
+				app.IniciarTelaDePagamento(PagamentoTotal,Produtos,this);
 			});
 		}
 

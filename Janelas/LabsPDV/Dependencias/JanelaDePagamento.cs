@@ -17,11 +17,14 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 		//
 		public const string NomeArquivoConfig = "ModosDePagamento";
 		//
-		List<MeioDePagamento> MeiosDePagamento = new();
+		MeiosPagamento MeiosPagamento { get; set; } = null!;
 		//
 		List<PagamentoEfetuado> PagamentosEfetuados = new();
 		//
 		List<Produto> Produtos = new();
+		//
+		LabsPDV LabsPDV { get; set; } = null!; // referencia a janela de pdv que requisitou a janela de pagamento
+		//
 		//Variáveis de Construtor
 		private double ValorTotal = 0;
 		private double ValorTotalComDesconto = 0;
@@ -34,17 +37,19 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 			InitializeComponent();
 			this.FormClosed += LimpaEstaJanela;
 			// Carrega a lista de Modos de Pagamento presente na DataBase;
-			//
 		}
 
-		async void GetMeios()
+		void GetMeios()
 		{
-			MeiosDePagamento = await CloudDataBase.GetMeiosDePagamentoAsync();
-			//Lista os modos de pagamento
-			MeioDePagamentoComboBox.Items.Clear();
-			foreach (MeioDePagamento Meio in MeiosDePagamento)
+			if(LabsPDV != null)
 			{
-				MeioDePagamentoComboBox.Items.Add(Meio.Meio);
+                MeiosPagamento = LabsPDV.CaixaLabs.Meios;
+				//
+				MeioDePagamentoComboBox.Items.Clear();
+				foreach (var Meio in MeiosPagamento.Meios)
+				{
+					MeioDePagamentoComboBox.Items.Add(Meio.Item1);
+				}
 			}
 		}
 		//--------------------------//
@@ -54,11 +59,6 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 		private void Reset()
 		{
 			MeioDePagamentoComboBox.Text = null;
-			ModoDePagamentoComboBox.Text = null;
-			//
-			BandeiraComboBox.Text = null;
-			ParcelasComboBox.Text = null;
-			//
 			PagamentoBoxInput.Text = null;
 			//
 			ListaPagamentosEfetuados.Items.Clear();
@@ -73,15 +73,6 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 		}
 		void UpdateInterface()
 		{
-			this.ValorTotalComDesconto = this.ValorTotal - (this.ValorTotal * getPorcentagem());
-			//Aqui atualizamos os valores antes de por diretamente na interface
-			this.FaltaReceber = this.ValorTotalComDesconto - this.ValorTotalRecebido;
-			this.ValorTroco = 0;
-			if (FaltaReceber < 0) { this.ValorTroco = this.ValorTotalRecebido - ValorTotalComDesconto; FaltaReceber = 0; }
-			this.ValorTroco = Math.Round(this.ValorTroco,2);
-			this.FaltaReceber = Math.Round(this.FaltaReceber,2);
-			this.ValorTotalComDesconto = Math.Round(this.ValorTotalComDesconto,2);
-
 			//
 			ValorRecebidoBox.Text = $"R$ {ValorTotalRecebido}";
 			ValorTotalComDescontoBox.Text = $"R$ {ValorTotalComDesconto}";
@@ -102,15 +93,19 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 			ValorTotalBox.Text = $"R$: {valor}";
 		}
 		//
-		public void IniciarTelaDePagamento(double ValorTotal,List<Produto> produtos)
+		public void IniciarTelaDePagamento(double ValorTotal,List<Produto> Produtos,LabsPDV LabsPDV)
 		{
 			//
 			SetPagamentoTotalBox(ValorTotal);
 			this.ValorTotal = ValorTotal;
-			this.Produtos = produtos;
+			this.LabsPDV = LabsPDV;
+			this.Produtos = Produtos;
+			//
+			DescontoBoxInput.Text = "0";
 			//
 			Reset();
 			GetMeios();
+			RealizarCalculos(0,0);
 			UpdateInterface();
 		}
 		//
@@ -125,110 +120,56 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 			Reset();
 			this.Close();
 		}
+		//
+		void RealizarCalculos(double ValorPago, double descontoPorcentagem)
+		{
+			ValorTotalComDesconto = Math.Round((ValorTotal - (ValorTotal * descontoPorcentagem)),2); // Já calculamos esse primeiro já que será usado no resto
+			//
+			ValorTotalRecebido += Math.Round(ValorPago,2);
+			FaltaReceber = Math.Round(ValorTotalComDesconto - ValorTotalRecebido,2);
+			ValorTroco = 0;
+			if(ValorTotalRecebido > ValorTotalComDesconto) { ValorTroco = Math.Round(ValorTotalRecebido - ValorTotalComDesconto,2); FaltaReceber = 0; }
+			//
+			UpdateInterface();
+		}
+		//
 		void AdicionarPagamento()
 		{
-			string PagamentoEfetuado = null!;
+			if (MeioDePagamentoComboBox.Items.Count < 1) { Modais.MostrarErro("Nenhum Meio de Pagamento Registrado!"); return; }
+			if (MeioDePagamentoComboBox.Text.IsNullOrEmpty()) { Modais.MostrarAviso("Selecione um Meio de Pagamento!"); return; }
 			//
-			if (MeioDePagamentoComboBox.Text.Length == 0) { Modais.MostrarAviso("Você Deve Selecionar um Meio de Pagameto!"); MeioDePagamentoComboBox.Focus(); return; }
-			else
+			string valorSTR = PagamentoBoxInput.Text;
+			string descSTR = DescontoBoxInput.Text;
+			bool SLDV = MeiosPagamento.Meios[MeioDePagamentoComboBox.SelectedIndex].Item2; // Item2 é SLDV
+			//
+			if(FaltaReceber > 0)
 			{
 				//
-				int index = MeioDePagamentoComboBox.SelectedIndex;
-				MeioDePagamento meio = MeiosDePagamento[index];
-				ModoDePagamento modo = default!;
-				//
-				PagamentoEfetuado = $"{MeioDePagamentoComboBox.Text} ";
-				//
-				if (meio.PossuiModos && ModoDePagamentoComboBox.Text.Length == 0) { Modais.MostrarAviso("Selecione um Modo Para o Meio de Pagamento Selecionado!"); ModoDePagamentoComboBox.Focus(); return; }
-				if (meio.PossuiModos) { modo = meio.Modos[ModoDePagamentoComboBox.SelectedIndex]; }
-				//
-				else { PagamentoEfetuado += $"{ModoDePagamentoComboBox.Text} "; }
-				if (modo != null)
+				if (!Utils.TryParseToDouble(valorSTR,out double valorPag)) { Modais.MostrarAviso("Insira um Valor de Pagamento Válido!"); return; }
+				if (!Utils.TryParseToDouble(descSTR,out ValorDescontoPorcentagem)) { Modais.MostrarAviso("Insira um Valor de Desconto Válido"); return; }
+				if (!SLDV)
 				{
-					if (modo.PossuiBandeira && BandeiraComboBox.Text.Length == 0) { Modais.MostrarAviso("Selecione uma Bandeira Para o Modo de Pagamento Selecionado!"); BandeiraComboBox.Focus(); return; }
-					//
-					else { PagamentoEfetuado += $"{BandeiraComboBox.Text}"; }
-					if (modo.PossuiParcelas && ParcelasComboBox.Text.Length == 0) { Modais.MostrarAviso("Selecione a Quantidade de Parcelas!"); ParcelasComboBox.Focus(); return; }
+					if(valorPag > FaltaReceber) { valorPag = FaltaReceber; }
 				}
 				//
-				if (Utils.TryParseToDouble(PagamentoBoxInput.Text, out double value))
-				{
-					// Se o produto não pode ultrapassar o valor total a gente trava ele na trave
-					if (!meio.PodeUltrapassarOValorTotal) { if (value > this.FaltaReceber) { value = this.FaltaReceber; } }
-					if (this.FaltaReceber > 0)
-					{
-						if (value > 0)
-						{
-							//
-							ListViewItem item = new([PagamentoEfetuado, $"R$ {value}"]);
-							ListaPagamentosEfetuados.Items.Add(item);
-							item.EnsureVisible();
-							//
-							PagamentosEfetuados.Add(new PagamentoEfetuado(PagamentoEfetuado, value));
-							//
-							ValorTotalRecebido += value;
-							//
-							UpdateInterface();
-							//
-						}
-					}
-				}
-			}
+                RealizarCalculos(valorPag, getPorcentagem());
+                //
+                PagamentoEfetuado pagEfet = new(MeioDePagamentoComboBox.Text, Math.Round(valorPag));
+                PagamentosEfetuados.Add(pagEfet);
+                //
+                ListaPagamentosEfetuados.Items.Add(new ListViewItem([MeioDePagamentoComboBox.Text, $"R$ {Math.Round(valorPag, 2)}"]));
+                //
+                PagamentoBoxInput.Text = null!;
+                DescontoBoxInput.Text = "0";
+            }
 		}
 		void AtualizarPagamento()
 		{
-			if (ListaPagamentosEfetuados.SelectedItems.Count == 0) { Modais.MostrarAviso("Selecione o Pagamento que Deseja Atualizar"); return; }
-			string PagamentoEfetuado = null!;
-			int indexPE = ListaPagamentosEfetuados.SelectedIndices[0];
-			double value = PagamentosEfetuados[indexPE].Valor;
-			//
-			if (MeioDePagamentoComboBox.Text.Length == 0) { Modais.MostrarAviso("Você Deve Selecionar um Meio de Pagameto!"); MeioDePagamentoComboBox.Focus(); return; }
-			else
-			{
-				//
-				int index = MeioDePagamentoComboBox.SelectedIndex;
-				MeioDePagamento meio = MeiosDePagamento[index];
-				ModoDePagamento modo = default!;
-				//
-				PagamentoEfetuado = $"{MeioDePagamentoComboBox.Text} ";
-				//
-				if (meio.PossuiModos && ModoDePagamentoComboBox.Text.Length == 0) { Modais.MostrarAviso("Selecione um Modo Para o Meio de Pagamento Selecionado!"); ModoDePagamentoComboBox.Focus(); return; }
-				if (meio.PossuiModos) { modo = meio.Modos[ModoDePagamentoComboBox.SelectedIndex]; }
-				//
-				else { PagamentoEfetuado += $"{ModoDePagamentoComboBox.Text} "; }
-				if (modo != null)
-				{
-					if (modo.PossuiBandeira && BandeiraComboBox.Text.Length == 0) { Modais.MostrarAviso("Selecione uma Bandeira Para o Modo de Pagamento Selecionado!"); BandeiraComboBox.Focus(); return; }
-					//
-					else { PagamentoEfetuado += $"{BandeiraComboBox.Text}"; }
-					if (modo.PossuiParcelas && ParcelasComboBox.Text.Length == 0) { Modais.MostrarAviso("Selecione a Quantidade de Parcelas!"); ParcelasComboBox.Focus(); return; }
-				}
-				//
-				if (PagamentoBoxInput.Text.Length == 0) { Modais.MostrarAviso("Você Deve Informar o Valor Para a Atualização"); ResetFocus(); return; }
-				//
-				ListViewItem item = new([PagamentoEfetuado, $"R$ {value}"]);
-				ListaPagamentosEfetuados.Items.RemoveAt(indexPE);
-				ListaPagamentosEfetuados.Items.Add(item);
-				item.EnsureVisible();
-				//
-				PagamentosEfetuados.RemoveAt(indexPE);
-				PagamentosEfetuados.Add(new PagamentoEfetuado(PagamentoEfetuado, value));
-				//
-				UpdateInterface();
-				//
-				Reset();
-			}
+			
 		}
 		void ExcluirUmPagamento()
 		{
-			if (ListaPagamentosEfetuados.SelectedItems.Count == 0) { Modais.MostrarAviso("Selecione o Pagamento que Deseja Excluir"); return; }
-			int indexPE = ListaPagamentosEfetuados.SelectedIndices[0];
-			double value = PagamentosEfetuados[indexPE].Valor;
-			PagamentosEfetuados.RemoveAt(indexPE);
-			ListaPagamentosEfetuados.Items.RemoveAt(indexPE);
-			//
-			ValorTotalRecebido -= value;
-			UpdateInterface();
+
 		}
 		//--------------------------//
 		//		   EVENTOS
@@ -260,55 +201,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 
 		private void OnMeioDePagamentoSelect(object sender, EventArgs e)
 		{
-			//Primeiramente garantimos que a lista vai estar vazia e habilitamos a janela de seleção de modos
-			if (MeioDePagamentoComboBox.SelectedIndex > -1)
-			{
-				ModoDePagamentoComboBox.Items.Clear();
-				int index = MeioDePagamentoComboBox.SelectedIndex;
-				MeioDePagamento meio = MeiosDePagamento[index];
-				if (meio.PossuiModos)
-				{
-					ModoDePagamentoComboBox.Enabled = true;
-					foreach (var Modo in meio.Modos)
-					{
-						ModoDePagamentoComboBox.Items.Add(Modo.Modo);
-					}
-				}
-			}
-		}
-
-		private void OnModoDePagamentoSelect(object sender, EventArgs e)
-		{
-			//Mais uma vez, Para Garantir limpamos as listas e deixamos desabilitadas
-			BandeiraComboBox.Items.Clear(); BandeiraComboBox.Text = null; BandeiraComboBox.Enabled = false;
-			ParcelasComboBox.Items.Clear(); ParcelasComboBox.Text = null; ParcelasComboBox.Enabled = false;
-			//Após dizemos se tem bandeira ou não
-			int index = ModoDePagamentoComboBox.SelectedIndex;
-			if (index > -1)
-			{
-				// Aqui selecionamos o modo requisitado
-				ModoDePagamento modo = MeiosDePagamento[MeioDePagamentoComboBox.SelectedIndex].Modos[index];
-				if (modo.PossuiBandeira)
-				{
-					BandeiraComboBox.Enabled = true;
-					foreach (string Bandeira in modo.Bandeiras)
-					{
-						BandeiraComboBox.Items.Add(Bandeira);
-					}
-				}
-				//
-				if (modo.PossuiParcelas)
-				{
-					ParcelasComboBox.Enabled = true;
-					//
-					for (int i = 1; i <= modo.Parcelas; i++)
-					{
-						if(i == 1) { ParcelasComboBox.Items.Add($"{i} Vez"); }
-						else { ParcelasComboBox.Items.Add($"{i} Vezes"); }
-					}
-				}
-				//
-			}
+			
 		}
 
 		private void OnBoxKeyUp(object sender, KeyEventArgs e)
