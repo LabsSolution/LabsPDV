@@ -85,6 +85,9 @@ namespace Labs.Janelas.Configuracoes.Dependencias
                 {
                     var item = ListaMeiosRegistrados.SelectedItems[0];
                     var index = ListaMeiosRegistrados.SelectedIndices[0];
+                    //
+                    if(index == 0) { Modais.MostrarAviso("Não é Possível Remover um Meio Protegido Internamente!"); return; }
+                    //
                     ListaMeiosRegistrados.Items.Remove(item);
                     Meios.Meios.RemoveAt(index);
                 }

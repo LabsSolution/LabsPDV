@@ -13,8 +13,11 @@ namespace Labs.LABS_PDV
     {
         //
         public bool SemLimiteDeValor { get; private set; } = SemLimiteDeValor;
+        //
         public string NomeDoRegistro { get; set; } = NomeDoRegistro;
-        public double CapitalDeGiro { get { return Math.Round(CapitalDeGiro, 2); } set => Math.Round(CapitalDeGiroInicial, 2); }
+        //
+        private double _capitalDeGiro = CapitalDeGiroInicial;
+        public double CapitalDeGiro { get { return Math.Round(_capitalDeGiro, 2); } set { _capitalDeGiro = Math.Round(value, 2); } }
         //
         public void AdicionarCapital(double valor)
         {

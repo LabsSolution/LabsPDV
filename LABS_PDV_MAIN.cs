@@ -19,7 +19,7 @@ namespace Labs
 		public static string CloudDataBase = null!;
 		public static string LocalDataBase = null!;
 		//
-		static SVGParser parser = new();
+		static SVGParser Parser = new();
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -37,7 +37,7 @@ namespace Labs
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
 			//
-			LabsPDV App = new(); // Altere esse campo para modificar a primeira janela a ser aberta (Utilizar somente para debug)
+			LabsMainApp App = new(); // Altere esse campo para modificar a primeira janela a ser aberta (Utilizar somente para debug)
 			//
 			//svgtest App = new();
 			App.Resize += OnAppSizeChange;
@@ -68,7 +68,7 @@ namespace Labs
             if(sender is Form App)
 			{
 				App.BackgroundImageLayout = ImageLayout.Stretch;
-				App.BackgroundImage = parser.GetImageFromSVG(); ;
+				App.BackgroundImage = Parser.GetImageFromSVG(); ;
             }
         }
 
@@ -95,8 +95,6 @@ namespace Labs
                     App.Load -= OnAppLoad;
                     App.BackgroundImage?.Dispose();
                     //
-                    if (RunningApps.TryGetValue(App.Name, out Form? closingApp)) { RunningApps.Remove(App.Name); }
-					//
                     LabsMainApp.App.Show();
 				}
 			}
@@ -112,7 +110,6 @@ namespace Labs
 					App.VisibleChanged -= AppHidden;
 					App.Resize -= OnAppSizeChange;
                     App.Load -= OnAppLoad;
-                    App.BackgroundImage?.Dispose();
                     //
                     LabsMainApp.App.Show();
 				}
@@ -130,7 +127,6 @@ namespace Labs
                     App.Load -= OnAppLoad;
                     App.BackgroundImage?.Dispose();
                     //
-                    if (RunningApps.TryGetValue(App.Name, out Form? closingApp)) { RunningApps.Remove(App.Name); }
                 }
             }
         }
@@ -144,7 +140,6 @@ namespace Labs
                     App.VisibleChanged -= AppHidden;
                     App.Resize -= OnAppSizeChange;
 					App.Load -= OnAppLoad;
-					App.BackgroundImage?.Dispose();
 					App.Dispose();
                 }
             }
@@ -180,7 +175,16 @@ namespace Labs
 			config?.Invoke(App);
 			// Mostra a aplicação
 			//
-            if (SempreNoTopo) { if (BackgroundImage == true) { App.Load += OnAppLoad; } App.FormClosed += DepAppClosed; App.VisibleChanged += DepAppHidden; App.ShowDialog(); return App; }
+            if (SempreNoTopo) 
+			{ 
+				if (BackgroundImage == true)  { App.Load += OnAppLoad; } 
+				//
+				App.FormClosed += DepAppClosed; 
+				App.VisibleChanged += DepAppHidden; 
+				App.ShowDialog(); 
+				//
+				return App; 
+			}
 			//Retornamos o App
 			if (BackgroundImage == true) { App.Load += OnAppLoad; }
 			App.FormClosed += DepAppClosed;

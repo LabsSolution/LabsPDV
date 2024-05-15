@@ -58,6 +58,7 @@
             VoltarButton = new Button();
             AbrirFecharCaixaButton = new Button();
             PagamentoTotalBox = new TextBox();
+            DebugLabel = new Label();
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
@@ -400,9 +401,21 @@
             PagamentoTotalBox.Font = new Font("Segoe UI", 24F, FontStyle.Bold, GraphicsUnit.Point, 0);
             PagamentoTotalBox.Location = new Point(570, 328);
             PagamentoTotalBox.Name = "PagamentoTotalBox";
-            PagamentoTotalBox.PlaceholderText = "Total a Pagar R$";
+            PagamentoTotalBox.PlaceholderText = "Total a Pagar R$: 0,00";
             PagamentoTotalBox.Size = new Size(764, 50);
             PagamentoTotalBox.TabIndex = 23;
+            // 
+            // DebugLabel
+            // 
+            DebugLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            DebugLabel.AutoSize = true;
+            DebugLabel.BackColor = Color.Transparent;
+            DebugLabel.Font = new Font("Segoe UI", 16F);
+            DebugLabel.Location = new Point(665, 673);
+            DebugLabel.Name = "DebugLabel";
+            DebugLabel.Size = new Size(87, 30);
+            DebugLabel.TabIndex = 24;
+            DebugLabel.Text = "DEBUG:";
             // 
             // LabsPDV
             // 
@@ -411,6 +424,7 @@
             BackColor = SystemColors.WindowFrame;
             ClientSize = new Size(1346, 725);
             ControlBox = false;
+            Controls.Add(DebugLabel);
             Controls.Add(PagamentoTotalBox);
             Controls.Add(AbrirFecharCaixaButton);
             Controls.Add(VoltarButton);
@@ -438,7 +452,6 @@
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "LabsPDV";
-            Text = "Labs PDV";
             WindowState = FormWindowState.Maximized;
             KeyUp += OnPDVKeyUp;
             ResumeLayout(false);
@@ -469,5 +482,6 @@
 		private Button AbrirFecharCaixaButton;
 		private TextBox PagamentoTotalBox;
 		private ColumnHeader ColunaItemID;
-	}
+        private Label DebugLabel;
+    }
 }

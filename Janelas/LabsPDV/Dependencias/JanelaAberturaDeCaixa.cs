@@ -52,7 +52,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                 total += valor;
                 total = Math.Round(total, 2);
             }
-            CapitalTotal = total;
+            CapitalTotal = CapitalEmCaixa + total;
         }
         //
         private void UpdateVisual()
@@ -102,7 +102,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
             Calc();
             UpdateVisual();
         }
-
+        //
         private void OnAdicionarCapitalInputBoxKeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -110,10 +110,13 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                 AdicionarCapital();
             }
         }
+        //
         private void AbrirCaixaButton_Click(object sender, EventArgs e)
         {
             if(onJDACClose != null) // se tiver alguém ouvindo o evento, disparamos
             {
+                if (CapitalTotal == 0) { Modais.MostrarAviso("Não é Possível Prosseguir sem Fundo de Caixa!"); return; }
+                //
                 onJDACClose(CapitalTotal,this);
             }
         }

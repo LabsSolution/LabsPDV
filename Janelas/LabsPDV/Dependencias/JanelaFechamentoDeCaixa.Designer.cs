@@ -20,29 +20,29 @@
 			base.Dispose(disposing);
 		}
 
-		#region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent()
-		{
-			SuspendLayout();
-			// 
-			// JanelaFechamentoDeCaixa
-			// 
-			AutoScaleDimensions = new SizeF(7F, 15F);
-			AutoScaleMode = AutoScaleMode.Font;
-			BackColor = SystemColors.WindowFrame;
-			ClientSize = new Size(800, 600);
-			ControlBox = false;
-			FormBorderStyle = FormBorderStyle.None;
-			Name = "JanelaFechamentoDeCaixa";
-			Text = "JanelaFechamentoDeCaixa";
-			ResumeLayout(false);
-		}
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            SuspendLayout();
+            // 
+            // JanelaFechamentoDeCaixa
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.WindowFrame;
+            ClientSize = new Size(854, 750);
+            ControlBox = false;
+            FormBorderStyle = FormBorderStyle.None;
+            Name = "JanelaFechamentoDeCaixa";
+            Text = "JanelaFechamentoDeCaixa";
+            ResumeLayout(false);
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

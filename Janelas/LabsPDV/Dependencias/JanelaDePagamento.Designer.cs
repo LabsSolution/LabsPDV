@@ -55,7 +55,6 @@
             FaltaReceberValorBox = new TextBox();
             MeioDePagamentoComboBox = new ComboBox();
             label12 = new Label();
-            AtualizarPagamentoButton = new Button();
             ExcluirPagamento = new Button();
             SuspendLayout();
             // 
@@ -357,6 +356,7 @@
             // 
             // MeioDePagamentoComboBox
             // 
+            MeioDePagamentoComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             MeioDePagamentoComboBox.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
             MeioDePagamentoComboBox.FormattingEnabled = true;
             MeioDePagamentoComboBox.Location = new Point(11, 166);
@@ -378,29 +378,16 @@
             label12.TabIndex = 36;
             label12.Text = "Meio de Pag:";
             // 
-            // AtualizarPagamentoButton
-            // 
-            AtualizarPagamentoButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            AtualizarPagamentoButton.BackColor = Color.FromArgb(255, 255, 128);
-            AtualizarPagamentoButton.Font = new Font("Segoe UI Black", 15F, FontStyle.Bold);
-            AtualizarPagamentoButton.Location = new Point(12, 323);
-            AtualizarPagamentoButton.Name = "AtualizarPagamentoButton";
-            AtualizarPagamentoButton.Size = new Size(298, 39);
-            AtualizarPagamentoButton.TabIndex = 41;
-            AtualizarPagamentoButton.Text = "Atualizar Pagamento (F5)";
-            AtualizarPagamentoButton.UseVisualStyleBackColor = false;
-            AtualizarPagamentoButton.Click += AtualizarPagamentoButton_Click;
-            // 
             // ExcluirPagamento
             // 
             ExcluirPagamento.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             ExcluirPagamento.BackColor = Color.FromArgb(255, 128, 128);
             ExcluirPagamento.Font = new Font("Segoe UI Black", 12F, FontStyle.Bold);
-            ExcluirPagamento.Location = new Point(316, 323);
+            ExcluirPagamento.Location = new Point(12, 323);
             ExcluirPagamento.Name = "ExcluirPagamento";
             ExcluirPagamento.Size = new Size(215, 39);
             ExcluirPagamento.TabIndex = 42;
-            ExcluirPagamento.Text = "Excluir Pagamento (F6)";
+            ExcluirPagamento.Text = "Excluir Pagamento (F5)";
             ExcluirPagamento.UseVisualStyleBackColor = false;
             ExcluirPagamento.Click += ExcluirPagamento_Click;
             // 
@@ -412,7 +399,6 @@
             ClientSize = new Size(884, 561);
             ControlBox = false;
             Controls.Add(ExcluirPagamento);
-            Controls.Add(AtualizarPagamentoButton);
             Controls.Add(label12);
             Controls.Add(MeioDePagamentoComboBox);
             Controls.Add(FaltaReceberValorBox);
@@ -479,7 +465,6 @@
 		private TextBox FaltaReceberValorBox;
 		private ComboBox MeioDePagamentoComboBox;
 		private Label label12;
-		private Button AtualizarPagamentoButton;
 		private Button ExcluirPagamento;
 	}
 }

@@ -92,35 +92,79 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 		{
 			ValorTotalBox.Text = $"R$: {valor}";
 		}
-		//
+		/// <summary>
+		/// Inicia a tela de pagamento usando os parâmetros Fornecidos
+		/// </summary>
+		/// <param name="ValorTotal">Valor total dos itens</param>
+		/// <param name="Produtos">Produtos Da venda (Quantidade etc)</param>
+		/// <param name="LabsPDV">O Ponto PDV que requisitou a janela (Será usado no futuro para pontos remotos)</param>
 		public void IniciarTelaDePagamento(double ValorTotal,List<Produto> Produtos,LabsPDV LabsPDV)
 		{
+			//Garante que todos os campos estejam limpos para receber novos valores
+			Reset();
 			//
+			// seta o valor total visualmente pro operador de caixa
 			SetPagamentoTotalBox(ValorTotal);
+			//
 			this.ValorTotal = ValorTotal;
 			this.LabsPDV = LabsPDV;
 			this.Produtos = Produtos;
+			Modais.MostrarInfo($"Produtos: {this.Produtos.Count}");
 			//
 			DescontoBoxInput.Text = "0";
 			//
-			Reset();
+			//
 			GetMeios();
+			//
 			RealizarCalculos(0,0);
+			//
 			UpdateInterface();
 		}
 		//
 		async void Finalizar()
 		{
-			await CloudDataBase.AbaterProdutosEmEstoqueAsync(Produtos);
-			Reset();
-			this.Close();
+			//Previne que a venda seja finalizada sem receber o valor total do pagamento.
+			//
+			if(FaltaReceber > 0) { Modais.MostrarInfo($"Ainda Falta Receber R$: {FaltaReceber} !"); return; }
+            //Substituir essa parte por funções genéricas para espelhamento (As funções genéricas já suportam Update Massivo)
+            Modais.MostrarInfo($"Produtos: {this.Produtos.Count}");
+            await CloudDataBase.AbaterProdutosEmEstoqueAsync(Produtos);
+			// Adiciona o valor Recebido ao meio correspondente
+			if(LabsPDV != null)
+			{
+				var index = MeioDePagamentoComboBox.SelectedIndex;
+				double valor = ValorTotalRecebido - ValorTroco;
+				//
+				LabsPDV.CaixaLabs.AdicionarCapitalAoMeio(index,valor);
+				LabsPDV.CaixaLabs.AtualizarCaixa(); // Atualizar é importante para termos controle dos Valores Recebidos!
+				//
+				// Aqui faz a impressão do cupom fiscal (ou não fiscal)
+				// Sinaliza que a venda foi finalizada com sucesso
+				//
+				Modais.MostrarInfo("Venda Finalizada com Sucesso!");
+				Reset();
+				//
+				this.Close();
+			}
 		}
+		//Ao Cancelar, somente voltamos para a tela de PDV (Vai que o cliente esqueceu de comprar algo né)
 		void Cancelar()
 		{
-			Reset();
-			this.Close();
+			DialogResult r = Modais.MostrarPergunta("Você Deseja Retornar Para a Tela do PDV?");
+			//
+			if(r == DialogResult.Yes)
+			{
+				//
+				Reset();
+				this.Close();
+			}
 		}
 		//
+		/// <summary>
+		/// Realiza os Cálculos de troco, falta receber e valor recebido, junto com valor de desconto
+		/// </summary>
+		/// <param name="ValorPago">Valor do pagamento efetuado</param>
+		/// <param name="descontoPorcentagem">Desconto aplicado na venda (Esse valor é constante para todos os pagamentos (não afeta o pagamento, somente o valor total))</param>
 		void RealizarCalculos(double ValorPago, double descontoPorcentagem)
 		{
 			ValorTotalComDesconto = Math.Round((ValorTotal - (ValorTotal * descontoPorcentagem)),2); // Já calculamos esse primeiro já que será usado no resto
@@ -153,23 +197,45 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 				}
 				//
                 RealizarCalculos(valorPag, getPorcentagem());
-                //
+                // é importante que o pagamento efetuado e a lista de pagamento sejam atualizados juntos para manter o mesmo index
                 PagamentoEfetuado pagEfet = new(MeioDePagamentoComboBox.Text, Math.Round(valorPag));
                 PagamentosEfetuados.Add(pagEfet);
                 //
                 ListaPagamentosEfetuados.Items.Add(new ListViewItem([MeioDePagamentoComboBox.Text, $"R$ {Math.Round(valorPag, 2)}"]));
                 //
                 PagamentoBoxInput.Text = null!;
-                DescontoBoxInput.Text = "0";
             }
 		}
-		void AtualizarPagamento()
-		{
-			
-		}
+		//
 		void ExcluirUmPagamento()
 		{
-
+			if(ListaPagamentosEfetuados.SelectedIndices.Count < 1) { Modais.MostrarAviso("Você Deve Selecionar um Pagamento da lista Para Removêlo"); return; }
+			var index = ListaPagamentosEfetuados.SelectedIndices[0];
+			//
+			DialogResult r = Modais.MostrarPergunta("Você Deseja Remover o Pagamento Selecionado?");
+			if (r == DialogResult.Yes)
+			{
+				try
+				{
+					PagamentoEfetuado PagEfetuado = PagamentosEfetuados[index]; // se pegou o pagamento na lista é porque existe
+					//
+					ValorTotalRecebido -= PagEfetuado.Valor;
+					//
+					PagamentosEfetuados.Remove(PagEfetuado);
+					//
+					ListaPagamentosEfetuados.Items.RemoveAt(index);
+					//
+					Modais.MostrarInfo("Pagamento Removido com Sucesso!");
+					//
+					RealizarCalculos(0,getPorcentagem());
+					UpdateInterface();
+				}
+				catch (Exception ex)
+				{
+					Modais.MostrarAviso($"Não foi Possível Remover o Pagamento Selecionado \n{ex.Message}");
+					throw;
+				}
+			}
 		}
 		//--------------------------//
 		//		   EVENTOS
@@ -191,11 +257,8 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 					DescontoBoxInput.Focus();
 					break;
 				case Keys.F5:
-					AtualizarPagamento();
-					break;
-				case Keys.F6:
-					ExcluirUmPagamento();
-					break;
+                    ExcluirUmPagamento();
+                    break;
 			}
 		}
 
@@ -208,25 +271,25 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 		{
 			if (e.KeyCode == Keys.Enter)
 			{
-				if (sender == DescontoBoxInput) { ResetFocus(); }
+				if (sender == DescontoBoxInput) 
+				{
+                    if (!Utils.TryParseToDouble(DescontoBoxInput.Text, out ValorDescontoPorcentagem)) { Modais.MostrarAviso("Insira um Valor de Desconto Válido"); return; }
+                    RealizarCalculos(0,getPorcentagem()); // chamamos o realizar calculo aqui para atualizar o desconto
+                }
 				if (sender == PagamentoBoxInput) { AdicionarPagamento(); }
 			}
 		}
-		private void AtualizarPagamentoButton_Click(object sender, EventArgs e)
-		{
-			AtualizarPagamento();
-		}
-
+		//
 		private void ExcluirPagamento_Click(object sender, EventArgs e)
 		{
 			ExcluirUmPagamento();
 		}
-
+		//
 		private void CancelarButton_Click(object sender, EventArgs e)
 		{
 			Cancelar();
 		}
-
+		//
 		private void FinalizarButton_Clicks(object sender, EventArgs e)
 		{
 			Finalizar();

@@ -10,6 +10,29 @@ namespace Labs.LABS_PDV
 {
     public class CaixaLabs
     {
+        //
+        //
+        public OperadorCaixa OperadorCaixa { get; private set; }
+        /// <summary>
+        /// Valor de Abertura do caixa (Com Quanto Dinheiro o caixa abriu inicialmente no dia)
+        /// </summary>
+        public double FundoDeCaixa { get; private set; }
+        /// <summary>
+        /// Valor Total Contido no Caixa (Somatório de Todos os Ganhos + Valor de Abertura)
+        /// </summary>
+        public double ValorTotal { get; private set; }
+        /// <summary>
+        /// Valor Total contido no caixa em dinheiro
+        /// </summary>
+        public double ValorTotalEmDinheiro { get; private set; }
+        /// <summary>
+        /// Ganhos totais do Caixa (Juntando todos os Meios de Pagamento)
+        /// </summary>
+        public double GanhosTotais { get; private set; }
+        //
+        //Agora Registramos os Modos de pagamento Existentes;
+        public Dictionary<string, RIDP> RegistroInternoDePagamentos = new();
+
         /// <summary>
         /// Construtor
         /// </summary>
@@ -17,9 +40,10 @@ namespace Labs.LABS_PDV
         /// <param name="operadorCaixa">Referência a quem é o operador deste caixa</param>
         public CaixaLabs(double ValorDeAbertura, OperadorCaixa operadorCaixa)
         {
-            this.ValorAbertura = ValorDeAbertura;
+            this.FundoDeCaixa = ValorDeAbertura;
             OperadorCaixa = operadorCaixa;
         }
+        //
         public MeiosPagamento Meios { get; private set; } = null!;
         /// <summary>
         /// Carrega os meios direto da database seguindo o espelhamento padrão
@@ -48,38 +72,54 @@ namespace Labs.LABS_PDV
                 //
             }
         }
-        //
-        //
-        public OperadorCaixa OperadorCaixa { get; private set; }
-        /// <summary>
-        /// Valor de Abertura do caixa (Com Quanto Dinheiro o caixa abriu inicialmente no dia)
-        /// </summary>
-        public double ValorAbertura { get; private set; }
-        /// <summary>
-        /// Valor Total contido no caixa.
-        /// </summary>
-        public double ValorTotalNoCaixa { get; private set; }
-        //
-        //Agora Registramos os Modos de pagamento Existentes;
-        public Dictionary<string, RIDP> RegistroInternoDePagamentos = new();
         //-----------------------------------------------------------------//
+
         //----------------------------//
         //----------MÉTODOS-----------//
         //----------------------------//
-        //Fazemos a requisição de Abertura
+
+        /// <summary>
+        /// Retorna o Valor Total no Caixa em Dinheiro (Cédula)
+        /// </summary>
+        public double GetValorTotalNoCaixa()
+        {
+            // "0" é o index padrão do Registro DINHEIRO
+            ValorTotalEmDinheiro = RegistroInternoDePagamentos["0"].CapitalDeGiro;
+            //
+            return ValorTotalEmDinheiro;
+        }
+
+        //
+
+        public void AtualizarCaixa()
+        {
+            //Atualiza o Valor total No caixa em Cédula
+            ValorTotalEmDinheiro = RegistroInternoDePagamentos["0"].CapitalDeGiro;
+            //Agora atualiza os ganhos Totais//
+            GanhosTotais = 0;
+            //
+            foreach (var RegistroInterno in RegistroInternoDePagamentos.Values)
+            {
+                GanhosTotais += RegistroInterno.CapitalDeGiro;
+            }
+            //
+            ValorTotal = GanhosTotais + FundoDeCaixa;
+        }
+
+        //
 
         public async void RealizarAbertura() //Como o construtor obriga a realização de instância, não precisamos de um referenciador interno
         {
             //Carregamos da database os meios
             await LoadFromDataBase(); // Precisamos que o método finalize para que possamos seguir
             //Index 0 é o meio padrão para a adição de Fundo de caixa
-            RegistroInternoDePagamentos["0"].CapitalDeGiro = ValorAbertura;
+            RegistroInternoDePagamentos["0"].CapitalDeGiro = FundoDeCaixa;
         }
         //
         /// <summary>
         /// Adiciona um capital ao meio definido pelo ID
         /// </summary>
-        /// <param name="Index">Index do Meio para adicionar o capital</param>
+        /// <param name="Index">Index do Meio para adicionar o capital ( 0 ) - DINHEIRO</param>
         /// <param name="valor">Valor de capital a ser adicionado</param>
         public void AdicionarCapitalAoMeio(int Index,double valor)
         {
@@ -92,7 +132,7 @@ namespace Labs.LABS_PDV
         /// <summary>
         /// Remove um valor do registro usando o index do meio
         /// </summary>
-        /// <param name="Index">Index do Meio para remover o capital</param>
+        /// <param name="Index">Index do Meio para remover o capital ( 0 ) - DINHEIRO</param>
         /// <param name="valor">Valor que foi retirado</param>
         public void RemoverCapitalDoMeio(int Index, double valor)
         {
