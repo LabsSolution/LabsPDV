@@ -36,7 +36,7 @@ namespace Labs
 			//Caso tenha uma instância rodando, fechamos esta janela e jogamos um erro
 			//Dando a informação para que se o erro persistir, entrar em contato com o suporte técnico.
 			else { this.Close(); MessageBox.Show("ERRO-800 \n UMA INSTÂNCIA DO APLICATIVO JÁ ESTÁ EM EXECUCÃO\n Caso o erro persista recomendamos entrar em contato com o suporte.", "ERRO CRÍTICO-cod:800", MessageBoxButtons.OK, MessageBoxIcon.Error); }
-			//Carrega a imagem de fundo
+			//Carrega a imagem de fundo/
 			//
 			LoadConfigs();
 		}
