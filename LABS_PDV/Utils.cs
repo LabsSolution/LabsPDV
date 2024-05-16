@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -97,6 +98,24 @@ namespace Labs.LABS_PDV
 				return false;
 			}
 		}
+		/// <summary>
+		/// Formata um valor para string preservando os campos
+		/// </summary>
+		/// <param name="valor">Valor para formatar</param>
+		/// <returns>Valor Formatado</returns>
+		public static string FormatarValor(double valor)
+		{
+            return valor.ToString("0.00", CultureInfo.GetCultureInfo("pt-BR"));
+        }
+        /// <summary>
+        /// Formata um valor para string preservando os campos
+        /// </summary>
+        /// <param name="valor">Valor para formatar</param>
+        /// <returns>Valor Formatado</returns>
+        public static string FormatarValor(float valor)
+		{
+            return valor.ToString("0.00", CultureInfo.GetCultureInfo("pt-BR"));
+        }
 		/// <summary>
 		/// Formata um texto baseado em uma largura limite
 		/// </summary>

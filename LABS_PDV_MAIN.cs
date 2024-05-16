@@ -37,7 +37,7 @@ namespace Labs
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
 			//
-			TesteDeImpressora App = new(); // Altere esse campo para modificar a primeira janela a ser aberta (Utilizar somente para debug)
+			LabsMainApp App = new(); // Altere esse campo para modificar a primeira janela a ser aberta (Utilizar somente para debug)
 			//
 			//svgtest App = new();
 			App.Resize += OnAppSizeChange;

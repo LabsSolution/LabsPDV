@@ -19,9 +19,9 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 		//
 		MeiosPagamento MeiosPagamento { get; set; } = null!;
 		//
-		List<PagamentoEfetuado> PagamentosEfetuados = new();
+		List<PagamentoEfetuado> PagamentosEfetuados { get; set; } = new();
 		//
-		List<Produto> Produtos = new();
+		List<Produto> Produtos { get; set; } = new();
 		//
 		LabsPDV LabsPDV { get; set; } = null!; // referencia a janela de pdv que requisitou a janela de pagamento
 		//
@@ -139,6 +139,10 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 				LabsPDV.CaixaLabs.AtualizarCaixa(); // Atualizar é importante para termos controle dos Valores Recebidos!
 				//
 				// Aqui faz a impressão do cupom fiscal (ou não fiscal)
+				using (var PM = new PrintManager())
+				{
+					PM.ImprimirCupomNaoFiscal(PrintManager.ImpressoraDefault,Produtos,ValorTotalComDesconto);
+				}
 				// Sinaliza que a venda foi finalizada com sucesso
 				//
 				Modais.MostrarInfo("Venda Finalizada com Sucesso!");
