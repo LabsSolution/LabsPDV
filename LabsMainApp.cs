@@ -44,7 +44,7 @@ namespace Labs
         bool VerifyDataBases()
 		{
 			bool canProceed = true;
-			if(!CloudDataBase.CheckDataBaseConnection())
+			if(!CloudDataBase.CheckDataBaseConnection(out bool LocalOK, out bool CloudOK, out bool LabsCloudOK))
 			{
 				Modais.MostrarErro("ERRO CRÍTICO\nNão Foi Possivel Estabelecer Conexão com os Bancos de Dados!");
                 LabsPDV.Enabled = false;

@@ -16,10 +16,10 @@ namespace Labs
 		//Controle de Instâncias (Endereçamento de memória)
 		private static Dictionary<string, Form> RunningApps = new();
 		// Acessores Públicos para a database
-		public static string CloudDataBase = null!;
-		public static string LocalDataBase = null!;
+		public static string CloudDataBaseConnectionURI = null!;
+		public static string LocalDataBaseConnectionURI = null!;
 		//
-		static SVGParser Parser = new();
+		static SVGParser SVGParser = new();
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -29,9 +29,9 @@ namespace Labs
 			//A Criptografia é algo essencial para a segurança dos nossos clientes!
 			// Politica LGPD
 			//Descriptografa a database local
-			if(LabsCripto.Decript("L_Data",out string LDecripted)) { LocalDataBase = LDecripted; }
+			if(LabsCripto.Decript("L_Data",out string LDecripted)) { LocalDataBaseConnectionURI = LDecripted; }
 			//Descriptograda a Datavbase Remota
-			if(LabsCripto.Decript("C_Data",out string CDecripted)) { CloudDataBase = CDecripted; }
+			if(LabsCripto.Decript("C_Data",out string CDecripted)) { CloudDataBaseConnectionURI = CDecripted; }
 			//
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
@@ -68,7 +68,7 @@ namespace Labs
             if(sender is Form App)
 			{
 				App.BackgroundImageLayout = ImageLayout.Stretch;
-				App.BackgroundImage = Parser.GetImageFromSVG(); ;
+				App.BackgroundImage = SVGParser.GetImageFromSVG(); ;
             }
         }
 

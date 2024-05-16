@@ -24,28 +24,34 @@ namespace Labs.LABS_PDV
     //
 
 	public class CloudDataBase
-	{
+	{   //Quando estiver próximo de produção essa classe será refatorada, para ter somente membros genéricos
 		//
-		const string DataBase = "DataBaseCentral";
-		// Lista de Coleções de DataBase (Constantes)
+		const string DataBase = "DataBaseCentral"; // Nome da database da empresa
+		// Lista de Coleções de DataBase (Constantes) (Usados para gerenciamento de membros)
 		const string ClientesCollection = "Clientes";
 		const string ProdutosCollection = "Produtos";
 		const string MeiosDePagamentoCollection = "MeiosDePagamento";
-		//Check de Retorno das Conexões
-		/// <summary>
-		/// Retorna O estado de conexão das databases
-		/// </summary>
-		/// <returns>True se todas as conexões estiverem ok</returns>
-		public static bool CheckDataBaseConnection()
-		{
-			bool status = true;
+        //
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="LocalOK"></param>
+        /// <param name="CloudOK"></param>
+        /// <param name="LabsCloudOK"></param>
+        /// <returns></returns>
+		public static bool CheckDataBaseConnection(out bool LocalOK, out bool CloudOK, out bool LabsCloudOK)
+        { 
 			var local = ConnectToMongoLocal<Produto>(ProdutosCollection);
 			var cloud = ConnectToMongoCloud<Produto>(ProdutosCollection);
 			var labsCloud = ConnectToLabsMongoCloud<Cliente>(ClientesCollection);
 			//
-			if(local == null || cloud == null || labsCloud == null) { status = false; }
+            LocalOK = local != null; 
+            //
+            CloudOK = cloud != null; 
+            //
+            LabsCloudOK = labsCloud != null;
 			//
-			return status;
+			return LocalOK && CloudOK && LabsCloudOK;
 		}
 
 		//Implementação de Interface Para Busca de Coleções dentro da CloudDataBase
@@ -53,7 +59,7 @@ namespace Labs.LABS_PDV
 		{
 			try
 			{
-                var client = new MongoClient(LABS_PDV_MAIN.LocalDataBase);
+                var client = new MongoClient(LABS_PDV_MAIN.LocalDataBaseConnectionURI);
                 var db = client.GetDatabase(DataBase);
                 return db.GetCollection<T>(collection);
             }
@@ -68,7 +74,7 @@ namespace Labs.LABS_PDV
 		{
 			try
 			{
-                var client = new MongoClient(LABS_PDV_MAIN.CloudDataBase);
+                var client = new MongoClient(LABS_PDV_MAIN.CloudDataBaseConnectionURI);
                 var db = client.GetDatabase(DataBase);
                 return db.GetCollection<T>(collection);
             }
