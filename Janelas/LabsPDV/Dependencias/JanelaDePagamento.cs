@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Labs.LABS_PDV.Modelos;
-
+//
 namespace Labs.Janelas.LabsPDV.Dependencias
 {
 	public partial class JanelaDePagamento : Form
