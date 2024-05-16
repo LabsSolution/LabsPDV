@@ -97,5 +97,41 @@ namespace Labs.LABS_PDV
 				return false;
 			}
 		}
-	}
+		/// <summary>
+		/// Formata um texto baseado em uma largura limite
+		/// </summary>
+		/// <param name="texto">Texto para ser formatado</param>
+		/// <param name="font">Fonte usada no texto</param>
+		/// <param name="graphics">Interface grafica que está sendo usada</param>
+		/// <param name="larguraPagina">Largura da página (Largura limite)</param>
+		/// <param name="Altura">Altura total do texto</param>
+		/// <returns></returns>
+		public static string FormatarTexto(string texto, Font font, Graphics graphics, float larguraPagina, out float Altura)
+        {
+            string[] palavras = texto.Split(' ');
+            StringBuilder linhaAtual = new StringBuilder();
+            StringBuilder textoFormatado = new StringBuilder();
+
+            foreach (string palavra in palavras)
+            {
+                linhaAtual.Append(palavra + " ");
+                float largura = graphics.MeasureString(linhaAtual.ToString(), font).Width;
+
+                if (largura > larguraPagina)
+                {
+                    linhaAtual.Remove(linhaAtual.Length - palavra.Length - 1, palavra.Length + 1);
+                    textoFormatado.AppendLine(linhaAtual.ToString());
+                    linhaAtual.Clear();
+                    linhaAtual.Append(palavra + " ");
+                }
+            }
+
+            if (linhaAtual.Length > 0)
+            {
+                textoFormatado.AppendLine(linhaAtual.ToString());
+            }
+			Altura = graphics.MeasureString(textoFormatado.ToString(), font).Height;
+            return textoFormatado.ToString();
+        }
+    }
 }
