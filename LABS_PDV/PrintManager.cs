@@ -11,16 +11,25 @@ namespace Labs.LABS_PDV
 	public class PrintManager : PrintDocument
 	{
         //
-        public const string ImpressoraDefault = "POS-58 Baisec";
+        //public const string ImpressoraDefault = "POS-58 Baisec";
+        public const string ImpressoraDefault = "HP LaserJet Professional P1102w";
         //
         private Size Papel58mm = new(58, 210);
-
+        //
         private Size Papel76mm = new(76, 210);
-
+        //
         private Size Papel80mm = new(80, 210);
         //Holders
         List<Produto> Produtos { get; set; } = [];
-        double ValorTotal = 0;
+        //
+        string MeioPagamento = null!;
+        //
+        double ValorTotalComDesconto = 0;
+        double ValorTotalSemDesconto = 0;
+        double ValorPago = 0;
+        double ValorTroco = 0;
+        double Desconto = 0;
+
         //
         int LarguraPapel = 210; // largura em mm (usado como limitador) (Por algum motivo o segundo valor é o que vale) (o porque eu não sei)
         int LimiteNomeProduto = 30;
@@ -37,12 +46,17 @@ namespace Labs.LABS_PDV
         //
         // Criar função para cálculo de tamanho de texto
         //
-        public void ImprimirCupomNaoFiscal(string Impressora,List<Produto> Produtos, double ValorTotal)
+        public void ImprimirCupomNaoFiscal(string Impressora,List<Produto> Produtos, double ValorTotalComDesconto,double ValorTotalSemDesconto, double ValorPago,double Desconto,double ValorTroco, string MeioPagamento)
         {
             //Realizamos as configs iniciais
             PrinterSettings.PrinterName = Impressora;
             this.Produtos = Produtos;
-            this.ValorTotal = ValorTotal;
+            this.ValorTotalComDesconto = ValorTotalComDesconto;
+            this.ValorTotalSemDesconto = ValorTotalSemDesconto;
+            this.ValorPago = ValorPago;
+            this.ValorTroco = ValorTroco;
+            this.Desconto = Desconto;
+            this.MeioPagamento = MeioPagamento;
             //Começamos o processo de Print
             PrintPage += ICNF;
             Print();
@@ -97,9 +111,21 @@ namespace Labs.LABS_PDV
             }
             yPos += 15;
             //
-            graphics.DrawString($"TOTAL R$: {Utils.FormatarValor(ValorTotal)}", Bold, Brushes.Black, 0, yPos);
+            graphics.DrawString($"Total R$: {Utils.FormatarValor(ValorTotalSemDesconto)}", Regular, Brushes.Black, 0, yPos);
             yPos += 15;
-
+            graphics.DrawString($"Desconto: {Utils.FormatarValor(Desconto)}%", Regular, Brushes.Black, 0, yPos);
+            yPos += 15;
+            graphics.DrawString($"Total c. Desc. R$: {Utils.FormatarValor(ValorTotalComDesconto)}", Regular, Brushes.Black, 0, yPos);
+            yPos += 15;
+            graphics.DrawString($"Valor Pago R$: {Utils.FormatarValor(ValorPago)}", Regular, Brushes.Black, 0, yPos);
+            yPos += 15;
+            graphics.DrawString($"Troco R$: {Utils.FormatarValor(ValorTroco)}", Regular, Brushes.Black, 0, yPos);
+            yPos += 15;
+            graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
+            graphics.DrawString($"MEIO DE PAGAMENTO", Bold, Brushes.Black, 0, yPos);
+            yPos += 15;
+            graphics.DrawString($"{MeioPagamento}", Regular, Brushes.Black, 0, yPos);
+            yPos += 15;
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             yPos += 5;
 

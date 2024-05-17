@@ -133,6 +133,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 			if(LabsPDV != null)
 			{
 				var index = MeioDePagamentoComboBox.SelectedIndex;
+				var meioPagamento = MeioDePagamentoComboBox.Text;
 				double valor = ValorTotalRecebido - ValorTroco;
 				//
 				LabsPDV.CaixaLabs.AdicionarCapitalAoMeio(index,valor);
@@ -141,7 +142,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 				// Aqui faz a impressão do cupom fiscal (ou não fiscal)
 				using (var PM = new PrintManager())
 				{
-					PM.ImprimirCupomNaoFiscal(PrintManager.ImpressoraDefault,Produtos,ValorTotalComDesconto);
+					PM.ImprimirCupomNaoFiscal(PrintManager.ImpressoraDefault,Produtos,ValorTotalComDesconto,ValorTotal,ValorTotalRecebido,ValorDescontoPorcentagem,ValorTroco,meioPagamento);
 				}
 				// Sinaliza que a venda foi finalizada com sucesso
 				//
