@@ -19,6 +19,7 @@ namespace Labs
 		public static string CloudDataBaseConnectionURI = null!;
 		public static string LocalDataBaseConnectionURI = null!;
 		//
+		//
 		static SVGParser SVGParser = new();
         /// <summary>
         ///  The main entry point for the application.

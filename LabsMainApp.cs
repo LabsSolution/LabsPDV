@@ -25,10 +25,15 @@ namespace Labs
 		//Referencia de Instância
 		public static LabsMainApp App { get; private set; } = null!; //Declaramos como anulável já que de inicio não terá uma intância na memória.
 		public static int QMDP { get; private set; } = -1;
+        //
+        // Esses campos serão setados ao carregar as impressoras configuradas
+        public static string ImpressoraTermica { get; private set; } = null!;
+		public static string ImpressoraA4 { get; private set; } = null!;
 		/// <summary>
 		/// Habilitado Somente Caso Algum Erro Crítico de Inicialização for Detectado
 		/// </summary>
 		public static bool ModoSegurança { get; private set; } = false;
+		//
 		public LabsMainApp()
 		{
 			InitializeComponent();
@@ -61,6 +66,10 @@ namespace Labs
             {
                 QMDP = value;
             }
+			//Aqui Puxamos as Impressoras Configuradas Para uso do sistema (Configuradas pelo painel de Configs);
+			ImpressoraTermica = ConfigurationManager.AppSettings["ImpressoraTermica"]!;
+			ImpressoraA4 = ConfigurationManager.AppSettings["ImpressoraA4"]!;
+			//
         }
 		//
 		static async void VerificaEstoqueOnLoad()
