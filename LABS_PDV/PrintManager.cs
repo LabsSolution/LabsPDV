@@ -22,7 +22,7 @@ namespace Labs.LABS_PDV
         //Holders
         List<Produto> Produtos { get; set; } = [];
         //
-        string MeioPagamento = null!;
+        List<PagamentoEfetuado> PagamentosEfetuados { get; set; } = [];
         //
         double ValorTotalComDesconto = 0;
         double ValorTotalSemDesconto = 0;
@@ -46,7 +46,25 @@ namespace Labs.LABS_PDV
         //
         // Criar função para cálculo de tamanho de texto
         //
-        public void ImprimirCupomNaoFiscal(string Impressora,List<Produto> Produtos, double ValorTotalComDesconto,double ValorTotalSemDesconto, double ValorPago,double Desconto,double ValorTroco, string MeioPagamento)
+
+        public void ImprimirCupomNaoFiscalLoja(string Impressora, double ValorTotalComDesconto, double ValorTotalSemDesconto, double ValorPago, double Desconto, double ValorTroco, List<PagamentoEfetuado> PagamentosEfetuados)
+        {
+            //Realizamos as configs iniciais
+            PrinterSettings.PrinterName = Impressora;
+            //Configs Necessárias para o cupom
+            this.ValorTotalComDesconto = ValorTotalComDesconto;
+            this.ValorTotalSemDesconto = ValorTotalSemDesconto;
+            this.ValorPago = ValorPago;
+            this.ValorTroco = ValorTroco;
+            this.Desconto = Desconto;
+            this.PagamentosEfetuados = PagamentosEfetuados;
+            //Começamos o processo de Print
+            PrintPage += ICNFLoja;
+            EndPrint += OnEndPrinting;
+            // Mostra a pré-visualização antes de imprimir
+            Print();
+        }
+        public void ImprimirCupomNaoFiscalCliente(string Impressora, List<Produto> Produtos, double ValorTotalComDesconto, double ValorTotalSemDesconto, double ValorPago, double Desconto, double ValorTroco, List<PagamentoEfetuado> PagamentosEfetuados)
         {
             //Realizamos as configs iniciais
             PrinterSettings.PrinterName = Impressora;
@@ -57,13 +75,75 @@ namespace Labs.LABS_PDV
             this.ValorPago = ValorPago;
             this.ValorTroco = ValorTroco;
             this.Desconto = Desconto;
-            this.MeioPagamento = MeioPagamento;
+            this.PagamentosEfetuados = PagamentosEfetuados;
             //Começamos o processo de Print
-            PrintPage += ICNF;
+            PrintPage += ICNFCliente;
+            EndPrint += OnEndPrinting;
+            // Mostra a pré-visualização antes de imprimir
             Print();
         }
+        // Quando Terminam de Printar, Deserdam do evento
+        private void OnEndPrinting(object sender, PrintEventArgs e)
+        {
+            //Automaticamente deserdam do evento para não sobreescrever
+            PrintPage -= ICNFCliente;
+            PrintPage -= ICNFLoja;
+            EndPrint -= OnEndPrinting;
+        }
+
+        #region Impressão Cupom Não Fiscal Loja
         //
-        private void ICNF(object send, PrintPageEventArgs e)
+        private void ICNFLoja(object send, PrintPageEventArgs e)
+        {
+            Graphics? graphics = e.Graphics;
+            if (graphics == null) { return; }
+            float yPos = 0; // Variável responsável por determinar a posição da agulha
+            //
+            //print header
+            graphics.DrawString("CONTROLE INTERNO", Bold, Brushes.Black, 0, yPos);
+            yPos += 15;
+            graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
+            yPos += 30;
+            //
+            graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
+            graphics.DrawString("PEDIDO / VENDA: " + "ID PEDIDO / VENDA", RegularPedido, Brushes.Black, 0, yPos);
+            yPos += 15;
+            graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
+            yPos += 15;
+            //
+            graphics.DrawString($"Total R$: {Utils.FormatarValor(ValorTotalSemDesconto)}", Regular, Brushes.Black, 0, yPos);
+            yPos += 15;
+            graphics.DrawString($"Desconto: {Utils.FormatarValor(Desconto)}%", Regular, Brushes.Black, 0, yPos);
+            yPos += 15;
+            graphics.DrawString($"Total c. Desc. R$: {Utils.FormatarValor(ValorTotalComDesconto)}", Regular, Brushes.Black, 0, yPos);
+            yPos += 15;
+            graphics.DrawString($"Valor Pago R$: {Utils.FormatarValor(ValorPago)}", Regular, Brushes.Black, 0, yPos);
+            yPos += 15;
+            graphics.DrawString($"Troco R$: {Utils.FormatarValor(ValorTroco)}", Regular, Brushes.Black, 0, yPos);
+            yPos += 20;
+            graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
+            graphics.DrawString($"MEIO(S) DE PAGAMENTO", Bold, Brushes.Black, 0, yPos);
+            yPos += 15;
+            graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
+            yPos += 5;
+            foreach (var Pagamento in PagamentosEfetuados)
+            {
+                graphics.DrawString($"{Pagamento.DescPagamento} R$: {Utils.FormatarValor(Pagamento.Valor)}", RegularItens, Brushes.Black, 0, yPos);
+                yPos += 15;
+            }
+            graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
+            yPos += 5;
+
+            //bottom
+            graphics.DrawString($"Data: {DateTime.Now:dd/MM/yyyy} Hora: {DateTime.Now:HH:mm:ss}", RegularItens, Brushes.Black, 0, yPos);
+            yPos += 10;
+            graphics.DrawString(LABS_PDV_MAIN.TradeMark, RegularItens, Brushes.Black, 0, yPos);
+            e.HasMorePages = false;
+        }
+        #endregion
+        //
+        #region Impressão Cupom Não Fiscal Cliente
+        private void ICNFCliente(object send, PrintPageEventArgs e)
         {
             Graphics? graphics = e.Graphics;
             if (graphics == null) { return; }
@@ -105,13 +185,13 @@ namespace Labs.LABS_PDV
                 graphics.DrawString(produtoDesc, RegularItens, Brushes.Black, 0, yPos);
                 yPos += 10;
                 //
-                string valores = $"Uni R$: {Utils.FormatarValor(Produto.Preco)} Qtd: {Produto.Quantidade} Total R$ {Utils.FormatarValor(Math.Round(Produto.Quantidade * Produto.Preco,2))}";
+                string valores = $"Uni R$: {Utils.FormatarValor(Produto.Preco)} Qtd: {Produto.Quantidade} Total R$ {Utils.FormatarValor(Math.Round(Produto.Quantidade * Produto.Preco, 2))}";
                 graphics.DrawString(valores, RegularItens, Brushes.Black, 0, yPos);
                 yPos += 10;
                 graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
                 yPos += 5;
             }
-            yPos += 15;
+            yPos += 5;
             //
             graphics.DrawString($"Total R$: {Utils.FormatarValor(ValorTotalSemDesconto)}", Regular, Brushes.Black, 0, yPos);
             yPos += 15;
@@ -122,20 +202,26 @@ namespace Labs.LABS_PDV
             graphics.DrawString($"Valor Pago R$: {Utils.FormatarValor(ValorPago)}", Regular, Brushes.Black, 0, yPos);
             yPos += 15;
             graphics.DrawString($"Troco R$: {Utils.FormatarValor(ValorTroco)}", Regular, Brushes.Black, 0, yPos);
+            yPos += 20;
+            graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
+            graphics.DrawString($"MEIO(S) DE PAGAMENTO", Bold, Brushes.Black, 0, yPos);
             yPos += 15;
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
-            graphics.DrawString($"MEIO DE PAGAMENTO", Bold, Brushes.Black, 0, yPos);
-            yPos += 15;
-            graphics.DrawString($"{MeioPagamento}", Regular, Brushes.Black, 0, yPos);
-            yPos += 15;
+            yPos += 5;
+            foreach (var Pagamento in PagamentosEfetuados)
+            {
+                graphics.DrawString($"{Pagamento.DescPagamento} R$: {Utils.FormatarValor(Pagamento.Valor)}", RegularItens, Brushes.Black, 0, yPos);
+                yPos += 15;
+            }
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             yPos += 5;
 
             //bottom
             graphics.DrawString($"Data: {DateTime.Now:dd/MM/yyyy} Hora: {DateTime.Now:HH:mm:ss}", RegularItens, Brushes.Black, 0, yPos);
             yPos += 10;
-            graphics.DrawString("© Lab Soluções ©", RegularItens, Brushes.Black, 0, yPos);
+            graphics.DrawString(LABS_PDV_MAIN.TradeMark, RegularItens, Brushes.Black, 0, yPos);
             e.HasMorePages = false;
         }
+        #endregion
     }
 }

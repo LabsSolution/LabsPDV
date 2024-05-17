@@ -110,7 +110,6 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 			this.ValorTotal = ValorTotal;
 			this.LabsPDV = LabsPDV;
 			this.Produtos = Produtos;
-			Modais.MostrarInfo($"Produtos: {this.Produtos.Count}");
 			//
 			DescontoBoxInput.Text = "0";
 			//
@@ -128,13 +127,11 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 			//
 			if(FaltaReceber > 0) { Modais.MostrarInfo($"Ainda Falta Receber R$: {FaltaReceber} !"); return; }
             //Substituir essa parte por funções genéricas para espelhamento (As funções genéricas já suportam Update Massivo)
-            Modais.MostrarInfo($"Produtos: {this.Produtos.Count}");
 			await Labs_Estoque.AbaterProdutosEmEstoqueAsync(Produtos);
 			// Adiciona o valor Recebido ao meio correspondente
 			if(LabsPDV != null)
 			{
 				var index = MeioDePagamentoComboBox.SelectedIndex;
-				var meioPagamento = MeioDePagamentoComboBox.Text;
 				double valor = ValorTotalRecebido - ValorTroco;
 				//
 				LabsPDV.CaixaLabs.AdicionarCapitalAoMeio(index,valor);
@@ -143,7 +140,13 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 				// Aqui faz a impressão do cupom fiscal (ou não fiscal)
 				using (var PM = new PrintManager())
 				{
-					//PM.ImprimirCupomNaoFiscal(PrintManager.ImpressoraDefault,Produtos,ValorTotalComDesconto,ValorTotal,ValorTotalRecebido,ValorDescontoPorcentagem,ValorTroco,meioPagamento);
+					PM.ImprimirCupomNaoFiscalLoja(PrintManager.ImpressoraDefault,ValorTotalComDesconto,ValorTotal,ValorTotalRecebido,ValorDescontoPorcentagem,ValorTroco,PagamentosEfetuados);
+					//
+					DialogResult r = Modais.MostrarPergunta("Imprimir Via do Cliente?");
+					if(r == DialogResult.Yes)
+					{
+						PM.ImprimirCupomNaoFiscalCliente(PrintManager.ImpressoraDefault,Produtos,ValorTotalComDesconto,ValorTotal,ValorTotalRecebido,ValorDescontoPorcentagem,ValorTroco,PagamentosEfetuados);
+					}
 				}
 				// Sinaliza que a venda foi finalizada com sucesso
 				//

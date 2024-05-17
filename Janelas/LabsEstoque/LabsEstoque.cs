@@ -73,8 +73,6 @@ namespace Labs.Janelas.LabsEstoque
 				//Pega os Produtos do Estoque
 				List<Produto> toUpdateList = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.Produtos, x => Produtos.Exists(y => y.ID == x.ID));
 				//
-				Modais.MostrarInfo($"Produtos da Venda: {Produtos.Count} Produtos da Database {toUpdateList.Count}");
-				//
 				foreach (var produto in Produtos)
 				{
 					Produto? prod = toUpdateList.Find(x => x.ID == produto.ID);
@@ -82,7 +80,7 @@ namespace Labs.Janelas.LabsEstoque
 					if(prod != null)
 					{
 						prod.Quantidade -= produto.Quantidade;
-						CloudDataBase.UpdateOneLocalAsync<Produto>(Collections.Produtos,prod,Builders<Produto>.Filter.Eq("ID",prod.ID));
+						CloudDataBase.UpdateOneLocalAsync(Collections.Produtos,prod,Builders<Produto>.Filter.Eq("ID",prod.ID));
 					}
 				}
 				// Logo após Chamamos o UpdateMany

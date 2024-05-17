@@ -99,7 +99,7 @@ namespace Labs.LABS_PDV
 			public int PermLevel { get; set;} = PermLevel;
 		}
 		//Clientes
-		public class Cliente(string Auth0ID, bool AssinaturaAtiva = false, bool PossuiPlanoCloud = false)
+		public class Cliente(string Auth0ID,bool ClienteLabs = false, bool AssinaturaAtiva = false, bool PossuiPlanoCloud = false)
 		{
 			/// <summary>
 			/// ID deste Objeto na Database
@@ -121,6 +121,10 @@ namespace Labs.LABS_PDV
 			/// E será desativado caso o cliente atrase a assinatura mais de 15 dias.
 			/// </summary>
 			public bool AssinaturaAtiva { get; private set; } = AssinaturaAtiva;
+			/// <summary>
+			/// Define se é o primeiro Login do Cliente no Sistema (False se Acabou de Registrar)
+			/// </summary>
+			public bool ClienteLabs { get; private set; } = ClienteLabs;
 		}
 
 

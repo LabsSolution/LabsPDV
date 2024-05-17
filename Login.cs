@@ -76,7 +76,7 @@ namespace Labs
                     Cliente cliente = await CloudDataBase.GetClienteAsync(claim.Value);
                     if(cliente == null) 
                     { 
-                        cliente = new(claim.Value,false); 
+                        cliente = new(claim.Value); 
                         CloudDataBase.RegisterClienteAsync(cliente);
                     }
                     //Verifica o usuário

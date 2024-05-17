@@ -17,7 +17,7 @@ namespace Labs
 		//Controle de Instâncias (Endereçamento de memória)
 		private static Dictionary<string, Form> RunningApps = new();
 		//
-		public static string TradeMark = "";
+		public static string TradeMark = "© Lab Soluções © ";
 		//
 		public static string LabsCloudDataBaseConnectionURI = "mongodb+srv://solutionlab:solution%402024@labsolutions.p94r7be.mongodb.net/";
 		//

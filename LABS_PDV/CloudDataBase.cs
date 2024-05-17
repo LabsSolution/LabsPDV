@@ -23,15 +23,15 @@ namespace Labs.LABS_PDV
     }
     //
 
-	public class CloudDataBase
-	{   //Quando estiver próximo de produção essa classe será refatorada, para ter somente membros genéricos
-		//
-		const string LabsDataBase = "DataBaseCentral";  // Nome da dataBase da Empresa
-		// Lista de Coleções de DataBase (Constantes) (Usados para gerenciamento de membros)
-		const string ClientesCollection = "Clientes";
+    public class CloudDataBase
+    {   //Quando estiver próximo de produção essa classe será refatorada, para ter somente membros genéricos
         //
-		const string ProdutosCollection = "Produtos";
-		const string MeiosDePagamentoCollection = "MeiosDePagamento";
+        const string LabsDataBase = "DataBaseCentral";  // Nome da dataBase da Empresa
+                                                        // Lista de Coleções de DataBase (Constantes) (Usados para gerenciamento de membros)
+        const string ClientesCollection = "Clientes";
+        //
+        const string ProdutosCollection = "Produtos";
+        const string MeiosDePagamentoCollection = "MeiosDePagamento";
         //
         /// <summary>
         /// Verifica a Conexão com as Databases e Retorna o Status de Cada Uma.
@@ -41,61 +41,61 @@ namespace Labs.LABS_PDV
         /// <param name="LabsCloudOK">True se a Database da Labs estiver OK</param>
         /// <returns>Retorna True se todas as conexões estiverem funcionando corretamente</returns>
 		public static bool CheckDataBaseConnection(out bool LocalOK, out bool CloudOK, out bool LabsCloudOK)
-        { 
-			var local = ConnectToMongoLocal<Produto>(ProdutosCollection);
-			var cloud = ConnectToMongoCloud<Produto>(ProdutosCollection);
+        {
+            var local = ConnectToMongoLocal<Produto>(ProdutosCollection);
+            var cloud = ConnectToMongoCloud<Produto>(ProdutosCollection);
             //
-			var labsCloud = ConnectToLabsMongoCloud<Cliente>(ClientesCollection);
-			//
-            LocalOK = local != null; 
+            var labsCloud = ConnectToLabsMongoCloud<Cliente>(ClientesCollection);
             //
-            CloudOK = cloud != null; 
+            LocalOK = local != null;
+            //
+            CloudOK = cloud != null;
             //
             LabsCloudOK = labsCloud != null;
-			//
-			return LocalOK && CloudOK && LabsCloudOK;
-		}
+            //
+            return LocalOK && CloudOK && LabsCloudOK;
+        }
 
-		/// <summary>
+        /// <summary>
         /// Conecta na Database do cliente Procurando uma coleção específica
         /// </summary>
         /// <typeparam name="T">Tipo da Coleção</typeparam>
         /// <param name="collection">Nome da Coleção</param>
         /// <returns>Retorna a Conexão</returns>
-		private static IMongoCollection<T> ConnectToMongoLocal<T>(in string collection)
-		{
-			try
-			{
+        private static IMongoCollection<T> ConnectToMongoLocal<T>(in string collection)
+        {
+            try
+            {
                 var client = new MongoClient(LABS_PDV_MAIN.LocalDataBaseConnectionURI);
                 var db = client.GetDatabase(LABS_PDV_MAIN.ClientDataBase);
                 return db.GetCollection<T>(collection);
             }
-			catch (Exception ex)
-			{
-				Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-				return null!;
-			}
-		}
-		/// <summary>
+            catch (Exception ex)
+            {
+                Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
+                return null!;
+            }
+        }
+        /// <summary>
         /// Conecta na Database Remota (Caso esteja habilitado para o cliente)
         /// </summary>
         /// <typeparam name="T">Tipo da Coleção</typeparam>
         /// <param name="collection">Nome da Coleção</param>
         /// <returns>Retorna a Conexão</returns>
-		private static IMongoCollection<T> ConnectToMongoCloud<T>(in string collection)
-		{
-			try
-			{
+        private static IMongoCollection<T> ConnectToMongoCloud<T>(in string collection)
+        {
+            try
+            {
                 var client = new MongoClient(LABS_PDV_MAIN.CloudDataBaseConnectionURI);
                 var db = client.GetDatabase(LABS_PDV_MAIN.ClientDataBase);
                 return db.GetCollection<T>(collection);
             }
-			catch (Exception ex)
-			{
+            catch (Exception ex)
+            {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
                 return null!;
-			}
-		}
+            }
+        }
         /// <summary>
         /// Conecta na Database Remota da LABS (Uso Restrito do sistema somente)
         /// </summary>
@@ -104,47 +104,47 @@ namespace Labs.LABS_PDV
         /// <returns>Retorna a Conexão</returns>
         private static IMongoCollection<T> ConnectToLabsMongoCloud<T>(in string collection)
         {
-			try
-			{
+            try
+            {
                 var client = new MongoClient(LABS_PDV_MAIN.LabsCloudDataBaseConnectionURI);
                 var db = client.GetDatabase(LabsDataBase);
                 return db.GetCollection<T>(collection);
             }
-			catch (Exception ex)
-			{
+            catch (Exception ex)
+            {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
                 return null!;
-			}
+            }
         }
-		//
-		//---------------------------------------------------//
-		//------------METODOLOGIA GENÉRICA-------------------//
-		//-----TROCAR TODOS OS USOS PELOS MÉTODOS ABAIXO-----//
-		//---------------------------------------------------//
+        //
+        //---------------------------------------------------//
+        //------------METODOLOGIA GENÉRICA-------------------//
+        //-----TROCAR TODOS OS USOS PELOS MÉTODOS ABAIXO-----//
+        //---------------------------------------------------//
 
-		//--------------------MÉTODOS DE ACESSO AO BANCO DE DADOS LOCAL-------------------//
+        //--------------------MÉTODOS DE ACESSO AO BANCO DE DADOS LOCAL-------------------//
 
-		/// <summary>
-		/// Método para Retornar um objeto da DataBase Local Dentro de uma coleção Esperada
-		/// </summary>
-		/// <typeparam name="T">Tipo de Objeto a ser Retornado (Precisa derivar Diretamente de BSONID)</typeparam>
-		/// <param name="collectionName">Nome da Coleção para a busca</param>
-		/// <param name="predicate">Expressão Lambda para Requisição, default = "(_ => true)"</param>
-		/// <returns>Objeto Requisitado ou Nulo</returns>
-		public static async Task<T> GetLocalAsync<T>(string collectionName,Expression<Func<T,bool>> predicate)
-		{
-			try
-			{
-				var collection = ConnectToMongoLocal<T>(collectionName);
-				var results = await collection.FindAsync(predicate);
-				return results.ToList().FirstOrDefault()!;
-			}
-			catch (Exception ex)
-			{
+        /// <summary>
+        /// Método para Retornar um objeto da DataBase Local Dentro de uma coleção Esperada
+        /// </summary>
+        /// <typeparam name="T">Tipo de Objeto a ser Retornado (Precisa derivar Diretamente de BSONID)</typeparam>
+        /// <param name="collectionName">Nome da Coleção para a busca</param>
+        /// <param name="predicate">Expressão Lambda para Requisição, default = "(_ => true)"</param>
+        /// <returns>Objeto Requisitado ou Nulo</returns>
+        public static async Task<T> GetLocalAsync<T>(string collectionName, Expression<Func<T, bool>> predicate)
+        {
+            try
+            {
+                var collection = ConnectToMongoLocal<T>(collectionName);
+                var results = await collection.FindAsync(predicate);
+                return results.ToList().FirstOrDefault()!;
+            }
+            catch (Exception ex)
+            {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
                 return default!;
             }
-		}
+        }
         /// <summary>
 		/// Método para Retornar uma lista de objetos da DataBase Local Dentro de uma coleção Esperada
 		/// </summary>
@@ -152,7 +152,7 @@ namespace Labs.LABS_PDV
 		/// <param name="collectionName">Nome da Coleção para a busca</param>
 		/// <param name="predicate">Expressão Lambda para Requisição, default = "(_ => true)"</param>
 		/// <returns>Lista contendo todos os objetos compatíveis com o filtro</returns>
-        public static async Task<List<T>> GetManyLocalAsync<T>(string collectionName,Expression<Func<T,bool>> predicate)
+        public static async Task<List<T>> GetManyLocalAsync<T>(string collectionName, Expression<Func<T, bool>> predicate)
         {
             try
             {
@@ -166,46 +166,46 @@ namespace Labs.LABS_PDV
                 return default!;
             }
         }
-		//
-		/// <summary>
-		/// Registra um Objeto na database local em uma coleção determinada
-		/// </summary>
-		/// <typeparam name="T">Tipo de objeto para registro</typeparam>
-		/// <param name="collectionName">Nome da coleção</param>
-		/// <param name="ToRegisterObject">Objeto para registro (Respeitando o tipo)</param>
-		public static async void RegisterLocalAsync<T>(string collectionName,T ToRegisterObject)
-		{
-			try
-			{
+        //
+        /// <summary>
+        /// Registra um Objeto na database local em uma coleção determinada
+        /// </summary>
+        /// <typeparam name="T">Tipo de objeto para registro</typeparam>
+        /// <param name="collectionName">Nome da coleção</param>
+        /// <param name="ToRegisterObject">Objeto para registro (Respeitando o tipo)</param>
+        public static async void RegisterLocalAsync<T>(string collectionName, T ToRegisterObject)
+        {
+            try
+            {
                 var collection = ConnectToMongoLocal<T>(collectionName);
                 await collection.InsertOneAsync(ToRegisterObject);
             }
-			catch (Exception ex)
-			{
+            catch (Exception ex)
+            {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
                 throw;
             }
-		}
-		/// <summary>
-		/// Atualiza um objeto na database local utilizando um filtro
-		/// </summary>
-		/// <typeparam name="T">Tipo de objeto para ser atualizado</typeparam>
-		/// <param name="collectionName">Nome da coleção</param>
-		/// <param name="toUpdateObject">Objeto para atualização</param>
-		/// <param name="filter">Filtro para ser aplicado</param>
-		public static async void UpdateOneLocalAsync<T>(string collectionName, T toUpdateObject,FilterDefinition<T> filter)
-		{
-			try
-			{
+        }
+        /// <summary>
+        /// Atualiza um objeto na database local utilizando um filtro
+        /// </summary>
+        /// <typeparam name="T">Tipo de objeto para ser atualizado</typeparam>
+        /// <param name="collectionName">Nome da coleção</param>
+        /// <param name="toUpdateObject">Objeto para atualização</param>
+        /// <param name="filter">Filtro para ser aplicado</param>
+        public static async void UpdateOneLocalAsync<T>(string collectionName, T toUpdateObject, FilterDefinition<T> filter)
+        {
+            try
+            {
                 var collection = ConnectToMongoLocal<T>(collectionName);
                 await collection.ReplaceOneAsync(filter, toUpdateObject, new ReplaceOptions { IsUpsert = true });
             }
-			catch (Exception ex)
-			{
+            catch (Exception ex)
+            {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
                 throw;
             }
-		}
+        }
         /// <summary>
         /// Atualiza uma lista de objetos na database Utilizando um filtro
         /// </summary>
@@ -213,7 +213,7 @@ namespace Labs.LABS_PDV
         /// <param name="collectionName">Nome da coleção</param>
         /// <param name="updatedObjectList">Lista de objetos com as alterações aplicadas</param>
         /// <param name="filter">filtro para atualização</param>
-        public static async void UpdateManyLocalAsync<T>(string collectionName,List<T> updatedObjectList, FilterDefinition<T> filter)
+        public static async void UpdateManyLocalAsync<T>(string collectionName, List<T> updatedObjectList, FilterDefinition<T> filter)
         {
             //Somente Atualiza os Itens já que a Alteração já foi feita via script antes da chamada
             // na teoria vai funcionar
@@ -233,14 +233,14 @@ namespace Labs.LABS_PDV
             }
 
         }
-		/// <summary>
-		/// Remove um objeto na database local utilizando um predicado
-		/// </summary>
-		/// <typeparam name="T">Tipo de objeto para remoção</typeparam>
-		/// <param name="collectionName">Nome da coleção alvo</param>
-		/// <param name="predicate">Comparativo para remoção ex: "(x => x.ID == obj.ID)"</param>
-		public static async void RemoveLocalAsync<T>(string collectionName,Expression<Func<T,bool>> predicate)
-		{
+        /// <summary>
+        /// Remove um objeto na database local utilizando um predicado
+        /// </summary>
+        /// <typeparam name="T">Tipo de objeto para remoção</typeparam>
+        /// <param name="collectionName">Nome da coleção alvo</param>
+        /// <param name="predicate">Comparativo para remoção ex: "(x => x.ID == obj.ID)"</param>
+        public static async void RemoveLocalAsync<T>(string collectionName, Expression<Func<T, bool>> predicate)
+        {
             try
             {
                 var collection = ConnectToMongoLocal<T>(collectionName);
@@ -252,14 +252,14 @@ namespace Labs.LABS_PDV
                 throw;
             }
         }
-		/// <summary>
-		/// Pega a quantidade de objetos presentes em uma coleção (Não itera em subgrupos)
-		/// </summary>
-		/// <typeparam name="T">Tipo de objeto</typeparam>
-		/// <param name="collectionName">Nome da coleção</param>
-		/// <returns>Retorna a quantidade de objetos do Tipo especificado dentro da coleção</returns>
-		public static async Task<long> GetLocalCountAsync<T>(string collectionName)
-		{
+        /// <summary>
+        /// Pega a quantidade de objetos presentes em uma coleção (Não itera em subgrupos)
+        /// </summary>
+        /// <typeparam name="T">Tipo de objeto</typeparam>
+        /// <param name="collectionName">Nome da coleção</param>
+        /// <returns>Retorna a quantidade de objetos do Tipo especificado dentro da coleção</returns>
+        public static async Task<long> GetLocalCountAsync<T>(string collectionName)
+        {
             try
             {
                 var collection = ConnectToMongoLocal<T>(collectionName);
@@ -429,37 +429,37 @@ namespace Labs.LABS_PDV
         /// <param name="Auth0ID">Auth0ID Para Pesquisa</param>
         /// <returns>Retorna Admin Caso Esteja Registrado, senão retorna Nulo</returns>
         public static async Task<AdminLabs> GetAdminLabsAsync(string Auth0ID)
-		{
-			try
-			{
+        {
+            try
+            {
                 var Admins = ConnectToLabsMongoCloud<AdminLabs>("ADMINS");
                 //
                 var results = await Admins.FindAsync(x => x.Auth0ID == Auth0ID);
                 return results.ToList().FirstOrDefault()!;
             }
-			catch (Exception ex)
-			{
+            catch (Exception ex)
+            {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
                 return null!;
-			}
+            }
         }
-		/// <summary>
+        /// <summary>
         /// Registra um Admin No Banco Labs
         /// </summary>
         /// <param name="admin">Objeto de Admin Para ser Registrado</param>
-		public static async void RegisterAdminLabs(AdminLabs admin)
-		{
-			try
-			{
+        public static async void RegisterAdminLabs(AdminLabs admin)
+        {
+            try
+            {
                 var Admins = ConnectToLabsMongoCloud<AdminLabs>("ADMINS");
                 await Admins.InsertOneAsync(admin);
             }
-			catch (Exception ex)
-			{
+            catch (Exception ex)
+            {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
                 throw;
-			}
-		}
+            }
+        }
         //----------------------------------------------------------------//
         // Gestor de Acesso a Clientes
         //----------------------------------------------------------------//
@@ -469,71 +469,72 @@ namespace Labs.LABS_PDV
         /// <param name="Auth0ID">Auth0ID Requerido</param>
         /// <returns>Retorna Cliente, caso não exista retorna nulo</returns>
         public static async Task<Cliente> GetClienteAsync(string Auth0ID)
-		{
-			try
-			{
+        {
+            try
+            {
                 var Clientes = ConnectToLabsMongoCloud<Cliente>(Collections.Clientes);
                 //
                 var results = await Clientes.FindAsync(x => x.Auth0ID == Auth0ID);
                 //
                 return results.ToList().FirstOrDefault()!;
             }
-			catch (Exception ex)
-			{
+            catch (Exception ex)
+            {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
                 return null!;
-			}
-		}
-		/// <summary>
+            }
+        }
+        /// <summary>
         /// Registra um Cliente No Banco de Dados da LABS
         /// </summary>
         /// <param name="cliente">Objeto de Cliente para Registro</param>
-		public static async void RegisterClienteAsync(Cliente cliente)
-		{
-			try
-			{
+        public static async void RegisterClienteAsync(Cliente cliente)
+        {
+            try
+            {
                 var Clientes = ConnectToLabsMongoCloud<Cliente>(ClientesCollection);
                 await Clientes.InsertOneAsync(cliente);
             }
-			catch (Exception ex)
-			{
+            catch (Exception ex)
+            {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
                 throw;
-			}
-		}
-		/// <summary>
+            }
+        }
+        /// <summary>
         /// Atualiza um Cliente no Banco de Dados da LABS
         /// </summary>
         /// <param name="cliente">Objeto de cliente para ser atualizado</param>
-		public static async void UpdateClienteAsync(Cliente cliente)
-		{
-			try
-			{
+        public static async void UpdateClienteAsync(Cliente cliente)
+        {
+            try
+            {
                 var Clientes = ConnectToLabsMongoCloud<Cliente>(ClientesCollection);
                 //
                 var filter = Builders<Cliente>.Filter.Eq("DataBaseID", cliente.DataBaseID);
                 await Clientes.ReplaceOneAsync(filter, cliente, new ReplaceOptions { IsUpsert = true });
             }
-			catch (Exception ex)
-			{
+            catch (Exception ex)
+            {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
                 throw;
-			}
-			
-		}
-		//
-		public static async void RemoverClienteAsync(Cliente cliente)
-		{
-			try
-			{
+            }
+
+        }
+        //
+        public static async void RemoverClienteAsync(Cliente cliente)
+        {
+            try
+            {
                 var Clientes = ConnectToMongoLocal<Cliente>(ClientesCollection);
                 await Clientes.DeleteOneAsync(c => c.DataBaseID == cliente.DataBaseID);
             }
-			catch (Exception ex)
-			{
+            catch (Exception ex)
+            {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
                 throw;
-			}
-            
+            }
+
         }
+    }
 }

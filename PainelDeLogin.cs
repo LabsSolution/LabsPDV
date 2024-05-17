@@ -25,7 +25,20 @@ namespace Labs
         {
             Login login = new();
             var cliente = await login.RealizarLoginCliente();
-            if (!cliente.AssinaturaAtiva) { Modais.MostrarAviso("Que Pena!\nA Sua Assinatura LABS Expirou!\nPara Retomar o Acesso Basta Renovar sua Assinatura!"); return; }
+            //Se for o primeiro login do cliente Informamos o que ele precisa fazer (Talvez abrir no site da Empresa?)
+            if (!cliente.ClienteLabs) 
+            { 
+                Modais.MostrarInfo("Olá!, A Lab Soluções Agradece a sua Preferência!\n Para Ter Acesso ao Sistema Basta Contratar a Assinatura que" +
+                $"Melhor Atende as suas Necessidades!\n{LABS_PDV_MAIN.TradeMark}");
+                return;
+            }
+            //
+            if (!cliente.AssinaturaAtiva) 
+            { 
+                Modais.MostrarAviso($"Que Pena!\nA Sua Assinatura LABS Expirou!\nPara Retomar o Acesso Basta Renovar sua Assinatura!\n{LABS_PDV_MAIN.TradeMark}"); 
+                return; 
+            }
+            //
             LABS_PDV_MAIN.IniciarApp<LabsMainApp>(true);
         }
 
