@@ -11,8 +11,8 @@ namespace Labs.LABS_PDV
 	public class PrintManager : PrintDocument
 	{
         //
-        //public const string ImpressoraDefault = "POS-58 Baisec";
-        public const string ImpressoraDefault = "HP LaserJet Professional P1102w";
+        public const string ImpressoraDefault = "POS-58 Baisec";
+        //public const string ImpressoraDefault = "HP LaserJet Professional P1102w";
         //
         private Size Papel58mm = new(58, 210);
         //
@@ -75,15 +75,16 @@ namespace Labs.LABS_PDV
             var endereco = Utils.FormatarTexto("ENDEREÇO DA EMPRESA" + " Nº " + "NUMERO DA EMPRESA", RegularEndereco, graphics, LarguraPapel, out float yEndereco);
             // Usamos o limite gerado pela função de formatação e printamos a linha limite :D
             graphics.DrawString(endereco, RegularEndereco, Brushes.Black, 0, yPos);
-            yPos += yEndereco + 20; // A Cada Impressão Atualizamos a posição Vertical da Agulha
-            //
+            yPos += yEndereco;
+            yPos += 20; // A Cada Impressão Atualizamos a posição Vertical da Agulha
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
+            //
             graphics.DrawString("CUPOM NÃO FISCAL", Bold, Brushes.Black, 0, yPos);
             yPos += 15;
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
+            yPos += 30;
             //
-            yPos += 15;
-            //
+            graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             graphics.DrawString("PEDIDO / VENDA: " + "ID PEDIDO / VENDA", RegularPedido, Brushes.Black, 0, yPos);
             yPos += 15;
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
