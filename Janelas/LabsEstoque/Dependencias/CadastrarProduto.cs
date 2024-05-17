@@ -1,4 +1,5 @@
 ﻿using Labs.LABS_PDV;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -57,24 +58,25 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 					CodBarras = Cod,
 				};
 				//Depois de ter o produto Pronto, registramos ele :D
-				CloudDataBase.RegisterProdutoAsync(produto);
+				CloudDataBase.RegisterLocalAsync(Collections.Produtos,produto);
+				//
 				Modais.MostrarInfo("Produto Cadastrado Com Sucesso!");
 				//
 				LimparCampos();
 			}
 		}
-
+		//
 		private void LimparButton_Click(object sender, EventArgs e)
 		{
 			LimparCampos();
 		}
-
+		//
 		private void SairButton_Click(object sender, EventArgs e)
 		{
 			//Não tem muuuito o que fazer além de fechar kk
 			this.Close();
 		}
-
+		//
 		private void CadastrarProduto_Load(object sender, EventArgs e)
 		{
 

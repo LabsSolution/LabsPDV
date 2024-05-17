@@ -1,4 +1,5 @@
 ﻿using Labs.LABS_PDV;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -65,7 +66,8 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 				//Caso o Usuário Confirme a Ação, Seguimos em Frente
 				if (r == DialogResult.Yes)
 				{
-					CloudDataBase.UpdateProdutoAsync(produto);
+					CloudDataBase.UpdateOneLocalAsync(Collections.Produtos, produto, Builders<Produto>.Filter.Eq("ID",produto.ID));
+					//
 					Modais.MostrarInfo("Produto Atualizado Com Sucesso!");
 				}//
 				else { Modais.MostrarInfo("Atualização Cancelada"); }

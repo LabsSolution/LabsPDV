@@ -1,4 +1,5 @@
-﻿using Labs.Janelas.LabsPDV.Dependencias;
+﻿using Labs.Janelas.LabsEstoque;
+using Labs.Janelas.LabsPDV.Dependencias;
 using Labs.LABS_PDV;
 using Unimake.Business.DFe.Xml.EFDReinf;
 using static Labs.LABS_PDV.Modelos;
@@ -190,9 +191,8 @@ namespace Labs.Janelas.LabsPDV
 		{
 			if (!EstaAberto) { Modais.MostrarAviso("Realize a Abertura do Caixa Primeiro!"); return; }
 			if (!RealizandoVenda) { Modais.MostrarAviso("Você não está realizando nenhuma venda no momento!"); return; }
-			
+
 			//AS ETAPAS ACIMA DEVEM SER DESABILITADAS PARA AGILIZAR O PROCESSO DE DEV
-			
 			//Mostra a janela de conclusão de venda e atrela o evento de fechamento da janela com a finalização da venda
 			JanelaDePagamento janelaDePagamento = LABS_PDV_MAIN.IniciarDependencia<JanelaDePagamento>(app=>
 			{

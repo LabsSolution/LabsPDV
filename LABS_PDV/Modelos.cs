@@ -12,6 +12,13 @@ namespace Labs.LABS_PDV
 	/// ATENÇÃO!!!! TODOS OS MODELOS ABAIXO SÃO DE ALTO NÍVEL DE IMPORTÂNCIA!!!!, QUALQUER ALTERAÇÃO DESCUIDADA PODE OCASIONAR PROBLEMAS!!!
 	/// ANTES DE ALTERAR QUALQUER VALOR, CERTIFIQUE-SE DE CONFIRMAR A NÃO UTILIZAÇÃO DO ITEM NO CÓDIGO!!!
 	/// </summary>
+	public class Collections
+	{
+		public static string Produtos { get; } = "Produtos";
+		public static string Clientes { get; } = "Clientes";
+		public static string MeiosDePagamento { get; } = "MeiosDePagamento";
+		public static string LabAdmins { get; } = "LabAdmins";
+	}
 	public class Modelos
 	{
 		/// <summary>
@@ -92,7 +99,7 @@ namespace Labs.LABS_PDV
 			public int PermLevel { get; set;} = PermLevel;
 		}
 		//Clientes
-		public class Cliente(string Auth0ID, bool ClienteAtivo = false)
+		public class Cliente(string Auth0ID, bool AssinaturaAtiva = false, bool PossuiPlanoCloud = false)
 		{
 			/// <summary>
 			/// ID deste Objeto na Database
@@ -100,16 +107,20 @@ namespace Labs.LABS_PDV
 			[BsonId]
 			[BsonRepresentation(BsonType.ObjectId)]
 			public string DataBaseID { get; set; } = null!;
-			//
 			/// <summary>
-			/// ID De Autenticação do Usuário Dentro do Auth0
+			/// Determina se o Cliente Possui o Plano Cloud No seu Contrato.
+			/// </summary>
+			public bool PossuiPlanoCloud { get; set; } = PossuiPlanoCloud;
+			/// <summary>
+			/// ID De Autenticação do Usuário Dentro do Auth0.
 			/// </summary>
 			public string Auth0ID { get; private set; } = Auth0ID;
 			/// <summary>
 			/// Identifica se o Cliente é ativo ou não
 			/// Padrão é false pois vai ser ativado somente depois do pagamento da assinatura
+			/// E será desativado caso o cliente atrase a assinatura mais de 15 dias.
 			/// </summary>
-			public bool ClienteAtivo { get; private set; } = ClienteAtivo;
+			public bool AssinaturaAtiva { get; private set; } = AssinaturaAtiva;
 		}
 
 

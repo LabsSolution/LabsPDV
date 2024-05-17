@@ -1,12 +1,14 @@
 ﻿using Labs.Janelas.LabsEstoque.Dependencias;
 using Labs.LABS_PDV;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using static Labs.LABS_PDV.Modelos;
 
 namespace Labs.Janelas.LabsEstoque
 {
-	public partial class LabsEstoque : Form
+	public partial class Labs_Estoque : Form
 	{
-		public LabsEstoque()
+		public Labs_Estoque()
 		{
 			InitializeComponent();
 		}
@@ -36,12 +38,12 @@ namespace Labs.Janelas.LabsEstoque
 		{
 			//
 			ListaProdutosEstoque.Items.Clear(); // Limpamos a lista antes de carregar
-												//
-			List<Produto> Produtos = await CloudDataBase.GetProdutosAsync(); // Pegados todos os produtos cadastrados
+			//
+			List<Produto> Produtos = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.Produtos, _ => true); // Pega todos os produtos cadastrados
 			
 			foreach (Produto produto in Produtos) //Iteramos e adicionamos a lista
 			{
-				InserirProdutoNaLista(produto.ID.ToString(), produto.Descricao, produto.Quantidade.ToString(), produto.Preco.ToString(), produto.CodBarras,produto.Quantidade <= LabsMainApp.QMDP);
+				InserirProdutoNaLista(produto.ID.ToString(), produto.Descricao, produto.Quantidade.ToString(), Utils.FormatarValor(produto.Preco), produto.CodBarras,produto.Quantidade <= LabsMainApp.QMDP);
 				await Task.Delay(1);
 			}
 		}
@@ -61,6 +63,37 @@ namespace Labs.Janelas.LabsEstoque
 		{
 			AtualizarLista();
 		}
+		//-----------------------------------------//
+		//-------------MÉTODOS ESTÁTICOS!!!
+		//-----------------------------------------//
+		public static async Task AbaterProdutosEmEstoqueAsync(List<Produto> Produtos)
+		{
+            try
+            {
+				//Pega os Produtos do Estoque
+				List<Produto> toUpdateList = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.Produtos, x => Produtos.Exists(y => y.ID == x.ID));
+				//
+				Modais.MostrarInfo($"Produtos da Venda: {Produtos.Count} Produtos da Database {toUpdateList.Count}");
+				//
+				foreach (var produto in Produtos)
+				{
+					Produto? prod = toUpdateList.Find(x => x.ID == produto.ID);
+					//
+					if(prod != null)
+					{
+						prod.Quantidade -= produto.Quantidade;
+						CloudDataBase.UpdateOneLocalAsync<Produto>(Collections.Produtos,prod,Builders<Produto>.Filter.Eq("ID",prod.ID));
+					}
+				}
+				// Logo após Chamamos o UpdateMany
+				//
+            }
+            catch (Exception ex)
+            {
+                Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
+                throw;
+            }
+        }
 		//------------------------//
 		//Eventos
 		//------------------------//
@@ -106,7 +139,7 @@ namespace Labs.Janelas.LabsEstoque
 											   "ESSA OPERAÇÃO NÃO PODE SER DESFEITA!");
 				if(r == DialogResult.Yes)
 				{
-					CloudDataBase.RemoveProdutoAsync(produto);
+					CloudDataBase.RemoveLocalAsync<Produto>(Collections.Produtos,x => x.ID == produto.ID);
 					// Chamamos a DataBase para a remoção do item desejado
 					//Fazemos essa proteção para que não haja Bugs ou travamentos caso não seja encontrado nada na database
 					//O que pode acontecer caso haja alguma falha no espelhamento da lista com a database.

@@ -36,12 +36,14 @@
             VisualizarCloudURIButton = new Button();
             SalvarButton = new Button();
             SairButton = new Button();
+            label3 = new Label();
+            NomeDatabaseBox = new TextBox();
             SuspendLayout();
             // 
             // CloudURIBox
             // 
             CloudURIBox.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            CloudURIBox.Location = new Point(12, 38);
+            CloudURIBox.Location = new Point(12, 95);
             CloudURIBox.Name = "CloudURIBox";
             CloudURIBox.PasswordChar = '•';
             CloudURIBox.Size = new Size(332, 29);
@@ -53,16 +55,16 @@
             label1.BackColor = Color.Transparent;
             label1.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label1.ForeColor = SystemColors.Window;
-            label1.Location = new Point(12, 14);
+            label1.Location = new Point(12, 71);
             label1.Name = "label1";
-            label1.Size = new Size(165, 21);
+            label1.Size = new Size(177, 21);
             label1.TabIndex = 1;
-            label1.Text = "Cloud Database URI:";
+            label1.Text = "(URI) Database Cloud:";
             // 
             // LocalURIBox
             // 
             LocalURIBox.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            LocalURIBox.Location = new Point(12, 94);
+            LocalURIBox.Location = new Point(12, 151);
             LocalURIBox.Name = "LocalURIBox";
             LocalURIBox.PasswordChar = '•';
             LocalURIBox.Size = new Size(332, 29);
@@ -74,11 +76,11 @@
             label2.BackColor = Color.Transparent;
             label2.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label2.ForeColor = SystemColors.Window;
-            label2.Location = new Point(12, 70);
+            label2.Location = new Point(12, 127);
             label2.Name = "label2";
-            label2.Size = new Size(160, 21);
+            label2.Size = new Size(172, 21);
             label2.TabIndex = 3;
-            label2.Text = "Local Database URI:";
+            label2.Text = "(URI) Local Database:";
             // 
             // VisualizarLocalURIButton
             // 
@@ -89,7 +91,7 @@
             VisualizarLocalURIButton.FlatStyle = FlatStyle.Flat;
             VisualizarLocalURIButton.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             VisualizarLocalURIButton.ForeColor = SystemColors.Window;
-            VisualizarLocalURIButton.Location = new Point(350, 94);
+            VisualizarLocalURIButton.Location = new Point(350, 151);
             VisualizarLocalURIButton.Name = "VisualizarLocalURIButton";
             VisualizarLocalURIButton.Size = new Size(96, 30);
             VisualizarLocalURIButton.TabIndex = 4;
@@ -107,7 +109,7 @@
             VisualizarCloudURIButton.FlatStyle = FlatStyle.Flat;
             VisualizarCloudURIButton.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             VisualizarCloudURIButton.ForeColor = SystemColors.Window;
-            VisualizarCloudURIButton.Location = new Point(350, 37);
+            VisualizarCloudURIButton.Location = new Point(350, 94);
             VisualizarCloudURIButton.Name = "VisualizarCloudURIButton";
             VisualizarCloudURIButton.Size = new Size(96, 30);
             VisualizarCloudURIButton.TabIndex = 5;
@@ -150,6 +152,26 @@
             SairButton.UseVisualStyleBackColor = false;
             SairButton.Click += SairButton_Click;
             // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.BackColor = Color.Transparent;
+            label3.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label3.ForeColor = SystemColors.Window;
+            label3.Location = new Point(12, 9);
+            label3.Name = "label3";
+            label3.Size = new Size(316, 21);
+            label3.TabIndex = 9;
+            label3.Text = "Nome Da Database do Estabelecimento:";
+            // 
+            // NomeDatabaseBox
+            // 
+            NomeDatabaseBox.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            NomeDatabaseBox.Location = new Point(12, 33);
+            NomeDatabaseBox.Name = "NomeDatabaseBox";
+            NomeDatabaseBox.Size = new Size(332, 29);
+            NomeDatabaseBox.TabIndex = 8;
+            // 
             // DatabaseConfig
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -157,6 +179,8 @@
             BackColor = SystemColors.WindowFrame;
             ClientSize = new Size(800, 600);
             ControlBox = false;
+            Controls.Add(label3);
+            Controls.Add(NomeDatabaseBox);
             Controls.Add(SairButton);
             Controls.Add(SalvarButton);
             Controls.Add(VisualizarCloudURIButton);
@@ -183,5 +207,7 @@
         private Button VisualizarCloudURIButton;
         private Button SalvarButton;
         private Button SairButton;
+        private Label label3;
+        private TextBox NomeDatabaseBox;
     }
 }

@@ -1,4 +1,5 @@
-﻿using Labs.LABS_PDV;
+﻿using Labs.Janelas.LabsEstoque;
+using Labs.LABS_PDV;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -128,7 +129,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 			if(FaltaReceber > 0) { Modais.MostrarInfo($"Ainda Falta Receber R$: {FaltaReceber} !"); return; }
             //Substituir essa parte por funções genéricas para espelhamento (As funções genéricas já suportam Update Massivo)
             Modais.MostrarInfo($"Produtos: {this.Produtos.Count}");
-            await CloudDataBase.AbaterProdutosEmEstoqueAsync(Produtos);
+			await Labs_Estoque.AbaterProdutosEmEstoqueAsync(Produtos);
 			// Adiciona o valor Recebido ao meio correspondente
 			if(LabsPDV != null)
 			{
@@ -142,7 +143,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 				// Aqui faz a impressão do cupom fiscal (ou não fiscal)
 				using (var PM = new PrintManager())
 				{
-					PM.ImprimirCupomNaoFiscal(PrintManager.ImpressoraDefault,Produtos,ValorTotalComDesconto,ValorTotal,ValorTotalRecebido,ValorDescontoPorcentagem,ValorTroco,meioPagamento);
+					//PM.ImprimirCupomNaoFiscal(PrintManager.ImpressoraDefault,Produtos,ValorTotalComDesconto,ValorTotal,ValorTotalRecebido,ValorDescontoPorcentagem,ValorTroco,meioPagamento);
 				}
 				// Sinaliza que a venda foi finalizada com sucesso
 				//

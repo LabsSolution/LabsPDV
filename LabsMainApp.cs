@@ -62,13 +62,14 @@ namespace Labs
 		void LoadConfigs()
 		{
             //Aqui Lemos as Configs do App.Config;
-            if (Utils.TryParseToInt(ConfigurationManager.AppSettings["QMDP"]!, out int value))
+            if (Utils.TryParseToInt(LabsConfigs.GetConfigValue("QMDP"), out int value))
             {
                 QMDP = value;
             }
-			//Aqui Puxamos as Impressoras Configuradas Para uso do sistema (Configuradas pelo painel de Configs);
-			ImpressoraTermica = ConfigurationManager.AppSettings["ImpressoraTermica"]!;
-			ImpressoraA4 = ConfigurationManager.AppSettings["ImpressoraA4"]!;
+            //Aqui Puxamos as Impressoras Configuradas Para uso do sistema (Configuradas pelo painel de Configs);
+            // o valor vai ser retornado como Null caso não tenha nenhuma impressora configurada!
+            ImpressoraTermica = LabsConfigs.GetConfigValue("ImpressoraTermica"); 
+			ImpressoraA4 = LabsConfigs.GetConfigValue("ImpressoraA4");
 			//
         }
 		//
@@ -76,8 +77,8 @@ namespace Labs
 		{
 			var JDC = LABS_PDV_MAIN.IniciarApp<JanelaCarregamento>(true);
 			//
-			var ProdutosCount = await CloudDataBase.GetProdutosCountAsync();
-			var PBFDS = await CloudDataBase.GetProdutosAsync();
+			var ProdutosCount = await CloudDataBase.GetLocalCountAsync<Produto>(Collections.Produtos);
+			var PBFDS = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.Produtos,_ => true); // Pega todos os produtos
 			int ProdutosEmBaixa = 0;
 			//
 			JDC.SetTextoFrontEnd("VERIFICANDO ESTOQUE");
@@ -101,7 +102,7 @@ namespace Labs
 		private void OnLabsEstoqueClick(object sender, EventArgs e)
 		{
 			//Iniciamos a Janela de Controle de estoque caso o usuário tenha permissão para isso;
-			LABS_PDV_MAIN.IniciarApp<LabsEstoque>(false);
+			LABS_PDV_MAIN.IniciarApp<Labs_Estoque>(false);
 		}
 		//
 		private void PdvLogin() //Realiza o login do Operador se possível, caso contrário, não permite a abertura

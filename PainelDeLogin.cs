@@ -24,8 +24,8 @@ namespace Labs
         private async void RealizarLoginButton_Click(object sender, EventArgs e)
         {
             Login login = new();
-            var r = await login.RealizarLoginCliente();
-            if (!r) { Modais.MostrarAviso("Que Pena!\nParece Que você Ainda não é um Cliente Labs!"); return; }
+            var cliente = await login.RealizarLoginCliente();
+            if (!cliente.AssinaturaAtiva) { Modais.MostrarAviso("Que Pena!\nA Sua Assinatura LABS Expirou!\nPara Retomar o Acesso Basta Renovar sua Assinatura!"); return; }
             LABS_PDV_MAIN.IniciarApp<LabsMainApp>(true);
         }
 

@@ -30,11 +30,10 @@ namespace Labs.Janelas.Configuracoes.Dependencias
         }
         private bool Save()
         {
-            var filter = Builders<MeiosPagamento>.Filter.Eq("ID", Meios.ID);
             //LOCAL
-            CloudDataBase.RegisterLocalAsync(MeiosCollection, Meios,filter);
+            CloudDataBase.RegisterLocalAsync(MeiosCollection, Meios);
             //ESPELHAMENTO CLOUD
-            CloudDataBase.RegisterCloudAsync(MeiosCollection, Meios,filter);
+            CloudDataBase.RegisterCloudAsync(MeiosCollection, Meios);
             return true;
         }
         //

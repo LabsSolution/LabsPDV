@@ -7,6 +7,7 @@ using System.Configuration;
 using Labs.Janelas.Configuracoes.Dependencias;
 using Labs.Janelas.LabsPDV.Dependencias;
 using Labs.Janelas.LabsPDV;
+using static Labs.LABS_PDV.Modelos;
 //
 namespace Labs
 {
@@ -15,12 +16,20 @@ namespace Labs
 	{
 		//Controle de Instâncias (Endereçamento de memória)
 		private static Dictionary<string, Form> RunningApps = new();
-		// Acessores Públicos para a database
+		//
+		public static string TradeMark = "";
+		//
+		public static string LabsCloudDataBaseConnectionURI = "mongodb+srv://solutionlab:solution%402024@labsolutions.p94r7be.mongodb.net/";
+		//
+		// Acessores Públicos para a database do cliente
+		public static string ClientDataBase = null!; // Nome da database do cliente
 		public static string CloudDataBaseConnectionURI = null!;
 		public static string LocalDataBaseConnectionURI = null!;
 		//
+		public static Cliente Cliente { get; private set; } = null!;
 		//
-		static SVGParser SVGParser = new();
+		//
+		static readonly SVGParser SVGParser = new();
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -31,8 +40,10 @@ namespace Labs
 			// Politica LGPD
 			//Descriptografa a database local
 			if(LabsCripto.Decript("L_Data",out string LDecripted)) { LocalDataBaseConnectionURI = LDecripted; }
-			//Descriptograda a Datavbase Remota
+			//Descriptografa a Datavbase Remota
 			if(LabsCripto.Decript("C_Data",out string CDecripted)) { CloudDataBaseConnectionURI = CDecripted; }
+			//Descriptografa o nome da Database da empresa
+			if(LabsCripto.Decript("N_Data",out string NDecripted)) { ClientDataBase = NDecripted; }
 			//
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.

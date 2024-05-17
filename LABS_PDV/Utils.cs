@@ -32,7 +32,7 @@ namespace Labs.LABS_PDV
 		/// <returns>Retorna um booleano representado se a busca foi bem sucedida ou não</returns>
 		public static async Task<Produto> GetProdutoByCode(string Cod)
 		{
-			return await CloudDataBase.GetProdutoByCodBarrasAsync(Cod);
+			return await CloudDataBase.GetLocalAsync<Produto>(Collections.Produtos,x => x.CodBarras == Cod);
 		}
 		/// <summary>
 		/// Verifica se a tecla fornecida é uma tecla numérica válida

@@ -50,6 +50,7 @@ namespace Labs.LABS_PDV
         {
             //Realizamos as configs iniciais
             PrinterSettings.PrinterName = Impressora;
+            //Configs Necessárias para o cupom
             this.Produtos = Produtos;
             this.ValorTotalComDesconto = ValorTotalComDesconto;
             this.ValorTotalSemDesconto = ValorTotalSemDesconto;

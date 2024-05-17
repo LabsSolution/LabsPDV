@@ -1,6 +1,6 @@
 ﻿namespace Labs.Janelas.LabsEstoque
 {
-	partial class LabsEstoque
+	partial class Labs_Estoque
 	{
 		/// <summary>
 		/// Required designer variable.

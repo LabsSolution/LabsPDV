@@ -32,15 +32,6 @@ namespace Labs
             //
         }
         //
-        private async Task<bool> VerificarUsuário(Cliente cliente)
-        {
-            if (cliente.ClienteAtivo) { await Task.Delay(1); return true; }
-            //Se não for cliente ativo
-            
-            await Task.Delay(1);
-            return false;
-        }
-        //
         private async Task<bool> VerificarAdmin(AdminLabs admin)
         {
             if (admin.AdminAtivo && admin.PermLevel > 0) { await Task.Delay(1); return true; }
@@ -68,11 +59,14 @@ namespace Labs
             }
             return false;
         }
-        //
-        public async Task<bool> RealizarLoginCliente()
+        /// <summary>
+        /// Realiza o Login Do Cliente, Caso não exista retorna Nulo
+        /// </summary>
+        /// <returns>Objeto de Cliente</returns>
+        public async Task<Cliente> RealizarLoginCliente()
         {
             LoginResult result = await Client.LoginAsync();
-            if (result.IsError) { return false; }
+            if (result.IsError) { return null!; }
             // Se o Cliente Não existir no nosso Banco de Dados, Adicionamos, mas não Ativamos de imediato
             //
             foreach (Claim claim in result.User.Claims)
@@ -80,12 +74,16 @@ namespace Labs
                 if(claim.Type == "sub")
                 {
                     Cliente cliente = await CloudDataBase.GetClienteAsync(claim.Value);
-                    if(cliente == null) { cliente = new(claim.Value,false); CloudDataBase.RegisterClienteAsync(cliente); }
+                    if(cliente == null) 
+                    { 
+                        cliente = new(claim.Value,false); 
+                        CloudDataBase.RegisterClienteAsync(cliente);
+                    }
                     //Verifica o usuário
-                    return await VerificarUsuário(cliente);
+                    return cliente;
                 }
             }
-            return false;
+            return null!;
         }
     }
 }

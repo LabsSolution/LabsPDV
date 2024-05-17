@@ -13,6 +13,7 @@ namespace Labs.Janelas.Configuracoes.Dependencias
 {
     public partial class DatabaseConfig : Form
     {
+        private protected string DecriptedNomeDatabase { get; set; } = null!;
         private protected string DecriptedCloudData { get; set; } = null!;
         private protected string DecriptedLocalData { get; set; } = null!;
         //
@@ -20,6 +21,7 @@ namespace Labs.Janelas.Configuracoes.Dependencias
         //
         private protected string CFileName = "C_Data";
         private protected string LFileName = "L_Data";
+        private protected string NFileName = "N_Data";
         //
         public DatabaseConfig()
         {
@@ -27,6 +29,7 @@ namespace Labs.Janelas.Configuracoes.Dependencias
             //DecryptData
             if (LabsCripto.Decript(CFileName, out string CDec)) { DecriptedCloudData = CDec; }
             if (LabsCripto.Decript(LFileName, out string LDec)) { DecriptedLocalData = LDec; }
+            if (LabsCripto.Decript(NFileName, out string NDec)) { DecriptedNomeDatabase = NDec; }
             //
             LoadData();
         }
@@ -34,6 +37,7 @@ namespace Labs.Janelas.Configuracoes.Dependencias
         {
             CloudURIBox.Text = DecriptedCloudData;
             LocalURIBox.Text = DecriptedLocalData;
+            NomeDatabaseBox.Text = DecriptedNomeDatabase;
         }
         //CLOUD
         private void VisualizarCloudURIButton_MouseDown(object sender, MouseEventArgs e)
@@ -58,9 +62,11 @@ namespace Labs.Janelas.Configuracoes.Dependencias
         {
             string cData = CloudURIBox.Text;
             string lData = LocalURIBox.Text;
+            string nData = NomeDatabaseBox.Text;
             //
             LabsCripto.Encript(CFileName,cData);
             LabsCripto.Encript(LFileName,lData);
+            LabsCripto.Encript(NFileName,nData);
             //
             Modais.MostrarInfo("Alterações Salvas com Sucesso!\nReinicie o Sistema Para que as Alterações Tenham Efeito!");
         }
