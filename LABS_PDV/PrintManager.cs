@@ -46,7 +46,6 @@ namespace Labs.LABS_PDV
         //
         // Criar função para cálculo de tamanho de texto
         //
-
         public void ImprimirCupomNaoFiscalLoja(string Impressora, double ValorTotalComDesconto, double ValorTotalSemDesconto, double ValorPago, double Desconto, double ValorTroco, List<PagamentoEfetuado> PagamentosEfetuados)
         {
             //Realizamos as configs iniciais
@@ -64,6 +63,7 @@ namespace Labs.LABS_PDV
             // Mostra a pré-visualização antes de imprimir
             Print();
         }
+        //
         public void ImprimirCupomNaoFiscalCliente(string Impressora, List<Produto> Produtos, double ValorTotalComDesconto, double ValorTotalSemDesconto, double ValorPago, double Desconto, double ValorTroco, List<PagamentoEfetuado> PagamentosEfetuados)
         {
             //Realizamos as configs iniciais
