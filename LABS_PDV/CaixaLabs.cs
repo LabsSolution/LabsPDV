@@ -16,7 +16,7 @@ namespace Labs.LABS_PDV
         /// <summary>
         /// Valor de Abertura do caixa (Com Quanto Dinheiro o caixa abriu inicialmente no dia)
         /// </summary>
-        public double FundoDeCaixa { get; private set; }
+        public double ValorDeAbertura { get; private set; }
         /// <summary>
         /// Valor Total Contido no Caixa (Somatório de Todos os Ganhos + Valor de Abertura)
         /// </summary>
@@ -24,14 +24,14 @@ namespace Labs.LABS_PDV
         /// <summary>
         /// Valor Total contido no caixa em dinheiro
         /// </summary>
-        public double ValorTotalEmDinheiro { get; private set; }
+        public double FundoDeCaixa { get; private set; }
         /// <summary>
         /// Ganhos totais do Caixa (Juntando todos os Meios de Pagamento)
         /// </summary>
         public double GanhosTotais { get; private set; }
         //
         //Agora Registramos os Modos de pagamento Existentes;
-        public Dictionary<string, RIDP> RegistroInternoDePagamentos = new();
+        public List<RIDP> RegistroInternoDePagamentos = new();
 
         /// <summary>
         /// Construtor
@@ -40,7 +40,7 @@ namespace Labs.LABS_PDV
         /// <param name="operadorCaixa">Referência a quem é o operador deste caixa</param>
         public CaixaLabs(double ValorDeAbertura, OperadorCaixa operadorCaixa)
         {
-            this.FundoDeCaixa = ValorDeAbertura;
+            this.ValorDeAbertura = ValorDeAbertura;
             OperadorCaixa = operadorCaixa;
         }
         //
@@ -67,7 +67,7 @@ namespace Labs.LABS_PDV
                     string NomeMeio = Meios.Meios[i].Item1;
                     bool SLDV = Meios.Meios[i].Item2;
                     //
-                    RegistroInternoDePagamentos.Add(i.ToString(), new(NomeMeio, 0, SLDV)); // O Index é usado como chave do dicionário;
+                    RegistroInternoDePagamentos.Insert(i, new(NomeMeio, 0, SLDV)); // O Index é usado como chave do dicionário;
                 }
                 //
             }
@@ -84,9 +84,9 @@ namespace Labs.LABS_PDV
         public double GetValorTotalNoCaixa()
         {
             // "0" é o index padrão do Registro DINHEIRO
-            ValorTotalEmDinheiro = RegistroInternoDePagamentos["0"].CapitalDeGiro;
+            FundoDeCaixa = RegistroInternoDePagamentos[0].CapitalDeGiro;
             //
-            return ValorTotalEmDinheiro;
+            return FundoDeCaixa;
         }
 
         //
@@ -94,16 +94,16 @@ namespace Labs.LABS_PDV
         public void AtualizarCaixa()
         {
             //Atualiza o Valor total No caixa em Cédula
-            ValorTotalEmDinheiro = RegistroInternoDePagamentos["0"].CapitalDeGiro;
+            FundoDeCaixa = ValorDeAbertura + RegistroInternoDePagamentos[0].CapitalDeGiro;
             //Agora atualiza os ganhos Totais//
             GanhosTotais = 0;
             //
-            foreach (var RegistroInterno in RegistroInternoDePagamentos.Values)
+            foreach (var RegistroInterno in RegistroInternoDePagamentos)
             {
                 GanhosTotais += RegistroInterno.CapitalDeGiro;
             }
             //
-            ValorTotal = GanhosTotais + FundoDeCaixa;
+            ValorTotal = GanhosTotais + ValorDeAbertura + FundoDeCaixa; // ValorTotal simplesmente é o somatório de tudo no caixa
         }
 
         //
@@ -113,7 +113,8 @@ namespace Labs.LABS_PDV
             //Carregamos da database os meios
             await LoadFromDataBase(); // Precisamos que o método finalize para que possamos seguir
             //Index 0 é o meio padrão para a adição de Fundo de caixa
-            RegistroInternoDePagamentos["0"].CapitalDeGiro = FundoDeCaixa;
+            FundoDeCaixa = ValorDeAbertura;
+            AtualizarCaixa(); // Atualizamos para que o fundo de caixa seja atualizado
         }
         //
         /// <summary>
@@ -123,9 +124,11 @@ namespace Labs.LABS_PDV
         /// <param name="valor">Valor de capital a ser adicionado</param>
         public void AdicionarCapitalAoMeio(int Index,double valor)
         {
-            if (RegistroInternoDePagamentos.ContainsKey($"{Index}"))
+            //
+            var v = RegistroInternoDePagamentos.ElementAtOrDefault(Index);
+            if ( v != default!)
             {
-                RegistroInternoDePagamentos[$"{Index}"].AdicionarCapital(valor);
+                RegistroInternoDePagamentos[Index].AdicionarCapital(valor);
             }
         }
         //
@@ -136,9 +139,10 @@ namespace Labs.LABS_PDV
         /// <param name="valor">Valor que foi retirado</param>
         public void RemoverCapitalDoMeio(int Index, double valor)
         {
-            if (RegistroInternoDePagamentos.ContainsKey($"{Index}"))
+            var v = RegistroInternoDePagamentos.ElementAtOrDefault(Index);
+            if (v != default!)
             {
-                RegistroInternoDePagamentos[$"{Index}"].RetirarValor(valor);
+                RegistroInternoDePagamentos[Index].RetirarValor(valor);
             }
             //
         }

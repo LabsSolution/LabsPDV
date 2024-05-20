@@ -39,7 +39,7 @@ namespace Labs
                 return; 
             }
             //
-            LABS_PDV_MAIN.IniciarApp<LabsMainApp>(true);
+            LABS_PDV_MAIN.IniciarApp<LabsMainApp>(true,true);
         }
 
         private void SairButton_Click(object sender, EventArgs e)

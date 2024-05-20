@@ -189,13 +189,13 @@
             // CaixaStateLabel
             // 
             CaixaStateLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            CaixaStateLabel.BackColor = Color.FromArgb(128, 255, 128);
+            CaixaStateLabel.BackColor = Color.DarkSalmon;
             CaixaStateLabel.Font = new Font("Segoe UI", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             CaixaStateLabel.Location = new Point(-5, -5);
             CaixaStateLabel.Name = "CaixaStateLabel";
             CaixaStateLabel.Size = new Size(1359, 52);
             CaixaStateLabel.TabIndex = 1;
-            CaixaStateLabel.Text = "CAIXA ABERTO";
+            CaixaStateLabel.Text = "CAIXA FECHADO";
             CaixaStateLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // ListaDeVenda
@@ -308,6 +308,7 @@
             // QuantidadeInput
             // 
             QuantidadeInput.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            QuantidadeInput.Enabled = false;
             QuantidadeInput.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
             QuantidadeInput.Location = new Point(12, 537);
             QuantidadeInput.Name = "QuantidadeInput";
@@ -320,6 +321,7 @@
             // CodBarrasInput
             // 
             CodBarrasInput.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            CodBarrasInput.Enabled = false;
             CodBarrasInput.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
             CodBarrasInput.Location = new Point(219, 537);
             CodBarrasInput.Name = "CodBarrasInput";
@@ -444,9 +446,9 @@
             Controls.Add(QuantidadeBox);
             Controls.Add(DescricaoProdutoBox);
             Controls.Add(ListaDeVenda);
-            Controls.Add(CaixaStateLabel);
             Controls.Add(label4);
             Controls.Add(label5);
+            Controls.Add(CaixaStateLabel);
             FormBorderStyle = FormBorderStyle.None;
             KeyPreview = true;
             MaximizeBox = false;

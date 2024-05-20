@@ -131,10 +131,13 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 			// Adiciona o valor Recebido ao meio correspondente
 			if(LabsPDV != null)
 			{
-				var index = MeioDePagamentoComboBox.SelectedIndex;
-				double valor = ValorTotalRecebido - ValorTroco;
+				foreach (var pagEfet in PagamentosEfetuados)
+				{
+					var index = pagEfet.ID;
+					double valor = pagEfet.Valor;
+					LabsPDV.CaixaLabs.AdicionarCapitalAoMeio(index,valor);
+				}
 				//
-				LabsPDV.CaixaLabs.AdicionarCapitalAoMeio(index,valor);
 				LabsPDV.CaixaLabs.AtualizarCaixa(); // Atualizar é importante para termos controle dos Valores Recebidos!
 				//
 				// Aqui faz a impressão do cupom fiscal (ou não fiscal)
@@ -207,10 +210,10 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 				//
                 RealizarCalculos(valorPag, getPorcentagem());
                 // é importante que o pagamento efetuado e a lista de pagamento sejam atualizados juntos para manter o mesmo index
-                PagamentoEfetuado pagEfet = new(MeioDePagamentoComboBox.Text, Math.Round(valorPag));
+                PagamentoEfetuado pagEfet = new(MeioDePagamentoComboBox.SelectedIndex,MeioDePagamentoComboBox.Text, Math.Round(valorPag,2));
                 PagamentosEfetuados.Add(pagEfet);
                 //
-                ListaPagamentosEfetuados.Items.Add(new ListViewItem([MeioDePagamentoComboBox.Text, $"R$ {Math.Round(valorPag, 2)}"]));
+                ListaPagamentosEfetuados.Items.Add(new ListViewItem([MeioDePagamentoComboBox.Text, $"R$ {Utils.FormatarValor(Math.Round(valorPag, 2))}"]));
                 //
                 PagamentoBoxInput.Text = null!;
             }

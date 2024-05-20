@@ -26,8 +26,6 @@ namespace Labs.Janelas.LabsPDV
 		public LabsPDV()
 		{
 			InitializeComponent();
-			if (!EstaAberto) { FecharCaixa(); } else { ResetarFoco(); }
-			//
 		}
 		//
         public void AbrirCaixa()
@@ -39,7 +37,18 @@ namespace Labs.Janelas.LabsPDV
                 App.onJDACClose += RealizarAbertura;
             }, true, false);
         }
-		//
+        public void FecharCaixa()
+        {
+            if (RealizandoVenda) { Modais.MostrarAviso("Você não pode fechar o caixa com uma venda em progresso!"); return; }
+			//
+			var JFC = LABS_PDV_MAIN.IniciarDependencia<JanelaFechamentoDeCaixa>(App =>
+			{
+				App.InicializarFechamento(CaixaLabs);
+				App.onJFCClose += RealizarFechamento;
+				//
+			},true,false);
+        }
+        //
         /// <summary>
         /// Chamado quando a janela de abertura de caixa é "finalizada";
         /// </summary>
@@ -70,30 +79,30 @@ namespace Labs.Janelas.LabsPDV
             Modais.MostrarInfo("Caixa Aberto com Sucesso! \nBOAS VENDAS!");
         }
 		//
-		
-		//
-		public void FecharCaixa()
+		public void RealizarFechamento(JanelaFechamentoDeCaixa Janela)
 		{
-			if (RealizandoVenda) { Modais.MostrarAviso("Você Deve (Finalizar ou Cancelar) a Venda Atual Para Poder Fechar o Caixa!"); return; }
-			//
-			EstaAberto = false;
-			CaixaStateLabel.Text = CaixaFechado;
-			AbrirFecharCaixaButton.Text = AbrirCaixaText;
-			AbrirFecharCaixaButton.BackColor = Color.LightGreen;
-			CaixaStateLabel.BackColor = Color.DarkSalmon;
-			QuantidadeInput.Enabled = false;
-			CodBarrasInput.Enabled = false;
-			//
-			QuantidadeInput.Text = null;
-			//
-			//Fazer Janelinha de Fechamento de caixa
-			//Modais.MostrarInfo("Caixa Fechado com Sucesso!");
-		}
-		//----------------------------//
-		//			METODOS
-		//----------------------------//
-		//
-		private void ResetarFoco() { CodBarrasInput.Focus(); } // Essa função faz com que o foco do cursor seja o Input de código de barras
+            //
+            EstaAberto = false;
+            CaixaStateLabel.Text = CaixaFechado;
+            AbrirFecharCaixaButton.Text = AbrirCaixaText;
+            AbrirFecharCaixaButton.BackColor = Color.LightGreen;
+            CaixaStateLabel.BackColor = Color.DarkSalmon;
+            QuantidadeInput.Enabled = false;
+            CodBarrasInput.Enabled = false;
+            //
+            QuantidadeInput.Text = null;
+            //
+			Janela.Close();
+            Modais.MostrarInfo("Caixa Fechado com Sucesso!");
+        }
+
+
+
+        //----------------------------//
+        //			METODOS
+        //----------------------------//
+        //
+        private void ResetarFoco() { CodBarrasInput.Focus(); } // Essa função faz com que o foco do cursor seja o Input de código de barras
 		private void ResetarInterface() // função auto explicativa (eu acho)
 		{
 			//Resetamos os campos Principais que é o valor de pagamento, a lista visual e a lista de produtos;

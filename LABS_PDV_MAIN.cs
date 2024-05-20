@@ -49,9 +49,8 @@ namespace Labs
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
 			//
-			LabsMainApp App = new(); // Altere esse campo para modificar a primeira janela a ser aberta (Utilizar somente para debug)
+			LabsPDV App = new(); // Altere esse campo para modificar a primeira janela a ser aberta (Utilizar somente para debug)
 			//
-			//svgtest App = new();
 			App.Resize += OnAppSizeChange;
             App.Load += OnAppLoad;
             INIT(App);
@@ -79,8 +78,8 @@ namespace Labs
         {
             if(sender is Form App)
 			{
-				App.BackgroundImageLayout = ImageLayout.Stretch;
-				App.BackgroundImage = SVGParser.GetImageFromSVG(); ;
+				//App.BackgroundImageLayout = ImageLayout.Stretch;
+				//App.BackgroundImage = SVGParser.GetImageFromSVG(); ;
             }
         }
 
@@ -162,7 +161,7 @@ namespace Labs
 		/// </summary>
 		/// <typeparam name="T">Dependencia a ser Iniciada</typeparam>
 		/// <param name="SempreNoTopo">Mostrar Janela sempre no topo ou não</param>
-		public static T IniciarDependencia<T>(Action<T> config = null!, bool SempreNoTopo = true, bool BackgroundImage = true) where T : Form, new()
+		public static T IniciarDependencia<T>(Action<T> config = null!, bool SempreNoTopo = true, bool BackgroundImage = false) where T : Form, new()
 		{
 			T? App;
 			// Verifica se a aplicação já está rodando
@@ -210,7 +209,7 @@ namespace Labs
 		/// <typeparam name="T">Tipo de Janela que será iniciado</typeparam>
 		/// <param name="Persistente">Define se a janela permanece carregada até ser forçado seu fechamento ou não</param>
 		/// <param name="BackgroundImage">Define se a janela Carrega a imagem de Background ou não, padrão = true</param>
-		public static T IniciarApp<T>(bool Persistente = false, bool BackgroundImage = true) where T : Form, new()
+		public static T IniciarApp<T>(bool Persistente = false, bool BackgroundImage = false) where T : Form, new()
 		{
 			T? App;
 			// Verifica se a aplicação já está rodando

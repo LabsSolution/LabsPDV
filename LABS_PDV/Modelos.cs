@@ -21,10 +21,11 @@ namespace Labs.LABS_PDV
 	}
 	public class Modelos
 	{
-		/// <summary>
-		/// Essa classe precisa ser instanciada como objeto para poder funcionar corretamente!
-		/// </summary>
-		public class MeiosPagamento
+        //
+        /// <summary>
+        /// Essa classe precisa ser instanciada como objeto para poder funcionar corretamente!
+        /// </summary>
+        public class MeiosPagamento
 		{
 			/// <summary>
 			/// ID Para Representação no banco de dados
@@ -129,8 +130,12 @@ namespace Labs.LABS_PDV
 
 
 		//MODELOS DE Objetos (Structs)
-		public struct PagamentoEfetuado(string DescPagamento, double valor)
+		public struct PagamentoEfetuado(int ID, string DescPagamento, double valor)
 		{
+			/// <summary>
+			/// Identificador do RegistroInterno
+			/// </summary>
+			public int ID { get; private set; } = ID;
 			/// <summary>
 			/// Descrição do pagamento efetuado
 			/// </summary>

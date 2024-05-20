@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Labs.Janelas.LabsPDV.Dependencias;
+using System;
 using System.Collections.Generic;
 using System.Drawing.Printing;
 using System.Linq;
@@ -23,12 +24,18 @@ namespace Labs.LABS_PDV
         List<Produto> Produtos { get; set; } = [];
         //
         List<PagamentoEfetuado> PagamentosEfetuados { get; set; } = [];
-        //
+        List<RIDP> RegistroInternoDePagamentos { get; set; } = [];
+        //Controle de Notas
         double ValorTotalComDesconto = 0;
         double ValorTotalSemDesconto = 0;
         double ValorPago = 0;
         double ValorTroco = 0;
         double Desconto = 0;
+        //Fechamento de Caixa
+        double ValorAbertura = 0;
+        double FundoDeCaixa = 0;
+        double GanhosTotais = 0;
+        //
 
         //
         int LarguraPapel = 210; // largura em mm (usado como limitador) (Por algum motivo o segundo valor é o que vale) (o porque eu não sei)
@@ -82,14 +89,80 @@ namespace Labs.LABS_PDV
             // Mostra a pré-visualização antes de imprimir
             Print();
         }
+        //
+        public void ImprimirCupomFechamentoDeCaixa(string Impressora,List<RIDP> Recebimentos, double ValorAbertura, double FundoDeCaixa, double GanhosTotais, double Sangria = 0, double Suprimento = 0)
+        {
+            //Realizamos as configs iniciais
+            PrinterSettings.PrinterName = Impressora;
+            //Configs Necessárias para o cupom
+            this.RegistroInternoDePagamentos = Recebimentos;
+            this.ValorAbertura = ValorAbertura;
+            this.FundoDeCaixa = FundoDeCaixa;
+            this.GanhosTotais = GanhosTotais;
+            //Começamos o processo de Print
+            PrintPage += ICNFFechamento;
+            EndPrint += OnEndPrinting;
+            // Mostra a pré-visualização antes de imprimir
+            Print();
+        }
         // Quando Terminam de Printar, Deserdam do evento
         private void OnEndPrinting(object sender, PrintEventArgs e)
         {
             //Automaticamente deserdam do evento para não sobreescrever
             PrintPage -= ICNFCliente;
             PrintPage -= ICNFLoja;
+            PrintPage -= ICNFFechamento;
             EndPrint -= OnEndPrinting;
         }
+        //
+        #region Impressão Cupom Fechamento de Caixa
+        private void ICNFFechamento(object send, PrintPageEventArgs e)
+        {
+            Graphics? graphics = e.Graphics;
+            if (graphics == null) { return; }
+            float yPos = 0; // Variável responsável por determinar a posição da agulha
+            //
+            //print header
+            graphics.DrawString("FECHAMENTO DE CAIXA", Bold, Brushes.Black, 0, yPos);
+            yPos += 15;
+            graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
+            yPos += 30;
+            //
+            graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
+            graphics.DrawString($"DATA: {DateTime.Now:dd/MM/yyyy}", RegularPedido, Brushes.Black, 0, yPos);
+            yPos += 15;
+            graphics.DrawString($"HORA: {DateTime.Now:HH:mm:ss}", RegularPedido, Brushes.Black, 0, yPos);
+            yPos += 15;
+            graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
+            yPos += 15;
+            //
+            graphics.DrawString($"Valor de Abertura R$: {Utils.FormatarValor(ValorAbertura)}", Regular, Brushes.Black, 0, yPos);
+            yPos += 15;
+            graphics.DrawString($"Fundo de Caixa R$: {Utils.FormatarValor(FundoDeCaixa)}", Regular, Brushes.Black, 0, yPos);
+            yPos += 15;
+            graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
+            graphics.DrawString($"MEIOS RECEBIDOS", Bold, Brushes.Black, 0, yPos);
+            yPos += 15;
+            graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
+            yPos += 5;
+            foreach (var MeioRecebido in RegistroInternoDePagamentos)
+            {
+                graphics.DrawString($"{MeioRecebido.NomeDoRegistro}", RegularItens, Brushes.Black, 0, yPos);
+                yPos += 15;
+                graphics.DrawString($"R$: {Utils.FormatarValor(MeioRecebido.CapitalDeGiro)}", RegularItens, Brushes.Black, 0, yPos);
+                yPos += 15;
+                graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
+            }
+            yPos += 15;
+            graphics.DrawString($"Ganhos Totais. R$: {Utils.FormatarValor(GanhosTotais)}", Regular, Brushes.Black, 0, yPos);
+            yPos += 20;
+            graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
+            yPos += 5;
+            //bottom
+            graphics.DrawString(LABS_PDV_MAIN.TradeMark, RegularItens, Brushes.Black, 0, yPos);
+            e.HasMorePages = false;
+        }
+        #endregion
 
         #region Impressão Cupom Não Fiscal Loja
         //
