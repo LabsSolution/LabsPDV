@@ -29,14 +29,16 @@
         private void InitializeComponent()
         {
             ListaAferimentoMeios = new DataGridView();
-            ListaAferimentoGeral = new DataGridView();
-            LabelDataHora = new Label();
-            dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
-            dataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
-            dataGridViewTextBoxColumn3 = new DataGridViewTextBoxColumn();
             ColunaDescricao = new DataGridViewTextBoxColumn();
             ColunaAfericaoSistema = new DataGridViewTextBoxColumn();
             ColunaAferimentoManual = new DataGridViewTextBoxColumn();
+            ListaAferimentoGeral = new DataGridView();
+            dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
+            dataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
+            dataGridViewTextBoxColumn3 = new DataGridViewTextBoxColumn();
+            LabelDataHora = new Label();
+            label1 = new Label();
+            label2 = new Label();
             ((System.ComponentModel.ISupportInitialize)ListaAferimentoMeios).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ListaAferimentoGeral).BeginInit();
             SuspendLayout();
@@ -47,55 +49,10 @@
             ListaAferimentoMeios.AllowUserToDeleteRows = false;
             ListaAferimentoMeios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             ListaAferimentoMeios.Columns.AddRange(new DataGridViewColumn[] { ColunaDescricao, ColunaAfericaoSistema, ColunaAferimentoManual });
-            ListaAferimentoMeios.Location = new Point(12, 53);
+            ListaAferimentoMeios.Location = new Point(12, 37);
             ListaAferimentoMeios.Name = "ListaAferimentoMeios";
             ListaAferimentoMeios.Size = new Size(776, 283);
             ListaAferimentoMeios.TabIndex = 0;
-            // 
-            // ListaAferimentoGeral
-            // 
-            ListaAferimentoGeral.AllowUserToAddRows = false;
-            ListaAferimentoGeral.AllowUserToDeleteRows = false;
-            ListaAferimentoGeral.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            ListaAferimentoGeral.Columns.AddRange(new DataGridViewColumn[] { dataGridViewTextBoxColumn1, dataGridViewTextBoxColumn2, dataGridViewTextBoxColumn3 });
-            ListaAferimentoGeral.Location = new Point(12, 342);
-            ListaAferimentoGeral.Name = "ListaAferimentoGeral";
-            ListaAferimentoGeral.Size = new Size(776, 283);
-            ListaAferimentoGeral.TabIndex = 1;
-            // 
-            // LabelDataHora
-            // 
-            LabelDataHora.AutoSize = true;
-            LabelDataHora.BackColor = Color.Transparent;
-            LabelDataHora.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            LabelDataHora.ForeColor = SystemColors.Window;
-            LabelDataHora.Location = new Point(451, 9);
-            LabelDataHora.Name = "LabelDataHora";
-            LabelDataHora.Size = new Size(337, 25);
-            LabelDataHora.TabIndex = 2;
-            LabelDataHora.Text = "DATA: dd/mm/yyyy | HORA: HH/mm";
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            dataGridViewTextBoxColumn1.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewTextBoxColumn1.HeaderText = "Descrição";
-            dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            dataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            dataGridViewTextBoxColumn2.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewTextBoxColumn2.FillWeight = 50F;
-            dataGridViewTextBoxColumn2.HeaderText = "Valor Aferido Pelo Sistema";
-            dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            dataGridViewTextBoxColumn2.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            dataGridViewTextBoxColumn3.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewTextBoxColumn3.FillWeight = 50F;
-            dataGridViewTextBoxColumn3.HeaderText = "Aferição Final";
-            dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
             // 
             // ColunaDescricao
             // 
@@ -119,6 +76,75 @@
             ColunaAferimentoManual.HeaderText = "Aferição Final";
             ColunaAferimentoManual.Name = "ColunaAferimentoManual";
             // 
+            // ListaAferimentoGeral
+            // 
+            ListaAferimentoGeral.AllowUserToAddRows = false;
+            ListaAferimentoGeral.AllowUserToDeleteRows = false;
+            ListaAferimentoGeral.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            ListaAferimentoGeral.Columns.AddRange(new DataGridViewColumn[] { dataGridViewTextBoxColumn1, dataGridViewTextBoxColumn2, dataGridViewTextBoxColumn3 });
+            ListaAferimentoGeral.Location = new Point(12, 351);
+            ListaAferimentoGeral.Name = "ListaAferimentoGeral";
+            ListaAferimentoGeral.Size = new Size(776, 283);
+            ListaAferimentoGeral.TabIndex = 1;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            dataGridViewTextBoxColumn1.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewTextBoxColumn1.HeaderText = "Descrição";
+            dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            dataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            dataGridViewTextBoxColumn2.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewTextBoxColumn2.FillWeight = 50F;
+            dataGridViewTextBoxColumn2.HeaderText = "Valor Aferido Pelo Sistema";
+            dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            dataGridViewTextBoxColumn2.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            dataGridViewTextBoxColumn3.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewTextBoxColumn3.FillWeight = 50F;
+            dataGridViewTextBoxColumn3.HeaderText = "Aferição Final";
+            dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            // 
+            // LabelDataHora
+            // 
+            LabelDataHora.AutoSize = true;
+            LabelDataHora.BackColor = Color.Transparent;
+            LabelDataHora.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            LabelDataHora.ForeColor = SystemColors.Window;
+            LabelDataHora.Location = new Point(451, 9);
+            LabelDataHora.Name = "LabelDataHora";
+            LabelDataHora.Size = new Size(337, 25);
+            LabelDataHora.TabIndex = 2;
+            LabelDataHora.Text = "DATA: dd/mm/yyyy | HORA: HH/mm";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.BackColor = Color.Transparent;
+            label1.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            label1.ForeColor = SystemColors.Window;
+            label1.Location = new Point(12, 9);
+            label1.Name = "label1";
+            label1.Size = new Size(308, 25);
+            label1.TabIndex = 3;
+            label1.Text = "Aferimento dos Meios Recebidos:";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.BackColor = Color.Transparent;
+            label2.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            label2.ForeColor = SystemColors.Window;
+            label2.Location = new Point(12, 323);
+            label2.Name = "label2";
+            label2.Size = new Size(170, 25);
+            label2.TabIndex = 4;
+            label2.Text = "Aferimento Geral:";
+            // 
             // JanelaFechamentoDeCaixa
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -126,6 +152,8 @@
             BackColor = SystemColors.WindowFrame;
             ClientSize = new Size(800, 700);
             ControlBox = false;
+            Controls.Add(label2);
+            Controls.Add(label1);
             Controls.Add(LabelDataHora);
             Controls.Add(ListaAferimentoGeral);
             Controls.Add(ListaAferimentoMeios);
@@ -150,5 +178,7 @@
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private Label label1;
+        private Label label2;
     }
 }
