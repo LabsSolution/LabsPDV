@@ -67,7 +67,7 @@ namespace Labs.LABS_PDV
                     string NomeMeio = Meios.Meios[i].Item1;
                     bool SLDV = Meios.Meios[i].Item2;
                     //
-                    RegistroInternoDePagamentos.Insert(i, new(NomeMeio, 0, SLDV)); // O Index é usado como chave do dicionário;
+                    RegistroInternoDePagamentos.Insert(i, new(NomeMeio, 0, SLDV));
                 }
                 //
             }
@@ -103,7 +103,7 @@ namespace Labs.LABS_PDV
                 GanhosTotais += RegistroInterno.CapitalDeGiro;
             }
             //
-            ValorTotal = GanhosTotais + ValorDeAbertura + FundoDeCaixa; // ValorTotal simplesmente é o somatório de tudo no caixa
+            ValorTotal = GanhosTotais + FundoDeCaixa; // ValorTotal simplesmente é o somatório de tudo no caixa
         }
 
         //
