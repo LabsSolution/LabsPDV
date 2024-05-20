@@ -39,6 +39,8 @@
             LabelDataHora = new Label();
             label1 = new Label();
             label2 = new Label();
+            VoltarButton = new Button();
+            RealizarFechamentoButton = new Button();
             ((System.ComponentModel.ISupportInitialize)ListaAferimentoMeios).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ListaAferimentoGeral).BeginInit();
             SuspendLayout();
@@ -145,13 +147,43 @@
             label2.TabIndex = 4;
             label2.Text = "Aferimento Geral:";
             // 
+            // VoltarButton
+            // 
+            VoltarButton.BackColor = SystemColors.Window;
+            VoltarButton.FlatAppearance.BorderSize = 0;
+            VoltarButton.FlatStyle = FlatStyle.Flat;
+            VoltarButton.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            VoltarButton.Location = new Point(638, 640);
+            VoltarButton.Name = "VoltarButton";
+            VoltarButton.Size = new Size(150, 50);
+            VoltarButton.TabIndex = 5;
+            VoltarButton.Text = "Voltar";
+            VoltarButton.UseVisualStyleBackColor = false;
+            VoltarButton.Click += VoltarButton_Click;
+            // 
+            // RealizarFechamentoButton
+            // 
+            RealizarFechamentoButton.BackColor = SystemColors.Window;
+            RealizarFechamentoButton.FlatAppearance.BorderSize = 0;
+            RealizarFechamentoButton.FlatStyle = FlatStyle.Flat;
+            RealizarFechamentoButton.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            RealizarFechamentoButton.Location = new Point(12, 640);
+            RealizarFechamentoButton.Name = "RealizarFechamentoButton";
+            RealizarFechamentoButton.Size = new Size(220, 50);
+            RealizarFechamentoButton.TabIndex = 6;
+            RealizarFechamentoButton.Text = "Realizar Fechamento";
+            RealizarFechamentoButton.UseVisualStyleBackColor = false;
+            RealizarFechamentoButton.Click += RealizarFechamentoButton_Click;
+            // 
             // JanelaFechamentoDeCaixa
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = SystemColors.WindowFrame;
+            BackColor = Color.FromArgb(64, 64, 64);
             ClientSize = new Size(800, 700);
             ControlBox = false;
+            Controls.Add(RealizarFechamentoButton);
+            Controls.Add(VoltarButton);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(LabelDataHora);
@@ -180,5 +212,7 @@
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private Label label1;
         private Label label2;
+        private Button VoltarButton;
+        private Button RealizarFechamentoButton;
     }
 }
