@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unimake.Business.DFe.Xml.GNRE;
 
 namespace Labs.LABS_PDV
 { 
@@ -15,6 +16,8 @@ namespace Labs.LABS_PDV
 	public class Collections
 	{
 		public static string Produtos { get; } = "Produtos";
+		public static string EstadoCaixa { get; } = "EstadoCaixa";
+		public static string Vendas { get; } = "Vendas";
 		public static string Clientes { get; } = "Clientes";
 		public static string MeiosDePagamento { get; } = "MeiosDePagamento";
 		public static string LabAdmins { get; } = "LabAdmins";
@@ -42,6 +45,56 @@ namespace Labs.LABS_PDV
 			/// Construtor Padrão
 			/// </summary>
 			public MeiosPagamento() { Meios = [new("DINHEIRO",false)]; }
+		}
+		/// <summary>
+		/// Segura o estado do caixa, para que caso venha faltar luz ou algo acontecer, a venda não seja perdida
+		/// </summary>
+		public class EstadoCaixa // Essa classe só existe no banco de dados local e é temporária (assim que o caixa é fechado deletamos)
+		{
+			/// <summary>
+			/// ID Para Representação no Banco de Dados
+			/// </summary>
+			[BsonId]
+			[BsonRepresentation(BsonType.ObjectId)]
+			public string ID { get; set; } = null!;
+			/// <summary>
+			/// Lista de produtos atuais da venda
+			/// </summary>
+			public List<Produto> Produtos { get; set; } = [];
+			//
+			public OperadorCaixa OperadorCaixa { get; set; } = null!;
+			public bool CaixaAberto { get; set; } = false;
+			public CaixaLabs CaixaLabs { get; set; } = null!;
+			public bool RealizandoVenda { get; set; } = false;
+		}
+
+		//
+		public class VendaRealizada
+		{
+			/// <summary>
+			/// ID Para Representação no Banco de Dados
+			/// </summary>
+			[BsonId]
+			[BsonRepresentation(BsonType.ObjectId)]
+			public string ID { get; set; } = null!;
+			/// <summary>
+			/// ID da venda realizada (usado para a pesquisa dentro do banco de dados)
+			/// </summary>
+			public string IDVenda { get; set; } = null!;
+			/// <summary>
+			/// Produtos contidos na venda (nome,quantidade,código, etc)
+			/// </summary>
+			public Produto[] Produtos { get; set; } = null!;
+			//
+			public double Total { get; set; }
+			public double Desconto { get; set; }
+			public double TotalComDesconto { get; set; }
+			public double ValorPago { get; set; }
+			public double Troco { get; set; }
+			/// <summary>
+			/// Pagamentos efetuados durante a venda (Contendo nome e valor pago)
+			/// </summary>
+			public PagamentoEfetuado[] PagamentosEfetuados { get; set; } = null!;
 		}
 		//
 		public class Meio(string NomeDoMeio,bool SLDV = false)
@@ -130,7 +183,7 @@ namespace Labs.LABS_PDV
 
 
 		//MODELOS DE Objetos (Structs)
-		public struct PagamentoEfetuado(int ID, string DescPagamento, double valor)
+		public class PagamentoEfetuado(int ID, string DescPagamento, double valor)
 		{
 			/// <summary>
 			/// Identificador do RegistroInterno

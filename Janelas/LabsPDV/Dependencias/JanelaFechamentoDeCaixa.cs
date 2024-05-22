@@ -30,10 +30,9 @@ namespace Labs.Janelas.LabsPDV.Dependencias
             //
             public bool AferirValor() { return this.ValorSistema == this.ValorAferido; }
         }
-
         //
-
-        Dictionary<string,double[]> ValoresParaAferimento = [];
+        List<ValorFechamento> ValoresParaAferimento = [];
+        CaixaLabs CaixaLabs { get; set; } = null!;
         //
         public JanelaFechamentoDeCaixa()
         {
@@ -53,53 +52,74 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                     var cell = ListaAferimentoMeios.Rows[rIndex].Cells[cIndex];
                     if(Utils.TryParseToDouble($"{cell.Value}",out double value))
                     {
-                        ValoresParaAferimento[$"{ListaAferimentoMeios.Rows[rIndex].Cells[0].Value}"].Item2 = value;
+                        string? NomeMeio = $"{ListaAferimentoMeios.Rows[rIndex].Cells[0].Value}";
+                        foreach (ValorFechamento vf in ValoresParaAferimento) { if(vf.Nome == NomeMeio) { vf.ValorAferido = value; } }
                     }
                     else { Modais.MostrarAviso($"Aferimento do Meio:{ListaAferimentoMeios.Rows[rIndex].Cells[0].Value}\nValor Inválido Inserido!"); return; }
                 }
                 //
                 UpdateAferimentoMeios(); 
             }
+            if (sender == ListaAferimentoGeral) 
+            {
+                if(cIndex == 2)
+                {
+                    var cell = ListaAferimentoGeral.Rows[rIndex].Cells[cIndex];
+                    if(Utils.TryParseToDouble($"{cell.Value}",out double value))
+                    {
+                        string? NomeMeio = $"{ListaAferimentoGeral.Rows[rIndex].Cells[0].Value}";
+                        foreach (ValorFechamento vf in ValoresParaAferimento) { if(vf.Nome == NomeMeio) { vf.ValorAferido = value; } }
+                    }
+                    else { Modais.MostrarAviso($"Aferimento do Meio:{ListaAferimentoGeral.Rows[rIndex].Cells[0].Value}\nValor Inválido Inserido!"); return; }
+                }
+                //
+                UpdateAferimentoMeios(); 
+            }
         }
         //
-        public void InicializarFechamento(CaixaLabs caixaLabs)
+        public void InicializarFechamento(CaixaLabs CaixaLabs)
         {
             //Limpamos a lista de controle para aferimento
+            this.CaixaLabs = CaixaLabs;
+            //
+            if(this.CaixaLabs == null) { return; }
+            //
             ValoresParaAferimento.Clear();
             //
             LabelDataHora.Text = $"DATA: {DateTime.Now:dd/MM/yyyy} | HORA: {DateTime.Now:HH:mm}";
             //
-            CreateRowGeral("Valor de Abertura", caixaLabs.ValorDeAbertura);
-            ValoresParaAferimento.Add("Valor de Abertura",new(caixaLabs.ValorDeAbertura,0));
+            CreateRowGeral("Valor de Abertura", this.CaixaLabs.ValorDeAbertura);
+            ValoresParaAferimento.Add(new("Valor de Abertura", CaixaLabs.ValorDeAbertura, 0));
             //
-            CreateRowGeral("Fundo de Caixa", caixaLabs.FundoDeCaixa);
-            ValoresParaAferimento.Add("Fundo de Caixa",new(caixaLabs.FundoDeCaixa,0));
+            CreateRowGeral("Fundo de Caixa", this.CaixaLabs.FundoDeCaixa);
+            ValoresParaAferimento.Add(new("Fundo de Caixa", CaixaLabs.FundoDeCaixa, 0));
             //
             //Aqui adicionamos os meios
-            for (int i = 0; i < caixaLabs.RegistroInternoDePagamentos.Count; i++)
+            for (int i = 0; i < this.CaixaLabs.RegistroInternoDePagamentos.Count; i++)
             {
-                RIDP registroInterno = caixaLabs.RegistroInternoDePagamentos[i];
+                RIDP registroInterno = this.CaixaLabs.RegistroInternoDePagamentos[i];
                 CreateRowMeio(registroInterno.NomeDoRegistro, registroInterno.CapitalDeGiro);
                 //
-                ValoresParaAferimento.Add(registroInterno.NomeDoRegistro,new (registroInterno.CapitalDeGiro,0));
+                ValoresParaAferimento.Add(new(registroInterno.NomeDoRegistro, registroInterno.CapitalDeGiro, 0));
                 //
             }
-            CreateRowMeio("Ganhos Totais", caixaLabs.GanhosTotais);
-            ValoresParaAferimento.Add("Ganhos Totais",new (caixaLabs.GanhosTotais,0));
+            CreateRowMeio("Ganhos Totais", this.CaixaLabs.GanhosTotais);
+            ValoresParaAferimento.Add(new("Ganhos Totais", this.CaixaLabs.GanhosTotais, 0));
             //Atribuimos o evento
             //Por último adicionamos os ganhos totais (No Aferimento de meios)
             //
             ListaAferimentoMeios.CellValueChanged += OnCellChanged;
+            ListaAferimentoGeral.CellValueChanged += OnCellChanged;
         }
         //
-        private void VerificarAferimentos()
+        private bool VerificarAferimentos()
         {
             //
-            bool Proceed = true;
             foreach (var VPA in ValoresParaAferimento)
             {
-
+                if(VPA.ValorSistema != VPA.ValorAferido) { Modais.MostrarAviso($"Aferimento do Meio:{VPA.Nome}\nOs valores não Coincidem!"); return false; }
             }
+            return true;
         }
         //
         private void UpdateAferimentoMeios()
@@ -142,11 +162,20 @@ namespace Labs.Janelas.LabsPDV.Dependencias
         private void VoltarButton_Click(object sender, EventArgs e)
         {
             this.Close();
+            ListaAferimentoMeios.CellValueChanged -= OnCellChanged;
+            ListaAferimentoGeral.CellValueChanged -= OnCellChanged;
         }
 
         private void RealizarFechamentoButton_Click(object sender, EventArgs e)
         {
-
+            if (VerificarAferimentos())
+            {
+                using (var PM = new PrintManager())
+                {
+                    PM.ImprimirCupomFechamentoDeCaixa(PrintManager.ImpressoraDefault,this.CaixaLabs.RegistroInternoDePagamentos,this.CaixaLabs.ValorDeAbertura,this.CaixaLabs.FundoDeCaixa,this.CaixaLabs.GanhosTotais);
+                }
+                FecharJanela();
+            }
         }
     }
 }

@@ -16,8 +16,6 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 	public partial class JanelaDePagamento : Form
 	{
 		//
-		public const string NomeArquivoConfig = "ModosDePagamento";
-		//
 		MeiosPagamento MeiosPagamento { get; set; } = null!;
 		//
 		List<PagamentoEfetuado> PagamentosEfetuados { get; set; } = new();
@@ -139,21 +137,36 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 				}
 				//
 				LabsPDV.CaixaLabs.AtualizarCaixa(); // Atualizar é importante para termos controle dos Valores Recebidos!
-				//
-				// Aqui faz a impressão do cupom fiscal (ou não fiscal)
-				using (var PM = new PrintManager())
+                // o ID da venda é literalmente o horario e a data do ano em que foi realizada (o que impede de ter ID's repetidos :D)
+                string IDVenda = $"{DateTime.Now:ddMMyyyyy}{DateTime.Now:HHmmss}";
+				// Geramos o objeto de venda e salvamos no banco de dados
+				VendaRealizada venda = new()
 				{
-					PM.ImprimirCupomNaoFiscalLoja(PrintManager.ImpressoraDefault,ValorTotalComDesconto,ValorTotal,ValorTotalRecebido,ValorDescontoPorcentagem,ValorTroco,PagamentosEfetuados);
-					//
-					DialogResult r = Modais.MostrarPergunta("Imprimir Via do Cliente?");
-					if(r == DialogResult.Yes)
-					{
-						PM.ImprimirCupomNaoFiscalCliente(PrintManager.ImpressoraDefault,Produtos,ValorTotalComDesconto,ValorTotal,ValorTotalRecebido,ValorDescontoPorcentagem,ValorTroco,PagamentosEfetuados);
-					}
-				}
-				// Sinaliza que a venda foi finalizada com sucesso
-				//
-				Modais.MostrarInfo("Venda Finalizada com Sucesso!");
+					Desconto = ValorDescontoPorcentagem,
+					Produtos = [.. Produtos], // Repassa pra array
+					Total = ValorTotal,
+					TotalComDesconto = ValorTotalComDesconto,
+					ValorPago = ValorTotalRecebido,
+					Troco = ValorTroco,
+					PagamentosEfetuados = [..PagamentosEfetuados],//Repassa pra array
+					IDVenda = IDVenda 
+				};
+				CloudDataBase.RegisterLocalAsync(Collections.Vendas,venda);
+                //
+                // Aqui faz a impressão do cupom fiscal (ou não fiscal)
+                using (var PM = new PrintManager())
+                {
+                    PM.ImprimirCupomNaoFiscalLoja(PrintManager.ImpressoraDefault, venda);
+                    //
+                    DialogResult r = Modais.MostrarPergunta("Imprimir Via do Cliente?");
+                    if (r == DialogResult.Yes)
+                    {
+                        PM.ImprimirCupomNaoFiscalCliente(PrintManager.ImpressoraDefault, venda);
+                    }
+                }
+                // Sinaliza que a venda foi finalizada com sucesso
+                //
+                Modais.MostrarInfo("Venda Finalizada com Sucesso!");
 				Reset();
 				//
 				this.Close();

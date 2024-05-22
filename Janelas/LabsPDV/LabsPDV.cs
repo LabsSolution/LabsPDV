@@ -22,6 +22,7 @@ namespace Labs.Janelas.LabsPDV
 		private protected double PagamentoTotal = 0.0; // registro do pagamento total
 		//
 		public CaixaLabs CaixaLabs { get; private set; } = null!;
+		public EstadoCaixa EstadoCaixa { get; private set; } = null!;
 		//
 		public LabsPDV()
 		{
@@ -54,29 +55,51 @@ namespace Labs.Janelas.LabsPDV
         /// </summary>
         /// <param name="ValorDeAbertura">Valor total com que o caixa está abrindo</param>
         /// <param name="Janela">Retorno da Própria janela</param>
-        private void RealizarAbertura(double ValorDeAbertura,JanelaAberturaDeCaixa Janela)
+        private async void RealizarAbertura(double ValorDeAbertura,JanelaAberturaDeCaixa Janela)
 		{
-			//Iniciamos o CaixaLabs, se não conseguirmos lançamos um erro
-			CaixaLabs = new(ValorDeAbertura,new OperadorCaixa("Operador Teste","User","Pass")); // Aqui estamos iniciando na maluquice
+			//Tenta buscar um estado de caixa anterior (caso exista, significa que o sistema foi finalizado de maneira inesperada)
+			EstadoCaixa = await CloudDataBase.GetLocalAsync<EstadoCaixa>(Collections.EstadoCaixa,_ => true);
 			//
-			if(CaixaLabs == null) { Modais.MostrarErro("ERRO CRÍTICO!\nA Comunicação com um módulo interno foi Interrompida!"); return; }
-			CaixaLabs.RealizarAbertura();
-			Janela.Close();
-            //
-            //
-            EstaAberto = true;
-            CaixaStateLabel.Text = CaixaAberto;
-            AbrirFecharCaixaButton.Text = FecharCaixaText;
-            AbrirFecharCaixaButton.BackColor = Color.DarkSalmon;
-            CaixaStateLabel.BackColor = Color.LightGreen;
-            //
-            QuantidadeInput.Enabled = true;
-            CodBarrasInput.Enabled = true;
-            //
-            QuantidadeInput.Text = "1";
-            CodBarrasInput.Focus();
-            //
-            Modais.MostrarInfo("Caixa Aberto com Sucesso! \nBOAS VENDAS!");
+			if(EstadoCaixa != null)
+			{
+
+			}
+			else
+			{
+				//Iniciamos o CaixaLabs, se não conseguirmos lançamos um erro
+				OperadorCaixa operador = new("Operador Teste", "User", "Pass");
+				//
+                CaixaLabs = new(ValorDeAbertura, operador); // Aqui estamos iniciando na maluquice
+				//
+                if (CaixaLabs == null) { Modais.MostrarErro("ERRO CRÍTICO!\nA Comunicação com um módulo interno foi Interrompida!"); return; }
+                CaixaLabs.RealizarAbertura();
+                Janela.Close();
+                //
+                EstaAberto = true;
+                CaixaStateLabel.Text = CaixaAberto;
+                AbrirFecharCaixaButton.Text = FecharCaixaText;
+                AbrirFecharCaixaButton.BackColor = Color.DarkSalmon;
+                CaixaStateLabel.BackColor = Color.LightGreen;
+                //
+                QuantidadeInput.Enabled = true;
+                CodBarrasInput.Enabled = true;
+                //
+                QuantidadeInput.Text = "1";
+                CodBarrasInput.Focus();
+                //
+                Modais.MostrarInfo("Caixa Aberto com Sucesso! \nBOAS VENDAS!");
+                //
+                EstadoCaixa = new()
+                {
+                    CaixaLabs = CaixaLabs,
+                    RealizandoVenda = RealizandoVenda,
+                    CaixaAberto = EstaAberto,
+                    Produtos = Produtos,
+                    OperadorCaixa = operador
+                };
+                //
+                CloudDataBase.RegisterLocalAsync(Collections.EstadoCaixa, EstadoCaixa);
+            }
         }
 		//
 		public void RealizarFechamento(JanelaFechamentoDeCaixa Janela)
@@ -91,7 +114,9 @@ namespace Labs.Janelas.LabsPDV
             CodBarrasInput.Enabled = false;
             //
             QuantidadeInput.Text = null;
-            //
+			//
+			CloudDataBase.RemoveLocalAsync<EstadoCaixa>(Collections.EstadoCaixa,_ => true); // ao realizar o fechamento do caixa, não precisamos mais do monitoramento
+			//
 			Janela.Close();
             Modais.MostrarInfo("Caixa Fechado com Sucesso!");
         }
@@ -132,6 +157,7 @@ namespace Labs.Janelas.LabsPDV
 		private void AddProduto(Produto produto, out double TotalItem) // Adiciona um produto na lista de venda
 		{
 			if (!RealizandoVenda) { RealizandoVenda = true; } // assim que o primeiro produto é registrado, setamos que uma venda está sendo realizada
+			// Atualizamos também no estado caixa
 			//
 			DescricaoProdutoBox.Text = produto.Descricao; // pegamos a descrição do produto
 			//// Geramos o numero apresentado na tela (Começando por 1 já que a maioria não iria entender se começar por 0).
@@ -153,7 +179,7 @@ namespace Labs.Janelas.LabsPDV
 			ListaDeVenda.Items.Add(item);
 			item.EnsureVisible();
 			//Adicionamos o produto na lista de produtos da venda
-			Produtos.Add(produto); 
+			Produtos.Add(produto);
 		}
 		/// <summary>
 		/// Remove um produto da lista de venda. (Caso esteja sendo realizado alguma venda no momento)
@@ -217,13 +243,6 @@ namespace Labs.Janelas.LabsPDV
 			{
 				//Desatrelamos o evento para prevenir vazamento de memória e resetamos a interface
 				app.FormClosed -= JanelaDePagamento_FormClosed;
-				//PARA DEBUG!!!
-				//PARA DEBUG!!!
-				//PARA DEBUG!!!
-				DebugLabel.Text = $"{CaixaLabs.ValorTotal}";
-				//PARA DEBUG!!!
-				//PARA DEBUG!!!
-				//PARA DEBUG!!!
 				ResetarInterface();
 			}
 		}

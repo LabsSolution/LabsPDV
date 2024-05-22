@@ -29,18 +29,18 @@
         private void InitializeComponent()
         {
             ListaAferimentoMeios = new DataGridView();
-            ColunaDescricao = new DataGridViewTextBoxColumn();
-            ColunaAfericaoSistema = new DataGridViewTextBoxColumn();
-            ColunaAferimentoManual = new DataGridViewTextBoxColumn();
             ListaAferimentoGeral = new DataGridView();
-            dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
-            dataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
-            dataGridViewTextBoxColumn3 = new DataGridViewTextBoxColumn();
             LabelDataHora = new Label();
             label1 = new Label();
             label2 = new Label();
             VoltarButton = new Button();
             RealizarFechamentoButton = new Button();
+            ColunaDescricao = new DataGridViewTextBoxColumn();
+            ColunaAfericaoSistema = new DataGridViewTextBoxColumn();
+            ColunaAferimentoManual = new DataGridViewTextBoxColumn();
+            dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
+            dataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
+            dataGridViewTextBoxColumn3 = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)ListaAferimentoMeios).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ListaAferimentoGeral).BeginInit();
             SuspendLayout();
@@ -56,28 +56,6 @@
             ListaAferimentoMeios.Size = new Size(776, 283);
             ListaAferimentoMeios.TabIndex = 0;
             // 
-            // ColunaDescricao
-            // 
-            ColunaDescricao.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            ColunaDescricao.HeaderText = "Descrição";
-            ColunaDescricao.Name = "ColunaDescricao";
-            ColunaDescricao.ReadOnly = true;
-            // 
-            // ColunaAfericaoSistema
-            // 
-            ColunaAfericaoSistema.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            ColunaAfericaoSistema.FillWeight = 50F;
-            ColunaAfericaoSistema.HeaderText = "Valor Aferido Pelo Sistema";
-            ColunaAfericaoSistema.Name = "ColunaAfericaoSistema";
-            ColunaAfericaoSistema.ReadOnly = true;
-            // 
-            // ColunaAferimentoManual
-            // 
-            ColunaAferimentoManual.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            ColunaAferimentoManual.FillWeight = 50F;
-            ColunaAferimentoManual.HeaderText = "Aferição Final";
-            ColunaAferimentoManual.Name = "ColunaAferimentoManual";
-            // 
             // ListaAferimentoGeral
             // 
             ListaAferimentoGeral.AllowUserToAddRows = false;
@@ -88,28 +66,6 @@
             ListaAferimentoGeral.Name = "ListaAferimentoGeral";
             ListaAferimentoGeral.Size = new Size(776, 283);
             ListaAferimentoGeral.TabIndex = 1;
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            dataGridViewTextBoxColumn1.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewTextBoxColumn1.HeaderText = "Descrição";
-            dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            dataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            dataGridViewTextBoxColumn2.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewTextBoxColumn2.FillWeight = 50F;
-            dataGridViewTextBoxColumn2.HeaderText = "Valor Aferido Pelo Sistema";
-            dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            dataGridViewTextBoxColumn2.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            dataGridViewTextBoxColumn3.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewTextBoxColumn3.FillWeight = 50F;
-            dataGridViewTextBoxColumn3.HeaderText = "Aferição Final";
-            dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
             // 
             // LabelDataHora
             // 
@@ -175,6 +131,56 @@
             RealizarFechamentoButton.UseVisualStyleBackColor = false;
             RealizarFechamentoButton.Click += RealizarFechamentoButton_Click;
             // 
+            // ColunaDescricao
+            // 
+            ColunaDescricao.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            ColunaDescricao.HeaderText = "Descrição";
+            ColunaDescricao.Name = "ColunaDescricao";
+            ColunaDescricao.ReadOnly = true;
+            ColunaDescricao.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // ColunaAfericaoSistema
+            // 
+            ColunaAfericaoSistema.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            ColunaAfericaoSistema.FillWeight = 50F;
+            ColunaAfericaoSistema.HeaderText = "Valor Aferido Pelo Sistema";
+            ColunaAfericaoSistema.Name = "ColunaAfericaoSistema";
+            ColunaAfericaoSistema.ReadOnly = true;
+            ColunaAfericaoSistema.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // ColunaAferimentoManual
+            // 
+            ColunaAferimentoManual.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            ColunaAferimentoManual.FillWeight = 50F;
+            ColunaAferimentoManual.HeaderText = "Aferição Final";
+            ColunaAferimentoManual.Name = "ColunaAferimentoManual";
+            ColunaAferimentoManual.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            dataGridViewTextBoxColumn1.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewTextBoxColumn1.HeaderText = "Descrição";
+            dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            dataGridViewTextBoxColumn1.ReadOnly = true;
+            dataGridViewTextBoxColumn1.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            dataGridViewTextBoxColumn2.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewTextBoxColumn2.FillWeight = 50F;
+            dataGridViewTextBoxColumn2.HeaderText = "Valor Aferido Pelo Sistema";
+            dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            dataGridViewTextBoxColumn2.ReadOnly = true;
+            dataGridViewTextBoxColumn2.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            dataGridViewTextBoxColumn3.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewTextBoxColumn3.FillWeight = 50F;
+            dataGridViewTextBoxColumn3.HeaderText = "Aferição Final";
+            dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            dataGridViewTextBoxColumn3.SortMode = DataGridViewColumnSortMode.NotSortable;
+            // 
             // JanelaFechamentoDeCaixa
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -204,15 +210,15 @@
         private DataGridView ListaAferimentoMeios;
         private DataGridView ListaAferimentoGeral;
         private Label LabelDataHora;
+        private Label label1;
+        private Label label2;
+        private Button VoltarButton;
+        private Button RealizarFechamentoButton;
         private DataGridViewTextBoxColumn ColunaDescricao;
         private DataGridViewTextBoxColumn ColunaAfericaoSistema;
         private DataGridViewTextBoxColumn ColunaAferimentoManual;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
-        private Label label1;
-        private Label label2;
-        private Button VoltarButton;
-        private Button RealizarFechamentoButton;
     }
 }

@@ -21,22 +21,14 @@ namespace Labs.LABS_PDV
         //
         private Size Papel80mm = new(80, 210);
         //Holders
-        List<Produto> Produtos { get; set; } = [];
+        //Para a impressão de Cupons ( e depois emissão de nota fiscal )
+        VendaRealizada Venda = null!;
         //
-        List<PagamentoEfetuado> PagamentosEfetuados { get; set; } = [];
         List<RIDP> RegistroInternoDePagamentos { get; set; } = [];
-        //Controle de Notas
-        double ValorTotalComDesconto = 0;
-        double ValorTotalSemDesconto = 0;
-        double ValorPago = 0;
-        double ValorTroco = 0;
-        double Desconto = 0;
         //Fechamento de Caixa
         double ValorAbertura = 0;
         double FundoDeCaixa = 0;
         double GanhosTotais = 0;
-        //
-
         //
         int LarguraPapel = 210; // largura em mm (usado como limitador) (Por algum motivo o segundo valor é o que vale) (o porque eu não sei)
         int LimiteNomeProduto = 30;
@@ -53,17 +45,11 @@ namespace Labs.LABS_PDV
         //
         // Criar função para cálculo de tamanho de texto
         //
-        public void ImprimirCupomNaoFiscalLoja(string Impressora, double ValorTotalComDesconto, double ValorTotalSemDesconto, double ValorPago, double Desconto, double ValorTroco, List<PagamentoEfetuado> PagamentosEfetuados)
+        public void ImprimirCupomNaoFiscalLoja(string Impressora,VendaRealizada Venda)
         {
             //Realizamos as configs iniciais
             PrinterSettings.PrinterName = Impressora;
-            //Configs Necessárias para o cupom
-            this.ValorTotalComDesconto = ValorTotalComDesconto;
-            this.ValorTotalSemDesconto = ValorTotalSemDesconto;
-            this.ValorPago = ValorPago;
-            this.ValorTroco = ValorTroco;
-            this.Desconto = Desconto;
-            this.PagamentosEfetuados = PagamentosEfetuados;
+            this.Venda = Venda;
             //Começamos o processo de Print
             PrintPage += ICNFLoja;
             EndPrint += OnEndPrinting;
@@ -71,18 +57,11 @@ namespace Labs.LABS_PDV
             Print();
         }
         //
-        public void ImprimirCupomNaoFiscalCliente(string Impressora, List<Produto> Produtos, double ValorTotalComDesconto, double ValorTotalSemDesconto, double ValorPago, double Desconto, double ValorTroco, List<PagamentoEfetuado> PagamentosEfetuados)
+        public void ImprimirCupomNaoFiscalCliente(string Impressora,VendaRealizada Venda)
         {
             //Realizamos as configs iniciais
             PrinterSettings.PrinterName = Impressora;
-            //Configs Necessárias para o cupom
-            this.Produtos = Produtos;
-            this.ValorTotalComDesconto = ValorTotalComDesconto;
-            this.ValorTotalSemDesconto = ValorTotalSemDesconto;
-            this.ValorPago = ValorPago;
-            this.ValorTroco = ValorTroco;
-            this.Desconto = Desconto;
-            this.PagamentosEfetuados = PagamentosEfetuados;
+            this.Venda = Venda;
             //Começamos o processo de Print
             PrintPage += ICNFCliente;
             EndPrint += OnEndPrinting;
@@ -179,27 +158,27 @@ namespace Labs.LABS_PDV
             yPos += 30;
             //
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
-            graphics.DrawString("PEDIDO / VENDA: " + "ID PEDIDO / VENDA", RegularPedido, Brushes.Black, 0, yPos);
+            graphics.DrawString($"PEDIDO / VENDA: {Venda.IDVenda}", RegularPedido, Brushes.Black, 0, yPos);
             yPos += 15;
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             yPos += 15;
             //
-            graphics.DrawString($"Total R$: {Utils.FormatarValor(ValorTotalSemDesconto)}", Regular, Brushes.Black, 0, yPos);
+            graphics.DrawString($"Total R$: {Utils.FormatarValor(Venda.Total)}", Regular, Brushes.Black, 0, yPos);
             yPos += 15;
-            graphics.DrawString($"Desconto: {Utils.FormatarValor(Desconto)}%", Regular, Brushes.Black, 0, yPos);
+            graphics.DrawString($"Desconto: {Utils.FormatarValor(Venda.Desconto)}%", Regular, Brushes.Black, 0, yPos);
             yPos += 15;
-            graphics.DrawString($"Total c. Desc. R$: {Utils.FormatarValor(ValorTotalComDesconto)}", Regular, Brushes.Black, 0, yPos);
+            graphics.DrawString($"Total c. Desc. R$: {Utils.FormatarValor(Venda.TotalComDesconto)}", Regular, Brushes.Black, 0, yPos);
             yPos += 15;
-            graphics.DrawString($"Valor Pago R$: {Utils.FormatarValor(ValorPago)}", Regular, Brushes.Black, 0, yPos);
+            graphics.DrawString($"Valor Pago R$: {Utils.FormatarValor(Venda.ValorPago)}", Regular, Brushes.Black, 0, yPos);
             yPos += 15;
-            graphics.DrawString($"Troco R$: {Utils.FormatarValor(ValorTroco)}", Regular, Brushes.Black, 0, yPos);
+            graphics.DrawString($"Troco R$: {Utils.FormatarValor(Venda.Troco)}", Regular, Brushes.Black, 0, yPos);
             yPos += 20;
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             graphics.DrawString($"MEIO(S) DE PAGAMENTO", Bold, Brushes.Black, 0, yPos);
             yPos += 15;
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             yPos += 5;
-            foreach (var Pagamento in PagamentosEfetuados)
+            foreach (var Pagamento in Venda.PagamentosEfetuados)
             {
                 graphics.DrawString($"{Pagamento.DescPagamento} R$: {Utils.FormatarValor(Pagamento.Valor)}", RegularItens, Brushes.Black, 0, yPos);
                 yPos += 15;
@@ -239,7 +218,7 @@ namespace Labs.LABS_PDV
             yPos += 30;
             //
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
-            graphics.DrawString("PEDIDO / VENDA: " + "ID PEDIDO / VENDA", RegularPedido, Brushes.Black, 0, yPos);
+            graphics.DrawString($"PEDIDO / VENDA: {Venda.IDVenda}", RegularPedido, Brushes.Black, 0, yPos);
             yPos += 15;
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             yPos += 30;
@@ -251,7 +230,7 @@ namespace Labs.LABS_PDV
             yPos += 10;
             //
             //itens de venda
-            foreach (var Produto in Produtos)
+            foreach (var Produto in Venda.Produtos)
             {
                 string produtoDesc = $"{Produto.Descricao}";
                 produtoDesc = produtoDesc.Length > LimiteNomeProduto ? $"{produtoDesc[..LimiteNomeProduto]}..." : produtoDesc; // se o produto tiver mais de 20 de tamanho, cortamos o nome e colocamos ... no final
@@ -266,22 +245,22 @@ namespace Labs.LABS_PDV
             }
             yPos += 5;
             //
-            graphics.DrawString($"Total R$: {Utils.FormatarValor(ValorTotalSemDesconto)}", Regular, Brushes.Black, 0, yPos);
+            graphics.DrawString($"Total R$: {Utils.FormatarValor(Venda.Total)}", Regular, Brushes.Black, 0, yPos);
             yPos += 15;
-            graphics.DrawString($"Desconto: {Utils.FormatarValor(Desconto)}%", Regular, Brushes.Black, 0, yPos);
+            graphics.DrawString($"Desconto: {Utils.FormatarValor(Venda.Desconto)}%", Regular, Brushes.Black, 0, yPos);
             yPos += 15;
-            graphics.DrawString($"Total c. Desc. R$: {Utils.FormatarValor(ValorTotalComDesconto)}", Regular, Brushes.Black, 0, yPos);
+            graphics.DrawString($"Total c. Desc. R$: {Utils.FormatarValor(Venda.TotalComDesconto)}", Regular, Brushes.Black, 0, yPos);
             yPos += 15;
-            graphics.DrawString($"Valor Pago R$: {Utils.FormatarValor(ValorPago)}", Regular, Brushes.Black, 0, yPos);
+            graphics.DrawString($"Valor Pago R$: {Utils.FormatarValor(Venda.ValorPago)}", Regular, Brushes.Black, 0, yPos);
             yPos += 15;
-            graphics.DrawString($"Troco R$: {Utils.FormatarValor(ValorTroco)}", Regular, Brushes.Black, 0, yPos);
+            graphics.DrawString($"Troco R$: {Utils.FormatarValor(Venda.Troco)}", Regular, Brushes.Black, 0, yPos);
             yPos += 20;
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             graphics.DrawString($"MEIO(S) DE PAGAMENTO", Bold, Brushes.Black, 0, yPos);
             yPos += 15;
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             yPos += 5;
-            foreach (var Pagamento in PagamentosEfetuados)
+            foreach (var Pagamento in Venda.PagamentosEfetuados)
             {
                 graphics.DrawString($"{Pagamento.DescPagamento} R$: {Utils.FormatarValor(Pagamento.Valor)}", RegularItens, Brushes.Black, 0, yPos);
                 yPos += 15;
