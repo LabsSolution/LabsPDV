@@ -279,23 +279,21 @@ namespace Labs.Janelas.LabsPDV
 
 			//AS ETAPAS ACIMA DEVEM SER DESABILITADAS PARA AGILIZAR O PROCESSO DE DEV
 			//Mostra a janela de conclusão de venda e atrela o evento de fechamento da janela com a finalização da venda
+			Modais.MostrarInfo($"PRODUTOS: {Produtos.Count}");
 			JanelaDePagamento janelaDePagamento = LABS_PDV_MAIN.IniciarDependencia<JanelaDePagamento>(app=>
 			{
 				//Atrelamos o evento para a finalização
-				app.FormClosed += JanelaDePagamento_FormClosed;
+                app.OnPagamentoFinalizado += OnPagamentoFinalizado;
 				app.IniciarTelaDePagamento(PagamentoTotal,Produtos,this);
 			});
 		}
-
-		private void JanelaDePagamento_FormClosed(object? sender, FormClosedEventArgs e)
-		{
-			if (sender is JanelaDePagamento app)
-			{
-				//Desatrelamos o evento para prevenir vazamento de memória e resetamos a interface
-				app.FormClosed -= JanelaDePagamento_FormClosed;
-				ResetarInterface();
-			}
-		}
+		//
+        private void OnPagamentoFinalizado(JanelaDePagamento Janela)
+        {
+            //Desatrelamos o evento para prevenir vazamento de memória e resetamos a interface
+            Janela.OnPagamentoFinalizado -= OnPagamentoFinalizado;
+            ResetarInterface();
+        } 
 		//
 		private void CancelarVenda()
 		{

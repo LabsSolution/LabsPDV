@@ -16,10 +16,8 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 	public partial class JanelaDePagamento : Form
 	{
 		//Eventos
-		public delegate void PagamentoFinalizado();
+		public delegate void PagamentoFinalizado(JanelaDePagamento Janela);
 		public event PagamentoFinalizado OnPagamentoFinalizado = null!;
-		public delegate void PagamentoCancelado();
-		public event PagamentoCancelado OnPagamentoCancelado = null!;
 		//
 		//
 		MeiosPagamento MeiosPagamento { get; set; } = null!;
@@ -113,7 +111,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 			//
 			this.ValorTotal = ValorTotal;
 			this.LabsPDV = LabsPDV;
-			this.Produtos = Produtos;
+			Produtos.ForEach(this.Produtos.Add);
 			//
 			DescontoBoxInput.Text = "0";
 			//
@@ -173,7 +171,8 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                 // Sinaliza que a venda foi finalizada com sucesso
                 //
                 Modais.MostrarInfo("Venda Finalizada com Sucesso!");
-				Reset();
+                OnPagamentoFinalizado?.Invoke(this);
+                Reset();
 				//
 				this.Close();
 			}
