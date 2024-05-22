@@ -49,7 +49,7 @@ namespace Labs
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
 			//
-			LabsPDV App = new(); // Altere esse campo para modificar a primeira janela a ser aberta (Utilizar somente para debug)
+			LabsMainApp App = new(); // Altere esse campo para modificar a primeira janela a ser aberta (Utilizar somente para debug)
 			//
 			App.Resize += OnAppSizeChange;
             App.Load += OnAppLoad;
