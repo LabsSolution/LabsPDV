@@ -1,7 +1,7 @@
 ﻿using Labs.Janelas.LabsEstoque;
 using Labs.Janelas.LabsPDV.Dependencias;
 using Labs.LABS_PDV;
-using Unimake.Business.DFe.Xml.EFDReinf;
+using MongoDB.Driver;
 using static Labs.LABS_PDV.Modelos;
 
 namespace Labs.Janelas.LabsPDV
@@ -22,6 +22,7 @@ namespace Labs.Janelas.LabsPDV
 		private protected double PagamentoTotal = 0.0; // registro do pagamento total
 		//
 		public CaixaLabs CaixaLabs { get; private set; } = null!;
+		public OperadorCaixa Operador { get; private set; } = null!;
 		public EstadoCaixa EstadoCaixa { get; private set; } = null!;
 		//
 		public LabsPDV()
@@ -59,17 +60,31 @@ namespace Labs.Janelas.LabsPDV
 		{
 			//Tenta buscar um estado de caixa anterior (caso exista, significa que o sistema foi finalizado de maneira inesperada)
 			EstadoCaixa = await CloudDataBase.GetLocalAsync<EstadoCaixa>(Collections.EstadoCaixa,_ => true);
-			//
-			if(EstadoCaixa != null)
+            //
+            if(EstadoCaixa != null)
 			{
-
-			}
+				//
+				Operador = EstadoCaixa.OperadorCaixa;
+				CaixaLabs = EstadoCaixa.CaixaLabs;
+				EstaAberto = EstadoCaixa.CaixaAberto;
+				RealizandoVenda = EstadoCaixa.RealizandoVenda;
+				//Por últimos atualizamos os produtos
+				foreach (Produto produto in EstadoCaixa.Produtos)
+				{
+                    AddProduto(produto, out double TotalItem);
+                    // Ao Adicionar o produto na lista, limpamos o código de barras e resetamos a quantidade para somente 1 (para evitar de replicar a quantidade anterior);
+                    PagamentoTotal += TotalItem;
+                    //
+                }
+                PagamentoTotal = Math.Round(PagamentoTotal, 2);
+                SetPagamentoTotalBox();
+            }
 			else
 			{
 				//Iniciamos o CaixaLabs, se não conseguirmos lançamos um erro
-				OperadorCaixa operador = new("Operador Teste", "User", "Pass");
+				Operador = new("Operador Teste", "User", "Pass");
 				//
-                CaixaLabs = new(ValorDeAbertura, operador); // Aqui estamos iniciando na maluquice
+                CaixaLabs = new(ValorDeAbertura, Operador); // Aqui estamos iniciando na maluquice
 				//
                 if (CaixaLabs == null) { Modais.MostrarErro("ERRO CRÍTICO!\nA Comunicação com um módulo interno foi Interrompida!"); return; }
                 CaixaLabs.RealizarAbertura();
@@ -95,7 +110,7 @@ namespace Labs.Janelas.LabsPDV
                     RealizandoVenda = RealizandoVenda,
                     CaixaAberto = EstaAberto,
                     Produtos = Produtos,
-                    OperadorCaixa = operador
+                    OperadorCaixa = Operador
                 };
                 //
                 CloudDataBase.RegisterLocalAsync(Collections.EstadoCaixa, EstadoCaixa);
@@ -217,6 +232,10 @@ namespace Labs.Janelas.LabsPDV
 			PagamentoTotal = Math.Round(TotalHolder, 2);
 			PagamentoTotalBox.Text = PagamentoTotal.ToString();
 			SetPagamentoTotalBox(); // Essa função apenas atualiza o visor de preço pro cliente
+			//Atualizamos o Estado Caixa (Reflexão)
+			//
+			EstadoCaixa.Produtos = Produtos;
+			CloudDataBase.UpdateOneLocalAsync(Collections.EstadoCaixa, EstadoCaixa, Builders<EstadoCaixa>.Filter.Eq("ID", EstadoCaixa.ID));
 			// resetamos o foco novamente para o Input de Cod de Barras
 			ResetarFoco();
 		}
@@ -254,6 +273,7 @@ namespace Labs.Janelas.LabsPDV
 			//Ao Cancelar a venda, simplesmente descartamos todos os items e resetamos os campos;
 			ResetarInterface();
 			RealizandoVenda = false;
+			EstadoCaixa.RealizandoVenda = false;
 		}
 		//---EVENTOS--//
 		//Chamado quando pressiona alguma tecla na tela de PDV
@@ -291,6 +311,7 @@ namespace Labs.Janelas.LabsPDV
 			else { Modais.MostrarErro("Somente Números!"); }
 		}
 		//Chamado quando alguma tecla é pressionada na área de cód de barras
+		//
 		private async void OnAddCodBarras()
 		{
 			//
@@ -306,7 +327,7 @@ namespace Labs.Janelas.LabsPDV
 					//
 					// Alteramos a quantidade porque não queremos vender o estoque inteiro de uma vez só KKK
 					int QTD = int.Parse(QuantidadeBox.Text);
-					if(QTD > produto.Quantidade) { Modais.MostrarAviso("Produto Esgotado!"); return; } // caso a quantidade que estamos passando for maior que a disponível no estoque;
+					if(QTD > produto.Quantidade) { Modais.MostrarAviso("A quantidade passada é maior que a contida no estoque!"); return; } // caso a quantidade que estamos passando for maior que a disponível no estoque;
 					//
 					produto.Quantidade = int.Parse(QuantidadeBox.Text);
 					AddProduto(produto, out double TotalItem);
@@ -321,6 +342,10 @@ namespace Labs.Janelas.LabsPDV
 					PagamentoTotal = Math.Round(PagamentoTotal, 2);
 					//
 					SetPagamentoTotalBox();
+					//
+					EstadoCaixa.Produtos = Produtos; // Aqui refletimos
+					// Atualizamos o estado Caixa do Banco de dados
+					CloudDataBase.UpdateOneLocalAsync(Collections.EstadoCaixa,EstadoCaixa,Builders<EstadoCaixa>.Filter.Eq("ID",EstadoCaixa.ID));
 				}
 				else
 				{
