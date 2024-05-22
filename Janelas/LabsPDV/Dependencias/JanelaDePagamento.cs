@@ -15,6 +15,12 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 {
 	public partial class JanelaDePagamento : Form
 	{
+		//Eventos
+		public delegate void PagamentoFinalizado();
+		public event PagamentoFinalizado OnPagamentoFinalizado = null!;
+		public delegate void PagamentoCancelado();
+		public event PagamentoCancelado OnPagamentoCancelado = null!;
+		//
 		//
 		MeiosPagamento MeiosPagamento { get; set; } = null!;
 		//
