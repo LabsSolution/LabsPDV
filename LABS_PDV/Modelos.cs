@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using IdentityModel.Client;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace Labs.LABS_PDV
 	{
 		public static string Produtos { get; } = "Produtos";
 		public static string EstadoCaixa { get; } = "EstadoCaixa";
+		public static string Fechamentos { get; } = "Fechamentos";
 		public static string Vendas { get; } = "Vendas";
 		public static string Clientes { get; } = "Clientes";
 		public static string MeiosDePagamento { get; } = "MeiosDePagamento";
@@ -45,6 +47,35 @@ namespace Labs.LABS_PDV
 			/// Construtor Padrão
 			/// </summary>
 			public MeiosPagamento() { Meios = [new("DINHEIRO",false)]; }
+		}
+		public class FechamentoDeCaixa
+		{
+			/// <summary>
+			/// ID Para Representação no Banco de Dados
+			/// </summary>
+			[BsonId]
+			[BsonRepresentation(BsonType.ObjectId)]
+			public string ID { get; set; } = null!;
+			//
+			public string FechamentoID { get; set; } = null!;
+			public double ValorDeAbertura { get; set; }
+			public double FundoDeCaixa { get; set; }
+			public double GanhosTotais { get; set; }
+			public int ItensVendidos { get; set; }
+			public int ItensDevolvidos { get; set; }
+			/// <summary>
+			/// Array com todas as Sangrias feitas (Motivo => valor)
+			/// </summary>
+			public Tuple<string, double>[] Sangrias { get; set; } = [];
+			/// <summary>
+			/// Array com todos os Suprimentos Feitos (Motivo => valor)
+			/// </summary>
+			public Tuple<string, double>[] Suprimentos { get; set; } = [];
+			/// <summary>
+			/// Array com o valor recebido em cada meio de pagamento configurado
+			/// </summary>
+			public RIDP[] Recebimentos { get; set; } = [];
+			
 		}
 		/// <summary>
 		/// Segura o estado do caixa, para que caso venha faltar luz ou algo acontecer, a venda não seja perdida

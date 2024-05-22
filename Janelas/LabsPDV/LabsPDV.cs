@@ -279,7 +279,6 @@ namespace Labs.Janelas.LabsPDV
 
 			//AS ETAPAS ACIMA DEVEM SER DESABILITADAS PARA AGILIZAR O PROCESSO DE DEV
 			//Mostra a janela de conclusão de venda e atrela o evento de fechamento da janela com a finalização da venda
-			Modais.MostrarInfo($"PRODUTOS: {Produtos.Count}");
 			JanelaDePagamento janelaDePagamento = LABS_PDV_MAIN.IniciarDependencia<JanelaDePagamento>(app=>
 			{
 				//Atrelamos o evento para a finalização
@@ -339,7 +338,7 @@ namespace Labs.Janelas.LabsPDV
 		}
 		//Chamado quando alguma tecla é pressionada na área de cód de barras
 		//
-		private async void OnAddCodBarras()
+		private async void OnAddProduto()
 		{
 			//
 			if (QuantidadeBox.TextLength < 1) { QuantidadeBox.Text = "1"; }
@@ -383,7 +382,7 @@ namespace Labs.Janelas.LabsPDV
 		private void OnCodBarrasKeyUp(object sender, KeyEventArgs e)
 		{
 			if (e.KeyCode != Keys.Enter) { return; } // se não for enter não seguimos
-			OnAddCodBarras();
+			OnAddProduto();
 			//
 		}
 		//

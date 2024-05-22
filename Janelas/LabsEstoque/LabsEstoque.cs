@@ -44,7 +44,7 @@ namespace Labs.Janelas.LabsEstoque
 			foreach (Produto produto in Produtos) //Iteramos e adicionamos a lista
 			{
 				InserirProdutoNaLista(produto.ID.ToString(), produto.Descricao, produto.Quantidade.ToString(), Utils.FormatarValor(produto.Preco), produto.CodBarras,produto.Quantidade <= LabsMainApp.QMDP);
-				await Task.Delay(1);
+				await Task.Delay(0);
 			}
 		}
 		//

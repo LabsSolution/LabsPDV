@@ -51,7 +51,7 @@
             ListaProdutosEstoque.Location = new Point(12, 168);
             ListaProdutosEstoque.MultiSelect = false;
             ListaProdutosEstoque.Name = "ListaProdutosEstoque";
-            ListaProdutosEstoque.Size = new Size(1324, 701);
+            ListaProdutosEstoque.Size = new Size(1324, 545);
             ListaProdutosEstoque.TabIndex = 0;
             ListaProdutosEstoque.UseCompatibleStateImageBehavior = false;
             ListaProdutosEstoque.View = View.Details;
@@ -134,7 +134,7 @@
             VoltarButton.UseVisualStyleBackColor = false;
             VoltarButton.Click += VoltarButton_Click;
             // 
-            // LabsEstoque
+            // Labs_Estoque
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -150,7 +150,7 @@
             KeyPreview = true;
             MaximizeBox = false;
             MinimizeBox = false;
-            Name = "LabsEstoque";
+            Name = "Labs_Estoque";
             Text = "LabsEstoque";
             WindowState = FormWindowState.Maximized;
             Load += OnLabsEstoqueLoad;

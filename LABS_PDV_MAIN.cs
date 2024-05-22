@@ -19,7 +19,7 @@ namespace Labs
 		//
 		public static string TradeMark = "© Lab Soluções © ";
 		//
-		public static string LabsCloudDataBaseConnectionURI = "mongodb+srv://solutionlab:solution%402024@labsolutions.p94r7be.mongodb.net/";
+		public static string LabsCloudDataBaseConnectionURI = "mongodb+srv://labscentral:solution2024@labs-central.vqvqvje.mongodb.net/";
 		//
 		// Acessores Públicos para a database do cliente
 		public static string ClientDataBase = null!; // Nome da database do cliente
@@ -29,7 +29,7 @@ namespace Labs
 		public static Cliente Cliente { get; private set; } = null!;
 		//
 		//
-		static readonly SVGParser SVGParser = new();
+		static readonly SVGParser SVGParser = new(); // Desabilitado por enquanto por motivos de performance;
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -40,7 +40,7 @@ namespace Labs
 			// Politica LGPD
 			//Descriptografa a database local
 			if(LabsCripto.Decript("L_Data",out string LDecripted)) { LocalDataBaseConnectionURI = LDecripted; }
-			//Descriptografa a Datavbase Remota
+			//Descriptografa a Database Remota
 			if(LabsCripto.Decript("C_Data",out string CDecripted)) { CloudDataBaseConnectionURI = CDecripted; }
 			//Descriptografa o nome da Database da empresa
 			if(LabsCripto.Decript("N_Data",out string NDecripted)) { ClientDataBase = NDecripted; }

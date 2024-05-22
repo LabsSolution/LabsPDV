@@ -31,7 +31,6 @@ namespace Labs.LABS_PDV
         const string ClientesCollection = "Clientes";
         //
         const string ProdutosCollection = "Produtos";
-        const string MeiosDePagamentoCollection = "MeiosDePagamento";
         //
         /// <summary>
         /// Verifica a Conexão com as Databases e Retorna o Status de Cada Uma.
@@ -42,10 +41,10 @@ namespace Labs.LABS_PDV
         /// <returns>Retorna True se todas as conexões estiverem funcionando corretamente</returns>
 		public static bool CheckDataBaseConnection(out bool LocalOK, out bool CloudOK, out bool LabsCloudOK)
         {
-            var local = ConnectToMongoLocal<Produto>(ProdutosCollection);
-            var cloud = ConnectToMongoCloud<Produto>(ProdutosCollection);
+            var local = ConnectToMongoLocal<Produto>(Collections.Produtos);
+            var cloud = ConnectToMongoCloud<Produto>(Collections.Produtos);
             //
-            var labsCloud = ConnectToLabsMongoCloud<Cliente>(ClientesCollection);
+            var labsCloud = ConnectToLabsMongoCloud<Cliente>(Collections.Clientes);
             //
             LocalOK = local != null;
             //
@@ -339,6 +338,28 @@ namespace Labs.LABS_PDV
                 throw;
             }
         }
+        //
+        /// <summary>
+        /// Registra um Objeto caso ele não exista na database Cloud em uma coleção determinada
+        /// </summary>
+        /// <typeparam name="T">Tipo de objeto para registro</typeparam>
+        /// <param name="collectionName">Nome da coleção</param>
+        /// <param name="ToRegisterObject">Objeto para registro (Respeitando o tipo)</param>
+        /// <param name="filter">Objeto para registro (Respeitando o tipo)</param>
+        public static async void RegisterCloudAsync<T>(string collectionName, T ToRegisterObject,FilterDefinition<T> filter)
+        {
+            try
+            {
+                var collection = ConnectToMongoCloud<T>(collectionName);
+                var options = new ReplaceOptions { IsUpsert = true };
+                await collection.ReplaceOneAsync(filter, ToRegisterObject, options);
+            }
+            catch (Exception ex)
+            {
+                Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
+                throw;
+            }
+        }
         /// <summary>
         /// Atualiza um objeto na database Cloud utilizando um filtro
         /// </summary>
@@ -432,7 +453,7 @@ namespace Labs.LABS_PDV
         {
             try
             {
-                var Admins = ConnectToLabsMongoCloud<AdminLabs>("ADMINS");
+                var Admins = ConnectToLabsMongoCloud<AdminLabs>(Collections.LabAdmins);
                 //
                 var results = await Admins.FindAsync(x => x.Auth0ID == Auth0ID);
                 return results.ToList().FirstOrDefault()!;
@@ -451,7 +472,7 @@ namespace Labs.LABS_PDV
         {
             try
             {
-                var Admins = ConnectToLabsMongoCloud<AdminLabs>("ADMINS");
+                var Admins = ConnectToLabsMongoCloud<AdminLabs>(Collections.LabAdmins);
                 await Admins.InsertOneAsync(admin);
             }
             catch (Exception ex)
@@ -492,7 +513,7 @@ namespace Labs.LABS_PDV
         {
             try
             {
-                var Clientes = ConnectToLabsMongoCloud<Cliente>(ClientesCollection);
+                var Clientes = ConnectToLabsMongoCloud<Cliente>(Collections.Clientes);
                 await Clientes.InsertOneAsync(cliente);
             }
             catch (Exception ex)
@@ -509,7 +530,7 @@ namespace Labs.LABS_PDV
         {
             try
             {
-                var Clientes = ConnectToLabsMongoCloud<Cliente>(ClientesCollection);
+                var Clientes = ConnectToLabsMongoCloud<Cliente>(Collections.Clientes);
                 //
                 var filter = Builders<Cliente>.Filter.Eq("DataBaseID", cliente.DataBaseID);
                 await Clientes.ReplaceOneAsync(filter, cliente, new ReplaceOptions { IsUpsert = true });
@@ -526,7 +547,7 @@ namespace Labs.LABS_PDV
         {
             try
             {
-                var Clientes = ConnectToMongoLocal<Cliente>(ClientesCollection);
+                var Clientes = ConnectToMongoLocal<Cliente>(Collections.Clientes);
                 await Clientes.DeleteOneAsync(c => c.DataBaseID == cliente.DataBaseID);
             }
             catch (Exception ex)

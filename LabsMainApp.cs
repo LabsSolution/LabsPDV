@@ -73,27 +73,9 @@ namespace Labs
 			//
         }
 		//
-		static async void VerificaEstoqueOnLoad()
+		static async void VerificacoesPreventivas()
 		{
-			var JDC = LABS_PDV_MAIN.IniciarApp<JanelaCarregamento>(true);
-			//
-			var ProdutosCount = await CloudDataBase.GetLocalCountAsync<Produto>(Collections.Produtos);
-			var PBFDS = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.Produtos,_ => true); // Pega todos os produtos
-			int ProdutosEmBaixa = 0;
-			//
-			JDC.SetTextoFrontEnd("VERIFICANDO ESTOQUE");
-			JDC.ConfigBarraDeCarregamento(0, (int)ProdutosCount);
-			JDC.BringToFront();
-			//
-			foreach (Produto produto in PBFDS)
-			{
-				if(produto.Quantidade <= QMDP) {  ProdutosEmBaixa++; }
-				JDC.AumentarBarraDeCarregamento(1);
-				await Task.Delay(1);
-			}
-			//
-			if (ProdutosEmBaixa > 0) { Modais.MostrarAviso("UM OU MAIS PRODUTOS ESTÃO EM BAIXA NO ESTOQUE!"); }
-			JDC.Close();
+			await GerenciadorPDV.VerificarEstoque(QMDP);
 		}
 		//
 		//---------------------------//
@@ -132,7 +114,7 @@ namespace Labs
 		private void LabsMainApp_Load(object sender, EventArgs e)
 		{
 			if (!VerifyDataBases()) { ModoSegurança = true; Modais.MostrarAviso("MODO DE SEGURANÇA HABILITADO!\nPara Sair Desse Modo, Os Conflitos Devem ser Resolvidos\ne Logo Após o Sistema Deve Ser Reiniciado!"); return; }
-            VerificaEstoqueOnLoad();
+            VerificacoesPreventivas();
 		}
 	}
 }

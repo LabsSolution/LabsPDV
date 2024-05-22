@@ -23,8 +23,7 @@ namespace Labs.LABS_PDV
         //Holders
         //Para a impressão de Cupons ( e depois emissão de nota fiscal )
         VendaRealizada Venda = null!;
-        //
-        List<RIDP> RegistroInternoDePagamentos { get; set; } = [];
+        FechamentoDeCaixa Fechamento = null!;
         //Fechamento de Caixa
         double ValorAbertura = 0;
         double FundoDeCaixa = 0;
@@ -69,15 +68,12 @@ namespace Labs.LABS_PDV
             Print();
         }
         //
-        public void ImprimirCupomFechamentoDeCaixa(string Impressora,List<RIDP> Recebimentos, double ValorAbertura, double FundoDeCaixa, double GanhosTotais, double Sangria = 0, double Suprimento = 0)
+        public void ImprimirCupomFechamentoDeCaixa(string Impressora,FechamentoDeCaixa Fechamento)
         {
             //Realizamos as configs iniciais
             PrinterSettings.PrinterName = Impressora;
             //Configs Necessárias para o cupom
-            this.RegistroInternoDePagamentos = Recebimentos;
-            this.ValorAbertura = ValorAbertura;
-            this.FundoDeCaixa = FundoDeCaixa;
-            this.GanhosTotais = GanhosTotais;
+            this.Fechamento = Fechamento; 
             //Começamos o processo de Print
             PrintPage += ICNFFechamento;
             EndPrint += OnEndPrinting;
@@ -105,6 +101,8 @@ namespace Labs.LABS_PDV
             graphics.DrawString("FECHAMENTO DE CAIXA", Bold, Brushes.Black, 0, yPos);
             yPos += 15;
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
+            yPos += 15;
+            graphics.DrawString($"ID: {Fechamento.FechamentoID}", Bold, Brushes.Black, 0, yPos);
             yPos += 30;
             //
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
@@ -115,16 +113,16 @@ namespace Labs.LABS_PDV
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             yPos += 15;
             //
-            graphics.DrawString($"Valor de Abertura R$: {Utils.FormatarValor(ValorAbertura)}", Regular, Brushes.Black, 0, yPos);
+            graphics.DrawString($"Valor de Abertura R$: {Utils.FormatarValor(Fechamento.ValorDeAbertura)}", Regular, Brushes.Black, 0, yPos);
             yPos += 15;
-            graphics.DrawString($"Fundo de Caixa R$: {Utils.FormatarValor(FundoDeCaixa)}", Regular, Brushes.Black, 0, yPos);
+            graphics.DrawString($"Fundo de Caixa R$: {Utils.FormatarValor(Fechamento.FundoDeCaixa)}", Regular, Brushes.Black, 0, yPos);
             yPos += 15;
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             graphics.DrawString($"MEIOS RECEBIDOS", Bold, Brushes.Black, 0, yPos);
             yPos += 15;
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             yPos += 5;
-            foreach (var MeioRecebido in RegistroInternoDePagamentos)
+            foreach (RIDP MeioRecebido in Fechamento.Recebimentos)
             {
                 graphics.DrawString($"{MeioRecebido.NomeDoRegistro}", RegularItens, Brushes.Black, 0, yPos);
                 yPos += 15;
@@ -133,7 +131,7 @@ namespace Labs.LABS_PDV
                 graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             }
             yPos += 15;
-            graphics.DrawString($"Ganhos Totais. R$: {Utils.FormatarValor(GanhosTotais)}", Regular, Brushes.Black, 0, yPos);
+            graphics.DrawString($"Ganhos Totais. R$: {Utils.FormatarValor(Fechamento.GanhosTotais)}", Regular, Brushes.Black, 0, yPos);
             yPos += 20;
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             yPos += 5;

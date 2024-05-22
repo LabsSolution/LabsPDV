@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static Labs.LABS_PDV.Modelos;
 
 namespace Labs.Janelas.LabsPDV.Dependencias
 {
@@ -32,6 +33,8 @@ namespace Labs.Janelas.LabsPDV.Dependencias
         }
         //
         List<ValorFechamento> ValoresParaAferimento = [];
+        FechamentoDeCaixa Fechamento = null!;
+        //
         CaixaLabs CaixaLabs { get; set; } = null!;
         //
         public JanelaFechamentoDeCaixa()
@@ -110,6 +113,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
             //
             ListaAferimentoMeios.CellValueChanged += OnCellChanged;
             ListaAferimentoGeral.CellValueChanged += OnCellChanged;
+            //
         }
         //
         private bool VerificarAferimentos()
@@ -170,10 +174,33 @@ namespace Labs.Janelas.LabsPDV.Dependencias
         {
             if (VerificarAferimentos())
             {
-                using (var PM = new PrintManager())
+
+                Fechamento = new()
                 {
-                    PM.ImprimirCupomFechamentoDeCaixa(PrintManager.ImpressoraDefault,this.CaixaLabs.RegistroInternoDePagamentos,this.CaixaLabs.ValorDeAbertura,this.CaixaLabs.FundoDeCaixa,this.CaixaLabs.GanhosTotais);
+                    FechamentoID = $"{DateTime.Now:ddMMyyyy}{DateTime.Now:HHmmss}",
+                    FundoDeCaixa = CaixaLabs.FundoDeCaixa,
+                    GanhosTotais = CaixaLabs.GanhosTotais,
+                    ValorDeAbertura = CaixaLabs.ValorDeAbertura,
+                    Recebimentos = [.. CaixaLabs.RegistroInternoDePagamentos], // repassa para array
+                    Sangrias = [], // Não implementado ainda
+                    Suprimentos = [], // Não implementado ainda
+                    ItensDevolvidos = 0,
+                    ItensVendidos = 0,
+                };
+                //
+                CloudDataBase.RegisterLocalAsync(Collections.Fechamentos,Fechamento);
+                //Realizar espelhamento aqui.
+                //Logo após imprimimos o cupom de fechamento
+                DialogResult r = Modais.MostrarPergunta("Deseja Imprimir a Nota de Fechamento?");
+                if(r == DialogResult.Yes)
+                {
+                    using (var PM = new PrintManager())
+                    {
+                        PM.ImprimirCupomFechamentoDeCaixa(PrintManager.ImpressoraDefault,Fechamento);
+                    }
                 }
+                //
+                //
                 FecharJanela();
             }
         }
