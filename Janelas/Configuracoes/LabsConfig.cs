@@ -37,7 +37,7 @@ namespace Labs.Janelas.Configuracoes
             bool isAdmin = await painel.RealizarLoginAdmin();
             if (isAdmin)
             {
-                LABS_PDV_MAIN.IniciarDependencia<DatabaseConfig>();
+                LABS_PDV_MAIN.IniciarDependencia<DatabaseConfig>(null!,true,true);
             }
         }
 

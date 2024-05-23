@@ -52,6 +52,7 @@ namespace Labs
                 if (claim.Type == "sub")
                 {
                     AdminLabs admin = await CloudDataBase.GetAdminLabsAsync(claim.Value);
+                    Modais.MostrarInfo($"{admin.AdminAtivo}|{admin.PermLevel}");
                     if (admin == null) { admin = new(claim.Value, false); CloudDataBase.RegisterAdminLabs(admin); }
                     //Verifica o usuário
                     return await VerificarAdmin(admin);

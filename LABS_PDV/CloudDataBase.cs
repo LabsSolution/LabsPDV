@@ -27,10 +27,6 @@ namespace Labs.LABS_PDV
     {   //Quando estiver próximo de produção essa classe será refatorada, para ter somente membros genéricos
         //
         const string LabsDataBase = "DataBaseCentral";  // Nome da dataBase da Empresa
-                                                        // Lista de Coleções de DataBase (Constantes) (Usados para gerenciamento de membros)
-        const string ClientesCollection = "Clientes";
-        //
-        const string ProdutosCollection = "Produtos";
         //
         /// <summary>
         /// Verifica a Conexão com as Databases e Retorna o Status de Cada Uma.

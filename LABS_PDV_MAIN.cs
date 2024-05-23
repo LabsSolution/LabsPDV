@@ -78,8 +78,8 @@ namespace Labs
         {
             if(sender is Form App)
 			{
-				//App.BackgroundImageLayout = ImageLayout.Stretch;
-				//App.BackgroundImage = SVGParser.GetImageFromSVG(); ;
+				App.BackgroundImageLayout = ImageLayout.Stretch;
+				App.BackgroundImage = SVGParser.GetImageFromSVG(); ;
             }
         }
 

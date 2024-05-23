@@ -103,7 +103,7 @@ namespace Labs
 
 		private void OnLabsConfigClick(object sender, EventArgs e)
 		{
-			LABS_PDV_MAIN.IniciarApp<LabsConfig>(false);
+			LABS_PDV_MAIN.IniciarApp<LabsConfig>(false,true);
 		}
 
 		private void SairButton_Click(object sender, EventArgs e)
