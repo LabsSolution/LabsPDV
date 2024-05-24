@@ -28,7 +28,7 @@ namespace Labs.Janelas.LabsEstoque
 		private void InserirProdutoNaLista(string ID, string Desc, string QtdEstoque, string Preco, string CodBarras, bool EmFalta = false)
 		{
 			var item = new ListViewItem([ID, Desc, QtdEstoque, $"R$ {Preco}", CodBarras]);
-			if (EmFalta) { item.BackColor = Color.IndianRed; item.ForeColor = Color.Black; } else {  item.BackColor = Color.LightGreen; item.ForeColor = Color.Black; }
+            if (EmFalta) { item.BackColor = Color.IndianRed; item.ForeColor = Color.Black; } else {  item.BackColor = Color.LightGreen; item.ForeColor = Color.Black; }
 			ListaProdutosEstoque.Items.Insert(ListaProdutosEstoque.Items.Count, item);
 		}
 		/// <summary>

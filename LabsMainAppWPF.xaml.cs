@@ -23,6 +23,8 @@ namespace Labs
     /// </summary>
     public partial class LabsMainAppWPF : Window
     {
+        //Referencia de Instancia
+        public static LabsMainAppWPF App { get; private set; } = null!;
         //
         public static int QMDP { get; private set; } = -1;
         //
@@ -37,6 +39,11 @@ namespace Labs
         public LabsMainAppWPF()
         {
             InitializeComponent();
+            if (App == null) { App = this; }
+            //Caso tenha uma instância rodando, fechamos esta janela e jogamos um erro
+            //Dando a informação para que se o erro persistir, entrar em contato com o suporte técnico.
+            else { this.Close(); Modais.MostrarAviso("ERRO-800 \n UMA INSTÂNCIA DO APLICATIVO JÁ ESTÁ EM EXECUCÃO\n Caso o erro persista recomendamos entrar em contato com o suporte."); }
+            //Carrega as Configs/
             LoadConfigs();
             //TEMPORÁRIO
             LABS_PDV_MAIN.LabsCloudDataBaseConnectionURI = LABS_PDV_MAIN_WPF.LabsCloudDataBaseConnectionURI;
@@ -79,7 +86,7 @@ namespace Labs
         //
         private void OnLabsEstoqueClick(object sender, RoutedEventArgs e)
         {
-            LABS_PDV_MAIN.IniciarDependencia<Labs_Estoque>();
+            LABS_PDV_MAIN_WPF.IniciarApp<LabsEstoqueWPF>();
         }
 
         private void OnLabsPDVClick(object sender, RoutedEventArgs e)
@@ -89,7 +96,7 @@ namespace Labs
 
         private void OnLabsConfigClick(object sender, RoutedEventArgs e)
         {
-            LABS_PDV_MAIN.IniciarDependencia<LabsConfig>();
+            LABS_PDV_MAIN_WPF.IniciarApp<LabsConfigWPF>(true,false,false);
         }
 
         private void OnLabsSairClick(object sender, RoutedEventArgs e)

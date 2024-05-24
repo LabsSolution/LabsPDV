@@ -101,10 +101,9 @@ namespace Labs
 				App.Closed -= AppClosed;
 				App.SizeChanged -= OnAppSizeChange;
                 App.Loaded -= OnAppLoad;
-				//
-				LabsMainAppWPF app = new();
-				app.Show();
-			}
+                //
+                LabsMainAppWPF.App?.Show();
+            }
 		}
 		//Método De Retorno caso a janela seja escondida (Também chamada somente nas janelas Instanciadas pelo InicarApp)
 		//Mas nesse caso, somente quando o parametro "Persistente for ativo"
@@ -118,8 +117,7 @@ namespace Labs
 					App.SizeChanged -= OnAppSizeChange;
                     App.Loaded -= OnAppLoad;
                     //
-                    LabsMainAppWPF app = new();
-                    app.Show();
+                    LabsMainAppWPF.App?.Show();
                 }
 			}
 		}
@@ -169,7 +167,7 @@ namespace Labs
 			}
 
 			// Verifica se a aplicação está descartada
-			if (App.IsActive)
+			if (App?.IsActive == false)
 			{
 				// Cria uma nova instância da aplicação se a antiga estiver descartada
 				App = new T();
@@ -182,6 +180,7 @@ namespace Labs
 			{ 
 				if (BackgroundImage == true)  { App.Loaded += OnAppLoad; } 
 				//
+				App.Topmost = true;
 				App.Closed += DepAppClosed; 
 				App.IsVisibleChanged += DepAppHidden; 
 				App.ShowDialog(); 
@@ -201,7 +200,7 @@ namespace Labs
 		/// <typeparam name="T">Tipo de Janela que será iniciado</typeparam>
 		/// <param name="Persistente">Define se a janela permanece carregada até ser forçado seu fechamento ou não</param>
 		/// <param name="BackgroundImage">Define se a janela Carrega a imagem de Background ou não, padrão = true</param>
-		public static T IniciarApp<T>(bool Persistente = false, bool BackgroundImage = false) where T : Window, new()
+		public static T IniciarApp<T>(bool Persistente = false, bool BackgroundImage = false, bool AutoMaximize = true) where T : Window, new()
 		{
 			T? App;
 			// Verifica se a aplicação já está rodando
@@ -217,7 +216,7 @@ namespace Labs
 			}
 
 			// Verifica se a aplicação está descartada
-			if (App.IsActive)
+			if (App?.IsActive == false)
 			{
 				// Cria uma nova instância da aplicação se a antiga estiver descartada
 				App = new T();
@@ -226,14 +225,14 @@ namespace Labs
 			//
 
 			// Quando uma nova Instância for Iniciada Escondemos a principal
-			LabsMainApp.App.Hide();
+			LabsMainAppWPF.App?.Hide();
 			//Aqui lidamos com qual evento queremos chamar (Dependendo do parametro de persistência)
 			//
 			// Aqui atrelamos os dois eventos porque em algum momento a janela será realmente fechada;
 			//
 			if (Persistente) { App.IsVisibleChanged += AppHidden;  }
 			if (BackgroundImage == true) { App.Loaded += OnAppLoad; }
-			App.SizeChanged += OnAppSizeChange; // O evento de SizeChange é global para qualquer janela;
+			if (AutoMaximize) { App.SizeChanged += OnAppSizeChange; }
             App.Closed += AppClosed; // Global
             // Mostra a aplicação
             App.Show();

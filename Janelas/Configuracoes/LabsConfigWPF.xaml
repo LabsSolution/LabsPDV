@@ -1,0 +1,52 @@
+﻿<Window x:Class="Labs.Janelas.Configuracoes.LabsConfigWPF"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        
+        xmlns:svg="http://sharpvectors.codeplex.com/runtime/"
+        xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+        
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Labs.Janelas.Configuracoes"
+        mc:Ignorable="d"
+        Title="LabsConfigWPF" Background="Transparent" AllowsTransparency="True" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize"  Height="600" Width="800">
+    <Border CornerRadius="20">
+        <Border.Background>
+            <ImageBrush ImageSource="{svgc:SvgImage Source=Recursos/Fundos/Background.svg, AppName=LabsMainAppWPF}" Stretch="Fill"/>
+        </Border.Background>
+        <!---->
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <!--Colunas-->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <!--CONTEUDO-->
+            <Label FontSize="30" Height="50" Content="Painel de Configurações" HorizontalAlignment="Left" Grid.ColumnSpan="2" Foreground="#f0f0f0" FontFamily="Segoe UI" FontWeight="Black"/>
+            <!--Config Usuário-->
+            <StackPanel x:Name="ConfigUsuario" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0">
+                <Button Width="200" Height="40" Margin="0,0,10,10" HorizontalAlignment="Left" Background="#f0f0f0" BorderThickness="0" Click="MeioPagamento_Click">
+                    <TextBlock Text="Meios de Pagamento" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold"/>
+                </Button>
+            </StackPanel>
+            <!--Config Técnico-->
+            <StackPanel x:Name="ConfigAdminLabs" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="1">
+                <Button Width="200" Height="40" Margin="0,0,10,10" HorizontalAlignment="Left" Background="#f0f0f0" BorderThickness="0" Click="DatabaseConfig_Click">
+                    <TextBlock Text="Database Configs" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold"/>
+                </Button>
+            </StackPanel>
+            <!--Config Técnico-->
+            <Button Width="80" Height="30" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="#f0f0f0" BorderThickness="0" Click="Sair_Click">
+                <TextBlock Text="Sair" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold"/>
+            </Button>
+            <!--Config Técnico-->
+            
+        </Grid>
+    </Border>
+</Window>

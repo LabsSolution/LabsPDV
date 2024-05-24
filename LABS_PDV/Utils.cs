@@ -68,6 +68,11 @@ namespace Labs.LABS_PDV
 				return false;
 			}
 		}
+		/// <summary>
+		/// Verifica se o Código de Barras fornecido é Válido Checando se são somente números
+		/// </summary>
+		/// <param name="Cod">Código Para Checar</param>
+		/// <returns>Retorna True caso o código seja válido</returns>
 		public static bool IsValidBarCode(string Cod) 
 		{
 			try

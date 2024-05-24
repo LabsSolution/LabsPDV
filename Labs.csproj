@@ -13,12 +13,14 @@
     <PackageReference Include="Auth0.OidcClient.Core" Version="4.0.1" />
     <PackageReference Include="Auth0.OidcClient.WinForms" Version="4.0.0" />
     <PackageReference Include="Dapper" Version="2.1.44" />
+    <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.60" />
     <PackageReference Include="MongoDB.Driver" Version="2.25.0" />
-    <PackageReference Include="RestSharp" Version="110.2.0" />
+    <PackageReference Include="RestSharp" Version="111.0.1-alpha.0.4" />
+    <PackageReference Include="SharpVectors" Version="1.8.4" />
     <PackageReference Include="Svg" Version="3.4.7" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
-    <PackageReference Include="Unimake.DFe" Version="20240429.1001.13" />
+    <PackageReference Include="Unimake.DFe" Version="20240522.1703.32" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,13 +42,13 @@
     <None Update="Certificado\labsCert.pfx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="LabsBin\cerebelo.png">
+    <None Update="Recursos\Fundos\cerebelo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="LabsBin\init.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="LabsBin\Background.svg">
+    <None Update="Recursos\Fundos\Background.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="LABS_PDV\DB\DataBase.db">
@@ -58,6 +60,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Recursos\Icones\" />
     <Folder Include="Resources\" />
   </ItemGroup>
 

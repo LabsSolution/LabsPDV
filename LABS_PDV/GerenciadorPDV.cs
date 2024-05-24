@@ -18,7 +18,7 @@ namespace Labs.LABS_PDV
 		/// <returns>Retorna Aguardável (Task) </returns>
 		public static async Task VerificarEstoque(int QMDP)
 		{
-            var JDC = LABS_PDV_MAIN.IniciarApp<JanelaCarregamento>(true);
+            var JDC = LABS_PDV_MAIN_WPF.IniciarApp<JanelaCarregamentoWPF>(true,false,false);
             //
             var PBFDS = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.Produtos, _ => true); // Pega todos os produtos
             int ProdutosEmBaixa = 0;
@@ -26,13 +26,13 @@ namespace Labs.LABS_PDV
             JDC.SetTextoFrontEnd("VERIFICANDO ESTOQUE");
 			await Task.Delay(100);
             JDC.ConfigBarraDeCarregamento(0, PBFDS.Count);
-            JDC.BringToFront();
 			//
 			for (int i = 0; i < PBFDS.Count; i++)
 			{
 				if (PBFDS[i].Quantidade <= QMDP) { ProdutosEmBaixa++; }
                 JDC.SetTextoFrontEnd($"VERIFICANDO ESTOQUE\n({i}/{PBFDS.Count})");
                 JDC.AumentarBarraDeCarregamento(1);
+				await Task.Delay(1);
             }
             //
             if (ProdutosEmBaixa > 0) { Modais.MostrarAviso("UM OU MAIS PRODUTOS ESTÃO EM BAIXA NO ESTOQUE!"); }
