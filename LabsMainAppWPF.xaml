@@ -1,0 +1,30 @@
+﻿<Window x:Class="Labs.LabsMainAppWPF"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Labs"
+        mc:Ignorable="d"
+        Title="LABS" Height="768" Loaded="OnLabsMainAppLoad" Width="1366" Background="#303030" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowState="Maximized" WindowStyle="None">
+    <Grid Margin="5,10,0,10" HorizontalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <!-- Botoes de Cima -->
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0">
+            <Button x:Name="LabsEstoqueButton" Click="OnLabsEstoqueClick" Content="Estoque" Width="150" Height="80" FontSize="18" FontFamily="Segoe UI Black" FontWeight="Bold" Margin="10,0" Background="#FFFFFF"/>
+            <Button x:Name="LabsPDVButton" Click="OnLabsPDVClick" Content="PDV" Width="150" Height="80" FontSize="18" FontFamily="Segoe UI Black" FontWeight="Bold" Margin="10,0" Background="#FFFFFF"/>
+        </StackPanel>
+        <!-- Botoes de Baixo -->
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10,0">
+            <Button x:Name="ConfigButton" Click="OnLabsConfigClick" Content="Configurações" Width="150" Height="80" FontSize="18" FontFamily="Segoe UI Black" FontWeight="Bold" Margin="10,0" Background="#FFFFFF"/>
+            <Button x:Name="SairButton" Click="OnLabsSairClick" Content="Sair" Width="150" Height="80" FontSize="18" FontFamily="Segoe UI Black" FontWeight="Bold" Margin="10,0" Background="#FFFFFF"/>
+        </StackPanel>
+    </Grid>
+</Window>
