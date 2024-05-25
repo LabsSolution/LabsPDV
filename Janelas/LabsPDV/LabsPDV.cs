@@ -279,7 +279,7 @@ namespace Labs.Janelas.LabsPDV
 
 			//AS ETAPAS ACIMA DEVEM SER DESABILITADAS PARA AGILIZAR O PROCESSO DE DEV
 			//Mostra a janela de conclusão de venda e atrela o evento de fechamento da janela com a finalização da venda
-			JanelaDePagamento janelaDePagamento = LABS_PDV_MAIN.IniciarDependencia<JanelaDePagamento>(app=>
+			JanelaDePagamentoWPF janelaDePagamento = LABS_PDV_MAIN_WPF.IniciarDependencia<JanelaDePagamentoWPF>(app=>
 			{
 				//Atrelamos o evento para a finalização
                 app.OnPagamentoFinalizado += OnPagamentoFinalizado;
@@ -287,7 +287,7 @@ namespace Labs.Janelas.LabsPDV
 			});
 		}
 		//
-        private void OnPagamentoFinalizado(JanelaDePagamento Janela)
+        private void OnPagamentoFinalizado(JanelaDePagamentoWPF Janela)
         {
             //Desatrelamos o evento para prevenir vazamento de memória e resetamos a interface
             Janela.OnPagamentoFinalizado -= OnPagamentoFinalizado;

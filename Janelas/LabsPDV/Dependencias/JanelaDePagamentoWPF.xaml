@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Labs.Janelas.LabsPDV.Dependencias"
         mc:Ignorable="d"
-        Title="JanelaDePagamentoWPF" WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Background="Transparent" Width="800" Height="600">
+        Title="JanelaDePagamentoWPF" WindowStartupLocation="CenterScreen" KeyDown="OnJanelaDePagamentoKeyUp" WindowStyle="None" AllowsTransparency="True" Background="Transparent" Width="800" Height="600">
     <Border Background="#202020" CornerRadius="20">
         <Border Background="#404040" Margin="10" CornerRadius="20">
             <Grid Margin="5">
@@ -13,8 +13,65 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <!--Content-->
-                
+                <!--Coluna da Esquerda-->
+                <StackPanel Grid.Column="0">
+                    <!--Nome do Cliente-->
+                    <Label Content="Cliente" HorizontalAlignment="Left" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="18" Foreground="#F0f0f0"/>
+                    <TextBox x:Name="NomeClienteBox" HorizontalAlignment="Left" IsEnabled="False" FontFamily="Segoe UI Black" FontSize="20.5" Width="410" Margin="5,5,5,0"/>
+                    <!--CPF/CNPJ-->
+                    <Label Content="CPF/CNPJ" HorizontalAlignment="Left" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="18" Foreground="#F0f0f0"/>
+                    <TextBox x:Name="CPF_CNPJ_Box" HorizontalAlignment="Left" IsEnabled="False" FontFamily="Segoe UI Black" FontSize="20.5" Width="410" Margin="5,5,5,0"/>
+                    <!--Email-->
+                    <Label Content="E-MAIL" HorizontalAlignment="Left" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="18" Foreground="#F0f0f0"/>
+                    <TextBox x:Name="EmailBox" HorizontalAlignment="Left" IsEnabled="False" FontFamily="Segoe UI Black" FontSize="20.5" Width="410" Margin="5,5,5,0"/>
+                    <!--Meio de Pagamento-->
+                    <Label Content="Meio de Pagamento:" HorizontalAlignment="Left" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="18" Foreground="#F0f0f0"/>
+                    <ComboBox x:Name="MeioDePagamentoComboBox" HorizontalAlignment="Left" FontFamily="Segoe UI" FontSize="14" Width="410" Margin="5,5,5,0"/>
+                    
+                    <!--Botão Remover Pagamento-->
+                    <Button x:Name="ExcluirPagamento" Content="Remover Pagamento (F5)" HorizontalAlignment="Left" Height="40" MinWidth="210" Background="#f08080" BorderThickness="0" Margin="5,40,5,0" FontFamily="Segoe UI Black" FontSize="16" Click="ExcluirPagamento_Click" />
+                    <!--Lista-->
+                    <ListView x:Name="ListaPagamentosEfetuados" Grid.Row="2" ClipToBounds="True" MinHeight="160" ToolTip="Lista de Produtos" Margin="10,10,10,0" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="False">
+                                <GridViewColumn Header="Pagamento Efetuado" DisplayMemberBinding="{Binding DescPagamento}" Width="300"/>
+                                <GridViewColumn Header="Valor Pago" DisplayMemberBinding="{Binding Valor}" Width="100"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <StackPanel Orientation="Horizontal" Margin="10,0,10,0" HorizontalAlignment="Stretch">
+                        <Label Content="Efetuar Pagamento (F1)" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20" Foreground="#F0f0f0" />
+                        <TextBox x:Name="PagamentoBoxInput" KeyUp="OnBoxKeyUp" IsEnabled="true" FontFamily="Segoe UI Black" FontSize="25.5" Width="330" Margin="5,5,5,5"/>
+                    </StackPanel>
+                </StackPanel>
+                <!--Coluna da Direita-->
+                <StackPanel Grid.Column="1">
+                    <!--Valor Total-->
+                    <Label Content="Valor Total" HorizontalAlignment="Right" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20" Foreground="#F0f0f0"/>
+                    <TextBox x:Name="ValorTotalBox" IsEnabled="False" FontFamily="Segoe UI Black" FontSize="25.5" Width="330" Margin="5,5,5,0"/>
+                    <!--Desconto-->
+                    <Label Content="(F4) Desconto %" HorizontalAlignment="Right" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20" Foreground="#F0f0f0"/>
+                    <TextBox x:Name="DescontoBox" FontFamily="Segoe UI Black" KeyUp="OnBoxKeyUp" FontSize="25.5" Width="330" Margin="5,5,5,0"/> 
+                    <!--ValorTotal Com Desconto-->
+                    <Label Content="Valor Total Com Desconto" HorizontalAlignment="Right" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20" Foreground="#F0f0f0"/>
+                    <TextBox x:Name="ValorTotalComDescontoBox" IsEnabled="False" FontFamily="Segoe UI Black" FontSize="25.5" Width="330" Margin="5,5,5,0"/>
+                    
+                    <!--Recebido-->
+                    <Label Content="Valor Recebido" HorizontalAlignment="Right" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20" Foreground="#F0f0f0"/>
+                    <TextBox x:Name="ValorRecebidoBox" IsEnabled="False" FontFamily="Segoe UI Black" FontSize="25.5" Width="330" Margin="5,5,5,0"/>
+                    
+                    <!--Falta Receber-->
+                    <Label Content="Falta Receber" HorizontalAlignment="Right" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20" Foreground="#F0f0f0"/>
+                    <TextBox x:Name="FaltaReceberValorBox" IsEnabled="False" FontFamily="Segoe UI Black" FontSize="25.5" Width="330" Margin="5,5,5,0"/>
+                    <!--Troco-->
+                    <Label Content="Troco" HorizontalAlignment="Right" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20" Foreground="#F0f0f0"/>
+                    <TextBox x:Name="TrocoBox" IsEnabled="False" FontFamily="Segoe UI Black" FontSize="25.5" Width="330" Margin="5,5,5,0"/>
+                    <!--Botoes-->
+                    <StackPanel Orientation="Horizontal" Margin="0,50,0,0" HorizontalAlignment="Stretch">
+                        <Button Name="FinalizarButton" Content="Finalizar (F2)" MinWidth="160" Margin="5,10,5,0" FontFamily="Segoe UI Black" FontSize="20.5" Background="LightGreen" BorderThickness="0" MinHeight="40" Click="FinalizarButton_Click" />
+                        <Button Name="CancelarButton" Content="Cancelar (F3)"  MinWidth="160"  Margin="5,10,5,0" FontFamily="Segoe UI Black" FontSize="20.5" Background="#F08080" BorderThickness="0" MinHeight="40" Click="CancelarButton_Click_1" />
+                    </StackPanel>
+                </StackPanel>
             </Grid>
         </Border>
     </Border>

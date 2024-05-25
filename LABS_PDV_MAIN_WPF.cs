@@ -48,7 +48,7 @@ namespace Labs
 			//Descriptografa o nome da Database da empresa
 			if(LabsCripto.Decript("N_Data",out string NDecripted)) { ClientDataBase = NDecripted; }
 			//
-			JanelaDePagamentoWPF App = new(); // Altere esse campo para modificar a primeira janela a ser aberta (Utilizar somente para debug)
+			LabsMainAppWPF App = new(); // Altere esse campo para modificar a primeira janela a ser aberta (Utilizar somente para debug)
 			//
 			//App.SizeChanged += OnAppSizeChange;
             App.Loaded += OnAppLoad;

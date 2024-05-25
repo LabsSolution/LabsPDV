@@ -241,7 +241,7 @@
             textBox6.Location = new Point(12, 37);
             textBox6.Name = "textBox6";
             textBox6.PlaceholderText = "Nome do Cliente";
-            textBox6.Size = new Size(304, 29);
+            textBox6.Size = new Size(518, 29);
             textBox6.TabIndex = 20;
             textBox6.TextAlign = HorizontalAlignment.Center;
             // 
@@ -261,10 +261,10 @@
             // textBox7
             // 
             textBox7.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            textBox7.Location = new Point(322, 37);
+            textBox7.Location = new Point(12, 97);
             textBox7.Name = "textBox7";
             textBox7.PlaceholderText = "CPF ou CNPJ";
-            textBox7.Size = new Size(209, 29);
+            textBox7.Size = new Size(519, 29);
             textBox7.TabIndex = 23;
             textBox7.TextAlign = HorizontalAlignment.Center;
             // 
@@ -275,7 +275,7 @@
             label8.BackColor = Color.Transparent;
             label8.Font = new Font("Segoe UI Black", 14F, FontStyle.Bold);
             label8.ForeColor = SystemColors.Window;
-            label8.Location = new Point(322, 9);
+            label8.Location = new Point(12, 69);
             label8.Name = "label8";
             label8.Size = new Size(104, 25);
             label8.TabIndex = 24;
@@ -288,16 +288,17 @@
             label9.BackColor = Color.Transparent;
             label9.Font = new Font("Segoe UI Black", 14F, FontStyle.Bold);
             label9.ForeColor = SystemColors.Window;
-            label9.Location = new Point(12, 70);
+            label9.Location = new Point(10, 129);
             label9.Name = "label9";
             label9.Size = new Size(80, 25);
             label9.TabIndex = 25;
             label9.Text = "E-MAIL";
+            label9.Click += label9_Click;
             // 
             // textBox8
             // 
             textBox8.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            textBox8.Location = new Point(12, 98);
+            textBox8.Location = new Point(10, 157);
             textBox8.Name = "textBox8";
             textBox8.PlaceholderText = "EmailDoCliente@Dominio.com";
             textBox8.Size = new Size(519, 29);
@@ -359,7 +360,7 @@
             MeioDePagamentoComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             MeioDePagamentoComboBox.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
             MeioDePagamentoComboBox.FormattingEnabled = true;
-            MeioDePagamentoComboBox.Location = new Point(11, 166);
+            MeioDePagamentoComboBox.Location = new Point(12, 217);
             MeioDePagamentoComboBox.Name = "MeioDePagamentoComboBox";
             MeioDePagamentoComboBox.Size = new Size(520, 25);
             MeioDePagamentoComboBox.TabIndex = 33;
@@ -371,7 +372,7 @@
             label12.BackColor = Color.Transparent;
             label12.Font = new Font("Segoe UI Black", 14F, FontStyle.Bold);
             label12.ForeColor = SystemColors.Window;
-            label12.Location = new Point(12, 138);
+            label12.Location = new Point(10, 189);
             label12.Name = "label12";
             label12.Size = new Size(134, 25);
             label12.TabIndex = 36;
