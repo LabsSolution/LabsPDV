@@ -52,9 +52,9 @@ namespace Labs.LABS_PDV
         private async Task LoadFromDataBase()
         {
             //Tentamos realizar a atribuição
-            Meios = await CloudDataBase.GetCloudAsync<MeiosPagamento>(MeiosDePagamentoConfig.MeiosCollection, _ => true);
+            Meios = await CloudDataBase.GetCloudAsync<MeiosPagamento>(Collections.MeiosDePagamento, _ => true);
             // Se não conseguir do cloud pega do local
-            Meios ??= await CloudDataBase.GetLocalAsync<MeiosPagamento>(MeiosDePagamentoConfig.MeiosCollection, _ => true);
+            Meios ??= await CloudDataBase.GetLocalAsync<MeiosPagamento>(Collections.MeiosDePagamento, _ => true);
             // A partir daqui Mostramos os Meios já registrados, caso não tenha criamos um novo objeto para a edição;
             Meios ??= new();
             //

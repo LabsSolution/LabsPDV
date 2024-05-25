@@ -1,0 +1,49 @@
+﻿<Window x:Class="Labs.Janelas.LabsPDV.Dependencias.JanelaAberturaDeCaixaWPF"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Labs.Janelas.LabsPDV.Dependencias"
+        mc:Ignorable="d"
+        Title="JanelaAberturaDeCaixaWPF" AllowsTransparency="True" Background="Transparent" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize" Height="250" Width="450">
+    <Border Background="#202020" CornerRadius="10">
+        <Border Margin="10" Background="#404040" CornerRadius="10">
+            <Grid Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+            <!--Content-->
+                <StackPanel Grid.Column="0" >
+                    <Label Content="Capital em Caixa:" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f0f0f0"/>
+                    <TextBox x:Name="CapitalEmCaixaBox" FontSize="16" IsEnabled="False"/>
+
+                    <Label Content="Capital Total:" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f0f0f0"/>
+                    <TextBox x:Name="CapitalTotalBox" FontSize="16" IsEnabled="False"/>
+
+                    <Label Content="Adicionar Total:" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f0f0f0"/>
+                    <TextBox x:Name="AdicionarCapitalInputBox" KeyDown="AdicionarCapitalInputBox_KeyDown" FontSize="16" IsEnabled="True"/>
+                </StackPanel>
+                    
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="1" Height="Auto" Margin="0,0,0,0">
+                    <Button Name="AdicionarCapitalButton" FontFamily="Segoe UI" FontWeight="Bold" Background="#f0f0f0" BorderThickness="0" MinHeight="20" Content="Adicionar" Width="70" Margin="0,0,0,0" Click="AdicionarCapitalButton_Click"/>
+                    <Button Name="RemoverCapitalButton" FontFamily="Segoe UI" FontWeight="Bold" Background="#f0f0f0" BorderThickness="0" MinHeight="20" Content="Remover" Width="70"  Margin="5,0,0,0" Click="RemoverCapitalButton_Click"/>
+                </StackPanel>
+                    
+                <ListView x:Name="ListaCapitaisAdicionados" Grid.Column="1" Grid.Row="0" ClipToBounds="True" VerticalAlignment="Stretch" ToolTip="Lista de Produtos" Margin="10,10,10,10" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}">
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="True">
+                            <GridViewColumn Header="Cap. Adicionado" DisplayMemberBinding="{Binding Nome}" Width="130"/>
+                            <GridViewColumn Header="Valor" DisplayMemberBinding="{Binding Valor}" Width="50"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <Button x:Name="AbrirCaixaButton" FontFamily="Segoe UI" FontWeight="Bold" Grid.Column="1" Grid.Row="1" Content="Abrir Caixa" Background="#f0f0f0" BorderThickness="0" MinHeight="20" Margin="10,0,10,0" Click="AbrirCaixaButton_Click"/>
+            </Grid>
+        </Border>
+    </Border>
+</Window>

@@ -14,17 +14,41 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <!--Conteudo-->
                 <Label Content="Meios Registrados:" Grid.Row="0" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f0f0f0" FontSize="18"/>
-                <ListView x:Name="ListaMeiosRegistrados" Grid.Row="1" ClipToBounds="True" VerticalAlignment="Stretch" ToolTip="Lista de Produtos" Margin="10,10,10,10" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}">
+                <ListView x:Name="ListaMeiosRegistrados" Grid.Row="1" ClipToBounds="True" VerticalAlignment="Stretch" ToolTip="Lista de Meios de Pagamento" Margin="10,10,10,10" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}">
                     <ListView.View>
-                        <GridView AllowsColumnReorder="True">
+                        <GridView AllowsColumnReorder="False">
                             <GridViewColumn Header="Meios Registrados" DisplayMemberBinding="{Binding Item1}" Width="470"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
+                <!--Conteudo-->
+                <StackPanel Grid.Row="2">
+                    <Grid Margin="10,0,0,0">
+                        <!--Linhas-->
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <!--Colunas-->
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <!--Conteudo-->
+                        <Label Content="Meio de Pagamento:" Grid.Row="0" Grid.Column="0" FontSize="14" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f0f0f0"/>
+                        <Label Content="SLDV : (Sem Limide De Valor):" Grid.Row="0" Grid.Column="1" FontSize="14" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f0f0f0"/>
+                        <TextBox Name="MeioPagamentoInputBox" FontFamily="Segoe UI" FontSize="16" Grid.Row="1" Grid.Column="0"/>
+                        <CheckBox Name="SLDVCheckBox" Grid.Row="1" Grid.Column="1" Margin="5,0,0,0" Foreground="#f0f0f0" VerticalAlignment="Center" Content="SLDV?" FontFamily="Segoe UI" FontWeight="Bold" FontSize="14"/>
+                    </Grid>
+                </StackPanel>
+                <StackPanel Grid.Row="3" Margin="5,5,0,0" HorizontalAlignment="Left" Orientation="Horizontal">
+                    <Button Margin="5,0,0,0" x:Name="AdicionarButton" MinWidth="120" Height="40" Content="Adicionar" FontSize="16" FontWeight="Bold" FontFamily="Segoe UI" Background="LightGreen" Click="AdicionarButton_Click"/>
+                    <Button Margin="5,0,0,0" x:Name="RemoverButton" MinWidth="120" Height="40" Content="Remover" FontSize="16" FontWeight="Bold" FontFamily="Segoe UI" Background="#FFFF80" Click="RemoverButton_Click"/>
+                    <Button Margin="5,0,0,0" x:Name="SairButton" MinWidth="120" Height="40" Content="Sair" FontSize="16" FontWeight="Bold" FontFamily="Segoe UI" Background="#F08080" Click="SairButton_Click"/>
+                </StackPanel>
             </Grid>
         </Border>
     </Border>

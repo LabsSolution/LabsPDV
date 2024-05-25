@@ -363,7 +363,6 @@
             MeioDePagamentoComboBox.Name = "MeioDePagamentoComboBox";
             MeioDePagamentoComboBox.Size = new Size(520, 25);
             MeioDePagamentoComboBox.TabIndex = 33;
-            MeioDePagamentoComboBox.SelectedIndexChanged += OnMeioDePagamentoSelect;
             // 
             // label12
             // 

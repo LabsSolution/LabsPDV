@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Auth0.OidcClient.Core" Version="4.0.1" />
     <PackageReference Include="Auth0.OidcClient.WinForms" Version="4.0.0" />
+    <PackageReference Include="Auth0.OidcClient.WPF" Version="4.0.0" />
     <PackageReference Include="Dapper" Version="2.1.44" />
     <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.60" />

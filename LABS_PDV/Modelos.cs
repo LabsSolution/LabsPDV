@@ -46,7 +46,7 @@ namespace Labs.LABS_PDV
 			/// <summary>
 			/// Construtor Padrão
 			/// </summary>
-			public MeiosPagamento() { Meios = [new("DINHEIRO",false)]; }
+			public MeiosPagamento() { Meios = [new("DINHEIRO",true)]; }
 		}
 		public class FechamentoDeCaixa
 		{

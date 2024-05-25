@@ -37,7 +37,7 @@ namespace Labs.Janelas.LabsPDV
 			EstadoCaixa = await CloudDataBase.GetLocalAsync<EstadoCaixa>(Collections.EstadoCaixa, _ => true);
 			if(EstadoCaixa != null)
 			{
-                DialogResult r = Modais.MostrarPergunta("O Sistema foi encerrado de maneira inesperada\nDeseja retornar a venda em progresso?");
+                DialogResult r = Modais.MostrarPergunta("O Sistema foi encerrado de maneira inesperada\nDeseja Retornar ao Caixa Salvo?");
                 if (r == DialogResult.Yes)
                 {
                     Operador = EstadoCaixa.OperadorCaixa;
@@ -66,7 +66,7 @@ namespace Labs.Janelas.LabsPDV
         {
             //
             //FAZER JANELINHA DE ABERTURA DE CAIXA // Gestão de Fluxo
-            var JDAC = LABS_PDV_MAIN.IniciarDependencia<JanelaAberturaDeCaixa>(App =>
+            var JDAC = LABS_PDV_MAIN_WPF.IniciarDependencia<JanelaAberturaDeCaixaWPF>(App =>
             {
                 App.onJDACClose += RealizarAbertura;
             }, true, false);
@@ -121,7 +121,7 @@ namespace Labs.Janelas.LabsPDV
         /// </summary>
         /// <param name="ValorDeAbertura">Valor total com que o caixa está abrindo</param>
         /// <param name="Janela">Retorno da Própria janela</param>
-        private void RealizarAbertura(double ValorDeAbertura,JanelaAberturaDeCaixa Janela)
+        private void RealizarAbertura(double ValorDeAbertura,JanelaAberturaDeCaixaWPF Janela)
 		{
 			//Iniciamos o CaixaLabs, se não conseguirmos lançamos um erro
 			Operador = new("Operador Teste", "User", "Pass");

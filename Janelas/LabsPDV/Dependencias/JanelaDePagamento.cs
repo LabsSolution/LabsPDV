@@ -292,11 +292,6 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 			}
 		}
 
-		private void OnMeioDePagamentoSelect(object sender, EventArgs e)
-		{
-			
-		}
-
 		private void OnBoxKeyUp(object sender, KeyEventArgs e)
 		{
 			if (e.KeyCode == Keys.Enter)
