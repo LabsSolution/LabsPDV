@@ -181,6 +181,28 @@ namespace Labs.LABS_PDV
                 throw;
             }
         }
+        //
+        /// <summary>
+        /// Registra um Objeto na database local em uma coleção determinada
+        /// </summary>
+        /// <typeparam name="T">Tipo de objeto para registro</typeparam>
+        /// <param name="collectionName">Nome da coleção</param>
+        /// <param name="ToRegisterObject">Objeto para registro (Respeitando o tipo)</param>
+        /// <param name="filter">Filtro Para Upsert (Respeitando o tipo)</param>
+        public static async void RegisterLocalAsync<T>(string collectionName, T ToRegisterObject,FilterDefinition<T> filter)
+        {
+            try
+            {
+                var collection = ConnectToMongoLocal<T>(collectionName);
+                var options = new ReplaceOptions { IsUpsert = true };
+                await collection.ReplaceOneAsync(filter, ToRegisterObject, options);
+            }
+            catch (Exception ex)
+            {
+                Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
+                throw;
+            }
+        }
         /// <summary>
         /// Atualiza um objeto na database local utilizando um filtro
         /// </summary>
@@ -341,7 +363,7 @@ namespace Labs.LABS_PDV
         /// <typeparam name="T">Tipo de objeto para registro</typeparam>
         /// <param name="collectionName">Nome da coleção</param>
         /// <param name="ToRegisterObject">Objeto para registro (Respeitando o tipo)</param>
-        /// <param name="filter">Objeto para registro (Respeitando o tipo)</param>
+        /// <param name="filter">Filtro Para Upsert (Respeitando o tipo)</param>
         public static async void RegisterCloudAsync<T>(string collectionName, T ToRegisterObject,FilterDefinition<T> filter)
         {
             try

@@ -228,7 +228,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                 //
                 RealizarCalculos(valorPag, getPorcentagem());
                 // é importante que o pagamento efetuado e a lista de pagamento sejam atualizados juntos para manter o mesmo index
-                PagamentoEfetuado pagEfet = new(MeioDePagamentoComboBox.SelectedIndex, MeioDePagamentoComboBox.Text, Math.Round(valorPag, 2));
+                PagamentoEfetuado pagEfet = new(MeioDePagamentoComboBox.SelectedIndex, MeioDePagamentoComboBox.Text, Math.Round(valorPag, 2),0);
                 PagamentosEfetuados.Add(pagEfet);
                 //
                 ListaPagamentosEfetuados.Items.Add(new ListViewItem([MeioDePagamentoComboBox.Text, $"R$ {Utils.FormatarValor(Math.Round(valorPag, 2))}"]));

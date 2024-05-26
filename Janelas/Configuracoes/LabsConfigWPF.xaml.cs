@@ -23,16 +23,26 @@ namespace Labs.Janelas.Configuracoes
         public LabsConfigWPF()
         {
             InitializeComponent();
+            if (LabsMainApp.ModoSegurança) { MeioPagamentoButton.IsEnabled = false; }
         }
-
+        private async void DataBaseConfig()
+        {
+            Login painel = new();
+            bool isAdmin = await painel.RealizarLoginAdmin();
+            if (isAdmin)
+            {
+                LABS_PDV_MAIN_WPF.IniciarDependencia<DatabaseConfigWPF>(null!, true, false);
+            }
+        }
+        //
         private void MeioPagamento_Click(object sender, RoutedEventArgs e)
         {
-            LABS_PDV_MAIN_WPF.IniciarDependencia<MeiosDePagamentoConfigWPF>();
+            LABS_PDV_MAIN_WPF.IniciarDependencia<MeiosDePagamentoConfigWPF>(null!, true, false);
         }
 
         private void DatabaseConfig_Click(object sender, RoutedEventArgs e)
         {
-            LABS_PDV_MAIN_WPF.IniciarDependencia<DatabaseConfigWPF>();
+            DataBaseConfig();
         }
 
         private void Sair_Click(object sender, RoutedEventArgs e)

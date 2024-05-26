@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Labs
+namespace Labs.Janelas
 {
     /// <summary>
     /// Lógica interna para JanelaCarregamentoWPF.xaml

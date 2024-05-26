@@ -75,7 +75,7 @@ namespace Labs.Janelas.LabsPDV
         {
             if (RealizandoVenda) { Modais.MostrarAviso("Você não pode fechar o caixa com uma venda em progresso!"); return; }
 			//
-			var JFC = LABS_PDV_MAIN.IniciarDependencia<JanelaFechamentoDeCaixa>(App =>
+			var JFC = LABS_PDV_MAIN_WPF.IniciarDependencia<JanelaFechamentoDeCaixaWPF>(App =>
 			{
 				App.InicializarFechamento(CaixaLabs);
 				App.onJFCClose += RealizarFechamento;
@@ -150,7 +150,7 @@ namespace Labs.Janelas.LabsPDV
             }
         }
 		//
-		public void RealizarFechamento(JanelaFechamentoDeCaixa Janela)
+		public void RealizarFechamento(JanelaFechamentoDeCaixaWPF Janela)
 		{
 			FecharCaixaVisual();
 			//

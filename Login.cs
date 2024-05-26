@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.Linq;
 using System.Net.Security;
@@ -9,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 using Auth0.OidcClient;
 using IdentityModel.Client;
@@ -16,20 +18,36 @@ using IdentityModel.OidcClient;
 using Labs.Janelas.Configuracoes.Dependencias;
 using Labs.Janelas.LabsPDV;
 using Labs.LABS_PDV;
+using static System.Formats.Asn1.AsnWriter;
 using static Labs.LABS_PDV.Modelos;
 
 namespace Labs
 {
     public partial class Login
     {
-        readonly static Auth0ClientOptions ClientOptions = new() { Domain = "solucaeslab.us.auth0.com", LoadProfile = true, Scope = "read:role", ClientId = "00hKMs1GjChBpf0bMo9WVrPNXXe2ycGv"};
-        readonly static Auth0Client Client = new (ClientOptions);
-        //
+        static Auth0ClientOptions ClientOptions = new();
+        static Auth0Client Client { get; set; } = null!;
+        /// <summary>
+        /// Construtor Obrigatório
+        /// </summary>
         public Login()
         {
+            //Instância
+            ClientOptions.Browser = new WebViewBrowser(() => new Window()
+            {
+                WindowStyle = WindowStyle.SingleBorderWindow,
+                WindowState = WindowState.Maximized,
+                ResizeMode = ResizeMode.NoResize
+            });
             //
+            ClientOptions.Domain = "solucaeslab.us.auth0.com";
+            ClientOptions.Scope = "read:role";
+            ClientOptions.LoadProfile = true;
+            ClientOptions.ClientId = "00hKMs1GjChBpf0bMo9WVrPNXXe2ycGv";
+
             ClientOptions.PostLogoutRedirectUri = ClientOptions.RedirectUri;
-            //
+            // Logo Após Inicia o Client
+            Client = new(ClientOptions);
         }
         //
         private async Task<bool> VerificarAdmin(AdminLabs admin)

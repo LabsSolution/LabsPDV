@@ -156,7 +156,6 @@ namespace Labs.Janelas.LabsPDV.Dependencias
             ListaAferimentoGeral.Rows.Insert(index, rowGeral);
             ListaAferimentoGeral.Rows[index].SetValues(Descricao, $"R$: {Utils.FormatarValor(ValorAferidoSistema)}", 0);
         }
-
         //
         private void FecharJanela()
         {

@@ -3,6 +3,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,7 +49,41 @@ namespace Labs.LABS_PDV
 			/// </summary>
 			public MeiosPagamento() { Meios = [new("DINHEIRO",true)]; }
 		}
-		public class FechamentoDeCaixa
+		//
+        public class ValorFechamento(string Nome, double ValorSistema, double ValorAferido) : INotifyPropertyChanged
+        {
+            public event PropertyChangedEventHandler? PropertyChanged;
+            /// <summary>
+			/// Nome do Meio para Aferimento
+			/// </summary>
+            public string Nome { get; private set; } = Nome;
+			/// <summary>
+			/// Valor Aferido pelo sistema
+			/// </summary>
+            public double ValorSistema { get; private set; } = ValorSistema;
+			/// <summary>
+			/// Valor Aferido pelo lojista
+			/// </summary>
+            public double ValorAferido { get; set; } = ValorAferido;
+        }
+		//
+		public class ValorFechado(string Nome, double ValorSistema, double ValorAferido)
+		{
+            /// <summary>
+            /// Nome do Meio para Aferimento
+            /// </summary>
+            public string Nome { get; private set; } = Nome;
+            /// <summary>
+            /// Valor Aferido pelo sistema
+            /// </summary>
+            public double ValorSistema { get; private set; } = ValorSistema;
+            /// <summary>
+            /// Valor Aferido pelo lojista
+            /// </summary>
+            public double ValorAferido { get; set; } = ValorAferido;
+        }
+		//
+        public class FechamentoDeCaixa
 		{
 			/// <summary>
 			/// ID Para Representação no Banco de Dados
@@ -63,6 +98,9 @@ namespace Labs.LABS_PDV
 			public double GanhosTotais { get; set; }
 			public int ItensVendidos { get; set; }
 			public int ItensDevolvidos { get; set; }
+			//
+			public List<ValorFechado> ValoresFechadosMeio { get; set; } = [];
+			public List<ValorFechado> ValoresFechadosGeral { get; set; } = [];
 			/// <summary>
 			/// Array com todas as Sangrias feitas (Motivo => valor)
 			/// </summary>
@@ -214,7 +252,7 @@ namespace Labs.LABS_PDV
 
 
 		//MODELOS DE Objetos (Structs)
-		public class PagamentoEfetuado(int ID, string DescPagamento, double valor)
+		public class PagamentoEfetuado(int ID, string DescPagamento, double Valor, double ValorTroco)
 		{
 			/// <summary>
 			/// Identificador do RegistroInterno
@@ -227,7 +265,8 @@ namespace Labs.LABS_PDV
 			/// <summary>
 			/// Valor do pagamento efetuado
 			/// </summary>
-			public double Valor { get; private set; } = valor;
+			public double Valor { get; private set; } = Valor;
+			public double ValorTroco { get; private set; } = ValorTroco;
 		}
 		//
 		public class MeioDePagamento(string Meio, bool PodeUltrapassarOValorTotal = false, bool PossuiModos = false, List<ModoDePagamento> Modos = default!)

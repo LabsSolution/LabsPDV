@@ -145,11 +145,13 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                 foreach (var pagEfet in PagamentosEfetuados)
                 {
                     var index = pagEfet.ID;
-                    double valor = pagEfet.Valor;
-                    LabsPDV.CaixaLabs.AdicionarCapitalAoMeio(index, valor);
+                    double valorR = Math.Round(pagEfet.Valor - pagEfet.ValorTroco,2);
+                    // ValorR é o cálculo de quanto foi recebido de fato através desse pagamento (para evitar problemas na contabilidade final do caixa)
+                    LabsPDV.CaixaLabs.AdicionarCapitalAoMeio(index, valorR);
                 }
                 //
                 LabsPDV.CaixaLabs.AtualizarCaixa(); // Atualizar é importante para termos controle dos Valores Recebidos!
+                //
                 // o ID da venda é literalmente o horario e a data do ano em que foi realizada (o que impede de ter ID's repetidos :D)
                 string IDVenda = $"{DateTime.Now:ddMMyyyyy}{DateTime.Now:HHmmss}";
                 // Geramos o objeto de venda e salvamos no banco de dados
@@ -237,7 +239,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                 //
                 RealizarCalculos(valorPag, getPorcentagem());
                 // é importante que o pagamento efetuado e a lista de pagamento sejam atualizados juntos para manter o mesmo index
-                PagamentoEfetuado pagEfet = new(MeioDePagamentoComboBox.SelectedIndex, MeioDePagamentoComboBox.Text, Math.Round(valorPag, 2));
+                PagamentoEfetuado pagEfet = new(MeioDePagamentoComboBox.SelectedIndex, MeioDePagamentoComboBox.Text, Math.Round(valorPag, 2),ValorTroco);
                 PagamentosEfetuados.Add(pagEfet);
                 //
                 ListaPagamentosEfetuados.Items.Add(pagEfet);

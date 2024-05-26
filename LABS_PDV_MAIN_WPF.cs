@@ -68,7 +68,7 @@ namespace Labs
 				if(r == DialogResult.Retry) { INIT(App); return; }
 				return; 
 			}
-			// Somente após o sistema verificar tudo é que inicializamos.
+			// Somente após o sistema verificar tudo é que inicializamos
 			AppInitializer.Run(App);
             //
         }
@@ -183,7 +183,7 @@ namespace Labs
 				App.Topmost = true;
 				App.Closed += DepAppClosed; 
 				App.IsVisibleChanged += DepAppHidden; 
-				App.ShowDialog(); 
+				App.ShowDialog();
 				//
 				return App; 
 			}

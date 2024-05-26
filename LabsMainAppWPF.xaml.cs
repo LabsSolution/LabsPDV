@@ -91,7 +91,7 @@ namespace Labs
 
         private void OnLabsPDVClick(object sender, RoutedEventArgs e)
         {
-            LABS_PDV_MAIN.IniciarDependencia<LabsPDV>();
+            LABS_PDV_MAIN_WPF.IniciarDependencia<LabsPDV_WPF>();
         }
 
         private void OnLabsConfigClick(object sender, RoutedEventArgs e)

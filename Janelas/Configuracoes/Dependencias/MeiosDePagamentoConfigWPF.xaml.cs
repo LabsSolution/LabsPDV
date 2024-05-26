@@ -1,4 +1,5 @@
 ﻿using Labs.LABS_PDV;
+using MongoDB.Driver;
 using System.Windows;
 using System.Windows.Controls;
 using static Labs.LABS_PDV.Modelos;
@@ -21,9 +22,9 @@ namespace Labs.Janelas.Configuracoes.Dependencias
         private bool Save()
         {
             //LOCAL
-            CloudDataBase.RegisterLocalAsync(Collections.MeiosDePagamento, Meios);
+            CloudDataBase.RegisterLocalAsync(Collections.MeiosDePagamento, Meios,Builders<MeiosPagamento>.Filter.Eq("ID",Meios.ID));
             //ESPELHAMENTO CLOUD
-            CloudDataBase.RegisterCloudAsync(Collections.MeiosDePagamento, Meios);
+            CloudDataBase.RegisterCloudAsync(Collections.MeiosDePagamento, Meios,Builders<MeiosPagamento>.Filter.Eq("ID",Meios.ID));
             return true;
         }
         //
