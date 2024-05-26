@@ -32,7 +32,7 @@ namespace Labs.LABS_PDV
 				if (PBFDS[i].Quantidade <= QMDP) { ProdutosEmBaixa++; }
                 JDC.SetTextoFrontEnd($"VERIFICANDO ESTOQUE\n({i}/{PBFDS.Count})");
                 JDC.AumentarBarraDeCarregamento(1);
-				await Task.Delay(1);
+				await Task.Delay(0);
             }
             //
             if (ProdutosEmBaixa > 0) { Modais.MostrarAviso("UM OU MAIS PRODUTOS ESTÃO EM BAIXA NO ESTOQUE!"); }
@@ -42,7 +42,7 @@ namespace Labs.LABS_PDV
 
 		public static async Task EspelhamentoParaCloud()
 		{
-			var JDC = LABS_PDV_MAIN.IniciarApp<JanelaCarregamento>(true);
+			var JDC = LABS_PDV_MAIN_WPF.IniciarApp<JanelaCarregamentoWPF>(true);
 			//Pega tudo que ta na nuvem e espelha para o local.
 			var Produtos = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.Produtos, _ => true); //Retorna todos os produtos
 			JDC.SetTextoFrontEnd("Realizando Espelhamento de Estoque");

@@ -138,7 +138,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
             //
             if (FaltaReceber > 0) { Modais.MostrarInfo($"Ainda Falta Receber R$: {FaltaReceber} !"); return; }
             //Substituir essa parte por funções genéricas para espelhamento (As funções genéricas já suportam Update Massivo)
-            await Labs_Estoque.AbaterProdutosEmEstoqueAsync(Produtos);
+            await LabsEstoqueWPF.AbaterProdutosEmEstoqueAsync(Produtos);
             // Adiciona o valor Recebido ao meio correspondente
             if (LabsPDV != null)
             {
@@ -173,8 +173,8 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                 {
                     PM.ImprimirCupomNaoFiscalLoja(PrintManager.ImpressoraDefault, venda);
                     //
-                    DialogResult r = Modais.MostrarPergunta("Imprimir Via do Cliente?");
-                    if (r == System.Windows.Forms.DialogResult.Yes)
+                    MessageBoxResult r = Modais.MostrarPergunta("Imprimir Via do Cliente?");
+                    if (r == MessageBoxResult.Yes)
                     {
                         PM.ImprimirCupomNaoFiscalCliente(PrintManager.ImpressoraDefault, venda);
                     }
@@ -191,9 +191,9 @@ namespace Labs.Janelas.LabsPDV.Dependencias
         //Ao Cancelar, somente voltamos para a tela de PDV (Vai que o cliente esqueceu de comprar algo né)
         void Cancelar()
         {
-            DialogResult r = Modais.MostrarPergunta("Você Deseja Retornar Para a Tela do PDV?");
+            MessageBoxResult r = Modais.MostrarPergunta("Você Deseja Retornar Para a Tela do PDV?");
             //
-            if (r == System.Windows.Forms.DialogResult.Yes)
+            if (r == MessageBoxResult.Yes)
             {
                 //
                 Reset();
@@ -253,8 +253,8 @@ namespace Labs.Janelas.LabsPDV.Dependencias
             PagamentoEfetuado? pagEfet = ListaPagamentosEfetuados.SelectedItem as PagamentoEfetuado;
             if (pagEfet == null) { Modais.MostrarAviso("Você Deve Selecionar um Pagamento da lista Para Removêlo"); return; }
             //
-            DialogResult r = Modais.MostrarPergunta("Você Deseja Remover o Pagamento Selecionado?");
-            if (r == System.Windows.Forms.DialogResult.Yes)
+            MessageBoxResult r = Modais.MostrarPergunta("Você Deseja Remover o Pagamento Selecionado?");
+            if (r == MessageBoxResult.Yes)
             {
                 try
                 {

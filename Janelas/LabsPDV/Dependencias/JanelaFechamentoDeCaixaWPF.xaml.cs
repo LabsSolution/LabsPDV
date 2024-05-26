@@ -126,8 +126,8 @@ namespace Labs.Janelas.LabsPDV.Dependencias
             // Caso o cliente tenha a assinatura cloud, refletimos para a database cloud
             //Realizar espelhamento aqui.
             //Logo após imprimimos o cupom de fechamento
-            DialogResult r = Modais.MostrarPergunta("Deseja Imprimir a Nota de Fechamento?");
-            if (r == System.Windows.Forms.DialogResult.Yes)
+            MessageBoxResult r = Modais.MostrarPergunta("Deseja Imprimir a Nota de Fechamento?");
+            if (r == MessageBoxResult.Yes)
             {
                 using (var PM = new PrintManager())
                 {

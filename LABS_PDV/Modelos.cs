@@ -50,9 +50,8 @@ namespace Labs.LABS_PDV
 			public MeiosPagamento() { Meios = [new("DINHEIRO",true)]; }
 		}
 		//
-        public class ValorFechamento(string Nome, double ValorSistema, double ValorAferido) : INotifyPropertyChanged
+        public class ValorFechamento(string Nome, double ValorSistema, double ValorAferido)
         {
-            public event PropertyChangedEventHandler? PropertyChanged;
             /// <summary>
 			/// Nome do Meio para Aferimento
 			/// </summary>

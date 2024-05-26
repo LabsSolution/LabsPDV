@@ -30,7 +30,7 @@ namespace Labs
 		//
 		public static Cliente Cliente { get; private set; } = null!;
         //
-        static Application AppInitializer = new();
+        public static Application AppInitializer = new();
         //
         static readonly SVGParser SVGParser = new(); // Desabilitado por enquanto por motivos de performance;
         /// <summary>
@@ -51,7 +51,6 @@ namespace Labs
 			LabsMainAppWPF App = new(); // Altere esse campo para modificar a primeira janela a ser aberta (Utilizar somente para debug)
 			//
 			//App.SizeChanged += OnAppSizeChange;
-            App.Loaded += OnAppLoad;
             INIT(App);
         }
         //
@@ -64,26 +63,14 @@ namespace Labs
 			{ 
 				//O Init só é falso caso dê algo de errado na pasta config e não seja possível inicializar
 				var r = Modais.MostrarErro("Não Foi Possivel Iniciar o Sistema Por Conter Erros Críticos!");
-				if(r == DialogResult.Ignore) { INIT(App); return; }
-				if(r == DialogResult.Retry) { INIT(App); return; }
+				if(r == MessageBoxResult.OK) { INIT(App); return; }
 				return; 
 			}
 			// Somente após o sistema verificar tudo é que inicializamos
 			AppInitializer.Run(App);
             //
         }
-
-        private static void OnAppLoad(object? sender, EventArgs e)
-        {
-            if(sender is Form App)
-			{
-				App.BackgroundImageLayout = ImageLayout.Stretch;
-				App.BackgroundImage = SVGParser.GetImageFromSVG(); ;
-            }
-        }
-
         //
-
         //EVENTOS//
         //Previne o Cliente de Minimizar o sistema
         private static void OnAppSizeChange(object? sender, SizeChangedEventArgs e)
@@ -100,7 +87,6 @@ namespace Labs
 			{
 				App.Closed -= AppClosed;
 				App.SizeChanged -= OnAppSizeChange;
-                App.Loaded -= OnAppLoad;
                 //
                 LabsMainAppWPF.App?.Show();
             }
@@ -115,7 +101,6 @@ namespace Labs
 				{
 					App.IsVisibleChanged -= AppHidden;
 					App.SizeChanged -= OnAppSizeChange;
-                    App.Loaded -= OnAppLoad;
                     //
                     LabsMainAppWPF.App?.Show();
                 }
@@ -128,7 +113,6 @@ namespace Labs
 			{
 			    App.IsVisibleChanged -= AppHidden;
 			    App.SizeChanged -= OnAppSizeChange;
-			    App.Loaded -= OnAppLoad;
 			    //
 			}
         }
@@ -141,7 +125,6 @@ namespace Labs
                 {
                     App.IsVisibleChanged -= AppHidden;
                     App.SizeChanged -= OnAppSizeChange;
-					App.Loaded -= OnAppLoad;
                 }
             }
         }
@@ -173,25 +156,27 @@ namespace Labs
 				App = new T();
 				RunningApps[typeof(T).Name] = App;
 			}
-			config?.Invoke(App);
+			//
+			if(App != null) { config?.Invoke(App); }
 			// Mostra a aplicação
 			//
             if (SempreNoTopo) 
 			{ 
-				if (BackgroundImage == true)  { App.Loaded += OnAppLoad; } 
 				//
-				App.Topmost = true;
-				App.Closed += DepAppClosed; 
-				App.IsVisibleChanged += DepAppHidden; 
-				App.ShowDialog();
-				//
-				return App; 
+				if(App != null)
+				{
+                    App.Topmost = true;
+                    App.Closed += DepAppClosed;
+                    App.IsVisibleChanged += DepAppHidden;
+                    App.ShowDialog();
+                    //
+                    return App;
+                }
 			}
-			//Retornamos o App
-			if (BackgroundImage == true) { App.Loaded += OnAppLoad; }
-			App.Closed += DepAppClosed;
-			App.Show();
-			return App;
+            //Retornamos o App caso não seja nulo
+			if(App != null) { App.Closed += DepAppClosed; App.Show(); return App; }
+			//
+			return null!;
 		}
 
 		/// <summary>
@@ -230,13 +215,16 @@ namespace Labs
 			//
 			// Aqui atrelamos os dois eventos porque em algum momento a janela será realmente fechada;
 			//
-			if (Persistente) { App.IsVisibleChanged += AppHidden;  }
-			if (BackgroundImage == true) { App.Loaded += OnAppLoad; }
-			if (AutoMaximize) { App.SizeChanged += OnAppSizeChange; }
-            App.Closed += AppClosed; // Global
-            // Mostra a aplicação
-            App.Show();
-            return App; // Após isso tudo, retornamos a janela
+			if(App != null) // se não for nulo checamos os requisitos e devolvemos a janela
+			{
+				if (Persistente) { App.IsVisibleChanged += AppHidden;  }
+				if (AutoMaximize) { App.SizeChanged += OnAppSizeChange; }
+				App.Closed += AppClosed; // Global
+				// Mostra a aplicação
+				App.Show();
+				return App;
+			}
+            return null!; // Após isso tudo, retornamos a janela nula caso seja
 		}
 	}
 }

@@ -70,7 +70,7 @@ namespace Labs.Janelas.Configuracoes.Dependencias
             if (meio != null)
             {
                 var r = Modais.MostrarPergunta("Deseja Remover o Meio Selecionado?");
-                if (r == System.Windows.Forms.DialogResult.Yes)
+                if (r == MessageBoxResult.Yes)
                 {
                     var index = ListaMeiosRegistrados.SelectedIndex;
                     //

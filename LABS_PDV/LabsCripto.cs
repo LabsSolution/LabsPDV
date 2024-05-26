@@ -76,7 +76,7 @@ namespace Labs.LABS_PDV
 
         static string DecryptStringFromBytes_Aes(byte[] cipherText, byte[] Key, byte[] IV)
         {
-            string plaintext = null;
+            string plaintext = null!;
 
             using (var aes = Aes.Create())
             {

@@ -61,8 +61,8 @@ namespace Labs.LABS_PDV
         {
             try
             {
-                var client = new MongoClient(LABS_PDV_MAIN.LocalDataBaseConnectionURI);
-                var db = client.GetDatabase(LABS_PDV_MAIN.ClientDataBase);
+                var client = new MongoClient(LABS_PDV_MAIN_WPF.LocalDataBaseConnectionURI);
+                var db = client.GetDatabase(LABS_PDV_MAIN_WPF.ClientDataBase);
                 return db.GetCollection<T>(collection);
             }
             catch (Exception ex)
@@ -81,8 +81,8 @@ namespace Labs.LABS_PDV
         {
             try
             {
-                var client = new MongoClient(LABS_PDV_MAIN.CloudDataBaseConnectionURI);
-                var db = client.GetDatabase(LABS_PDV_MAIN.ClientDataBase);
+                var client = new MongoClient(LABS_PDV_MAIN_WPF.CloudDataBaseConnectionURI);
+                var db = client.GetDatabase(LABS_PDV_MAIN_WPF.ClientDataBase);
                 return db.GetCollection<T>(collection);
             }
             catch (Exception ex)
@@ -101,7 +101,7 @@ namespace Labs.LABS_PDV
         {
             try
             {
-                var client = new MongoClient(LABS_PDV_MAIN.LabsCloudDataBaseConnectionURI);
+                var client = new MongoClient(LABS_PDV_MAIN_WPF.LabsCloudDataBaseConnectionURI);
                 var db = client.GetDatabase(LabsDataBase);
                 return db.GetCollection<T>(collection);
             }

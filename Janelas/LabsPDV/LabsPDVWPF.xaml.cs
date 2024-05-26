@@ -68,8 +68,8 @@ namespace Labs.Janelas.LabsPDV
             EstadoCaixa = await CloudDataBase.GetLocalAsync<EstadoCaixa>(Collections.EstadoCaixa, _ => true);
             if (EstadoCaixa != null)
             {
-                DialogResult r = Modais.MostrarPergunta("O Sistema foi encerrado de maneira inesperada\nDeseja Retornar ao Caixa Salvo?");
-                if (r == System.Windows.Forms.DialogResult.Yes)
+                MessageBoxResult r = Modais.MostrarPergunta("O Sistema foi encerrado de maneira inesperada\nDeseja Retornar ao Caixa Salvo?");
+                if (r == MessageBoxResult.Yes)
                 {
                     Operador = EstadoCaixa.OperadorCaixa;
                     CaixaLabs = EstadoCaixa.CaixaLabs;
@@ -136,7 +136,7 @@ namespace Labs.Janelas.LabsPDV
             CaixaStateLabel.Content = CaixaFechado;
             AbrirFecharCaixaButtonLabel.Text = AbrirCaixaText;
             AbrirFecharCaixaButton.Background = new SolidColorBrush(Color.FromArgb(255, 80, 255, 80));
-            CaixaStateColor.Background = new SolidColorBrush(Color.FromArgb(255, 200, 80, 80));
+            CaixaStateColor.Background = new SolidColorBrush(Color.FromArgb(255, 255, 80, 80));
             QuantidadeInput.IsEnabled = false;
             CodBarrasInput.IsEnabled = false;
             //
@@ -259,10 +259,10 @@ namespace Labs.Janelas.LabsPDV
             string nomeProduto = pv.Descricao; // pegamos o nome do produto
 
             //Perguntamos se o Usuário quer realmente Realizar a operação
-            DialogResult res = Modais.MostrarPergunta($"Deseja Remover o Produto: {nomeProduto}?\nESTA OPERAÇÃO NÃO PODE SER DESFEITA!");
+            MessageBoxResult res = Modais.MostrarPergunta($"Deseja Remover o Produto: {nomeProduto}?\nESTA OPERAÇÃO NÃO PODE SER DESFEITA!");
 
             //Após informado dos riscos seguimos em frente
-            if (res == System.Windows.Forms.DialogResult.No) { Modais.MostrarInfo("Exclusão do Item Cancelada"); ResetarFoco(); return; }
+            if (res == MessageBoxResult.No) { Modais.MostrarInfo("Exclusão do Item Cancelada"); ResetarFoco(); return; }
             //
             int pIndex = ListaDeVenda.Items.IndexOf(pv); // pegamos o index do item
             Produtos.RemoveAt(pIndex); // removemos da lista de produtos no index
@@ -319,8 +319,8 @@ namespace Labs.Janelas.LabsPDV
             if (!EstaAberto) { return; }
             if (!RealizandoVenda) { Modais.MostrarAviso("Você não está realizando nenhuma venda no momento!"); return; }
             //Ao Cancelar a venda, simplesmente descartamos todos os items e resetamos os campos;
-            DialogResult r = Modais.MostrarPergunta("Você Realmente Deseja Cancelar esta Venda?\nESTA AÇÃO NÃO PODE SER DESFEITA!");
-            if(r == System.Windows.Forms.DialogResult.Yes)
+            MessageBoxResult r = Modais.MostrarPergunta("Você Realmente Deseja Cancelar esta Venda?\nESTA AÇÃO NÃO PODE SER DESFEITA!");
+            if(r == MessageBoxResult.Yes)
             {
                 ResetarInterface();
             }

@@ -81,8 +81,8 @@ namespace Labs.Janelas.LabsEstoque
         {
             Produto? produto = ListaProdutosCadastrados.SelectedItem as Produto;
             if(produto == null) { Modais.MostrarAviso("Você precisa selecionar o produto que deseja remover do estoque!"); return; }
-            DialogResult r = Modais.MostrarPergunta($"Você deseja remover o Produto: {produto.Descricao}?\nESTA OPERAÇÃO NÃO PODE SER DESFEITA!");
-            if(r == System.Windows.Forms.DialogResult.Yes)
+            MessageBoxResult r = Modais.MostrarPergunta($"Você deseja remover o Produto: {produto.Descricao}?\nESTA OPERAÇÃO NÃO PODE SER DESFEITA!");
+            if(r == MessageBoxResult.Yes)
             {
                 //
                 ListaProdutosCadastrados.Items.Remove(produto);

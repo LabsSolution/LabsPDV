@@ -46,10 +46,6 @@ namespace Labs
             //Carrega as Configs/
             LoadConfigs();
             //TEMPORÁRIO
-            LABS_PDV_MAIN.LabsCloudDataBaseConnectionURI = LABS_PDV_MAIN_WPF.LabsCloudDataBaseConnectionURI;
-            LABS_PDV_MAIN.CloudDataBaseConnectionURI = LABS_PDV_MAIN_WPF.CloudDataBaseConnectionURI;
-            LABS_PDV_MAIN.LocalDataBaseConnectionURI = LABS_PDV_MAIN_WPF.LocalDataBaseConnectionURI;
-            LABS_PDV_MAIN.ClientDataBase = LABS_PDV_MAIN_WPF.ClientDataBase;
         }
         //
         bool VerifyDataBases()
@@ -102,14 +98,15 @@ namespace Labs
         private void OnLabsSairClick(object sender, RoutedEventArgs e)
         {
             this.Close();
+            LABS_PDV_MAIN_WPF.AppInitializer.Shutdown();
         }
 
         private void OnLabsMainAppLoad(object sender, RoutedEventArgs e)
         {
             //Quando forem repassadas para wpf reativar
-
-            //if (!VerifyDataBases()) { ModoSegurança = true; Modais.MostrarAviso("MODO DE SEGURANÇA HABILITADO!\nPara Sair Desse Modo, Os Conflitos Devem ser Resolvidos\ne Logo Após o Sistema Deve Ser Reiniciado!"); return; }
-            //VerificacoesPreventivas();
+            
+            if (!VerifyDataBases()) { ModoSegurança = true; Modais.MostrarAviso("MODO DE SEGURANÇA HABILITADO!\nPara Sair Desse Modo, Os Conflitos Devem ser Resolvidos\ne Logo Após o Sistema Deve Ser Reiniciado!"); return; }
+            VerificacoesPreventivas();
         }
         //
 

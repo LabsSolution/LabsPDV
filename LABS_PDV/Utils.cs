@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -40,7 +41,7 @@ namespace Labs.LABS_PDV
 		/// <param name="keyCode">Código da tecla</param>
 		/// <param name="key">Numero correspondente a essa tecla</param>
 		/// <returns>Retorna verdadeiro se a tecla for válida</returns>
-		public static bool IsValidNumberKey(Keys keyCode, out string key)
+		public static bool IsValidNumberKey(Key keyCode, out string key)
 		{
 			key = "NULL";
 			if (ValidNumberKeys.Contains(keyCode.ToString())) { key = nKeys[keyCode.ToString()]; return true; }

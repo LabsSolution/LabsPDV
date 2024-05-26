@@ -11,7 +11,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
 using Auth0.OidcClient;
 using IdentityModel.Client;
 using IdentityModel.OidcClient;

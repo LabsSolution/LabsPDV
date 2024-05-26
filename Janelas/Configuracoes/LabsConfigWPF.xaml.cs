@@ -23,7 +23,7 @@ namespace Labs.Janelas.Configuracoes
         public LabsConfigWPF()
         {
             InitializeComponent();
-            if (LabsMainApp.ModoSegurança) { MeioPagamentoButton.IsEnabled = false; }
+            if (LabsMainAppWPF.ModoSegurança) { MeioPagamentoButton.IsEnabled = false; }
         }
         private async void DataBaseConfig()
         {

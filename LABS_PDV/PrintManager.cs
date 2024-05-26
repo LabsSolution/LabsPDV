@@ -1,11 +1,18 @@
 ﻿using Labs.Janelas.LabsPDV.Dependencias;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
 using static Labs.LABS_PDV.Modelos;
+using Brushes = System.Drawing.Brushes;
+using FontFamily = System.Drawing.FontFamily;
+using FontStyle = System.Drawing.FontStyle;
+using Size = System.Drawing.Size;
 
 namespace Labs.LABS_PDV
 {
@@ -24,10 +31,6 @@ namespace Labs.LABS_PDV
         //Para a impressão de Cupons ( e depois emissão de nota fiscal )
         VendaRealizada Venda = null!;
         FechamentoDeCaixa Fechamento = null!;
-        //Fechamento de Caixa
-        double ValorAbertura = 0;
-        double FundoDeCaixa = 0;
-        double GanhosTotais = 0;
         //
         int LarguraPapel = 210; // largura em mm (usado como limitador) (Por algum motivo o segundo valor é o que vale) (o porque eu não sei)
         int LimiteNomeProduto = 30;
@@ -136,7 +139,7 @@ namespace Labs.LABS_PDV
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             yPos += 5;
             //bottom
-            graphics.DrawString(LABS_PDV_MAIN.TradeMark, RegularItens, Brushes.Black, 0, yPos);
+            graphics.DrawString(LABS_PDV_MAIN_WPF.TradeMark, RegularItens, Brushes.Black, 0, yPos);
             e.HasMorePages = false;
         }
         #endregion
@@ -187,7 +190,7 @@ namespace Labs.LABS_PDV
             //bottom
             graphics.DrawString($"Data: {DateTime.Now:dd/MM/yyyy} Hora: {DateTime.Now:HH:mm:ss}", RegularItens, Brushes.Black, 0, yPos);
             yPos += 10;
-            graphics.DrawString(LABS_PDV_MAIN.TradeMark, RegularItens, Brushes.Black, 0, yPos);
+            graphics.DrawString(LABS_PDV_MAIN_WPF.TradeMark, RegularItens, Brushes.Black, 0, yPos);
             e.HasMorePages = false;
         }
         #endregion
@@ -269,7 +272,7 @@ namespace Labs.LABS_PDV
             //bottom
             graphics.DrawString($"Data: {DateTime.Now:dd/MM/yyyy} Hora: {DateTime.Now:HH:mm:ss}", RegularItens, Brushes.Black, 0, yPos);
             yPos += 10;
-            graphics.DrawString(LABS_PDV_MAIN.TradeMark, RegularItens, Brushes.Black, 0, yPos);
+            graphics.DrawString(LABS_PDV_MAIN_WPF.TradeMark, RegularItens, Brushes.Black, 0, yPos);
             e.HasMorePages = false;
         }
         #endregion
