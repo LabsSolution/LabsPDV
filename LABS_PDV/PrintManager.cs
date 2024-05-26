@@ -19,8 +19,8 @@ namespace Labs.LABS_PDV
 	public class PrintManager : PrintDocument
 	{
         //
-        public const string ImpressoraDefault = "POS-58 Baisec";
-        //public const string ImpressoraDefault = "HP LaserJet Professional P1102w";
+        //public const string ImpressoraDefault = "POS-58 Baisec";
+        public const string ImpressoraDefault = "HP LaserJet Professional P1102w";
         //
         private Size Papel58mm = new(58, 210);
         //
@@ -125,11 +125,11 @@ namespace Labs.LABS_PDV
             yPos += 15;
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             yPos += 5;
-            foreach (RIDP MeioRecebido in Fechamento.Recebimentos)
+            foreach (ValorFechado MeioRecebido in Fechamento.Recebimentos)
             {
-                graphics.DrawString($"{MeioRecebido.NomeDoRegistro}", RegularItens, Brushes.Black, 0, yPos);
+                graphics.DrawString($"{MeioRecebido.Nome}", RegularItens, Brushes.Black, 0, yPos);
                 yPos += 15;
-                graphics.DrawString($"R$: {Utils.FormatarValor(MeioRecebido.CapitalDeGiro)}", RegularItens, Brushes.Black, 0, yPos);
+                graphics.DrawString($"R$: {Utils.FormatarValor(MeioRecebido.ValorAferido)}", RegularItens, Brushes.Black, 0, yPos);
                 yPos += 15;
                 graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -96,6 +97,12 @@ namespace Labs.Janelas.LabsPDV.Dependencias
             ValoresParaAferimentoMeio.Add(new("Ganhos Totais", this.CaixaLabs.GanhosTotais, 0));
             //
         }
+        private ValorFechamento GetValorFechamento(string Nome)
+        {
+            foreach(var v in ValoresParaAferimentoGeral) { if (v.Nome == Nome) return v; }
+            foreach(var v in ValoresParaAferimentoMeio) { if (v.Nome == Nome) return v; }
+            return null!;
+        }
         //
         //EVENTOS
         private void RealizarFechamentoButton_Click(object sender, RoutedEventArgs e)
@@ -107,36 +114,57 @@ namespace Labs.Janelas.LabsPDV.Dependencias
             foreach  (ValorFechamento vpafg in ValoresParaAferimentoGeral) { ValoresFechadosGeral.Add(new(vpafg.Nome,vpafg.ValorSistema,vpafg.ValorAferido)); }
             //Os campos acima são de extrema importância para a geração de notas de fechamento após o fechamento do caixa e para gestão quando for realizado pesquisas
             //Criamos um novo objeto de fechamento de caixa
-            Fechamento = new()
+            var fundo = GetValorFechamento("Fundo de Caixa");
+            var ganhos = GetValorFechamento("Ganhos Totais");
+            var abertura = GetValorFechamento("Valor de Abertura");
+            //
+            var rr = Modais.MostrarPergunta("Realizar Fechamento?\nATENÇÃO: Confira os dados antes de realizar o fechamento de caixa.");
+            //
+            if(rr == MessageBoxResult.No) { return; }
+            //
+            if(fundo != null && ganhos != null && abertura != null)
             {
-                FechamentoID = $"{DateTime.Now:ddMMyyyy}{DateTime.Now:HHmmss}",
-                FundoDeCaixa = CaixaLabs.FundoDeCaixa,
-                GanhosTotais = CaixaLabs.GanhosTotais,
-                ValorDeAbertura = CaixaLabs.ValorDeAbertura,
-                Recebimentos = [.. CaixaLabs.RegistroInternoDePagamentos], // repassa para array
-                ValoresFechadosMeio = ValoresFechadosMeio, // Salva a lista de aferimentos Meio
-                ValoresFechadosGeral = ValoresFechadosGeral, // Salva a lista de aferimentos Geral
-                Sangrias = [], // Não implementado ainda
-                Suprimentos = [], // Não implementado ainda
-                ItensDevolvidos = 0,
-                ItensVendidos = 0,
-            };
-            // Registramos na database local
-            CloudDataBase.RegisterLocalAsync(Collections.Fechamentos, Fechamento);
-            // Caso o cliente tenha a assinatura cloud, refletimos para a database cloud
-            //Realizar espelhamento aqui.
-            //Logo após imprimimos o cupom de fechamento
-            MessageBoxResult r = Modais.MostrarPergunta("Deseja Imprimir a Nota de Fechamento?");
-            if (r == MessageBoxResult.Yes)
-            {
-                using (var PM = new PrintManager())
+                if(ganhos.ValorSistema != ganhos.ValorAferido) { Modais.MostrarAviso("Os valores aferidos nos Ganhos Totais não coincidem!"); return; }
+                else
                 {
-                    PM.ImprimirCupomFechamentoDeCaixa(PrintManager.ImpressoraDefault, Fechamento);
-                }
+					//
+					Fechamento = new()
+					{
+						FechamentoID = $"{DateTime.Now:ddMMyyyy}{DateTime.Now:HHmmss}",
+						FundoDeCaixa = fundo.ValorAferido,
+						GanhosTotais = ganhos.ValorAferido, // Isso tem que ser aferido também
+						ValorDeAbertura = abertura.ValorAferido,
+						Recebimentos = [.. ValoresFechadosMeio], // repassa para array
+						ValoresFechadosMeio = ValoresFechadosMeio, // Salva a lista de aferimentos Meio
+						ValoresFechadosGeral = ValoresFechadosGeral, // Salva a lista de aferimentos Geral
+						Sangrias = [], // Não implementado ainda
+						Suprimentos = [], // Não implementado ainda
+						ItensDevolvidos = 0,
+						ItensVendidos = 0,
+					};
+					// Registramos na database local
+					CloudDataBase.RegisterLocalAsync(Collections.Fechamentos, Fechamento);
+					// Caso o cliente tenha a assinatura cloud, refletimos para a database cloud
+					//Realizar espelhamento aqui.
+					//Logo após imprimimos o cupom de fechamento
+					MessageBoxResult r = Modais.MostrarPergunta("Deseja Imprimir a Nota de Fechamento?");
+					if (r == MessageBoxResult.Yes)
+					{
+						using (var PM = new PrintManager())
+						{
+							PM.ImprimirCupomFechamentoDeCaixa(PrintManager.ImpressoraDefault, Fechamento);
+						}
+					}
+					//
+					FecharJanela();
+				}
+				
             }
-            //
-            //
-            FecharJanela();
+            else
+            {
+				Modais.MostrarAviso("Houve um problema durante o fechamento do caixa");
+			}
+           
         }
         //
         private void VoltarButton_Click(object sender, RoutedEventArgs e)

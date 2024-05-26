@@ -111,7 +111,7 @@ namespace Labs.LABS_PDV
 			/// <summary>
 			/// Array com o valor recebido em cada meio de pagamento configurado
 			/// </summary>
-			public RIDP[] Recebimentos { get; set; } = [];
+			public ValorFechado[] Recebimentos { get; set; } = [];
 			
 		}
 		/// <summary>
