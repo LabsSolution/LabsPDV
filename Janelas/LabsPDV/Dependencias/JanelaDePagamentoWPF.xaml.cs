@@ -34,7 +34,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
         //
         List<Produto> Produtos { get; set; } = new();
         //
-        LabsPDV LabsPDV { get; set; } = null!; // referencia a janela de pdv que requisitou a janela de pagamento
+        LabsPDVWPF LabsPDV { get; set; } = null!; // referencia a janela de pdv que requisitou a janela de pagamento
                                                //
                                                //Variáveis de Construtor
         private double ValorTotal = 0;
@@ -110,7 +110,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
         /// <param name="ValorTotal">Valor total dos itens</param>
         /// <param name="Produtos">Produtos Da venda (Quantidade etc)</param>
         /// <param name="LabsPDV">O Ponto PDV que requisitou a janela (Será usado no futuro para pontos remotos)</param>
-        public void IniciarTelaDePagamento(double ValorTotal, List<Produto> Produtos, LabsPDV LabsPDV)
+        public void IniciarTelaDePagamento(double ValorTotal, List<Produto> Produtos, LabsPDVWPF LabsPDV)
         {
             //Garante que todos os campos estejam limpos para receber novos valores
             Reset();

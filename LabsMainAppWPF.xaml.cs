@@ -86,12 +86,12 @@ namespace Labs
         //
         private void OnLabsEstoqueClick(object sender, RoutedEventArgs e)
         {
-            LABS_PDV_MAIN_WPF.IniciarApp<LabsEstoqueWPF>();
+            LABS_PDV_MAIN_WPF.IniciarApp<LabsEstoqueWPF>(true,false,true);
         }
 
         private void OnLabsPDVClick(object sender, RoutedEventArgs e)
         {
-            LABS_PDV_MAIN_WPF.IniciarDependencia<LabsPDV_WPF>();
+            LABS_PDV_MAIN_WPF.IniciarApp<LabsPDVWPF>(true,false,true);
         }
 
         private void OnLabsConfigClick(object sender, RoutedEventArgs e)

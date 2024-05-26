@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Labs.Janelas.LabsPDV"
         mc:Ignorable="d"
-        Title="LabsPDVWPF" Width="1920" Height="1080" WindowStyle="None" WindowState="Maximized" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent">
+        Title="LabsPDVWPF" Width="1920" Height="1080" KeyUp="OnPDVKeyUp" Loaded="LabsPDVLoaded" WindowStyle="None" WindowState="Maximized" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent">
     <Border Background="#202020" CornerRadius="20">
         <Border Margin="10" Background="#404040" CornerRadius="20">
             <Grid>
@@ -25,14 +25,14 @@
                     <Label Name="CaixaStateLabel" HorizontalAlignment="Center"  FontFamily="Segoe UI Black" FontSize="20" FontWeight="Bold" Content="CAIXA FECHADO"/>
                 </Border>
                 <!--Segunda Linha-->
-                <ListView x:Name="ListaDeVenda" Grid.Row="1" FontSize="16" FontFamily="Segoe UI" Foreground="#202020" ClipToBounds="True" VerticalAlignment="Stretch" ToolTip="Lista de Produtos" Margin="10,5,10,5" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}">
+                <ListView x:Name="ListaDeVenda" Grid.Row="1" FontSize="20" FontFamily="Segoe UI" Foreground="#202020" ClipToBounds="True" VerticalAlignment="Stretch" ToolTip="Lista de Produtos" Margin="10,5,10,5" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}">
                     <ListView.View>
                         <GridView AllowsColumnReorder="True">
                             <GridViewColumn Header="N°" DisplayMemberBinding="{Binding Numero}" Width="50"/>
                             <GridViewColumn Header="Descrição" DisplayMemberBinding="{Binding Descricao}" Width="400"/>
-                            <GridViewColumn Header="Código" DisplayMemberBinding="{Binding Codigo}" Width="150"/>
+                            <GridViewColumn Header="Código" DisplayMemberBinding="{Binding CodBarras}" Width="150"/>
                             <GridViewColumn Header="Unidade" DisplayMemberBinding="{Binding Unidade}" Width="80"/>
-                            <GridViewColumn Header="Valor Unitário" DisplayMemberBinding="{Binding ValorUnitario}" Width="100"/>
+                            <GridViewColumn Header="Valor Unitário" DisplayMemberBinding="{Binding Preco}" Width="100"/>
                             <GridViewColumn Header="Quantidade" DisplayMemberBinding="{Binding Quantidade}" Width="100"/>
                             <GridViewColumn Header="Total do Item" DisplayMemberBinding="{Binding TotalItem}" Width="100"/>
                             <GridViewColumn Header="Desconto" DisplayMemberBinding="{Binding Desconto}" Width="100"/>
@@ -99,7 +99,7 @@
                     <StackPanel Margin="10,0,10,10" Width="500" DockPanel.Dock="Left" HorizontalAlignment="Left">
                         <!--Quantidade Input-->
                         <Label FontFamily="Segoe UI Black" Margin="0,2.5,0,0" FontSize="25" Foreground="#F0f0f0" HorizontalAlignment="Center" Content="(F4) Quantidade:"/>
-                        <TextBox Name="QuantidadeInput" HorizontalContentAlignment="Center" Padding="10,0,0,0" Margin="0,5,0,0" VerticalContentAlignment="Center" IsEnabled="True" FontSize="30" FontFamily="Segoe UI Black" Width="Auto">
+                        <TextBox Name="QuantidadeInput" KeyUp="OnQuantidadeKeyUp" HorizontalContentAlignment="Center" Padding="10,0,0,0" Margin="0,5,0,0" VerticalContentAlignment="Center" IsEnabled="True" FontSize="30" FontFamily="Segoe UI Black" Width="Auto">
                             <TextBox.Resources>
                                 <Style TargetType="{x:Type Border}">
                                     <Setter Property="CornerRadius" Value="20"/>
@@ -108,7 +108,7 @@
                         </TextBox>
                         <!--Quantidade Input-->
                         <Label FontFamily="Segoe UI Black" Margin="0,2.5,0,0" FontSize="25" Foreground="#F0f0f0" HorizontalAlignment="Center" Content="* Código de Barras:"/>
-                        <TextBox Name="CodBarrasInput" HorizontalContentAlignment="Center" Padding="10,0,0,0" Margin="0,5,0,0" VerticalContentAlignment="Center" IsEnabled="True" FontSize="30" FontFamily="Segoe UI Black" Width="Auto">
+                        <TextBox Name="CodBarrasInput" KeyUp="OnCodBarrasKeyUp" HorizontalContentAlignment="Center" Padding="10,0,0,0" Margin="0,5,0,0" VerticalContentAlignment="Center" IsEnabled="True" FontSize="30" FontFamily="Segoe UI Black" Width="Auto">
                             <TextBox.Resources>
                                 <Style TargetType="{x:Type Border}">
                                     <Setter Property="CornerRadius" Value="20"/>
@@ -119,30 +119,30 @@
                     <!--Botoes-->
                     <DockPanel VerticalAlignment="Bottom" DockPanel.Dock="Left" HorizontalAlignment="Stretch" Margin="0,10,0,10" RenderTransformOrigin="0.5,0.5">
                         <!--PAgamentoButton-->
-                        <Button Name="PagamentoButton" VerticalAlignment="Bottom" BorderThickness="0" Margin="5,0,5,0" Background="LightGreen" Width="200" Height="70" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20">
+                        <Button Name="PagamentoButton" Click="PagamentoButton_Click" VerticalAlignment="Bottom" BorderThickness="0" Margin="5,0,5,0" Background="LightGreen" Width="200" Height="70" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20">
                             <Button.Content>
                                 <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="Pagamento (F1)"/>
                             </Button.Content>
                         </Button>
                         <!--CancelarVendaButton-->
-                        <Button Name="CancelarVendaButton" VerticalAlignment="Bottom" BorderThickness="0" Margin="5,0,5,0" Background="#F08080" Width="200" Height="70" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20">
+                        <Button Name="CancelarVendaButton" Click="CancelarVendaButton_Click" VerticalAlignment="Bottom" BorderThickness="0" Margin="5,0,5,0" Background="#F08080" Width="200" Height="70" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20">
                             <Button.Content>
                                 <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="Cancelar Venda (F2)"/>
                             </Button.Content>
                         </Button>
                         <!--ExcluirItemButton-->
-                        <Button Name="ExcluirItemButton" VerticalAlignment="Bottom" BorderThickness="0" Margin="5,0,5,0" Background="#FFFFBC5A" Width="200" Height="70" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20">
+                        <Button Name="ExcluirItemButton" Click="ExcluirItemButton_Click" VerticalAlignment="Bottom" BorderThickness="0" Margin="5,0,5,0" Background="#FFFFBC5A" Width="200" Height="70" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20">
                             <Button.Content>
                                 <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="Exluir Item (F3)"/>
                             </Button.Content>
                         </Button>
                         <StackPanel DockPanel.Dock="Right" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-                            <Button Name="AbrirFecharCaixaButton" BorderThickness="0" Margin="5,15,5,15" Background="#80FF80" Width="150" Height="40" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20">
+                            <Button Name="AbrirFecharCaixaButton" Click="AbrirFecharCaixaButton_Click" BorderThickness="0" Margin="5,15,5,15" Background="#80FF80" Width="150" Height="40" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20">
                                 <Button.Content>
                                     <TextBlock x:Name="AbrirFecharCaixaButtonLabel" Text="Abrir Caixa" TextWrapping="Wrap" TextAlignment="Center"/>
                                 </Button.Content>
                             </Button>
-                            <Button Name="VoltarButton" BorderThickness="0" Margin="5,5,5,0" Background="#FFFF80" Width="150" Height="70" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20">
+                            <Button Name="VoltarButton" Click="VoltarButton_Click" BorderThickness="0" Margin="5,5,5,0" Background="#FFFF80" Width="150" Height="70" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20">
                                 <Button.Content>
                                     <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="Voltar"/>
                                 </Button.Content>

@@ -15,6 +15,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using static Labs.LABS_PDV.Modelos;
+using Color = System.Windows.Media.Color;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
 namespace Labs.Janelas.LabsPDV
 {
@@ -33,7 +35,6 @@ namespace Labs.Janelas.LabsPDV
         private static bool EstaAberto { get; set; } = false; // deixar isso como false por padrão
         private static bool RealizandoVenda { get; set; } = false;
         //
-        private protected Brush Brush;
         private protected List<Produto> Produtos = []; // Usado para o gerenciamento do valor total
         private protected double PagamentoTotal = 0.0; // registro do pagamento total
                                                        //
@@ -41,10 +42,25 @@ namespace Labs.Janelas.LabsPDV
         public OperadorCaixa Operador { get; private set; } = null!;
         public EstadoCaixa EstadoCaixa { get; private set; } = null!;
         //
-
+        internal class ProdutoVisual(string Numero, string Descricao, string CodBarras, string Unidade, string Preco, string Quantidade, string TotalItem, string Desconto) 
+        {
+            public string Numero { get; set; } = Numero;
+            public string Descricao { get; set; } = Descricao;
+            public string CodBarras { get; set; } = CodBarras;
+            public string Unidade { get; set; } = Unidade;
+            public string Preco { get; set; } = Preco;
+            public string Quantidade { get; set; } = Quantidade;
+            public string TotalItem { get; set; } = TotalItem;
+            public string Desconto { get; set; } = Desconto;
+        }
+        //
         public LabsPDVWPF()
         {
             InitializeComponent();
+        }
+        private void LabsPDVLoaded(object sender, RoutedEventArgs e)
+        {
+            FoiEncerradoInesperadamente();
         }
         //
         private async void FoiEncerradoInesperadamente()
@@ -104,11 +120,11 @@ namespace Labs.Janelas.LabsPDV
             EstaAberto = true;
             CaixaStateLabel.Content = CaixaAberto;
             AbrirFecharCaixaButtonLabel.Text = FecharCaixaText;
-            AbrirFecharCaixaButton.Background = ;
-            CaixaStateLabel.BackColor = Color.LightGreen;
+            AbrirFecharCaixaButton.Background = new SolidColorBrush(Color.FromArgb(255,200,80,80));
+            CaixaStateColor.Background = new SolidColorBrush(Color.FromArgb(255,80,255,80));
             //
-            QuantidadeInput.Enabled = true;
-            CodBarrasInput.Enabled = true;
+            QuantidadeInput.IsEnabled = true;
+            CodBarrasInput.IsEnabled = true;
             //
             QuantidadeInput.Text = "1";
             CodBarrasInput.Focus();
@@ -117,12 +133,12 @@ namespace Labs.Janelas.LabsPDV
         {
             //
             EstaAberto = false;
-            CaixaStateLabel.Text = CaixaFechado;
-            AbrirFecharCaixaButton.Text = AbrirCaixaText;
-            AbrirFecharCaixaButton.BackColor = Color.LightGreen;
-            CaixaStateLabel.BackColor = Color.DarkSalmon;
-            QuantidadeInput.Enabled = false;
-            CodBarrasInput.Enabled = false;
+            CaixaStateLabel.Content = CaixaFechado;
+            AbrirFecharCaixaButtonLabel.Text = AbrirCaixaText;
+            AbrirFecharCaixaButton.Background = new SolidColorBrush(Color.FromArgb(255, 80, 255, 80));
+            CaixaStateColor.Background = new SolidColorBrush(Color.FromArgb(255, 200, 80, 80));
+            QuantidadeInput.IsEnabled = false;
+            CodBarrasInput.IsEnabled = false;
             //
             QuantidadeInput.Text = null;
         }
@@ -187,15 +203,15 @@ namespace Labs.Janelas.LabsPDV
             Produtos.Clear();
             //
             RealizandoVenda = false;
-            DescricaoProdutoBox.Text = null;
-            PagamentoTotalBox.Text = null;
+            DescricaoProdutoBox.Text = "Descrição do Produto";
+            PagamentoTotalBox.Text = "Total a Pagar R$: 0,00";
             CodBarrasInput.Text = null;
             QuantidadeBox.Text = "1";
             //
             QuantidadeInput.Text = "1";
             //
-            PrecoUnitarioBox.Text = null;
-            SubTotalBox.Text = null;
+            PrecoUnitarioBox.Text = "R$: 0,00";
+            SubTotalBox.Text = "R$: 0,00";
             //
             CodBarrasInput.Focus();
             //
@@ -225,20 +241,9 @@ namespace Labs.Janelas.LabsPDV
             string Numero = (ListaDeVenda.Items.Count + 1).ToString();
             //
             TotalItem = Math.Round(produto.Quantidade * produto.Preco, 2); ; // geramos o total do item fazendo Quant * valor.
-                                                                             //Colocamos os valores em suas respectivas colunas
-            ListViewItem item = new(
-            [   Numero,
-                produto.Descricao,
-                produto.CodBarras,
-                "UN",
-                $"R$: {produto.Preco}",
-                $"{produto.Quantidade}",
-                $"R$: {TotalItem}",
-                "N/A"
-            ]);
             //Adicionamos o item na lista visual
-            ListaDeVenda.Items.Add(item);
-            item.EnsureVisible();
+            ListaDeVenda.Items.Add(new ProdutoVisual(Numero,produto.Descricao,produto.CodBarras,"UN",$"R$: {produto.Preco}", $"{produto.Quantidade}",$"{TotalItem}","N/A"));
+            ListaDeVenda.ScrollIntoView(ListaDeVenda.Items[^1]);
             //Adicionamos o produto na lista de produtos da venda
             Produtos.Add(produto);
         }
@@ -249,28 +254,28 @@ namespace Labs.Janelas.LabsPDV
         {
             if (!EstaAberto) { return; }
             if (!RealizandoVenda) { Modais.MostrarAviso("Você não está realizando nenhuma venda no momento!"); return; }
-            if (ListaDeVenda.SelectedItems.Count < 1) { Modais.MostrarAviso("Selecione um Produto da Lista Primeiro!"); ResetarFoco(); return; }
+            if (ListaDeVenda.SelectedItem is not ProdutoVisual pv) { Modais.MostrarAviso("Selecione um Produto da Lista Primeiro!"); ResetarFoco(); return; }
             //
-            ListViewItem item = ListaDeVenda.SelectedItems[0]; // pegamos o item selecionado
-            string nomeProduto = item.SubItems[ColunaDescricao.Index].Text; // pegamos o nome do produto
+            string nomeProduto = pv.Descricao; // pegamos o nome do produto
 
             //Perguntamos se o Usuário quer realmente Realizar a operação
             DialogResult res = Modais.MostrarPergunta($"Deseja Remover o Produto: {nomeProduto}?\nESTA OPERAÇÃO NÃO PODE SER DESFEITA!");
 
             //Após informado dos riscos seguimos em frente
-            if (res == DialogResult.No) { Modais.MostrarInfo("Exclusão do Item Cancelada"); ResetarFoco(); return; }
+            if (res == System.Windows.Forms.DialogResult.No) { Modais.MostrarInfo("Exclusão do Item Cancelada"); ResetarFoco(); return; }
             //
-            int pIndex = item.Index; // pegamos o index do item
+            int pIndex = ListaDeVenda.Items.IndexOf(pv); // pegamos o index do item
             Produtos.RemoveAt(pIndex); // removemos da lista de produtos no index
-            ListaDeVenda.Items.Remove(item); // removemos também da lista visual
+            ListaDeVenda.Items.Remove(pv); // removemos também da lista visual
 
             // Logo após isso atualizamos as listas e a tela de venda
             double TotalHolder = 0.0;
-            foreach (ListViewItem produto in ListaDeVenda.Items)
+            foreach (ProdutoVisual produto in ListaDeVenda.Items)
             {
-                produto.SubItems[ColunaItemID.Index].Text = (produto.Index + 1).ToString();
+                int index = ListaDeVenda.Items.IndexOf(produto);
+                produto.Numero = $"{index + 1}";
                 //
-                var p = Produtos[produto.Index];
+                var p = Produtos[index];
                 //
                 TotalHolder += p.Quantidade * p.Preco;
             }
@@ -314,25 +319,29 @@ namespace Labs.Janelas.LabsPDV
             if (!EstaAberto) { return; }
             if (!RealizandoVenda) { Modais.MostrarAviso("Você não está realizando nenhuma venda no momento!"); return; }
             //Ao Cancelar a venda, simplesmente descartamos todos os items e resetamos os campos;
-            ResetarInterface();
+            DialogResult r = Modais.MostrarPergunta("Você Realmente Deseja Cancelar esta Venda?\nESTA AÇÃO NÃO PODE SER DESFEITA!");
+            if(r == System.Windows.Forms.DialogResult.Yes)
+            {
+                ResetarInterface();
+            }
         }
         //---EVENTOS--//
         //Chamado quando pressiona alguma tecla na tela de PDV
         private void OnPDVKeyUp(object sender, KeyEventArgs e)
         {
             //Usamos SwitchCase por questão de performance (Endereçamento direto)
-            switch (e.KeyCode)
+            switch (e.Key)
             {
-                case Keys.F1:
+                case Key.F1:
                     Pagamento();
                     break;
-                case Keys.F2:
+                case Key.F2:
                     CancelarVenda();
                     break;
-                case Keys.F3:
+                case Key.F3:
                     RemoverProduto();
                     break;
-                case Keys.F4:
+                case Key.F4:
                     QuantidadeInput.Focus();
                     break;
             }
@@ -340,12 +349,13 @@ namespace Labs.Janelas.LabsPDV
         //Chamado quando alguma tecla é pressionada na área de Quantidade
         private void OnQuantidadeKeyUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode != Keys.Enter) { return; } // se não for enter não seguimos
+            if (e.Key != Key.Enter) { return; } // se não for enter não seguimos
             string Quantidade = QuantidadeInput.Text;
             //
             if (Utils.TryParseToInt(Quantidade, out int QTD))
             {
-                QuantidadeBox.Text = QTD.ToString();//
+                if(QTD == 0) { QuantidadeBox.Text = "1"; }
+                else { QuantidadeBox.Text = QTD.ToString(); }
                 QuantidadeInput.Text = "1";
                 ResetarFoco();
             }
@@ -356,7 +366,7 @@ namespace Labs.Janelas.LabsPDV
         private async void OnAddProduto()
         {
             //
-            if (QuantidadeBox.TextLength < 1) { QuantidadeBox.Text = "1"; }
+            if (QuantidadeBox.Text.Length < 1) { QuantidadeBox.Text = "1"; }
             //
             if (Utils.IsValidBarCode(CodBarrasInput.Text))
             {
@@ -396,27 +406,27 @@ namespace Labs.Janelas.LabsPDV
         }
         private void OnCodBarrasKeyUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode != Keys.Enter) { return; } // se não for enter não seguimos
+            if (e.Key != Key.Enter) { return; } // se não for enter não seguimos
             OnAddProduto();
             //
         }
         //
-        private void PagamentoButton_Click(object sender, EventArgs e)
+        private void PagamentoButton_Click(object sender, RoutedEventArgs e)
         {
             Pagamento();
         }
         //
-        private void CancelarVendaButton_Click(object sender, EventArgs e)
+        private void CancelarVendaButton_Click(object sender, RoutedEventArgs e)
         {
             CancelarVenda();
         }
         //
-        private void ExcluirItemButton_Click(object sender, EventArgs e)
+        private void ExcluirItemButton_Click(object sender, RoutedEventArgs e)
         {
             RemoverProduto();
         }
         //
-        private void VoltarButton_Click(object sender, EventArgs e)
+        private void VoltarButton_Click(object sender, RoutedEventArgs e)
         {
             // Bem simples, se o caixa estiver aberto, caso o cliente queira voltar pra tela anterior, ele será mantido rodando
             // Caso contrário simplesmente fechamos para não consumir memória desnecessária;
@@ -424,7 +434,7 @@ namespace Labs.Janelas.LabsPDV
             this.Close();
         }
 
-        private void AbrirFecharCaixaButton_Click(object sender, EventArgs e)
+        private void AbrirFecharCaixaButton_Click(object sender, RoutedEventArgs e)
         {
             //Fazemos verificação para só abrir o caixa com a senha do usuário atual;
             //Por enquanto deixamos sem para DEV
