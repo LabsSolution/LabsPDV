@@ -41,7 +41,9 @@
                         <Label Content="Meio de Pagamento:" Grid.Row="0" Grid.Column="0" FontSize="14" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f0f0f0"/>
                         <Label Content="SLDV : (Sem Limide De Valor):" Grid.Row="0" Grid.Column="1" FontSize="14" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f0f0f0"/>
                         <TextBox Name="MeioPagamentoInputBox" FontFamily="Segoe UI" FontSize="16" Grid.Row="1" Grid.Column="0"/>
-                        <CheckBox Name="SLDVCheckBox" Grid.Row="1" Grid.Column="1" Margin="5,0,0,0" Foreground="#f0f0f0" VerticalAlignment="Center" Content="SLDV?" FontFamily="Segoe UI" FontWeight="Bold" FontSize="14"/>
+                        <CheckBox Name="SLDVCheckBox" Grid.Row="1" Grid.Column="1" Margin="5,0,0,0" Foreground="#f0f0f0" VerticalAlignment="Center" Content="SLDV?" FontFamily="Segoe UI" FontWeight="Bold" FontSize="14">
+                            <CheckBox.ToolTip>SLDV(Sem Limite de Valor) Define se o meio que deseja adicionar pode ultrapassar o valor de venda.</CheckBox.ToolTip>
+                        </CheckBox>
                     </Grid>
                 </StackPanel>
                 <StackPanel Grid.Row="3" Margin="5,5,0,0" HorizontalAlignment="Left" Orientation="Horizontal">
