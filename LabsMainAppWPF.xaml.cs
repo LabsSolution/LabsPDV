@@ -5,6 +5,7 @@ using Labs.LABS_PDV;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -36,6 +37,10 @@ namespace Labs
         /// </summary>
         public static bool ModoSegurança { get; private set; } = false;
         //
+        public static bool IsDatabaseConnected { get; private set; }
+        //
+        public static bool IsConnectedToInternet { get; private set; } = true;
+        //
         public LabsMainAppWPF()
         {
             InitializeComponent();
@@ -45,20 +50,25 @@ namespace Labs
             else { this.Close(); Modais.MostrarAviso("ERRO-800 \n UMA INSTÂNCIA DO APLICATIVO JÁ ESTÁ EM EXECUCÃO\n Caso o erro persista recomendamos entrar em contato com o suporte."); }
             //Carrega as Configs/
             LoadConfigs();
-            //TEMPORÁRIO
+            // Loop pra verificar net
         }
         //
         bool VerifyDataBases()
         {
-            bool canProceed = true;
-            if (!CloudDataBase.CheckDataBaseConnection(out bool LocalOK, out bool CloudOK, out bool LabsCloudOK))
-            {
-                Modais.MostrarErro("ERRO CRÍTICO\nNão Foi Possivel Estabelecer Conexão com os Bancos de Dados!");
-                LabsPDVButton.IsEnabled = false;
-                LabsEstoqueButton.IsEnabled = false;
-                canProceed = false;
-            }
-            return canProceed;
+            IsDatabaseConnected = CloudDataBase.CheckDataBaseConnection(out bool LocalOK, out bool CloudOK, out bool LabsCloudOK);
+            bool planoCloud = LABS_PDV_MAIN_WPF.Cliente.PossuiPlanoCloud;
+            //
+            IndicadorPlanoCloud.Visibility = planoCloud? Visibility.Collapsed: Visibility.Visible;
+            //
+            IndicadorDatabaseLocal.Fill = LocalOK ? new SolidColorBrush(Color.FromArgb(255,80,255,90)) : new SolidColorBrush(Color.FromArgb(255,225,80,80));
+            IndicadorDatabaseCloud.Fill = CloudOK ? new SolidColorBrush(Color.FromArgb(255,80,255,90)) : new SolidColorBrush(Color.FromArgb(255,225,80,80));
+            IndicadorDatabaseLabs.Fill = LabsCloudOK ? new SolidColorBrush(Color.FromArgb(255,80,255,90)) : new SolidColorBrush(Color.FromArgb(255,225,80,80));
+            //
+            LocalDatabasePanel.ToolTip = LocalOK ? "Conectado" : "Sem Conexão";
+            CloudDatabasePanel.ToolTip = CloudOK ? "Conectado" : "Sem Conexão";
+            LabsDatabasePanel.ToolTip = LabsCloudOK ? "Conectado" : "Sem Conexão";
+            //
+            return LocalOK;
         }
         //
         private void LoadConfigs()
@@ -75,18 +85,43 @@ namespace Labs
             //
         }
         //
+        private void OnLabsMainAppLoad(object sender, RoutedEventArgs e)
+        {
+            //Quando forem repassadas para wpf reativar
+
+            if (!VerifyDataBases()) { ModoSegurança = true; Modais.MostrarAviso("MODO DE SEGURANÇA HABILITADO!\nPara Sair Desse Modo, Os Conflitos Devem ser Resolvidos\ne Logo Após o Sistema Deve Ser Reiniciado!"); return; }
+            VerificacoesPreventivas();
+        }
+        //
         static async void VerificacoesPreventivas()
         {
             await GerenciadorPDV.VerificarEstoque(QMDP);
+            //
+            if (IsConnectedToInternet)
+            { 
+                Modais.MostrarAviso("Sua máquina esta sem acesso a internet!\n assim que a conexão retornar você será notificado(a)");
+                return;
+            }
+            //
+            if (!IsDatabaseConnected) { Modais.MostrarAviso("Sua Máquina está sem acesso ao Banco de dados remoto.\n" +
+                "Iniciando com acesso restrito ao banco de dados local\n" +
+                "Caso a conexão com o banco de dados remoto seja recuperada você será notificado(a)");
+                return;
+            }
+            await GerenciadorPDV.EspelhamentoParaCloud();
         }
         //
         private void OnLabsEstoqueClick(object sender, RoutedEventArgs e)
         {
+            //
+            if (ModoSegurança) { Modais.MostrarAviso("Sem Conexão Primária com o Banco de Dados!\nSe o problema persistir, entre em contato com o nosso suporte."); return; }
+            //
             LABS_PDV_MAIN_WPF.IniciarApp<LabsEstoqueWPF>(true,false,true);
         }
 
         private void OnLabsPDVClick(object sender, RoutedEventArgs e)
         {
+            if (ModoSegurança) { Modais.MostrarAviso("Sem Conexão Primária com o Banco de Dados!\nSe o problema persistir, entre em contato com o nosso suporte."); return; }
             LABS_PDV_MAIN_WPF.IniciarApp<LabsPDVWPF>(true,false,true);
         }
 
@@ -100,15 +135,6 @@ namespace Labs
             this.Close();
             LABS_PDV_MAIN_WPF.AppInitializer.Shutdown();
         }
-
-        private void OnLabsMainAppLoad(object sender, RoutedEventArgs e)
-        {
-            //Quando forem repassadas para wpf reativar
-            
-            if (!VerifyDataBases()) { ModoSegurança = true; Modais.MostrarAviso("MODO DE SEGURANÇA HABILITADO!\nPara Sair Desse Modo, Os Conflitos Devem ser Resolvidos\ne Logo Após o Sistema Deve Ser Reiniciado!"); return; }
-            VerificacoesPreventivas();
-        }
         //
-
     }
 }

@@ -19,19 +19,29 @@ namespace Labs.Janelas.Configuracoes.Dependencias
             LoadFromDataBase();
         }
         //
-        private bool Save()
+        private async Task<bool> Save()
         {
             //LOCAL
-            CloudDataBase.RegisterLocalAsync(Collections.MeiosDePagamento, Meios,Builders<MeiosPagamento>.Filter.Eq("ID",Meios.ID));
-            //ESPELHAMENTO CLOUD
-            CloudDataBase.RegisterCloudAsync(Collections.MeiosDePagamento, Meios,Builders<MeiosPagamento>.Filter.Eq("ID",Meios.ID));
+            await CloudDataBase.RegisterLocalAsync(Collections.MeiosDePagamento, Meios,Builders<MeiosPagamento>.Filter.Eq("ID",Meios.ID));
+            //Espelhamento Cloud
+            if (LABS_PDV_MAIN_WPF.Cliente.PossuiPlanoCloud)
+            {
+                //Só fazenos o salvamento cloud caso o cliente tenha internet (caso contrário será apresentado um erro grotesco)
+                if (LabsMainAppWPF.IsDatabaseConnected) { await CloudDataBase.RegisterCloudAsync(Collections.MeiosDePagamento, Meios,Builders<MeiosPagamento>.Filter.Eq("ID",Meios.ID)); }
+            }
             return true;
         }
         //
         private async void LoadFromDataBase()
         {
             //Tentamos realizar a atribuição
-            Meios = await CloudDataBase.GetCloudAsync<MeiosPagamento>(Collections.MeiosDePagamento, _ => true);
+            if (LABS_PDV_MAIN_WPF.Cliente.PossuiPlanoCloud)
+            {
+                if (LabsMainAppWPF.IsDatabaseConnected)
+                {
+                    Meios = await CloudDataBase.GetCloudAsync<MeiosPagamento>(Collections.MeiosDePagamento, _ => true);
+                }
+            }
             // Se não conseguir do cloud pega do local
             Meios ??= await CloudDataBase.GetLocalAsync<MeiosPagamento>(Collections.MeiosDePagamento, _ => true);
             // A partir daqui Mostramos os Meios já registrados, caso não tenha criamos um novo objeto para a edição;
@@ -66,8 +76,7 @@ namespace Labs.Janelas.Configuracoes.Dependencias
 
         private void RemoverButton_Click(object sender, RoutedEventArgs e)
         {
-            Meio? meio = ListaMeiosRegistrados.SelectedItem as Meio;
-            if (meio != null)
+            if (ListaMeiosRegistrados.SelectedItem is Meio meio)
             {
                 var r = Modais.MostrarPergunta("Deseja Remover o Meio Selecionado?");
                 if (r == MessageBoxResult.Yes)
@@ -83,10 +92,10 @@ namespace Labs.Janelas.Configuracoes.Dependencias
             }
         }
 
-        private void SairButton_Click(object sender, RoutedEventArgs e)
+        private async void SairButton_Click(object sender, RoutedEventArgs e)
         {
             //Salvamos as configs por precaução e com espelhamento
-            if (Save())
+            if (await Save())
             {
                 this.Close();
             }

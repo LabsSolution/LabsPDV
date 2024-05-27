@@ -9,6 +9,7 @@ using Labs.Janelas.LabsPDV.Dependencias;
 using Labs.Janelas.LabsPDV;
 using static Labs.LABS_PDV.Modelos;
 using System.Windows;
+using System.Net.NetworkInformation;
 using Application = System.Windows.Application;
 //
 namespace Labs
@@ -28,11 +29,18 @@ namespace Labs
 		public static string CloudDataBaseConnectionURI = null!;
 		public static string LocalDataBaseConnectionURI = null!;
 		//
-		public static Cliente Cliente { get; private set; } = null!;
+		//
+		/// <summary>
+		/// Objeto de Controle Cliente Labs
+		/// </summary>
+		//Estamos iniciando aqui por conta de Desenvolvimento
+		public static Cliente Cliente { get; private set; } = new("0029310",true,true,true); // aqui testamos as configs
         //
         public static Application AppInitializer = new();
-        //
-        static readonly SVGParser SVGParser = new(); // Desabilitado por enquanto por motivos de performance;
+        /// <summary>
+		/// Propriedade para verificar a conexão com a internet
+		/// </summary>
+		public static Task<PingReply> CheckInternet { get { return new Ping().SendPingAsync("www.google.com"); } }
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -48,12 +56,10 @@ namespace Labs
 			//Descriptografa o nome da Database da empresa
 			if(LabsCripto.Decript("N_Data",out string NDecripted)) { ClientDataBase = NDecripted; }
 			//
-			LabsMainAppWPF App = new(); // Altere esse campo para modificar a primeira janela a ser aberta (Utilizar somente para debug)
-			//
-			//App.SizeChanged += OnAppSizeChange;
+			LabsMainAppWPF App = new(); // Altere esse campo para modificar a primeira janela a ser aberta (Utilizar somente para debug)             //
+            //App.SizeChanged += OnAppSizeChange;
             INIT(App);
         }
-        //
         static void INIT<T>(T App) where T : Window
 		{
 			//Inicializamos as dependências obrigatórias

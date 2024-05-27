@@ -35,6 +35,26 @@
                 <Button x:Name="ConfigButton" Click="OnLabsConfigClick" Content="Configurações" Width="150" Height="80" FontSize="18" FontFamily="Segoe UI Black" FontWeight="Bold" Margin="10,0" Background="#FFFFFF"/>
                 <Button x:Name="SairButton" Click="OnLabsSairClick" Content="Sair" Width="150" Height="80" FontSize="18" FontFamily="Segoe UI Black" FontWeight="Bold" Margin="10,0" Background="#FFFFFF"/>
             </StackPanel>
+            <DockPanel Grid.Row="2" Grid.Column="0" Margin="20,0,0,0">
+                <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                    <!--Labs-->
+                    <StackPanel Name="LabsDatabasePanel" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Left">
+                        <TextBlock Text="Labs:" Margin="10,0,5,0" VerticalAlignment="Bottom" Width="55" TextAlignment="Left" HorizontalAlignment="Left" FontSize="16" FontFamily="Segoe UI Black" Foreground="#F0F0F0" />
+                        <Ellipse x:Name="IndicadorDatabaseLabs" Margin="0,1,0,1" Fill="#F08080" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="16" Height="16"/>
+                    </StackPanel>
+                    <!--Local-->
+                    <StackPanel Name="LocalDatabasePanel" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Left">
+                        <TextBlock Text="Local:" Margin="10,0,5,0" VerticalAlignment="Bottom" Width="55" TextAlignment="Left" HorizontalAlignment="Left" FontSize="16" FontFamily="Segoe UI Black" Foreground="#F0F0F0" />
+                        <Ellipse x:Name="IndicadorDatabaseLocal" Margin="0,1,0,1" Fill="#F08080" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="16" Height="16"/>
+                    </StackPanel>
+                    <!--Cloud-->
+                    <StackPanel Name="CloudDatabasePanel" Orientation="Horizontal" Width="Auto" HorizontalAlignment="Left">
+                        <TextBlock Text="Cloud:" Margin="10,0,5,0" VerticalAlignment="Bottom" Width="55" TextAlignment="Left" HorizontalAlignment="Left" FontSize="16" FontFamily="Segoe UI Black" Foreground="#F0F0F0" />
+                        <Ellipse x:Name="IndicadorDatabaseCloud" Margin="0,1,0,1" Fill="#F08080" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="16" Height="16"/>
+                        <TextBlock x:Name="IndicadorPlanoCloud" Visibility="Collapsed" Text="(Não está disponível no seu plano atual)" Margin="10,0,5,0" VerticalAlignment="Bottom" Width="Auto" TextAlignment="Left" HorizontalAlignment="Left" FontSize="16" FontFamily="Segoe UI Black" Foreground="#F0F0F0" />
+                    </StackPanel>
+                </StackPanel>
+            </DockPanel>
         </Grid>
     </Border>
 </Window>

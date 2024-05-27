@@ -142,9 +142,9 @@ namespace Labs.Janelas.LabsPDV
             //
             QuantidadeInput.Text = null;
         }
-        private void UpdateEstadoCaixa()
+        private async void UpdateEstadoCaixa()
         {
-            CloudDataBase.UpdateOneLocalAsync(Collections.EstadoCaixa, EstadoCaixa, Builders<EstadoCaixa>.Filter.Eq("ID", EstadoCaixa.ID));
+            await CloudDataBase.UpdateOneLocalAsync(Collections.EstadoCaixa, EstadoCaixa, Builders<EstadoCaixa>.Filter.Eq("ID", EstadoCaixa.ID));
         }
         //
         /// <summary>
@@ -152,7 +152,7 @@ namespace Labs.Janelas.LabsPDV
         /// </summary>
         /// <param name="ValorDeAbertura">Valor total com que o caixa está abrindo</param>
         /// <param name="Janela">Retorno da Própria janela</param>
-        private void RealizarAbertura(double ValorDeAbertura, JanelaAberturaDeCaixaWPF Janela)
+        private async void RealizarAbertura(double ValorDeAbertura, JanelaAberturaDeCaixaWPF Janela)
         {
             //Iniciamos o CaixaLabs, se não conseguirmos lançamos um erro
             Operador = new("Operador Teste", "User", "Pass");
@@ -177,15 +177,15 @@ namespace Labs.Janelas.LabsPDV
                     Produtos = Produtos,
                     OperadorCaixa = Operador
                 };
-                CloudDataBase.RegisterLocalAsync(Collections.EstadoCaixa, EstadoCaixa);
+                await CloudDataBase.RegisterLocalAsync(Collections.EstadoCaixa, EstadoCaixa);
             }
         }
         //
-        public void RealizarFechamento(JanelaFechamentoDeCaixaWPF Janela)
+        public async void RealizarFechamento(JanelaFechamentoDeCaixaWPF Janela)
         {
             FecharCaixaVisual();
             //
-            CloudDataBase.RemoveLocalAsync<EstadoCaixa>(Collections.EstadoCaixa, _ => true); // ao realizar o fechamento do caixa, não precisamos mais do monitoramento
+            await CloudDataBase.RemoveLocalAsync<EstadoCaixa>(Collections.EstadoCaixa, _ => true); // ao realizar o fechamento do caixa, não precisamos mais do monitoramento
                                                                                              //
             Janela.Close();
             Modais.MostrarInfo("Caixa Fechado com Sucesso!");

@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using Unimake.Business.DFe.Xml.NFe;
 using static Labs.LABS_PDV.Modelos;
 
+/// TODOS OS MEMBROS DEFINIDOS AQUI DEVEM SER DO TIPO TASK!
+
 namespace Labs.LABS_PDV
 {
 	//Exemplo de como deve ser os objetos salvos no banco de dados
@@ -44,7 +46,7 @@ namespace Labs.LABS_PDV
             //
             LocalOK = local != null;
             //
-            CloudOK = cloud != null;
+            CloudOK = cloud != null; // só retorna aconexão cloud caso o cliente possua esse plano
             //
             LabsCloudOK = labsCloud != null;
             //
@@ -77,8 +79,12 @@ namespace Labs.LABS_PDV
         /// <typeparam name="T">Tipo da Coleção</typeparam>
         /// <param name="collection">Nome da Coleção</param>
         /// <returns>Retorna a Conexão</returns>
+        // Esse método é desabilitado diretamente caso o cliente não possua o plano cloud
         private static IMongoCollection<T> ConnectToMongoCloud<T>(in string collection)
         {
+            //
+            if (!LABS_PDV_MAIN_WPF.Cliente.PossuiPlanoCloud) { return null!; }
+            //Desabilita a comunicação caso o cliente não tenha o plano cloud!
             try
             {
                 var client = new MongoClient(LABS_PDV_MAIN_WPF.CloudDataBaseConnectionURI);
@@ -168,7 +174,7 @@ namespace Labs.LABS_PDV
         /// <typeparam name="T">Tipo de objeto para registro</typeparam>
         /// <param name="collectionName">Nome da coleção</param>
         /// <param name="ToRegisterObject">Objeto para registro (Respeitando o tipo)</param>
-        public static async void RegisterLocalAsync<T>(string collectionName, T ToRegisterObject)
+        public static async Task RegisterLocalAsync<T>(string collectionName, T ToRegisterObject)
         {
             try
             {
@@ -189,7 +195,7 @@ namespace Labs.LABS_PDV
         /// <param name="collectionName">Nome da coleção</param>
         /// <param name="ToRegisterObject">Objeto para registro (Respeitando o tipo)</param>
         /// <param name="filter">Filtro Para Upsert (Respeitando o tipo)</param>
-        public static async void RegisterLocalAsync<T>(string collectionName, T ToRegisterObject,FilterDefinition<T> filter)
+        public static async Task RegisterLocalAsync<T>(string collectionName, T ToRegisterObject,FilterDefinition<T> filter)
         {
             try
             {
@@ -210,7 +216,7 @@ namespace Labs.LABS_PDV
         /// <param name="collectionName">Nome da coleção</param>
         /// <param name="toUpdateObject">Objeto para atualização</param>
         /// <param name="filter">Filtro para ser aplicado</param>
-        public static async void UpdateOneLocalAsync<T>(string collectionName, T toUpdateObject, FilterDefinition<T> filter)
+        public static async Task UpdateOneLocalAsync<T>(string collectionName, T toUpdateObject, FilterDefinition<T> filter)
         {
             try
             {
@@ -230,7 +236,7 @@ namespace Labs.LABS_PDV
         /// <param name="collectionName">Nome da coleção</param>
         /// <param name="updatedObjectList">Lista de objetos com as alterações aplicadas</param>
         /// <param name="filter">filtro para atualização</param>
-        public static async void UpdateManyLocalAsync<T>(string collectionName, List<T> updatedObjectList, FilterDefinition<T> filter)
+        public static async Task UpdateManyLocalAsync<T>(string collectionName, List<T> updatedObjectList, FilterDefinition<T> filter)
         {
             //Somente Atualiza os Itens já que a Alteração já foi feita via script antes da chamada
             // na teoria vai funcionar
@@ -256,7 +262,7 @@ namespace Labs.LABS_PDV
         /// <typeparam name="T">Tipo de objeto para remoção</typeparam>
         /// <param name="collectionName">Nome da coleção alvo</param>
         /// <param name="predicate">Comparativo para remoção ex: "(x => x.ID == obj.ID)"</param>
-        public static async void RemoveLocalAsync<T>(string collectionName, Expression<Func<T, bool>> predicate)
+        public static async Task RemoveLocalAsync<T>(string collectionName, Expression<Func<T, bool>> predicate)
         {
             try
             {
@@ -343,7 +349,7 @@ namespace Labs.LABS_PDV
         /// <typeparam name="T">Tipo de objeto para registro</typeparam>
         /// <param name="collectionName">Nome da coleção</param>
         /// <param name="ToRegisterObject">Objeto para registro (Respeitando o tipo)</param>
-        public static async void RegisterCloudAsync<T>(string collectionName, T ToRegisterObject)
+        public static async Task RegisterCloudAsync<T>(string collectionName, T ToRegisterObject)
         {
             try
             {
@@ -364,7 +370,7 @@ namespace Labs.LABS_PDV
         /// <param name="collectionName">Nome da coleção</param>
         /// <param name="ToRegisterObject">Objeto para registro (Respeitando o tipo)</param>
         /// <param name="filter">Filtro Para Upsert (Respeitando o tipo)</param>
-        public static async void RegisterCloudAsync<T>(string collectionName, T ToRegisterObject,FilterDefinition<T> filter)
+        public static async Task RegisterCloudAsync<T>(string collectionName, T ToRegisterObject,FilterDefinition<T> filter)
         {
             try
             {
@@ -385,7 +391,7 @@ namespace Labs.LABS_PDV
         /// <param name="collectionName">Nome da coleção</param>
         /// <param name="toUpdateObject">Objeto para atualização</param>
         /// <param name="filter">Filtro para ser aplicado</param>
-        public static async void UpdateCloudAsync<T>(string collectionName, T toUpdateObject, FilterDefinition<T> filter)
+        public static async Task UpdateCloudAsync<T>(string collectionName, T toUpdateObject, FilterDefinition<T> filter)
         {
             try
             {
@@ -404,7 +410,7 @@ namespace Labs.LABS_PDV
         /// <typeparam name="T">Tipo de objeto para remoção</typeparam>
         /// <param name="collectionName">Nome da coleção alvo</param>
         /// <param name="predicate">Comparativo para remoção ex: "(x => x.ID == obj.ID)"</param>
-        public static async void RemoveCloudAsync<T>(string collectionName, Expression<Func<T, bool>> predicate)
+        public static async Task RemoveCloudAsync<T>(string collectionName, Expression<Func<T, bool>> predicate)
         {
             try
             {
@@ -486,7 +492,7 @@ namespace Labs.LABS_PDV
         /// Registra um Admin No Banco Labs
         /// </summary>
         /// <param name="admin">Objeto de Admin Para ser Registrado</param>
-        public static async void RegisterAdminLabs(AdminLabs admin)
+        public static async Task RegisterAdminLabs(AdminLabs admin)
         {
             try
             {
@@ -527,7 +533,7 @@ namespace Labs.LABS_PDV
         /// Registra um Cliente No Banco de Dados da LABS
         /// </summary>
         /// <param name="cliente">Objeto de Cliente para Registro</param>
-        public static async void RegisterClienteAsync(Cliente cliente)
+        public static async Task RegisterClienteAsync(Cliente cliente)
         {
             try
             {
@@ -544,7 +550,7 @@ namespace Labs.LABS_PDV
         /// Atualiza um Cliente no Banco de Dados da LABS
         /// </summary>
         /// <param name="cliente">Objeto de cliente para ser atualizado</param>
-        public static async void UpdateClienteAsync(Cliente cliente)
+        public static async Task UpdateClienteAsync(Cliente cliente)
         {
             try
             {
@@ -561,7 +567,7 @@ namespace Labs.LABS_PDV
 
         }
         //
-        public static async void RemoverClienteAsync(Cliente cliente)
+        public static async Task RemoverClienteAsync(Cliente cliente)
         {
             try
             {

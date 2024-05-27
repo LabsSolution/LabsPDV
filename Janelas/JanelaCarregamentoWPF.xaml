@@ -8,7 +8,7 @@
         
         xmlns:local="clr-namespace:Labs.Janelas"
         mc:Ignorable="d"
-        Title="JanelaCarregamentoWPF" WindowStyle="None" AllowsTransparency="True" Background="Transparent" WindowState="Normal" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Height="200" Width="200">
+        Title="JanelaCarregamentoWPF" WindowStyle="None" AllowsTransparency="True" Background="Transparent" WindowState="Normal" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Height="400" Width="400">
     <Border Background="#202020" CornerRadius="10">
         <Border Background="#303030" Margin="5" CornerRadius="10">
             <Grid>
@@ -17,7 +17,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <!--Conteudo-->
-                <TextBlock x:Name="Titulo" Text="Atualizando alguma coisa" FontFamily="Segoe UI" FontWeight="Bold" Margin="5" TextAlignment="Center" Foreground="#f0f0f0" VerticalAlignment="Center" FontSize="20" TextWrapping="Wrap"/>
+                <TextBlock x:Name="Titulo" Text="" FontFamily="Segoe UI" FontWeight="Bold" Margin="5" TextAlignment="Center" Foreground="#f0f0f0" VerticalAlignment="Center" FontSize="20" TextWrapping="Wrap"/>
                 <StackPanel Orientation="Vertical" Grid.Row="1">
                     <fa:ImageAwesome Grid.Row="1" Margin="10" Icon="Refresh" Foreground="#00f100" SpinDuration="1.5" Spin="True" Height="30" Width="30" />
                     <ProgressBar x:Name="LoadingBar" HorizontalAlignment="Stretch" Height="20" Margin="10,0,10,5" Grid.Row="1" VerticalAlignment="Center"/>
