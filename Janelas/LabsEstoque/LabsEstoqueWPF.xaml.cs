@@ -67,8 +67,7 @@ namespace Labs.Janelas.LabsEstoque
         //
         private void AtualizarProdutoButton_Click(object sender, RoutedEventArgs e)
         {
-            Produto? produto = ListaProdutosCadastrados.SelectedItem as Produto;
-            if (produto == null) { Modais.MostrarAviso("Você deve selecionar o produto que deseja atualizar!"); return; }
+            if (ListaProdutosCadastrados.SelectedItem is not Produto produto) { Modais.MostrarAviso("Você deve selecionar o produto que deseja atualizar!"); return; }
             //
             LABS_PDV_MAIN_WPF.IniciarDependencia<AtualizarProdutoWPF>(app =>
             {
@@ -77,16 +76,15 @@ namespace Labs.Janelas.LabsEstoque
             });
         }
         //
-        private void RemoverProdutoButton_Click(object sender, RoutedEventArgs e)
+        private async void RemoverProdutoButton_Click(object sender, RoutedEventArgs e)
         {
-            Produto? produto = ListaProdutosCadastrados.SelectedItem as Produto;
-            if(produto == null) { Modais.MostrarAviso("Você precisa selecionar o produto que deseja remover do estoque!"); return; }
+            if (ListaProdutosCadastrados.SelectedItem is not Produto produto) { Modais.MostrarAviso("Você precisa selecionar o produto que deseja remover do estoque!"); return; }
             MessageBoxResult r = Modais.MostrarPergunta($"Você deseja remover o Produto: {produto.Descricao}?\nESTA OPERAÇÃO NÃO PODE SER DESFEITA!");
             if(r == MessageBoxResult.Yes)
             {
                 //
                 ListaProdutosCadastrados.Items.Remove(produto);
-                CloudDataBase.RemoveLocalAsync<Produto>(Collections.Produtos, x => x.ID == produto.ID);
+                await CloudDataBase.RemoveLocalAsync<Produto>(Collections.Produtos, x => x.ID == produto.ID);
                 //
                 Modais.MostrarInfo($"Produto: {produto.Descricao}\nRemovido com Sucesso!");
                 //
@@ -181,7 +179,7 @@ namespace Labs.Janelas.LabsEstoque
                     if (prod != null)
                     {
                         prod.Quantidade -= produto.Quantidade;
-                        CloudDataBase.UpdateOneLocalAsync(Collections.Produtos, prod, Builders<Produto>.Filter.Eq("ID", prod.ID));
+                        await CloudDataBase.UpdateOneLocalAsync(Collections.Produtos, prod, Builders<Produto>.Filter.Eq("ID", prod.ID));
                     }
                 }
                 // Logo após Chamamos o UpdateMany

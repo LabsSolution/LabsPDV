@@ -18,6 +18,7 @@ namespace Labs.LABS_PDV
 	public class Collections
 	{
 		public static string Produtos { get; } = "Produtos";
+		public static string ProdutosComDefeito { get; } = "ProdutosComDefeito";
 		public static string EstadoCaixa { get; } = "EstadoCaixa";
 		public static string Fechamentos { get; } = "Fechamentos";
 		public static string Vendas { get; } = "Vendas";
@@ -318,7 +319,7 @@ namespace Labs.LABS_PDV
 		//
 		//
 		//
-		public class Produto(string Descricao = null!, int Quantidade = 0, double Preco = 0, string CodBarras = null!)
+		public class Produto(string Descricao = null!, int Quantidade = 0, double Preco = 0, string CodBarras = null!, bool ComDefeito = false, string Status = null!)
 		{
 			//Identificador na database
 			[BsonId]
@@ -329,6 +330,10 @@ namespace Labs.LABS_PDV
 			public int Quantidade { get; set; } = Quantidade;
 			public double Preco { get; set; } = Preco;
 			public string CodBarras { get; set; } = CodBarras;
+			public string Status { get; set; } = Status;
+			//
+			public bool ComDefeito { get; set; } = ComDefeito;
+			//
 		}
 		//
 	}
