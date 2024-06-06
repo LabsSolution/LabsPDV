@@ -25,17 +25,30 @@ namespace Labs.LABS_PDV
             var PBFDS = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.Produtos, _ => true); // Pega todos os produtos
             int ProdutosEmBaixa = 0;
             //
-			await Task.Delay(100);
+			await Task.Delay(3000);
             JDC.ConfigBarraDeCarregamento(0, PBFDS.Count);
 			//
-			for (int i = 0; i < PBFDS.Count; i++)
+            JDC.SetTextoFrontEnd($"VERIFICANDO ESTOQUE");
+			foreach (var produto in PBFDS)
 			{
-				if (PBFDS[i].Quantidade <= QMDP) { ProdutosEmBaixa++; }
-                JDC.SetTextoFrontEnd($"VERIFICANDO ESTOQUE\n({i}/{PBFDS.Count})");
+				produto.Status = "OK";
+				//
+				if (produto.Quantidade <= QMDP) { produto.Status = "Produto em Baixa"; ProdutosEmBaixa++; }
+                //
                 JDC.AumentarBarraDeCarregamento(1);
+				await Task.Delay(1);
             }
             //
             if (ProdutosEmBaixa > 0) { Modais.MostrarAviso("UM OU MAIS PRODUTOS ESTÃO EM BAIXA NO ESTOQUE!"); }
+			//
+			JDC.SetTextoFrontEnd($"ATUALIZANDO ESTOQUE");
+			JDC.SetarValorBarra(0);
+			await Task.Delay(3000); // aguarda 3s
+			foreach (var produto in PBFDS)
+			{
+				await CloudDataBase.RegisterLocalAsync(Collections.Produtos,produto,Builders<Produto>.Filter.Eq("CodBarras",produto.CodBarras));
+				JDC.AumentarBarraDeCarregamento(1);
+			}
             //
             JDC.Close();
         }
@@ -50,40 +63,35 @@ namespace Labs.LABS_PDV
 			await Task.Delay(1000); // Aguarda 1 seg
 			//
 			var ProdutosLocais = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.Produtos, _ => true); //Retorna todos os produtos locais
-			var ProdutosCloud = await CloudDataBase.GetManyCloudAsync<Produto>(Collections.Produtos, _ => true);
+			var ProdutosCloud = await CloudDataBase.GetManyCloudAsync<Produto>(Collections.Produtos, _ => true); //Retorna todos os produtos cloud
 			//
 			JDC.SetTextoFrontEnd("Iniciando Processo de Comparação");
 			await Task.Delay(1000); // Aguarda 1 seg
 			JDC.SetTextoFrontEnd("Realizando Processo de Comparação");
+			await Task.Delay(1000); // Aguarda 1 seg
 			//
 			JDC.ConfigBarraDeCarregamento(0,ProdutosLocais.Count);
 			//
 			List<Produto> produtosEspelhados = [];
-			List<Produto> produtosParaEspelhar = [];
 			//
-			foreach (var pl in ProdutosLocais)
-			{
-				JDC.SetTextoFrontEnd($"Comparando Produto\n({pl.ID})");
-				if (ProdutosCloud.Find(xC => //Operação Lambda para pesquisa determinante
-                                             // Realizamos todos os comparativos já que precisamos que o espelhamento dos produtos sejam perfeitos
-											 //Futuramente esse espelhamento será realizado de forma mais profunda (quando tivermos comunicação com a receita)
-                (xC.CodBarras == pl.CodBarras && xC.Quantidade == pl.Quantidade && xC.Descricao == pl.Descricao && xC.Preco == pl.Preco)) != default) 
-				{ 
-					produtosEspelhados.Add(pl);
-				}
-				else { produtosParaEspelhar.Add(pl); }
-				//
-				JDC.AumentarBarraDeCarregamento(1); // aumenta a barra em 1 unidade
-				//
-				await Task.Delay(0);
-			}
-			if(produtosParaEspelhar.Count <= 0)
+			List<Produto> produtosParaEspelhar = [];
+            //
+            JDC.SetTextoFrontEnd($"Comparando Produtos...");
+			//
+			await Task.Delay(3000); // aguarda 3s
+			//
+            produtosEspelhados = ProdutosCloud.Except(ProdutosLocais).ToList(); // Pega os produtos que já estão no cloud
+            //
+            produtosParaEspelhar = ProdutosLocais.Except(ProdutosCloud).ToList(); // Pega os produtos que não estão no cloud
+			// após a comparação seguimos para a verificação
+			if (produtosParaEspelhar.Count <= 0 && ProdutosCloud.Count > 0)
 			{
 				JDC.SetTextoFrontEnd($"Processo de Comparação Finalizado.\nFechando Automaticamente em 3 Seg...");
 				await Task.Delay(3000);
 				JDC.Close();
 				return;
 			}
+			//
 			JDC.SetTextoFrontEnd($"Processo de Comparação Finalizado.\n{produtosParaEspelhar.Count} Itens de {ProdutosLocais.Count} Itens, Não Estão Espelhados.");
 			await Task.Delay(3000);
 			var r = Modais.MostrarPergunta($"Atenção! ({produtosParaEspelhar.Count} Itens de {ProdutosLocais.Count} Itens Não Estão Espelhados)\n" +
@@ -93,7 +101,7 @@ namespace Labs.LABS_PDV
 			//
 			JDC.SetTextoFrontEnd($"Iniciando Processo de Espelhamento\n (Isso Pode Demorar um Pouco)");
 			JDC.ConfigBarraDeCarregamento(0,produtosParaEspelhar.Count);
-			JDC.SetarValor(0);
+			JDC.SetarValorBarra(0);
 			//
 			await Task.Delay(3000);
 			//
@@ -101,7 +109,7 @@ namespace Labs.LABS_PDV
 			{
                 JDC.SetTextoFrontEnd($"Espelhando Itens\n({i}/{produtosParaEspelhar.Count})");
                 await CloudDataBase.RegisterCloudAsync(Collections.Produtos, produtosParaEspelhar[i], Builders<Produto>.Filter.Eq("CodBarras", produtosParaEspelhar[i].CodBarras));
-                JDC.SetarValor(i+1);
+                JDC.SetarValorBarra(i+1);
 			}
 			JDC.SetTextoFrontEnd($"Processo de Espelhamento Finalizado!\nFechando Automaticamente em 3 Seg...");
 			//

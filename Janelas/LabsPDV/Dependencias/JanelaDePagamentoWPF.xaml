@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Labs.Janelas.LabsPDV.Dependencias"
         mc:Ignorable="d"
-        Title="JanelaDePagamentoWPF" WindowStartupLocation="CenterScreen" KeyDown="OnJanelaDePagamentoKeyUp" WindowStyle="None" AllowsTransparency="True" Background="Transparent" Width="800" Height="600">
+        Title="JanelaDePagamentoWPF" Name="JanelaDePagamento" WindowStartupLocation="CenterScreen" KeyDown="OnJanelaDePagamentoKeyUp" WindowStyle="None" AllowsTransparency="True" Background="Transparent" Width="800" Height="600">
     <Border Background="#202020" CornerRadius="20">
         <Border Background="#404040" Margin="10" CornerRadius="20">
             <Grid Margin="5">

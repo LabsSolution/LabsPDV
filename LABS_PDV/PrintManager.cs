@@ -19,8 +19,8 @@ namespace Labs.LABS_PDV
 	public class PrintManager : PrintDocument
 	{
         //
-        //public const string ImpressoraDefault = "POS-58 Baisec";
-        public const string ImpressoraDefault = "HP LaserJet Professional P1102w";
+        public const string ImpressoraDefault = "POS-58 Baisec";
+        //public const string ImpressoraDefault = "HP LaserJet Professional P1102w";
         //
         private Size Papel58mm = new(58, 210);
         //

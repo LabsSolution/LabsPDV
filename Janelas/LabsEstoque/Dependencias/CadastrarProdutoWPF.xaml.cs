@@ -34,7 +34,7 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
             CodigoInputBox.Text = null!;
         }
         //METODOS
-        private void CadastrarProduto(string Desc, int QTD, double Preco, string CodBarras)
+        private async void CadastrarProduto(string Desc, int QTD, double Preco, string CodBarras)
         {
             Produto produto = new Produto()
             {
@@ -44,7 +44,7 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
                 Quantidade = QTD
             };
             //
-            CloudDataBase.RegisterLocalAsync(Collections.Produtos,produto);
+            await CloudDataBase.RegisterLocalAsync(Collections.Produtos,produto);
             //
             Modais.MostrarInfo("Produto cadastrado com sucesso!");
             //

@@ -9,7 +9,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Labs"
         mc:Ignorable="d"
-        Title="LABS" Loaded="OnLabsMainAppLoad" Width="1000" Height="768" Background="Transparent" AllowsTransparency="True" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowState="Maximized" WindowStyle="None">
+        Title="LABS" Name="LabsMainApp" Loaded="OnLabsMainAppLoad" Width="1000" Height="768" Background="Transparent" AllowsTransparency="True" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowState="Maximized" WindowStyle="None">
     <Border CornerRadius="20">
         <Border.Background>
             <ImageBrush ImageSource="{svgc:SvgImage Source=Recursos/Fundos/Background.svg, AppName=LabsMainAppWPF}" Stretch="Fill"/>

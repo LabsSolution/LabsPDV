@@ -50,7 +50,6 @@ namespace Labs
             else { this.Close(); Modais.MostrarAviso("ERRO-800 \n UMA INSTÂNCIA DO APLICATIVO JÁ ESTÁ EM EXECUCÃO\n Caso o erro persista recomendamos entrar em contato com o suporte."); }
             //Carrega as Configs/
             LoadConfigs();
-            // Loop pra verificar net
         }
         //
         bool VerifyDataBases()
@@ -97,7 +96,7 @@ namespace Labs
         {
             await GerenciadorPDV.VerificarEstoque(QMDP);
             //
-            if (IsConnectedToInternet)
+            if (!IsConnectedToInternet)
             { 
                 Modais.MostrarAviso("Sua máquina esta sem acesso a internet!\n assim que a conexão retornar você será notificado(a)");
                 return;
@@ -133,7 +132,7 @@ namespace Labs
         private void OnLabsSairClick(object sender, RoutedEventArgs e)
         {
             this.Close();
-            LABS_PDV_MAIN_WPF.AppInitializer.Shutdown();
+            LABS_PDV_MAIN_WPF.Application.Shutdown();
         }
         //
     }

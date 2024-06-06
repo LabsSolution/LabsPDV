@@ -47,7 +47,7 @@ namespace Labs.Janelas
             LoadingBar.Value += valor;
         }
         //
-        public void SetarValor(int valor)
+        public void SetarValorBarra(int valor)
         {
             LoadingBar.Value = valor;
         }

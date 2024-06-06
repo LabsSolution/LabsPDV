@@ -426,12 +426,17 @@ namespace Labs.Janelas.LabsPDV
             RemoverProduto();
         }
         //
+        private void DevolucaoButton_Click(object sender, RoutedEventArgs e)
+        {
+            LABS_PDV_MAIN_WPF.IniciarDependencia<JanelaDeDevolucaoWPF>(null!,true,false);
+        }
+        //
         private void VoltarButton_Click(object sender, RoutedEventArgs e)
         {
             // Bem simples, se o caixa estiver aberto, caso o cliente queira voltar pra tela anterior, ele será mantido rodando
             // Caso contrário simplesmente fechamos para não consumir memória desnecessária;
-            if (EstaAberto) { this.Hide(); return; }
-            this.Close();
+            if (EstaAberto) { this.Visibility = Visibility.Hidden; return; }
+            if (!EstaAberto) { this.Close(); }
         }
 
         private void AbrirFecharCaixaButton_Click(object sender, RoutedEventArgs e)

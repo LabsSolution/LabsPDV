@@ -15,10 +15,16 @@ using Application = System.Windows.Application;
 namespace Labs
 {
 
+	class LabWindow (Window window,bool IsClosed)
+	{ 
+		public Window Window { get; set; } = window;
+		public bool IsClosed { get; set; } = IsClosed;
+	}
+	//
 	internal static class LABS_PDV_MAIN_WPF
 	{
 		//Controle de Instâncias (Endereçamento de memória)
-		private static Dictionary<string, Window> RunningApps = new();
+		private static Dictionary<string, LabWindow> RunningApps = new();
 		//
 		public static string TradeMark = "© Lab Soluções © ";
 		//
@@ -29,14 +35,13 @@ namespace Labs
 		public static string CloudDataBaseConnectionURI = null!;
 		public static string LocalDataBaseConnectionURI = null!;
 		//
+		public static Application Application = new();
 		//
 		/// <summary>
 		/// Objeto de Controle Cliente Labs
 		/// </summary>
 		//Estamos iniciando aqui por conta de Desenvolvimento
 		public static Cliente Cliente { get; private set; } = new("0029310",true,true,true); // aqui testamos as configs
-        //
-        public static Application AppInitializer = new();
         /// <summary>
 		/// Propriedade para verificar a conexão com a internet
 		/// </summary>
@@ -57,7 +62,6 @@ namespace Labs
 			if(LabsCripto.Decript("N_Data",out string NDecripted)) { ClientDataBase = NDecripted; }
 			//
 			LabsMainAppWPF App = new(); // Altere esse campo para modificar a primeira janela a ser aberta (Utilizar somente para debug)             //
-            //App.SizeChanged += OnAppSizeChange;
             INIT(App);
         }
         static void INIT<T>(T App) where T : Window
@@ -73,7 +77,7 @@ namespace Labs
 				return; 
 			}
 			// Somente após o sistema verificar tudo é que inicializamos
-			AppInitializer.Run(App);
+			Application.Run(App);
             //
         }
         //
@@ -93,7 +97,10 @@ namespace Labs
 			{
 				App.Closed -= AppClosed;
 				App.SizeChanged -= OnAppSizeChange;
+                //se a janela existe no mapeamento, dizemos que ela foi fechada
                 //
+                if (RunningApps.TryGetValue(App.Name, out _)) { RunningApps[App.Name].IsClosed = true; }
+				//
                 LabsMainAppWPF.App?.Show();
             }
 		}
@@ -107,8 +114,8 @@ namespace Labs
 				{
 					App.IsVisibleChanged -= AppHidden;
 					App.SizeChanged -= OnAppSizeChange;
-                    //
-                    LabsMainAppWPF.App?.Show();
+					//
+					LabsMainAppWPF.App?.Show();
                 }
 			}
 		}
@@ -119,8 +126,11 @@ namespace Labs
 			{
 			    App.IsVisibleChanged -= AppHidden;
 			    App.SizeChanged -= OnAppSizeChange;
-			    //
-			}
+				//se a janela existe no mapeamento, dizemos que ela foi fechada
+				//
+                if (RunningApps.TryGetValue(App.Name, out _)) { RunningApps[App.Name].IsClosed = true; }
+                //
+            }
         }
 		//
 		private static void DepAppHidden(object? sender, DependencyPropertyChangedEventArgs e)
@@ -137,51 +147,42 @@ namespace Labs
 		/// <summary>
 		/// Inicia uma dependencia em cima da janela que a requisitou (Não Esconde a janela anterior)
 		/// Caso queira iniciar uma janela Diretamente como foco use o método IniciarApp para melhor performance
+		/// Esse Método Também não Deixa o Estado da Janela Salvo na memória, uma vez que a janela for fechada é descartada.
 		/// </summary>
 		/// <typeparam name="T">Dependencia a ser Iniciada</typeparam>
 		/// <param name="SempreNoTopo">Mostrar Janela sempre no topo ou não</param>
 		public static T IniciarDependencia<T>(Action<T> config = null!, bool SempreNoTopo = true, bool BackgroundImage = false) where T : Window, new()
 		{
-			T? App;
-			// Verifica se a aplicação já está rodando
-			if (RunningApps.TryGetValue(typeof(T).Name, out Window? existingApp))
-			{
-				App = existingApp as T;
-			}
-			else
-			{
-				// Cria uma nova instância da aplicação se ela ainda não estiver rodando
-				App = new T();
-				RunningApps.Add(typeof(T).Name, App);
-			}
-
-			// Verifica se a aplicação está descartada
-			if (App?.IsActive == false)
-			{
-				// Cria uma nova instância da aplicação se a antiga estiver descartada
-				App = new T();
-				RunningApps[typeof(T).Name] = App;
-			}
+			T? App = new();
 			//
-			if(App != null) { config?.Invoke(App); }
-			// Mostra a aplicação
-			//
-            if (SempreNoTopo) 
-			{ 
-				//
-				if(App != null)
-				{
-                    App.Topmost = true;
-                    App.Closed += DepAppClosed;
-                    App.IsVisibleChanged += DepAppHidden;
-                    App.ShowDialog();
-                    //
-                    return App;
-                }
+            // Verifica se a aplicação já está rodando
+            if (RunningApps.TryGetValue(App.Name, out LabWindow? existingLabWindow))
+            {
+				RunningApps[App.Name].Window = new T();
+            }
+            else
+            {
+                existingLabWindow = new(App, true);
+                RunningApps.Add(App.Name, existingLabWindow);
 			}
-            //Retornamos o App caso não seja nulo
-			if(App != null) { App.Closed += DepAppClosed; App.Show(); return App; }
-			//
+			//	
+			if (existingLabWindow != null && App != null)
+			{
+                //
+                // Invocamos a config antes de chamar a janela;
+                config?.Invoke((existingLabWindow.Window as T)!);
+                //Atrelamos eventos
+                existingLabWindow.Window.Topmost = SempreNoTopo;
+				existingLabWindow.Window.Closed += DepAppClosed;
+				existingLabWindow.Window.IsVisibleChanged += DepAppHidden;
+				//Chamamos a Janela
+				existingLabWindow.Window.Show();
+				// Registramos que foi Aberta(Padronização)
+				if (RunningApps.TryGetValue(App.Name, out _)) { RunningApps[App.Name].IsClosed = false; }
+				//Retornamos a Janela
+				return App;
+			}
+			// se nada for atendido retornamos nulo
 			return null!;
 		}
 
@@ -193,43 +194,50 @@ namespace Labs
 		/// <param name="BackgroundImage">Define se a janela Carrega a imagem de Background ou não, padrão = true</param>
 		public static T IniciarApp<T>(bool Persistente = false, bool BackgroundImage = false, bool AutoMaximize = true) where T : Window, new()
 		{
-			T? App;
-			// Verifica se a aplicação já está rodando
-			if (RunningApps.TryGetValue(typeof(T).Name, out Window? existingApp))
+			T? App = new();
+            // Verifica se a aplicação já está rodando
+            if (RunningApps.TryGetValue(App.Name, out LabWindow? existingLabWindow))
+            {
+                App = existingLabWindow.Window as T;
+            }
+            else
+            {
+                // Cria uma nova instância da aplicação se ela ainda não estiver rodando
+				existingLabWindow = new(App, true);
+                RunningApps.Add(App.Name, existingLabWindow);
+            }
+            // Verifica se a aplicação só está escondida e a janela está ativa
+			// Se o container existe
+			if(existingLabWindow != null && App != null)
 			{
-				App = existingApp as T;
-			}
-			else
-			{
-				// Cria uma nova instância da aplicação se ela ainda não estiver rodando
-				App = new T();
-				RunningApps.Add(typeof(T).Name, App);
-			}
-
-			// Verifica se a aplicação está descartada
-			if (App?.IsActive == false)
-			{
-				// Cria uma nova instância da aplicação se a antiga estiver descartada
-				App = new T();
-				RunningApps[typeof(T).Name] = App;
-			}
-			//
-
-			// Quando uma nova Instância for Iniciada Escondemos a principal
-			LabsMainAppWPF.App?.Hide();
-			//Aqui lidamos com qual evento queremos chamar (Dependendo do parametro de persistência)
-			//
-			// Aqui atrelamos os dois eventos porque em algum momento a janela será realmente fechada;
-			//
-			if(App != null) // se não for nulo checamos os requisitos e devolvemos a janela
-			{
-				if (Persistente) { App.IsVisibleChanged += AppHidden;  }
-				if (AutoMaximize) { App.SizeChanged += OnAppSizeChange; }
-				App.Closed += AppClosed; // Global
+				if (existingLabWindow.IsClosed == false)
+				{
+					App.Visibility = Visibility.Visible;
+					return App;
+				}
+				else
+				{
+					existingLabWindow.Window = new T();
+				}
+                //
+                // Quando uma nova Instância for Iniciada Escondemos a principal
+                LabsMainAppWPF.App?.Hide();
+                //Aqui lidamos com qual evento queremos chamar (Dependendo do parametro de persistência)
+                //
+                // Aqui atrelamos os dois eventos porque em algum momento a janela será realmente fechada;
+                //
+                if (Persistente) { existingLabWindow.Window.IsVisibleChanged += AppHidden; }
+				//
+                if (AutoMaximize) { existingLabWindow.Window.SizeChanged += OnAppSizeChange; }
+				//
+                existingLabWindow.Window.Closed += AppClosed; // Global
 				// Mostra a aplicação
-				App.Show();
-				return App;
-			}
+                existingLabWindow.Window.Show();
+				// registramos que o aplicativo foi aberto
+                existingLabWindow.IsClosed = false;
+				//
+                return App;
+            }
             return null!; // Após isso tudo, retornamos a janela nula caso seja
 		}
 	}

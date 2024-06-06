@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Labs.Janelas.LabsPDV.Dependencias"
         mc:Ignorable="d"
-        Title="JanelaAberturaDeCaixaWPF" AllowsTransparency="True" Background="Transparent" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize" Height="250" Width="450">
+        Title="JanelaAberturaDeCaixaWPF" Name="JanelaAberturaDeCaixa" AllowsTransparency="True" Background="Transparent" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize" Height="250" Width="450">
     <Border Background="#202020" CornerRadius="10">
         <Border Margin="10" Background="#404040" CornerRadius="10">
             <Grid Margin="5">

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Labs.Janelas.LabsEstoque.Dependencias"
         mc:Ignorable="d"
-        Title="AtualizarProdutoWPF" Height="500" Width="600" WindowStyle="None" AllowsTransparency="True" Background="Transparent" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="AtualizarProdutoWPF" Name="Atualizar_Produto" Height="500" Width="600" WindowStyle="None" AllowsTransparency="True" Background="Transparent" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Border CornerRadius="20" Background="#202020">
         <Border Margin="10" CornerRadius="10" Background="#404040">
             <Grid Margin="5">

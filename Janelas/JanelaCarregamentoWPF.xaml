@@ -8,7 +8,7 @@
         
         xmlns:local="clr-namespace:Labs.Janelas"
         mc:Ignorable="d"
-        Title="JanelaCarregamentoWPF" WindowStyle="None" AllowsTransparency="True" Background="Transparent" WindowState="Normal" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Height="400" Width="400">
+        Title="JanelaCarregamentoWPF" Name="JanelaDeCarregamento" WindowStyle="None" AllowsTransparency="True" Background="Transparent" WindowState="Normal" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Height="400" Width="400">
     <Border Background="#202020" CornerRadius="10">
         <Border Background="#303030" Margin="5" CornerRadius="10">
             <Grid>

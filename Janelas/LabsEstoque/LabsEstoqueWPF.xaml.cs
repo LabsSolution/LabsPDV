@@ -162,6 +162,40 @@ namespace Labs.Janelas.LabsEstoque
             CaixaDePesquisa.Text = null!;
             LoadFromDataBase();
         }
+
+        //Filtro de produtos
+        private void FiltrarPorCategoria()
+        {
+            if(ListaProdutosCadastrados == null) { return; }
+            ListaProdutosCadastrados.Items.Clear();
+            //
+            if (ComboBox_Todos.IsSelected) { LoadFromDataBase(); }
+            // Lista os defeituosos
+            if (ComboBox_Defeituosos.IsSelected)
+            {
+                Produtos.ForEach(x => { if (x.ComDefeito) { ListaProdutosCadastrados.Items.Add(x); } });
+            }
+            // os que foram devolvidos puxa de uma database diferente
+            //
+            if (ComboBox_Devolução.IsSelected)
+            {
+                //
+            }
+            //
+            if (ComboBox_EmBaixa.IsSelected)
+            {
+                Produtos.ForEach(x => { if (x.Quantidade <= LabsMainAppWPF.QMDP) { ListaProdutosCadastrados.Items.Add(x); } });
+            }
+            //
+            UpdateQuantidadeLabel();
+        }
+        //
+
+        private void ListarSelection_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            FiltrarPorCategoria();
+        }
+
         //-----------------------------------------//
         //-------------MÉTODOS ESTÁTICOS!!!
         //-----------------------------------------//

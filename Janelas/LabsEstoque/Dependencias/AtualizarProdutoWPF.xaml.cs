@@ -36,14 +36,14 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
             PrecoInputBox.Text = Utils.FormatarValor(Produto.Preco);
             CodigoInputBox.Text = Produto.CodBarras;
         }
-        private void AtualizarProduto(string Desc, int QTD, double Preco, string CodBarras)
+        private async void AtualizarProduto(string Desc, int QTD, double Preco, string CodBarras)
         {
             Produto.CodBarras = CodBarras;
             Produto.Descricao = Desc;
             Produto.Preco = Preco;
             Produto.Quantidade = QTD;
             //
-            CloudDataBase.UpdateOneLocalAsync(Collections.Produtos, Produto, Builders<Produto>.Filter.Eq("ID",Produto.ID));
+            await CloudDataBase.UpdateOneLocalAsync(Collections.Produtos, Produto, Builders<Produto>.Filter.Eq("ID",Produto.ID));
             //
             Modais.MostrarInfo("Produto Atualizado com sucesso!");
             //

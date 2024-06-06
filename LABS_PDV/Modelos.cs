@@ -318,7 +318,6 @@ namespace Labs.LABS_PDV
 		}
 		//
 		//
-		//
 		public class Produto(string Descricao = null!, int Quantidade = 0, double Preco = 0, string CodBarras = null!, bool ComDefeito = false, string Status = null!)
 		{
 			//Identificador na database
@@ -333,8 +332,27 @@ namespace Labs.LABS_PDV
 			public string Status { get; set; } = Status;
 			//
 			public bool ComDefeito { get; set; } = ComDefeito;
-			//
-		}
+            // Método Interno
+            public override bool Equals(object? obj)
+            {
+                if(obj is Produto p)
+				{
+					var p1 = ID == p.ID;
+					var p2 = Descricao == p.Descricao;
+					var p3 = Quantidade == p.Quantidade;
+					var p4 = Preco == p.Preco;
+					var p5 = CodBarras == p.CodBarras;
+					var p6 = Status == p.Status;
+					var p7 = ComDefeito == p.ComDefeito;
+                    return p1 && p2 && p3 && p4 && p5 && p6 && p7;
+				}
+				return false;
+            }
+            public override int GetHashCode()
+            {
+				return ID.GetHashCode();
+            }
+        }
 		//
 	}
 }

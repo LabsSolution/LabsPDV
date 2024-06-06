@@ -166,7 +166,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                     PagamentosEfetuados = [.. PagamentosEfetuados],//Repassa pra array
                     IDVenda = IDVenda
                 };
-                CloudDataBase.RegisterLocalAsync(Collections.Vendas, venda);
+                await CloudDataBase.RegisterLocalAsync(Collections.Vendas, venda);
                 //
                 // Aqui faz a impressão do cupom fiscal (ou não fiscal)
                 using (var PM = new PrintManager())

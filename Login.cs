@@ -70,7 +70,7 @@ namespace Labs
                 {
                     AdminLabs admin = await CloudDataBase.GetAdminLabsAsync(claim.Value);
                     Modais.MostrarInfo($"{admin.AdminAtivo}|{admin.PermLevel}");
-                    if (admin == null) { admin = new(claim.Value, false); CloudDataBase.RegisterAdminLabs(admin); }
+                    if (admin == null) { admin = new(claim.Value, false); await CloudDataBase.RegisterAdminLabs(admin); }
                     //Verifica o usuário
                     return await VerificarAdmin(admin);
                 }
@@ -95,7 +95,7 @@ namespace Labs
                     if(cliente == null) 
                     { 
                         cliente = new(claim.Value); 
-                        CloudDataBase.RegisterClienteAsync(cliente);
+                        await CloudDataBase.RegisterClienteAsync(cliente);
                     }
                     //Verifica o usuário
                     return cliente;

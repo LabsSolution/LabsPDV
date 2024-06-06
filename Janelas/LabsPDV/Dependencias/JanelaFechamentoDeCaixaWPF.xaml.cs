@@ -105,7 +105,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
         }
         //
         //EVENTOS
-        private void RealizarFechamentoButton_Click(object sender, RoutedEventArgs e)
+        private async void RealizarFechamentoButton_Click(object sender, RoutedEventArgs e)
         {
             List<ValorFechado> ValoresFechadosMeio = [];
             foreach  (ValorFechamento vpafm in ValoresParaAferimentoMeio) { ValoresFechadosMeio.Add(new(vpafm.Nome,vpafm.ValorSistema,vpafm.ValorAferido)); }
@@ -143,7 +143,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 						ItensVendidos = 0,
 					};
 					// Registramos na database local
-					CloudDataBase.RegisterLocalAsync(Collections.Fechamentos, Fechamento);
+					await CloudDataBase.RegisterLocalAsync(Collections.Fechamentos, Fechamento);
 					// Caso o cliente tenha a assinatura cloud, refletimos para a database cloud
 					//Realizar espelhamento aqui.
 					//Logo após imprimimos o cupom de fechamento

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Labs.Janelas.LabsEstoque"
         mc:Ignorable="d"
-        Title="LabsEstoqueWPF" ResizeMode="NoResize" Background="Transparent" AllowsTransparency="True" WindowStartupLocation="CenterScreen" WindowStyle="None" Width="1366" Height="768">
+        Title="LabsEstoqueWPF" Name="LabsEstoque" ResizeMode="NoResize" Background="Transparent" AllowsTransparency="True" WindowStartupLocation="CenterScreen" WindowStyle="None" Width="1366" Height="768">
     <Border CornerRadius="20" Background="#202020">
         <Grid Margin="20" Background="#303030">
             <Grid.RowDefinitions>
@@ -51,10 +51,11 @@
             <DockPanel Grid.Row="1">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,10,10,0" VerticalAlignment="Center">
                     <Label Name="ListarPorLabel" Content="Listar:" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f6f6f6" Width="Auto" Height="Auto" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <ComboBox FontFamily="Segoe UI" FontWeight="Bold" FontSize="14" Margin="0,0,5,0" VerticalAlignment="Center" Height="Auto" Width="120">
+                    <ComboBox FontFamily="Segoe UI" FontWeight="Bold" SelectionChanged="ListarSelection_Changed" FontSize="14" Margin="0,0,5,0" VerticalAlignment="Center" Height="Auto" Width="120">
                         <ComboBoxItem Name="ComboBox_Todos" IsSelected="True" Content="Todos"/>
                         <ComboBoxItem Name="ComboBox_Defeituosos" IsSelected="False" Content="Defeituosos"/>
                         <ComboBoxItem Name="ComboBox_Devolução" IsSelected="False" Content="Devolução"/>
+                        <ComboBoxItem Name="ComboBox_EmBaixa" IsSelected="False" Content="Em Baixa"/>
                     </ComboBox>
                 </StackPanel>
             </DockPanel>

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Labs.Janelas.LabsPDV"
         mc:Ignorable="d"
-        Title="LabsPDVWPF" Width="1920" Height="1080" KeyUp="OnPDVKeyUp" Loaded="LabsPDVLoaded" WindowStyle="None" WindowState="Maximized" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent">
+        Title="LabsPDVWPF" x:Name="LabsPDV" Width="1920" Height="1080" KeyUp="OnPDVKeyUp" Loaded="LabsPDVLoaded" WindowStyle="None" WindowState="Maximized" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent">
     <Border Background="#202020" CornerRadius="20">
         <Border Margin="10" Background="#404040" CornerRadius="20">
             <Grid>
@@ -136,8 +136,15 @@
                                 <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="Exluir Item (F3)"/>
                             </Button.Content>
                         </Button>
+                        <!--Devolução-->
+                        <Button Name="DevolucaoButtom" Visibility="Hidden" Click="DevolucaoButton_Click" VerticalAlignment="Bottom" BorderThickness="0" Margin="5,0,5,0" Background="#9900EE" Width="200" Height="70" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20">
+                            <Button.Content>
+                                <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="Devolução"/>
+                            </Button.Content>
+                        </Button>
+                        <!--Stack Lateral-->
                         <StackPanel DockPanel.Dock="Right" Width="Auto" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-                            <Button Name="AbrirFecharCaixaButton" Click="AbrirFecharCaixaButton_Click" BorderThickness="0" Margin="5,15,5,15" Background="#80FF80" Width="150" Height="40" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20">
+                            <Button Name="AbrirFecharCaixaButton" Click="AbrirFecharCaixaButton_Click" BorderThickness="0" Margin="5,15,5,15" Background="#80FF80" Width="150" Height="60" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20">
                                 <Button.Content>
                                     <TextBlock x:Name="AbrirFecharCaixaButtonLabel" Text="Abrir Caixa" TextWrapping="Wrap" TextAlignment="Center"/>
                                 </Button.Content>

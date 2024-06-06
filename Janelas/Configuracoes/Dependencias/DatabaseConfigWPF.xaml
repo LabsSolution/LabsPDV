@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Labs.Janelas.Configuracoes.Dependencias"
         mc:Ignorable="d"
-        Title="DatabaseConfigWPF" WindowStyle="None" WindowState="Normal" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="Transparent" AllowsTransparency="True" Height="350" Width="450">
+        Title="DatabaseConfigWPF" Name="DataBaseConfig" WindowStyle="None" WindowState="Normal" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="Transparent" AllowsTransparency="True" Height="350" Width="450">
     <Border CornerRadius="20" Background="#202020">
         <Border Margin="10" Background="#404040" CornerRadius="20">
             <Grid>
