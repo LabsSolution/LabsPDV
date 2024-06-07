@@ -5,19 +5,42 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Labs.Janelas.LabsPDV.Dependencias"
         mc:Ignorable="d"
-        Title="JanelaDeDevolucaoWPF" Name="JanelaDeDevolucao" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="Transparent" AllowsTransparency="True" Height="600" Width="600">
+        Title="JanelaDeDevolucaoWPF" Name="JanelaDeDevolucao" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="Transparent" AllowsTransparency="True" Height="600" Width="750">
     <Border Background="#202020" CornerRadius="20">
         <Border Background="#404040" Margin="10" CornerRadius="20">
             <Grid Margin="5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <!--Conteudo-->
-                <DockPanel Margin="5" Grid.Row="3">
-                    <Button/>
+                <DockPanel Margin="5" Grid.Row="0">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <Label Content="Código do Produto:" FontSize="16" Foreground="#f0f0f0" VerticalContentAlignment="Center" FontFamily="Segoe UI Black"/>
+                            <TextBox Name="CodigoInputBox" KeyUp="CodigoInputBox_KeyUp" Width="540" FontFamily="Segoe UI Black" FontSize="20" TextAlignment="Left" VerticalContentAlignment="Center"/>
+                        </StackPanel>
+                        <Label Content="Descrição do Produto:" FontSize="16" Foreground="#f0f0f0" HorizontalAlignment="Center" VerticalContentAlignment="Center" FontFamily="Segoe UI Black"/>
+                        <TextBox IsEnabled="False" Margin="5" Name="DescricaoProdutoBox" FontSize="25" FontFamily="Segoe UI Black" FontWeight="Bold"/>
+                        <Label Name="PrecoLabel" Content="Preço Unitário: R$ 0,00" FontSize="16" Foreground="#f0f0f0" HorizontalAlignment="Right" VerticalContentAlignment="Center" FontFamily="Segoe UI Black"/>
+                    </StackPanel>
+                </DockPanel>
+                <DockPanel Margin="5" Grid.Row="1">
+                    <StackPanel HorizontalAlignment="Left">
+                        <CheckBox Name="DevolucaoCheckBox" Margin="5" Checked="CheckBox_Checked" Content="Apenas Devolução" FontSize="14" FontFamily="Segoe UI Black" Foreground="#f0f0f0"/>
+                        <CheckBox Name="DefeitoCheckBox" Margin="5" Checked="CheckBox_Checked" Content="Produto com Defeito" FontSize="14" FontFamily="Segoe UI Black" Foreground="#f0f0f0"/>
+                    </StackPanel>
+                </DockPanel>
+                <!--Caixa de Texto para o motivo da devolução-->
+                <Label Grid.Row="2" Content="Motivo da Devolução:" FontSize="16" Foreground="#f0f0f0" HorizontalAlignment="Center" VerticalContentAlignment="Center" FontFamily="Segoe UI Black"/>
+                <TextBox Grid.Row="3" Margin="10" FontSize="16" FontFamily="Segoe UI"/>
+                <!--Botoes-->
+                <DockPanel Margin="5" Grid.Row="4">
+                    <Button Name="DevolucaoButton" Click="DevolucaoButton_Click" Margin="5,0,5,0" Content="Registrar Devolução" VerticalAlignment="Center" HorizontalAlignment="Left" BorderThickness="0" Background="LightGreen" Width="180" Height="40" FontSize="16" FontFamily="Segoe UI Black"/>
+                    <Button Name="VoltarButton" Click="VoltarButton_Click" Margin="5,0,5,0" Content="Voltar" VerticalAlignment="Center" HorizontalAlignment="Right" BorderThickness="0" Background="#F08080" Width="180" Height="40" FontSize="16" FontFamily="Segoe UI Black"/>
                 </DockPanel>
             </Grid>
         </Border>

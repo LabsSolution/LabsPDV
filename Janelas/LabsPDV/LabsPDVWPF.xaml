@@ -137,7 +137,7 @@
                             </Button.Content>
                         </Button>
                         <!--Devolução-->
-                        <Button Name="DevolucaoButtom" Visibility="Hidden" Click="DevolucaoButton_Click" VerticalAlignment="Bottom" BorderThickness="0" Margin="5,0,5,0" Background="#9900EE" Width="200" Height="70" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20">
+                        <Button Name="DevolucaoButtom" Click="DevolucaoButton_Click" VerticalAlignment="Bottom" BorderThickness="0" Margin="5,0,5,0" Background="#9900EE" Width="200" Height="70" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20">
                             <Button.Content>
                                 <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="Devolução"/>
                             </Button.Content>
