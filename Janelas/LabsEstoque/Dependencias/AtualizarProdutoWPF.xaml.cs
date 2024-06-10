@@ -43,7 +43,12 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
             Produto.Preco = Preco;
             Produto.Quantidade = QTD;
             //
-            await CloudDataBase.UpdateOneLocalAsync(Collections.Produtos, Produto, Builders<Produto>.Filter.Eq("ID",Produto.ID));
+            if (LabsMain.Cliente.PossuiPlanoCloud)
+            {
+                await CloudDataBase.RegisterCloudAsync(Collections.Produtos, Produto, Builders<Produto>.Filter.Eq("ID", Produto.ID));
+			}
+            //
+            await CloudDataBase.RegisterLocalAsync(Collections.Produtos, Produto, Builders<Produto>.Filter.Eq("ID",Produto.ID));
             //
             Modais.MostrarInfo("Produto Atualizado com sucesso!");
             //

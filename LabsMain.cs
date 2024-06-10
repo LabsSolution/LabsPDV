@@ -21,7 +21,7 @@ namespace Labs
 		public bool IsClosed { get; set; } = IsClosed;
 	}
 	//
-	internal static class LABS_PDV_MAIN_WPF
+	internal static class LabsMain
 	{
 		//Controle de Instâncias (Endereçamento de memória)
 		private static Dictionary<string, LabWindow> RunningApps = new();
@@ -61,7 +61,7 @@ namespace Labs
 			//Descriptografa o nome da Database da empresa
 			if(LabsCripto.Decript("N_Data",out string NDecripted)) { ClientDataBase = NDecripted; }
 			//
-			JanelaDeDevolucaoWPF App = new(); // Altere esse campo para modificar a primeira janela a ser aberta (Utilizar somente para debug)             //
+			LabsPDVWPF App = new(); // Altere esse campo para modificar a primeira janela a ser aberta (Utilizar somente para debug)             //
             INIT(App);
         }
         static void INIT<T>(T App) where T : Window

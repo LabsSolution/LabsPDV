@@ -13,6 +13,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
@@ -34,17 +35,23 @@
                         <CheckBox Name="DefeitoCheckBox" Margin="5" Checked="CheckBox_Checked" Content="Produto com Defeito" FontSize="14" FontFamily="Segoe UI Black" Foreground="#f0f0f0"/>
                     </StackPanel>
                 </DockPanel>
+                <!--Método de Devolução-->
+                <DockPanel Grid.Row="2" >
+                    <StackPanel Margin="10,5,10,10">
+                        <Label Content="Meio de Estorno:" FontSize="16" Foreground="#f0f0f0" HorizontalAlignment="Center" VerticalContentAlignment="Center" FontFamily="Segoe UI Black"/>
+                        <ComboBox FontFamily="Segoe UI Black" Name="MeiosDevolucaoComboBox" HorizontalContentAlignment="Center" FontSize="18"></ComboBox>
+                    </StackPanel>
+                </DockPanel>
                 <!--Caixa de Texto para o motivo da devolução-->
-                <Label Grid.Row="2" Content="Motivo da Devolução:" FontSize="16" Foreground="#f0f0f0" HorizontalAlignment="Center" VerticalContentAlignment="Center" FontFamily="Segoe UI Black"/>
-                <TextBox Grid.Row="3" Margin="10" FontSize="16" FontFamily="Segoe UI"/>
+                <Label Grid.Row="3" Content="Motivo da Devolução:" FontSize="16" Foreground="#f0f0f0" HorizontalAlignment="Center" VerticalContentAlignment="Center" FontFamily="Segoe UI Black"/>
+                <TextBox Grid.Row="4" Name="MotivoTextBox" Margin="10" FontSize="16" FontFamily="Segoe UI"/>
+                <!---->
                 <!--Botoes-->
-                <DockPanel Margin="5" Grid.Row="4">
+                <DockPanel Margin="5" Grid.Row="5">
                     <Button Name="DevolucaoButton" Click="DevolucaoButton_Click" Margin="5,0,5,0" Content="Registrar Devolução" VerticalAlignment="Center" HorizontalAlignment="Left" BorderThickness="0" Background="LightGreen" Width="180" Height="40" FontSize="16" FontFamily="Segoe UI Black"/>
                     <Button Name="VoltarButton" Click="VoltarButton_Click" Margin="5,0,5,0" Content="Voltar" VerticalAlignment="Center" HorizontalAlignment="Right" BorderThickness="0" Background="#F08080" Width="180" Height="40" FontSize="16" FontFamily="Segoe UI Black"/>
                 </DockPanel>
             </Grid>
         </Border>
     </Border>
-    
-    
 </Window>

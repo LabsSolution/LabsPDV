@@ -97,7 +97,7 @@ namespace Labs.Janelas.LabsPDV
         {
             //
             //FAZER JANELINHA DE ABERTURA DE CAIXA // Gestão de Fluxo
-            var JDAC = LABS_PDV_MAIN_WPF.IniciarDependencia<JanelaAberturaDeCaixaWPF>(App =>
+            var JDAC = LabsMain.IniciarDependencia<JanelaAberturaDeCaixaWPF>(App =>
             {
                 App.onJDACClose += RealizarAbertura;
             }, true, false);
@@ -106,7 +106,7 @@ namespace Labs.Janelas.LabsPDV
         {
             if (RealizandoVenda) { Modais.MostrarAviso("Você não pode fechar o caixa com uma venda em progresso!"); return; }
             //
-            var JFC = LABS_PDV_MAIN_WPF.IniciarDependencia<JanelaFechamentoDeCaixaWPF>(App =>
+            var JFC = LabsMain.IniciarDependencia<JanelaFechamentoDeCaixaWPF>(App =>
             {
                 App.InicializarFechamento(CaixaLabs);
                 App.onJFCClose += RealizarFechamento;
@@ -299,7 +299,7 @@ namespace Labs.Janelas.LabsPDV
 
             //AS ETAPAS ACIMA DEVEM SER DESABILITADAS PARA AGILIZAR O PROCESSO DE DEV
             //Mostra a janela de conclusão de venda e atrela o evento de fechamento da janela com a finalização da venda
-            JanelaDePagamentoWPF janelaDePagamento = LABS_PDV_MAIN_WPF.IniciarDependencia<JanelaDePagamentoWPF>(app =>
+            JanelaDePagamentoWPF janelaDePagamento = LabsMain.IniciarDependencia<JanelaDePagamentoWPF>(app =>
             {
                 //Atrelamos o evento para a finalização
                 app.OnPagamentoFinalizado += OnPagamentoFinalizado;
@@ -428,7 +428,7 @@ namespace Labs.Janelas.LabsPDV
         //
         private void DevolucaoButton_Click(object sender, RoutedEventArgs e)
         {
-            LABS_PDV_MAIN_WPF.IniciarDependencia<JanelaDeDevolucaoWPF>(null!,true,false);
+            LabsMain.IniciarDependencia<JanelaDeDevolucaoWPF>(null!,true,false);
         }
         //
         private void VoltarButton_Click(object sender, RoutedEventArgs e)

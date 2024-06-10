@@ -63,8 +63,8 @@ namespace Labs.LABS_PDV
         {
             try
             {
-                var client = new MongoClient(LABS_PDV_MAIN_WPF.LocalDataBaseConnectionURI);
-                var db = client.GetDatabase(LABS_PDV_MAIN_WPF.ClientDataBase);
+                var client = new MongoClient(LabsMain.LocalDataBaseConnectionURI);
+                var db = client.GetDatabase(LabsMain.ClientDataBase);
                 return db.GetCollection<T>(collection);
             }
             catch (Exception ex)
@@ -83,12 +83,12 @@ namespace Labs.LABS_PDV
         private static IMongoCollection<T> ConnectToMongoCloud<T>(in string collection)
         {
             //
-            if (!LABS_PDV_MAIN_WPF.Cliente.PossuiPlanoCloud) { return null!; }
+            if (!LabsMain.Cliente.PossuiPlanoCloud) { return null!; }
             //Desabilita a comunicação caso o cliente não tenha o plano cloud!
             try
             {
-                var client = new MongoClient(LABS_PDV_MAIN_WPF.CloudDataBaseConnectionURI);
-                var db = client.GetDatabase(LABS_PDV_MAIN_WPF.ClientDataBase);
+                var client = new MongoClient(LabsMain.CloudDataBaseConnectionURI);
+                var db = client.GetDatabase(LabsMain.ClientDataBase);
                 return db.GetCollection<T>(collection);
             }
             catch (Exception ex)
@@ -107,7 +107,7 @@ namespace Labs.LABS_PDV
         {
             try
             {
-                var client = new MongoClient(LABS_PDV_MAIN_WPF.LabsCloudDataBaseConnectionURI);
+                var client = new MongoClient(LabsMain.LabsCloudDataBaseConnectionURI);
                 var db = client.GetDatabase(LabsDataBase);
                 return db.GetCollection<T>(collection);
             }

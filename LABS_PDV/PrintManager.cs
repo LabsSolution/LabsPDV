@@ -139,7 +139,7 @@ namespace Labs.LABS_PDV
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             yPos += 5;
             //bottom
-            graphics.DrawString(LABS_PDV_MAIN_WPF.TradeMark, RegularItens, Brushes.Black, 0, yPos);
+            graphics.DrawString(LabsMain.TradeMark, RegularItens, Brushes.Black, 0, yPos);
             e.HasMorePages = false;
         }
         #endregion
@@ -190,7 +190,7 @@ namespace Labs.LABS_PDV
             //bottom
             graphics.DrawString($"Data: {DateTime.Now:dd/MM/yyyy} Hora: {DateTime.Now:HH:mm:ss}", RegularItens, Brushes.Black, 0, yPos);
             yPos += 10;
-            graphics.DrawString(LABS_PDV_MAIN_WPF.TradeMark, RegularItens, Brushes.Black, 0, yPos);
+            graphics.DrawString(LabsMain.TradeMark, RegularItens, Brushes.Black, 0, yPos);
             e.HasMorePages = false;
         }
         #endregion
@@ -272,7 +272,7 @@ namespace Labs.LABS_PDV
             //bottom
             graphics.DrawString($"Data: {DateTime.Now:dd/MM/yyyy} Hora: {DateTime.Now:HH:mm:ss}", RegularItens, Brushes.Black, 0, yPos);
             yPos += 10;
-            graphics.DrawString(LABS_PDV_MAIN_WPF.TradeMark, RegularItens, Brushes.Black, 0, yPos);
+            graphics.DrawString(LabsMain.TradeMark, RegularItens, Brushes.Black, 0, yPos);
             e.HasMorePages = false;
         }
         #endregion

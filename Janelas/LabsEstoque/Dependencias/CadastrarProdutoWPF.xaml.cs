@@ -36,13 +36,16 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
         //METODOS
         private async void CadastrarProduto(string Desc, int QTD, double Preco, string CodBarras)
         {
-            Produto produto = new Produto()
+            Produto produto = new()
             {
                 CodBarras = CodBarras,
                 Descricao = Desc,
                 Preco = Preco,
-                Quantidade = QTD
+                Quantidade = QTD,
+                Status = "OK",
             };
+            //
+            if (LabsMain.Cliente.PossuiPlanoCloud) { await CloudDataBase.RegisterCloudAsync(Collections.Produtos, produto); }
             //
             await CloudDataBase.RegisterLocalAsync(Collections.Produtos,produto);
             //

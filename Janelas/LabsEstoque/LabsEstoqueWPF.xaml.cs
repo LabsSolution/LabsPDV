@@ -46,19 +46,23 @@ namespace Labs.Janelas.LabsEstoque
             //Adicionamos direto na lista visual já que os itens apresentados são os próprios produtos
             Produtos.ForEach(x => ListaProdutosCadastrados.Items.Add(x));
             //
+            ComboBox_Todos.IsSelected = true;
+            ComboBox_Descricao.IsSelected = true;
+            //
             UpdateQuantidadeLabel();
         }
         //
         private void UpdateByEvent(object? sender, EventArgs e)
         {
             LoadFromDataBase();
+            //
             if (sender is Window window) { window.Closed -= UpdateByEvent; }
         }
         //
         //EVENTOS
         private void CadastrarProdutoButton_Click(object sender, RoutedEventArgs e)
         {
-            LABS_PDV_MAIN_WPF.IniciarDependencia<CadastrarProdutoWPF>(app =>
+            LabsMain.IniciarDependencia<CadastrarProdutoWPF>(app =>
             {
                 app.Closed += UpdateByEvent;
             },true);
@@ -69,7 +73,7 @@ namespace Labs.Janelas.LabsEstoque
         {
             if (ListaProdutosCadastrados.SelectedItem is not Produto produto) { Modais.MostrarAviso("Você deve selecionar o produto que deseja atualizar!"); return; }
             //
-            LABS_PDV_MAIN_WPF.IniciarDependencia<AtualizarProdutoWPF>(app =>
+            LabsMain.IniciarDependencia<AtualizarProdutoWPF>(app =>
             {
                 app.CarregarAtributos(produto);
                 app.Closed += UpdateByEvent;
@@ -84,6 +88,12 @@ namespace Labs.Janelas.LabsEstoque
             {
                 //
                 ListaProdutosCadastrados.Items.Remove(produto);
+                //
+                if (LabsMain.Cliente.PossuiPlanoCloud)
+                {
+                    await CloudDataBase.RemoveCloudAsync<Produto>(Collections.Produtos, x => x.ID == produto.ID);
+                }
+                //
                 await CloudDataBase.RemoveLocalAsync<Produto>(Collections.Produtos, x => x.ID == produto.ID);
                 //
                 Modais.MostrarInfo($"Produto: {produto.Descricao}\nRemovido com Sucesso!");

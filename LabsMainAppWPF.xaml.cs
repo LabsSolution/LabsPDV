@@ -55,7 +55,7 @@ namespace Labs
         bool VerifyDataBases()
         {
             IsDatabaseConnected = CloudDataBase.CheckDataBaseConnection(out bool LocalOK, out bool CloudOK, out bool LabsCloudOK);
-            bool planoCloud = LABS_PDV_MAIN_WPF.Cliente.PossuiPlanoCloud;
+            bool planoCloud = LabsMain.Cliente.PossuiPlanoCloud;
             //
             IndicadorPlanoCloud.Visibility = planoCloud? Visibility.Collapsed: Visibility.Visible;
             //
@@ -89,12 +89,13 @@ namespace Labs
             //Quando forem repassadas para wpf reativar
 
             if (!VerifyDataBases()) { ModoSegurança = true; Modais.MostrarAviso("MODO DE SEGURANÇA HABILITADO!\nPara Sair Desse Modo, Os Conflitos Devem ser Resolvidos\ne Logo Após o Sistema Deve Ser Reiniciado!"); return; }
-            //VerificacoesPreventivas();
+            VerificacoesPreventivas();
         }
         //
         static async void VerificacoesPreventivas()
         {
-            await GerenciadorPDV.VerificarEstoque(QMDP);
+            var JDC = GerenciadorPDV.Initiate("Buscando Estoque Remoto");
+            await GerenciadorPDV.BuscarEstoqueRemoto(JDC);
             //
             if (!IsConnectedToInternet)
             { 
@@ -107,7 +108,15 @@ namespace Labs
                 "Caso a conexão com o banco de dados remoto seja recuperada você será notificado(a)");
                 return;
             }
-            await GerenciadorPDV.EspelhamentoParaCloud();
+            JDC.SetTextoFrontEnd("Realizando Espelhamento Para Cloud...");
+            await GerenciadorPDV.EspelhamentoParaCloud(JDC);
+            //
+            JDC.SetTextoFrontEnd("Verificando Estoque...");
+            await Task.Delay(1000);
+            await GerenciadorPDV.VerificarEstoque(QMDP,JDC);
+            //
+            await GerenciadorPDV.Terminate(JDC);
+            //
         }
         //
         private void OnLabsEstoqueClick(object sender, RoutedEventArgs e)
@@ -115,24 +124,24 @@ namespace Labs
             //
             if (ModoSegurança) { Modais.MostrarAviso("Sem Conexão Primária com o Banco de Dados!\nSe o problema persistir, entre em contato com o nosso suporte."); return; }
             //
-            LABS_PDV_MAIN_WPF.IniciarApp<LabsEstoqueWPF>(true,false,true);
+            LabsMain.IniciarApp<LabsEstoqueWPF>(true,false,true);
         }
 
         private void OnLabsPDVClick(object sender, RoutedEventArgs e)
         {
             if (ModoSegurança) { Modais.MostrarAviso("Sem Conexão Primária com o Banco de Dados!\nSe o problema persistir, entre em contato com o nosso suporte."); return; }
-            LABS_PDV_MAIN_WPF.IniciarApp<LabsPDVWPF>(true,false,true);
+            LabsMain.IniciarApp<LabsPDVWPF>(true,false,true);
         }
 
         private void OnLabsConfigClick(object sender, RoutedEventArgs e)
         {
-            LABS_PDV_MAIN_WPF.IniciarApp<LabsConfigWPF>(true,false,false);
+            LabsMain.IniciarApp<LabsConfigWPF>(true,false,false);
         }
 
         private void OnLabsSairClick(object sender, RoutedEventArgs e)
         {
             this.Close();
-            LABS_PDV_MAIN_WPF.Application.Shutdown();
+            LabsMain.Application.Shutdown();
         }
         //
     }

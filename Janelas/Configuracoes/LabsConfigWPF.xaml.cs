@@ -31,13 +31,13 @@ namespace Labs.Janelas.Configuracoes
             bool isAdmin = await painel.RealizarLoginAdmin();
             if (isAdmin)
             {
-                LABS_PDV_MAIN_WPF.IniciarDependencia<DatabaseConfigWPF>(null!, true, false);
+                LabsMain.IniciarDependencia<DatabaseConfigWPF>(null!, true, false);
             }
         }
         //
         private void MeioPagamento_Click(object sender, RoutedEventArgs e)
         {
-            LABS_PDV_MAIN_WPF.IniciarDependencia<MeiosDePagamentoConfigWPF>(null!, true, false);
+            LabsMain.IniciarDependencia<MeiosDePagamentoConfigWPF>(null!, true, false);
         }
 
         private void DatabaseConfig_Click(object sender, RoutedEventArgs e)

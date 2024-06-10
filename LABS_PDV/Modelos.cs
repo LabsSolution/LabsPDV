@@ -18,7 +18,8 @@ namespace Labs.LABS_PDV
 	public class Collections
 	{
 		public static string Produtos { get; } = "Produtos";
-		public static string ProdutosComDefeito { get; } = "ProdutosComDefeito";
+		public static string Devolucoes { get; } = "Devolucoes";
+		public static string ProdutosComDefeito { get; } = "ProdutosDevolvidos";
 		public static string EstadoCaixa { get; } = "EstadoCaixa";
 		public static string Fechamentos { get; } = "Fechamentos";
 		public static string Vendas { get; } = "Vendas";
@@ -28,6 +29,32 @@ namespace Labs.LABS_PDV
 	}
 	public class Modelos
 	{
+		public class Devolucao(string Meio,string Motivo, double valor,string Data,string Hora)
+		{
+			[BsonId]
+			[BsonRepresentation(BsonType.ObjectId)]
+			public string ID { get; set; } = null!;
+			/// <summary>
+			/// Meio utilizado para estornar o valor do produto
+			/// </summary>
+			public string MeioDeEstorno = Meio;
+			/// <summary>
+			/// Motivo da Devolução
+			/// </summary>
+			public string Motivo = Motivo;
+			/// <summary>
+			/// Valor retornado ao Cliente
+			/// </summary>
+			public double Valor = valor;
+			/// <summary>
+			/// Data em que a devolução foi realizada
+			/// </summary>
+			public string Data = Data;
+			/// <summary>
+			/// Hora em que a devolução foi realizada
+			/// </summary>
+			public string Hora = Hora;
+		}
         //
         /// <summary>
         /// Essa classe precisa ser instanciada como objeto para poder funcionar corretamente!
@@ -51,6 +78,7 @@ namespace Labs.LABS_PDV
 			public MeiosPagamento() { Meios = [new("DINHEIRO",true)]; }
 		}
 		//
+		//
         public class ValorFechamento(string Nome, double ValorSistema, double ValorAferido)
         {
             /// <summary>
@@ -66,6 +94,7 @@ namespace Labs.LABS_PDV
 			/// </summary>
             public double ValorAferido { get; set; } = ValorAferido;
         }
+		//
 		//
 		public class ValorFechado(string Nome, double ValorSistema, double ValorAferido)
 		{
@@ -172,7 +201,13 @@ namespace Labs.LABS_PDV
 			[BsonRepresentation(BsonType.ObjectId)]
 			public string ID { get; set; } = null!;
 			//
+			/// <summary>
+			/// Nome do Meio de Pagamento
+			/// </summary>
 			public string Item1 { get; set; } = NomeDoMeio;
+			/// <summary>
+			/// Indicador SLDV
+			/// </summary>
 			public bool Item2 { get; set; } = SLDV;
 		}
 		//----------------------------------------------------------------------------------------//

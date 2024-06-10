@@ -24,7 +24,7 @@ namespace Labs.Janelas.Configuracoes.Dependencias
             //LOCAL
             await CloudDataBase.RegisterLocalAsync(Collections.MeiosDePagamento, Meios,Builders<MeiosPagamento>.Filter.Eq("ID",Meios.ID));
             //Espelhamento Cloud
-            if (LABS_PDV_MAIN_WPF.Cliente.PossuiPlanoCloud)
+            if (LabsMain.Cliente.PossuiPlanoCloud)
             {
                 //Só fazenos o salvamento cloud caso o cliente tenha internet (caso contrário será apresentado um erro grotesco)
                 if (LabsMainAppWPF.IsDatabaseConnected) { await CloudDataBase.RegisterCloudAsync(Collections.MeiosDePagamento, Meios,Builders<MeiosPagamento>.Filter.Eq("ID",Meios.ID)); }
@@ -35,7 +35,7 @@ namespace Labs.Janelas.Configuracoes.Dependencias
         private async void LoadFromDataBase()
         {
             //Tentamos realizar a atribuição
-            if (LABS_PDV_MAIN_WPF.Cliente.PossuiPlanoCloud)
+            if (LabsMain.Cliente.PossuiPlanoCloud)
             {
                 if (LabsMainAppWPF.IsDatabaseConnected)
                 {

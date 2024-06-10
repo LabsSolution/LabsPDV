@@ -1,4 +1,5 @@
 ﻿using Labs.LABS_PDV;
+using SharpVectors.Dom.Svg;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,30 @@ namespace Labs.Janelas.LabsPDV.Dependencias
         public JanelaDeDevolucaoWPF()
         {
             InitializeComponent();
+            //Remover
+            IniciarJanela();
+        }
+        //
+        //
+        public void IniciarJanela()
+        {
+            //Prepara a combobox de meio de devolução
+            SetMeios();
+        }
+        //
+        private async void SetMeios()
+        {
+            MeiosPagamento meios = await CloudDataBase.GetLocalAsync<MeiosPagamento>(Collections.MeiosDePagamento,_ => true);
+            if (meios == null && LabsMain.Cliente.PossuiPlanoCloud) { meios = await CloudDataBase.GetCloudAsync<MeiosPagamento>(Collections.MeiosDePagamento, _ => true); }
+            //
+            if(meios != null)
+            {
+                foreach (var meio in meios.Meios)
+                {
+					MeiosDevolucaoComboBox.Items.Add(meio.Item1);
+				}
+                MeiosDevolucaoComboBox.SelectedIndex = 0;
+            }
         }
         //
         private async void RealizarDevolucao()
@@ -34,6 +59,8 @@ namespace Labs.Janelas.LabsPDV.Dependencias
             Produto produto = await CloudDataBase.GetLocalAsync<Produto>(Collections.Produtos,x => x.CodBarras == CodBarras);
             //
             if(produto == null) { Modais.MostrarAviso("Produto Não Cadastrado no Estoque!"); return; }
+            //
+            if (MotivoTextBox.Text.IsNullOrEmpty()) { Modais.MostrarAviso("Você deve informar o motivo"); return; }
             //
             //Obriga o operador a escolher uma opção
             if(DevolucaoCheckBox.IsChecked == false && DefeitoCheckBox.IsChecked == false) { Modais.MostrarAviso("Você deve marcar pelo menos uma opção!"); return; }
@@ -47,6 +74,12 @@ namespace Labs.Janelas.LabsPDV.Dependencias
             //Setamos a descrição para que o produto seja apresentado
             DescricaoProdutoBox.Text = produto.Descricao;
             //
+            Devolucao dev = new(MeiosDevolucaoComboBox.Text, MotivoTextBox.Text, produto.Preco,$"{DateTime.Now:dd/MM/yyyy}",$"{DateTime.Now:HH/mm/ss}");
+            // Após gerarmos o Objeto de devolução, guardamos na database e geramos a nota
+            //Geramos a nota
+            //Guardamos no banco de dados
+            await CloudDataBase.RegisterLocalAsync(Collections.Devol)
+
         }
         //-------------------------
         //EVENTOS
