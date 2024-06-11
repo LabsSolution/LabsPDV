@@ -94,8 +94,9 @@ namespace Labs
         //
         static async void VerificacoesPreventivas()
         {
-            var JDC = GerenciadorPDV.Initiate("Buscando Estoque Remoto");
-            await GerenciadorPDV.BuscarEstoqueRemoto(JDC);
+            var JDC = GerenciadorPDV.Initiate("Sincronizando Banco de Dados...");
+            await GerenciadorPDV.VerificarEstoque(QMDP,JDC);
+            await Task.Delay(3000);
             //
             if (!IsConnectedToInternet)
             { 
@@ -108,15 +109,10 @@ namespace Labs
                 "Caso a conexão com o banco de dados remoto seja recuperada você será notificado(a)");
                 return;
             }
-            JDC.SetTextoFrontEnd("Realizando Espelhamento Para Cloud...");
-            await GerenciadorPDV.EspelhamentoParaCloud(JDC);
-            //
-            JDC.SetTextoFrontEnd("Verificando Estoque...");
-            await Task.Delay(1000);
-            await GerenciadorPDV.VerificarEstoque(QMDP,JDC);
-            //
+            //Só queremos garantir que espelhamos os itens para a cloud
+            await CloudDataBaseSync.SyncDatabase(JDC,false);
+            await Task.Delay(3000);
             await GerenciadorPDV.Terminate(JDC);
-            //
         }
         //
         private void OnLabsEstoqueClick(object sender, RoutedEventArgs e)

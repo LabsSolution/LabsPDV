@@ -31,7 +31,7 @@
                 </DockPanel>
                 <DockPanel Margin="5" Grid.Row="1">
                     <StackPanel HorizontalAlignment="Left">
-                        <CheckBox Name="DevolucaoCheckBox" Margin="5" Checked="CheckBox_Checked" Content="Apenas Devolução" FontSize="14" FontFamily="Segoe UI Black" Foreground="#f0f0f0"/>
+                        <CheckBox Name="DevolucaoCheckBox" Margin="5" Checked="CheckBox_Checked" Content="Devolução" FontSize="14" FontFamily="Segoe UI Black" Foreground="#f0f0f0"/>
                         <CheckBox Name="DefeitoCheckBox" Margin="5" Checked="CheckBox_Checked" Content="Produto com Defeito" FontSize="14" FontFamily="Segoe UI Black" Foreground="#f0f0f0"/>
                     </StackPanel>
                 </DockPanel>

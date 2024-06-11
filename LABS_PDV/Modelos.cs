@@ -18,8 +18,8 @@ namespace Labs.LABS_PDV
 	public class Collections
 	{
 		public static string Produtos { get; } = "Produtos";
+		public static string ProdutosComDefeito { get; } = "ProdutosComDefeito";
 		public static string Devolucoes { get; } = "Devolucoes";
-		public static string ProdutosComDefeito { get; } = "ProdutosDevolvidos";
 		public static string EstadoCaixa { get; } = "EstadoCaixa";
 		public static string Fechamentos { get; } = "Fechamentos";
 		public static string Vendas { get; } = "Vendas";
@@ -29,31 +29,32 @@ namespace Labs.LABS_PDV
 	}
 	public class Modelos
 	{
-		public class Devolucao(string Meio,string Motivo, double valor,string Data,string Hora)
+		public class Devolucao(string Descricao,string Meio,string Motivo, Produto produto,string Data,string Hora)
 		{
 			[BsonId]
 			[BsonRepresentation(BsonType.ObjectId)]
 			public string ID { get; set; } = null!;
+			public string Descricao { get; set; } = Descricao;
 			/// <summary>
 			/// Meio utilizado para estornar o valor do produto
 			/// </summary>
-			public string MeioDeEstorno = Meio;
+			public string MeioDeEstorno { get; set; } = Meio;
 			/// <summary>
 			/// Motivo da Devolução
 			/// </summary>
-			public string Motivo = Motivo;
+			public string Motivo { get; set; } = Motivo;
 			/// <summary>
-			/// Valor retornado ao Cliente
+			/// Produto Devolvido, nele há o valor de devolução.
 			/// </summary>
-			public double Valor = valor;
+			public Produto Produto { get; set; } = produto;
 			/// <summary>
 			/// Data em que a devolução foi realizada
 			/// </summary>
-			public string Data = Data;
+			public string Data { get; set; } = Data;
 			/// <summary>
 			/// Hora em que a devolução foi realizada
 			/// </summary>
-			public string Hora = Hora;
+			public string Hora { get; set; } = Hora;
 		}
         //
         /// <summary>

@@ -137,8 +137,6 @@ namespace Labs.Janelas.LabsPDV.Dependencias
             //Previne que a venda seja finalizada sem receber o valor total do pagamento.
             //
             if (FaltaReceber > 0) { Modais.MostrarInfo($"Ainda Falta Receber R$: {FaltaReceber} !"); return; }
-            //Substituir essa parte por funções genéricas para espelhamento (As funções genéricas já suportam Update Massivo)
-            await LabsEstoqueWPF.AbaterProdutosEmEstoqueAsync(Produtos);
             // Adiciona o valor Recebido ao meio correspondente
             if (LabsPDV != null)
             {
@@ -181,6 +179,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                 }
                 // Sinaliza que a venda foi finalizada com sucesso
                 //
+                await LabsEstoqueWPF.AbaterProdutosEmEstoqueAsync(Produtos);
                 Modais.MostrarInfo("Venda Finalizada com Sucesso!");
                 OnPagamentoFinalizado?.Invoke(this);
                 Reset();

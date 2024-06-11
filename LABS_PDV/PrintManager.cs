@@ -47,8 +47,18 @@ namespace Labs.LABS_PDV
         //
         // Criar função para cálculo de tamanho de texto
         //
+        private bool PrinterExists(string Printer)
+        {
+            foreach (string printer in PrinterSettings.InstalledPrinters)
+            {
+                if(printer == Printer) { return true; }
+            }
+            Modais.MostrarAviso("A Impressora Configurada Não Existe");
+            return false;
+        }
         public void ImprimirCupomNaoFiscalLoja(string Impressora,VendaRealizada Venda)
         {
+            if (!PrinterExists(Impressora)) { return; }
             //Realizamos as configs iniciais
             PrinterSettings.PrinterName = Impressora;
             this.Venda = Venda;
@@ -61,18 +71,20 @@ namespace Labs.LABS_PDV
         //
         public void ImprimirCupomNaoFiscalCliente(string Impressora,VendaRealizada Venda)
         {
+            if (!PrinterExists(Impressora)) { return; }
             //Realizamos as configs iniciais
             PrinterSettings.PrinterName = Impressora;
             this.Venda = Venda;
             //Começamos o processo de Print
             PrintPage += ICNFCliente;
             EndPrint += OnEndPrinting;
-            // Mostra a pré-visualização antes de imprimir
-            Print();
-        }
+			// Mostra a pré-visualização antes de imprimir
+		    Print();
+		}
         //
         public void ImprimirCupomFechamentoDeCaixa(string Impressora,FechamentoDeCaixa Fechamento)
         {
+            if (!PrinterExists(Impressora)) { return; }
             //Realizamos as configs iniciais
             PrinterSettings.PrinterName = Impressora;
             //Configs Necessárias para o cupom
@@ -80,9 +92,9 @@ namespace Labs.LABS_PDV
             //Começamos o processo de Print
             PrintPage += ICNFFechamento;
             EndPrint += OnEndPrinting;
-            // Mostra a pré-visualização antes de imprimir
-            Print();
-        }
+			// Mostra a pré-visualização antes de imprimir
+		    Print();
+		}
         // Quando Terminam de Printar, Deserdam do evento
         private void OnEndPrinting(object sender, PrintEventArgs e)
         {

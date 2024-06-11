@@ -52,7 +52,40 @@ namespace Labs.LABS_PDV
             //
             return LocalOK && CloudOK && LabsCloudOK;
         }
-
+        /// <summary>
+        /// Retorna a Database Pura do Servidor Local
+        /// </summary>
+        /// <returns>Database</returns>
+        public static IMongoDatabase GetLocalDataBase()
+        {
+            try
+            {
+                var client = new MongoClient(LabsMain.LocalDataBaseConnectionURI);
+                return client.GetDatabase(LabsMain.ClientDataBase);
+            }
+            catch (Exception ex)
+            {
+				Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
+				return null!;
+			}
+        }
+        /// <summary>
+        /// Retorna a Database Pura do Servidor Cloud
+        /// </summary>
+        /// <returns>Database</returns>
+        public static IMongoDatabase GetCloudDataBase()
+        {
+            try
+            {
+                var client = new MongoClient(LabsMain.CloudDataBaseConnectionURI);
+                return client.GetDatabase(LabsMain.ClientDataBase);
+            }
+            catch (Exception ex)
+            {
+				Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
+				return null!;
+			}
+        }
         /// <summary>
         /// Conecta na Database do cliente Procurando uma coleção específica
         /// </summary>

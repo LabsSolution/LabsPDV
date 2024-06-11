@@ -5,73 +5,143 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Labs.Janelas.LabsEstoque"
         mc:Ignorable="d"
-        Title="LabsEstoqueWPF" Name="LabsEstoque" ResizeMode="NoResize" Background="Transparent" AllowsTransparency="True" WindowStartupLocation="CenterScreen" WindowStyle="None" Width="1366" Height="768">
+        Title="LabsEstoqueWPF" KeyDown="Window_KeyDown" Name="LabsEstoque" ResizeMode="NoResize" Background="Transparent" AllowsTransparency="True" WindowStartupLocation="CenterScreen" WindowStyle="None" Width="1366" Height="768">
     <Border CornerRadius="20" Background="#202020">
         <Grid Margin="20" Background="#303030">
             <Grid.RowDefinitions>
-                <RowDefinition Name="Botoes_Superiores" MaxHeight="100"/>
-                <RowDefinition Name="Barra_De_Pesquisa" Height="Auto"/>
-                <RowDefinition Name="Lista_Produtos" Height="*"/>
-                <RowDefinition Name="BarraLabelQuantidade" Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="120"/>
-            </Grid.ColumnDefinitions>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,10,0,0">
-                <Button x:Name="CadastrarProdutoButton" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Cadastrar Produto(s)" Click="CadastrarProdutoButton_Click">
-                    <TextBlock TextWrapping="Wrap" TextAlignment="Center">Cadastrar Produto(s)</TextBlock>
-                </Button>
-                <Button x:Name="AtualizarProdutoButton" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Atualizar Produto Selecionado" Click="AtualizarProdutoButton_Click">
-                    <TextBlock TextWrapping="Wrap" TextAlignment="Center">Atualizar Produto Selecionado</TextBlock>
-                </Button>
-                <Button x:Name="RemoverProdutoButton" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Atualizar Produto Selecionado" Click="RemoverProdutoButton_Click">
-                    <TextBlock TextWrapping="Wrap" TextAlignment="Center">Remover Produto Selecionado</TextBlock>
-                </Button>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,0">
-                <Button x:Name="VoltarButton" Background="#F6F6F6" Width="80" Height="50" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Voltar" Click="VoltarButton_Click">
+            <TabControl x:Name="ListasTabControl" BorderThickness="0" Background="Transparent" SelectionChanged="ListasTabControl_SelectionChanged" Margin="0">
+
+
+
+                <!--ABA DO ESTOQUE-->
+                <TabItem Header="Estoque" Name="Estoque_Tab" IsSelected="True">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition MaxHeight="100"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition MinWidth="120" Width="99*"/>
+                            <ColumnDefinition Width="1223*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0" Grid.ColumnSpan="2">
+                            <Button x:Name="CadastrarProdutoButton" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Cadastrar Produto(s)" Click="CadastrarProdutoButton_Click">
+                                <TextBlock TextWrapping="Wrap" TextAlignment="Center">Cadastrar Produto(s)</TextBlock>
+                            </Button>
+                            <Button x:Name="AtualizarProdutoButton" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Atualizar Produto Selecionado" Click="AtualizarProdutoButton_Click">
+                                <TextBlock TextWrapping="Wrap" TextAlignment="Center">Atualizar Produto Selecionado</TextBlock>
+                            </Button>
+                            <Button x:Name="RemoverProdutoButton" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Atualizar Produto Selecionado" Click="RemoverProdutoButton_Click">
+                                <TextBlock TextWrapping="Wrap" TextAlignment="Center">Remover Produto Selecionado</TextBlock>
+                            </Button>
+                        </StackPanel>
+                        <!--CAIXA DE PESQUISA-->
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,10,10,0" VerticalAlignment="Top" Grid.ColumnSpan="2">
+                            <Label Name="PesquisarProdutoLabel"  Content="Pesquisar Produto:" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f6f6f6" Width="Auto" Height="Auto" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                            <ComboBox HorizontalAlignment="Left" FontFamily="Segoe UI" FontWeight="Bold" FontSize="14" Margin="0,0,5,0" VerticalAlignment="Center" Height="Auto" Width="120">
+                                <ComboBoxItem Name="ComboBox_Descricao" IsSelected="True" Content="Descrição"/>
+                                <ComboBoxItem Name="ComboBox_Codigo" IsSelected="False" Content="Código"/>
+                                <ComboBoxItem Name="ComboBox_ID" IsSelected="False" Content="ID"/>
+                                <ComboBoxItem Name="ComboBox_Preco" IsSelected="False" Content="Preço"/>
+                            </ComboBox>
+                            <TextBox x:Name="CaixaDePesquisa" FontSize="20" VerticalAlignment="Center" KeyDown="OnSearchBarKeyDown" HorizontalAlignment="Stretch" Width="350"/>
+                            <Button x:Name="PesquisarButton" Content="Pesquisar" FontFamily="Segoe UI" FontSize="14" Background="#f6f6f6" FontWeight="Bold" Click="PesquisarButton_Click" MinWidth="70" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                            <Button x:Name="LimparFiltrosButton" Content="Limpar Filtros" ToolTip="Limpa todos os filtros e puxa novamente os itens do Banco de Dados" FontFamily="Segoe UI" FontSize="14" Background="#f6f6f6" FontWeight="Bold" Click="LimparFiltrosButton_Click" MinWidth="70" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                        </StackPanel>
+                        <DockPanel Grid.Row="1" Grid.ColumnSpan="2">
+                            <StackPanel Name="ListarPorCategoriasPanel" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,10,10,0" VerticalAlignment="Center">
+                                <Label Name="ListarPorLabel" Content="Listar:" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f6f6f6" Width="Auto" Height="Auto" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                <ComboBox FontFamily="Segoe UI" FontWeight="Bold" SelectionChanged="ListarSelection_Changed" FontSize="14" Margin="0,0,5,0" VerticalAlignment="Center" Height="Auto" Width="120">
+                                    <ComboBoxItem Name="ComboBox_Todos" IsSelected="True" Content="Todos"/>
+                                    <ComboBoxItem Name="ComboBox_EmBaixa" IsSelected="False" Content="Em Baixa"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </DockPanel>
+                        <!--CAIXA DE PESQUISA-->
+                        <ListView x:Name="ListaProdutosCadastrados" Grid.Row="1" ClipToBounds="True" ToolTip="Lista de Produtos" Margin="0,41,0,0" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="False">
+                                    <GridViewColumn Header="Descrição" DisplayMemberBinding="{Binding Descricao}" Width="200"/>
+                                    <GridViewColumn Header="Estoque" DisplayMemberBinding="{Binding Quantidade}" Width="100"/>
+                                    <GridViewColumn Header="Preço Unitário" DisplayMemberBinding="{Binding Preco}" Width="100"/>
+                                    <GridViewColumn Header="Cód Barras" DisplayMemberBinding="{Binding CodBarras}" Width="150"/>
+                                    <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" Width="150"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </TabItem>
+
+
+
+                <!--Aba dos produtos Devolvidos-->
+                <TabItem Name="Devolucoes_Tab" IsSelected="False" Header="Devoluções">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <!--Botoes-->
+                        <DockPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0" Grid.ColumnSpan="2">
+                                <Button x:Name="RegistrarDevolucaoButton" Padding="10" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Registrar Devolução de Produto" Click="RegistrarDevolucao_Click">
+                                    <TextBlock TextWrapping="Wrap" TextAlignment="Center">Registrar Devolução</TextBlock>
+                                </Button>
+                                <Button x:Name="RemoverDevolucaoButton" Padding="10" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Remover Registro de Devolução" Click="RemoverDevolucao_Click">
+                                    <TextBlock TextWrapping="Wrap" TextAlignment="Center">Remover Devolução</TextBlock>
+                                </Button>
+                            </StackPanel>
+                        </DockPanel>
+                        <!--Lista-->
+                        <ListView x:Name="ListaProdutosDevolvidos" Grid.Row="1" ClipToBounds="True" ToolTip="Lista de Produtos" Margin="0,10,0,0" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}" Grid.ColumnSpan="2">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="False">
+                                    <GridViewColumn Header="Descrição" DisplayMemberBinding="{Binding Descricao}" Width="200"/>
+                                    <GridViewColumn Header="Meio Estornado" DisplayMemberBinding="{Binding MeioDeEstorno}" Width="100"/>
+                                    <GridViewColumn Header="Data" DisplayMemberBinding="{Binding Data}" Width="100"/>
+                                    <GridViewColumn Header="Hora" DisplayMemberBinding="{Binding Hora}" Width="150"/>
+                                    <GridViewColumn Header="Motivo" DisplayMemberBinding="{Binding Motivo}"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </TabItem>
+
+
+
+
+                <!--Aba dos produtos com defeito-->
+                <TabItem Name="Defeituosos_Tab" IsSelected="False" Header="Produtos Com Defeito">
+                    <ListView x:Name="ListaProdutosComDefeito" ClipToBounds="True" VerticalAlignment="Stretch" ToolTip="Lista de Produtos" Margin="0,0,0,0" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="False">
+                                <GridViewColumn Header="Descrição" DisplayMemberBinding="{Binding Descricao}" Width="200"/>
+                                <GridViewColumn Header="Quantidade" DisplayMemberBinding="{Binding Quantidade}" Width="100"/>
+                                <GridViewColumn Header="Cód Barras" DisplayMemberBinding="{Binding CodBarras}" Width="150"/>
+                                <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" Width="150"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </TabItem>
+            </TabControl>
+
+
+            <!--Estão Fora da Aba-->
+            <DockPanel Grid.Row="1" HorizontalAlignment="Stretch">
+                <StackPanel>
+                    <Label Name="QuantidadeProdutosLabel" Margin="10,0,0,0" Content="Mostrando 0 Produtos" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f6f6f6" Height="Auto" HorizontalAlignment="Left"/>
+                    <Label Margin="10,0,0,0" Content="Atualizar (F5)" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f6f6f6" Width="Auto" Height="Auto" HorizontalAlignment="Left"/>
+                </StackPanel>
+                <!---->
+                <Button x:Name="VoltarButton" HorizontalAlignment="Right" Background="#F6F6F6" Width="80" Height="50" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Voltar" Click="VoltarButton_Click">
                     <TextBlock TextWrapping="Wrap" TextAlignment="Center">Voltar</TextBlock>
                 </Button>
-            </StackPanel>
-            <!--Quantidade Label-->
-            <Label Name="QuantidadeProdutosLabel" Margin="10,0,0,0" Grid.Row="3" Content="Mostrando 0 Produtos" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f6f6f6" Width="Auto" Height="Auto" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
-            <!--CAIXA DE PESQUISA-->
-            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,10,10,0" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                <Label Name="PesquisarProdutoLabel"  Content="Pesquisar Produto:" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f6f6f6" Width="Auto" Height="Auto" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                <ComboBox HorizontalAlignment="Left" FontFamily="Segoe UI" FontWeight="Bold" FontSize="14" Margin="0,0,5,0" VerticalAlignment="Center" Height="Auto" Width="120">
-                    <ComboBoxItem Name="ComboBox_Descricao" IsSelected="True" Content="Descrição"/>
-                    <ComboBoxItem Name="ComboBox_Codigo" IsSelected="False" Content="Código"/>
-                    <ComboBoxItem Name="ComboBox_ID" IsSelected="False" Content="ID"/>
-                    <ComboBoxItem Name="ComboBox_Preco" IsSelected="False" Content="Preço"/>
-                </ComboBox>
-                <TextBox x:Name="CaixaDePesquisa" FontSize="20" VerticalAlignment="Center" KeyDown="OnSearchBarKeyDown" HorizontalAlignment="Stretch" Width="350"/>
-                <Button x:Name="PesquisarButton" Content="Pesquisar" FontFamily="Segoe UI" FontSize="14" Background="#f6f6f6" FontWeight="Bold" Click="PesquisarButton_Click" MinWidth="70" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,0,0"/>
-                <Button x:Name="LimparFiltrosButton" Content="Limpar Filtros" ToolTip="Limpa todos os filtros e puxa novamente os itens do Banco de Dados" FontFamily="Segoe UI" FontSize="14" Background="#f6f6f6" FontWeight="Bold" Click="LimparFiltrosButton_Click" MinWidth="70" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,0,0"/>
-            </StackPanel>
-            <DockPanel Grid.Row="1">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,10,10,0" VerticalAlignment="Center">
-                    <Label Name="ListarPorLabel" Content="Listar:" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f6f6f6" Width="Auto" Height="Auto" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <ComboBox FontFamily="Segoe UI" FontWeight="Bold" SelectionChanged="ListarSelection_Changed" FontSize="14" Margin="0,0,5,0" VerticalAlignment="Center" Height="Auto" Width="120">
-                        <ComboBoxItem Name="ComboBox_Todos" IsSelected="True" Content="Todos"/>
-                        <ComboBoxItem Name="ComboBox_Defeituosos" IsSelected="False" Content="Defeituosos"/>
-                        <ComboBoxItem Name="ComboBox_Devolução" IsSelected="False" Content="Devolução"/>
-                        <ComboBoxItem Name="ComboBox_EmBaixa" IsSelected="False" Content="Em Baixa"/>
-                    </ComboBox>
-                </StackPanel>
             </DockPanel>
-            <!--CAIXA DE PESQUISA-->
-            <ListView x:Name="ListaProdutosCadastrados" Grid.Row="2" ClipToBounds="True" VerticalAlignment="Stretch" ToolTip="Lista de Produtos" Margin="10,10,10,10" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}">
-                <ListView.View>
-                    <GridView AllowsColumnReorder="True">
-                        <GridViewColumn Header="ID" DisplayMemberBinding="{Binding ID}" Width="Auto"/>
-                        <GridViewColumn Header="Descrição" DisplayMemberBinding="{Binding Descricao}" Width="200"/>
-                        <GridViewColumn Header="Estoque" DisplayMemberBinding="{Binding Quantidade}" Width="100"/>
-                        <GridViewColumn Header="Preço Unitário" DisplayMemberBinding="{Binding Preco}" Width="100"/>
-                        <GridViewColumn Header="Cód Barras" DisplayMemberBinding="{Binding CodBarras}" Width="150"/>
-                        <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" Width="150"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
         </Grid>
     </Border>
 </Window>
