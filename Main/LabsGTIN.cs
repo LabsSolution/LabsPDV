@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace Labs.LABS_PDV
+namespace Labs.Main
 {
 
 	//Leitor GTIN (Comunicação Web Service com o Portal Fiscal ) (AINDA SENDO FEITO)

@@ -16,9 +16,9 @@ using IdentityModel.Client;
 using IdentityModel.OidcClient;
 using Labs.Janelas.Configuracoes.Dependencias;
 using Labs.Janelas.LabsPDV;
-using Labs.LABS_PDV;
+using Labs.Main;
 using static System.Formats.Asn1.AsnWriter;
-using static Labs.LABS_PDV.Modelos;
+using static Labs.Main.Modelos;
 
 namespace Labs
 {

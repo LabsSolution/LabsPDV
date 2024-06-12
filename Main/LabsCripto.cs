@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.IO;
 
-namespace Labs.LABS_PDV
+namespace Labs.Main
 {
     public class LabsCripto
     {

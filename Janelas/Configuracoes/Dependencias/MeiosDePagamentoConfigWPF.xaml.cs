@@ -1,8 +1,8 @@
-﻿using Labs.LABS_PDV;
+﻿using Labs.Main;
 using MongoDB.Driver;
 using System.Windows;
 using System.Windows.Controls;
-using static Labs.LABS_PDV.Modelos;
+using static Labs.Main.Modelos;
 
 namespace Labs.Janelas.Configuracoes.Dependencias
 {

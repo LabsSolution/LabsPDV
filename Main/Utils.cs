@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using static Labs.LABS_PDV.Modelos;
+using static Labs.Main.Modelos;
 
-namespace Labs.LABS_PDV
+namespace Labs.Main
 {
 	internal class Utils
 	{

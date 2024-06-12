@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Unimake.Business.DFe.Xml.NFe;
 
-namespace Labs.LABS_PDV
+namespace Labs.Main
 {
 	public static class JsonManager
 	{

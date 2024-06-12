@@ -7,9 +7,9 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using static Labs.LABS_PDV.Modelos;
+using static Labs.Main.Modelos;
 
-namespace Labs.LABS_PDV
+namespace Labs.Main
 {
 	public class GerenciadorPDV
 	{

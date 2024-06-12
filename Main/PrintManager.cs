@@ -8,13 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using static Labs.LABS_PDV.Modelos;
+using static Labs.Main.Modelos;
 using Brushes = System.Drawing.Brushes;
 using FontFamily = System.Drawing.FontFamily;
 using FontStyle = System.Drawing.FontStyle;
 using Size = System.Drawing.Size;
 
-namespace Labs.LABS_PDV
+namespace Labs.Main
 {
 	public class PrintManager : PrintDocument
 	{

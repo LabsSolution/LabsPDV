@@ -8,11 +8,11 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Unimake.Business.DFe.Xml.NFe;
-using static Labs.LABS_PDV.Modelos;
+using static Labs.Main.Modelos;
 
 /// TODOS OS MEMBROS DEFINIDOS AQUI DEVEM SER DO TIPO TASK!
 
-namespace Labs.LABS_PDV
+namespace Labs.Main
 {
 	//Exemplo de como deve ser os objetos salvos no banco de dados
 	public class PersonModel

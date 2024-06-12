@@ -13,14 +13,28 @@
     <PackageReference Include="Auth0.OidcClient.Core" Version="4.0.1" />
     <PackageReference Include="Auth0.OidcClient.WPF" Version="4.0.0" />
     <PackageReference Include="Dapper" Version="2.1.44" />
-    <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.61" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="7.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="MongoDB.Driver" Version="2.25.0" />
-    <PackageReference Include="RestSharp" Version="111.0.1-alpha.0.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NSwag.ApiDescription.Client" Version="13.18.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="RestSharp" Version="111.2.0" />
     <PackageReference Include="SharpVectors" Version="1.8.4" />
     <PackageReference Include="Svg" Version="3.4.7" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
-    <PackageReference Include="Unimake.DFe" Version="20240522.1703.32" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="6.0.*" />
+    <PackageReference Include="System.ServiceModel.Federation" Version="6.0.*" />
+    <PackageReference Include="System.ServiceModel.Http" Version="6.0.*" />
+    <PackageReference Include="System.ServiceModel.NetNamedPipe" Version="6.0.*" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="6.0.*" />
+    <PackageReference Include="System.ServiceModel.Security" Version="6.0.*" />
+    <PackageReference Include="Unimake.DFe" Version="20240610.1756.52" />
   </ItemGroup>
 
   <ItemGroup>
@@ -57,6 +71,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Connected Services\" />
     <Folder Include="Janelas\DependenciasGerais\" />
     <Folder Include="Recursos\Icones\" />
     <Folder Include="Resources\" />

@@ -9,8 +9,27 @@ using System.Text;
 using System.Threading.Tasks;
 using Unimake.Business.DFe.Xml.GNRE;
 
-namespace Labs.LABS_PDV
-{ 
+namespace Labs.Main
+{
+	//
+	public class UnidadesDeMedida
+	{
+		public static UnidadeDeMedida Unidade { get; } = new("UN", "Unidade");
+		public static UnidadeDeMedida Kg { get; } = new("Kg", "Quilograma");
+		public static UnidadeDeMedida G { get; } = new("g", "Grama");
+		public static UnidadeDeMedida Mg { get; } = new("mg", "Miligrama");
+		public static UnidadeDeMedida L { get; } = new("L", "Litro");
+		public static UnidadeDeMedida Ml { get; } = new("ml", "Mililitro");
+	}
+
+	//
+	public class UnidadeDeMedida (string Unidade, string Descricao)
+	{
+		public string Unidade { get; } = Unidade;
+		public string Descricao { get; } = Descricao;
+	}
+
+
 	/// <summary>
 	/// ATENÇÃO!!!! TODOS OS MODELOS ABAIXO SÃO DE ALTO NÍVEL DE IMPORTÂNCIA!!!!, QUALQUER ALTERAÇÃO DESCUIDADA PODE OCASIONAR PROBLEMAS!!!
 	/// ANTES DE ALTERAR QUALQUER VALOR, CERTIFIQUE-SE DE CONFIRMAR A NÃO UTILIZAÇÃO DO ITEM NO CÓDIGO!!!
@@ -18,6 +37,9 @@ namespace Labs.LABS_PDV
 	public class Collections
 	{
 		public static string Produtos { get; } = "Produtos";
+		public static string Fornecedores { get; } = "Fornecedores";
+		public static string Entradas { get; } = "Entradas";
+		public static string Saidas { get; } = "Saidas";
 		public static string ProdutosComDefeito { get; } = "ProdutosComDefeito";
 		public static string Devolucoes { get; } = "Devolucoes";
 		public static string EstadoCaixa { get; } = "EstadoCaixa";
@@ -353,8 +375,45 @@ namespace Labs.LABS_PDV
 			public double Taxa { get; set; } = Taxa;
 		}
 		//
+		public class Fornecedor(string CNPJ, string NomeEmpresa, string Contato, string Email, Endereco Endereco)
+		{
+			//Empresa,contato,email,endereço,totalcomprado
+			[BsonId]
+			[BsonRepresentation(BsonType.ObjectId)]
+			public string ID { get; set; } = null!;
+			/// <summary>
+			/// CNPJ do fornecedor
+			/// </summary>
+			public string CNPJ { get; set; } = CNPJ;
+			/// <summary>
+			/// Nome do Fornecedor
+			/// </summary>
+			public string NomeEmpresa { get; set; } = NomeEmpresa;
+			/// <summary>
+			/// Contato
+			/// </summary>
+			public string Contato { get; set; } = Contato;
+			/// <summary>
+			/// Email do Fornecedor
+			/// </summary>
+			public string Email { get; set; } = Email;
+			/// <summary>
+			/// Endereço
+			/// </summary>
+			public Endereco Endereco { get; set; } = Endereco;
+			//
+			public double TotalComprado { get; set; } = 0;
+			/// <summary>
+			/// Retorna o Total Comprado Formatado.
+			/// </summary>
+			public string TotalCompradoFormatado { get { return $"R$ {Utils.FormatarValor(TotalComprado)}"; } }
+			/// <summary>
+			/// Retorna o endereço Formatado (Rua,Bairro,Cidade-Estado)
+			/// </summary>
+			public string EnderecoFormatado { get { return $"{Endereco.Logradouro}, {Endereco.Bairro}, {Endereco.Localidade}-{Endereco.Uf}"; } }
+		}
 		//
-		public class Produto(string Descricao = null!, int Quantidade = 0, double Preco = 0, string CodBarras = null!, bool ComDefeito = false, string Status = null!)
+		public class Produto(string Descricao = null!, int Quantidade = 0,int QuantidadeMin = 0, UnidadeDeMedida UnidadeDeMedida = null!, Fornecedor Fornecedor = null!,double Custo = 0 ,double Preco = 0, string CodBarras = null!, bool ComDefeito = false, string Status = null!)
 		{
 			//Identificador na database
 			[BsonId]
@@ -362,33 +421,38 @@ namespace Labs.LABS_PDV
 			public string ID { get; set; } = null!;
 			//Parâmetros
 			public string Descricao { get; set; } = Descricao;
+			//
 			public int Quantidade { get; set; } = Quantidade;
+			//
+			public int QuantidadeMin { get; set; } = QuantidadeMin;
+			//
+			public UnidadeDeMedida UnidadeDeMedida { get; set; } = UnidadeDeMedida;
+			//
+			public Fornecedor Fornecedor { get; set; } = Fornecedor;
+			//
+			public double Custo { get; set; } = Custo;
+			//
 			public double Preco { get; set; } = Preco;
+			//
 			public string CodBarras { get; set; } = CodBarras;
+			//
 			public string Status { get; set; } = Status;
 			//
 			public bool ComDefeito { get; set; } = ComDefeito;
-            // Método Interno
-            public override bool Equals(object? obj)
-            {
-                if(obj is Produto p)
-				{
-					var p1 = ID == p.ID;
-					var p2 = Descricao == p.Descricao;
-					var p3 = Quantidade == p.Quantidade;
-					var p4 = Preco == p.Preco;
-					var p5 = CodBarras == p.CodBarras;
-					var p6 = Status == p.Status;
-					var p7 = ComDefeito == p.ComDefeito;
-                    return p1 && p2 && p3 && p4 && p5 && p6 && p7;
-				}
-				return false;
-            }
-            public override int GetHashCode()
-            {
-				return ID.GetHashCode();
-            }
         }
 		//
+		public class Endereco
+		{
+			public string Cep { get; set; } = null!;
+			public string Logradouro { get; set; } = null!;
+			public string Complemento { get; set; } = null!;
+			public string Bairro { get; set; } = null!;
+			public string Localidade { get; set; } = null!;
+			public string Uf { get; set; } = null!;
+			public string Ibge { get; set; } = null!;
+			public string Gia { get; set; } = null!;
+			public string Ddd { get; set; } = null!;
+			public string Siafi { get; set; } = null!;
+		}
 	}
 }

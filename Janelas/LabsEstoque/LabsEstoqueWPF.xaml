@@ -12,7 +12,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <TabControl x:Name="ListasTabControl" BorderThickness="0" Background="Transparent" SelectionChanged="ListasTabControl_SelectionChanged" Margin="0">
+            <TabControl x:Name="ListasTabControl" BorderThickness="0" Background="Transparent" Margin="0">
 
 
 
@@ -34,7 +34,7 @@
                                 <TextBlock TextWrapping="Wrap" TextAlignment="Center">Cadastrar Produto(s)</TextBlock>
                             </Button>
                             <Button x:Name="AtualizarProdutoButton" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Atualizar Produto Selecionado" Click="AtualizarProdutoButton_Click">
-                                <TextBlock TextWrapping="Wrap" TextAlignment="Center">Atualizar Produto Selecionado</TextBlock>
+                                <TextBlock TextWrapping="Wrap" TextAlignment="Center">Editar Produto Selecionado</TextBlock>
                             </Button>
                             <Button x:Name="RemoverProdutoButton" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Atualizar Produto Selecionado" Click="RemoverProdutoButton_Click">
                                 <TextBlock TextWrapping="Wrap" TextAlignment="Center">Remover Produto Selecionado</TextBlock>
@@ -67,7 +67,11 @@
                             <ListView.View>
                                 <GridView AllowsColumnReorder="False">
                                     <GridViewColumn Header="Descrição" DisplayMemberBinding="{Binding Descricao}" Width="200"/>
+                                    <GridViewColumn Header="Fornecedor" DisplayMemberBinding="{Binding Fornecedor.NomeEmpresa}" Width="200"/>
+                                    <GridViewColumn Header="Unidade de Medida" DisplayMemberBinding="{Binding UnidadeDeMedida.Descricao}" Width="200"/>
                                     <GridViewColumn Header="Estoque" DisplayMemberBinding="{Binding Quantidade}" Width="100"/>
+                                    <GridViewColumn Header="EstoqueMin" DisplayMemberBinding="{Binding QuantidadeMin}" Width="100"/>
+                                    <GridViewColumn Header="Custo Unitário" DisplayMemberBinding="{Binding Custo}" Width="100"/>
                                     <GridViewColumn Header="Preço Unitário" DisplayMemberBinding="{Binding Preco}" Width="100"/>
                                     <GridViewColumn Header="Cód Barras" DisplayMemberBinding="{Binding CodBarras}" Width="150"/>
                                     <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" Width="150"/>
@@ -128,13 +132,52 @@
                         </ListView.View>
                     </ListView>
                 </TabItem>
+                
+                <!--Aba dos Fornecedores-->
+                <TabItem Name="Fornecedores_Tab" IsSelected="False" Header="Fornecedores">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <DockPanel>
+                            <StackPanel Orientation="Horizontal" Margin="10">
+                                
+                                <Button x:Name="RegistrarFornecedorButton" Padding="10" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Cadastrar Novo Fornecedor" Click="RegistrarFornecedorButton_Click">
+                                    <TextBlock TextWrapping="Wrap" TextAlignment="Center">Cadastrar Novo Fornecedor</TextBlock>
+                                </Button>
+
+                                <Button x:Name="RemoverFornecedorButton" Padding="10" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Remover Fornecedor Selecionado" Click="RemoverFornecedorButton_Click">
+                                    <TextBlock TextWrapping="Wrap" TextAlignment="Center">Remover Fornecedor</TextBlock>
+                                </Button>
+                            </StackPanel>
+                        </DockPanel>
+                        <!--Lista de Fornecedores-->
+                        <ListView x:Name="ListaFornecedores" Grid.Row="1" FontSize="14" ClipToBounds="True" VerticalAlignment="Stretch" ToolTip="Lista de Fornecedores" Margin="0,0,0,0" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="False">
+                                    <GridViewColumn Header="CNPJ" DisplayMemberBinding="{Binding CNPJ}" Width="200"/>
+                                    <GridViewColumn Header="Empresa" DisplayMemberBinding="{Binding NomeEmpresa}" Width="200"/>
+                                    <GridViewColumn Header="Contato" DisplayMemberBinding="{Binding Contato}" Width="200"/>
+                                    <GridViewColumn Header="E-Mail" DisplayMemberBinding="{Binding Email}" Width="200"/>
+                                    <GridViewColumn Header="CEP" DisplayMemberBinding="{Binding Endereco.Cep}" Width="150"/>
+                                    <GridViewColumn Header="Endereço" DisplayMemberBinding="{Binding EnderecoFormatado}" Width="300"/>
+                                    <GridViewColumn Header="Total Comprado" DisplayMemberBinding="{Binding TotalCompradoFormatado}" Width="200"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </TabItem>
+
+
+
             </TabControl>
 
 
             <!--Estão Fora da Aba-->
             <DockPanel Grid.Row="1" HorizontalAlignment="Stretch">
                 <StackPanel>
-                    <Label Name="QuantidadeProdutosLabel" Margin="10,0,0,0" Content="Mostrando 0 Produtos" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f6f6f6" Height="Auto" HorizontalAlignment="Left"/>
                     <Label Margin="10,0,0,0" Content="Atualizar (F5)" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f6f6f6" Width="Auto" Height="Auto" HorizontalAlignment="Left"/>
                 </StackPanel>
                 <!---->

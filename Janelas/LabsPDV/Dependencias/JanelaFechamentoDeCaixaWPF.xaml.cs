@@ -1,4 +1,4 @@
-﻿using Labs.LABS_PDV;
+﻿using Labs.Main;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,7 +15,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using static Labs.LABS_PDV.Modelos;
+using static Labs.Main.Modelos;
 
 namespace Labs.Janelas.LabsPDV.Dependencias
 {

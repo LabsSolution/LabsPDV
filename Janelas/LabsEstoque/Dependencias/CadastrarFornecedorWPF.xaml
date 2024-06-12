@@ -1,0 +1,64 @@
+﻿<Window x:Class="Labs.Janelas.LabsEstoque.Dependencias.CadastrarFornecedorWPF"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Labs.Janelas.LabsEstoque.Dependencias"
+        mc:Ignorable="d"
+        Title="CadastrarFornecedorWPF" Name="CadastrarFornecedor" Height="500" Width="800" WindowStyle="None" AllowsTransparency="True" Background="Transparent" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <Border Background="#202020" CornerRadius="20">
+        <Border Background="#404040" CornerRadius="20" Margin="10">
+            <Grid Margin=" 10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <!--Nome Empresa-->
+                <Label Margin="10,0,10,0" Grid.Row="0" Content="Nome da Empresa: " FontFamily="Segoe UI Black" FontSize="20" Foreground="#f0f0f0"/>
+                <TextBox Margin="10,0,10,0"  Name="NomeEmpresaInputBox" Grid.Row="1" FontFamily="Segoe UI" FontSize="20" />
+                <!--Contato-->
+                <Label Margin="10,0,10,0" Grid.Row="2" Content="Contato: " FontFamily="Segoe UI Black" FontSize="20" Foreground="#f0f0f0"/>
+                <TextBox Margin="10,0,10,0" Name="ContatoInputBox" Grid.Row="3" FontFamily="Segoe UI" FontSize="20" />
+                <!--Email-->
+                <Label Margin="10,0,10,0" Grid.Row="4" Content="E-Mail: " FontFamily="Segoe UI Black" FontSize="20" Foreground="#f0f0f0"/>
+                <TextBox Margin="10,0,10,0" Name="EmailInputBox" Grid.Row="5" FontFamily="Segoe UI" FontSize="20" />
+                <!--CNPJ-->
+                <Label Margin="10,0,10,0" Grid.Row="6" Content="CNPJ: " FontFamily="Segoe UI Black" FontSize="20" Foreground="#f0f0f0"/>
+                <TextBox Margin="10,0,10,0" Name="CNPJInputBox" Grid.Row="7" FontFamily="Segoe UI" FontSize="20" />
+                <!--CEP-->
+                <Label Margin="10,0,10,0" Grid.Column="1" Grid.Row="0" Content="CEP:" FontFamily="Segoe UI Black" FontSize="20" Foreground="#f0f0f0"/>
+                <TextBox Margin="10,0,10,0" Name="CepInputBox" KeyDown="CepInputBox_KeyDown" Grid.Row="1" Grid.Column="1" FontFamily="Segoe UI" FontSize="20" />
+                <!--Bairro-->
+                <Label Margin="10,0,10,0" Grid.Column="1" Grid.Row="2" Content="Bairro:" FontFamily="Segoe UI Black" FontSize="20" Foreground="#f0f0f0"/>
+                <TextBox Margin="10,0,10,0" Grid.Column="1" Name="BairroInputBox" Grid.Row="3" FontFamily="Segoe UI" FontSize="20" />
+                <!--Cidade-->
+                <Label Margin="10,0,10,0" Grid.Column="1" Grid.Row="4" Content="Cidade:" FontFamily="Segoe UI Black" FontSize="20" Foreground="#f0f0f0"/>
+                <TextBox Margin="10,0,10,0" Grid.Column="1" Name="CidadeInputBox" Grid.Row="5" FontFamily="Segoe UI" FontSize="20" />
+                <!--Endereço-->
+                <Label Margin="10,0,10,0" Grid.Column="1" Grid.Row="6" Content="Endereço:" FontFamily="Segoe UI Black" FontSize="20" Foreground="#f0f0f0"/>
+                <TextBox Margin="10,0,10,0" Grid.Column="1" Name="EnderecoInputBox" Grid.Row="7" FontFamily="Segoe UI" FontSize="20" />
+                <!--Endereço-->
+                <Label Margin="10,0,10,0" Grid.Column="1" Grid.Row="8" Content="Complemento:" FontFamily="Segoe UI Black" FontSize="20" Foreground="#f0f0f0"/>
+                <TextBox Margin="10,0,10,0" Grid.Column="1" Name="ComplementoInputBox" Grid.Row="9" FontFamily="Segoe UI" FontSize="20" />
+                <!--Botões-->
+                <DockPanel Grid.Row="10" Grid.ColumnSpan="2">
+                    <Button Grid.Row="10" Name="RegistrarFornecedorButton" Padding="5" FontFamily="Segoe UI Black" Background="LightGreen" Grid.Column="0" Content="Registrar Fornecedor" Width="150" Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Left" Click="RegistrarFornecedorButton_Click"/>
+                    <Button Grid.Row="10" Name="CancelarRegistroButton" Padding="5" FontFamily="Segoe UI Black" Background="#F08080" Grid.Column="0" Content="Cancelar" Width="100" Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="CancelarRegistroButton_Click"/>
+                </DockPanel>
+            </Grid>
+        </Border>
+    </Border>
+</Window>

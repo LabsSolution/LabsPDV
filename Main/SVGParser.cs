@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Labs.LABS_PDV
+namespace Labs.Main
 {
     public class SVGParser
     {

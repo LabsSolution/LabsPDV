@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Labs.LABS_PDV.Modelos;
+using static Labs.Main.Modelos;
 
-namespace Labs.LABS_PDV
+namespace Labs.Main
 {
     public class CaixaLabs
     {

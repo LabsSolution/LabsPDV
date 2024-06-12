@@ -19,7 +19,7 @@
 
                 </Grid.ColumnDefinitions>
                 <!--Conteúdo-->
-                <Label Content="Atualizar Produto" Grid.Row="0" FontFamily="Segoe UI" FontSize="30" FontWeight="Bold" Foreground="#f0f0f0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Label Content="Editar Produto" Grid.Row="0" FontFamily="Segoe UI" FontSize="30" FontWeight="Bold" Foreground="#f0f0f0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <!--Conteúdo-->
                 <StackPanel Grid.Row="1">
                     <Label Content="Descrição do Produto:" FontSize="24" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f0f0f0"/>

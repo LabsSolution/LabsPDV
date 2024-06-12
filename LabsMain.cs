@@ -1,13 +1,13 @@
 //Importação das Janelas
 using Labs.Janelas.LabsEstoque;
-using Labs.LABS_PDV;
+using Labs.Main;
 using System.Security.AccessControl;
 using System.Security.Cryptography;
 using System.Configuration;
 using Labs.Janelas.Configuracoes.Dependencias;
 using Labs.Janelas.LabsPDV.Dependencias;
 using Labs.Janelas.LabsPDV;
-using static Labs.LABS_PDV.Modelos;
+using static Labs.Main.Modelos;
 using System.Windows;
 using System.Net.NetworkInformation;
 using Application = System.Windows.Application;

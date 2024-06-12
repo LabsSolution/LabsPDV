@@ -1,5 +1,5 @@
 ﻿using Labs.Janelas.LabsPDV.Dependencias;
-using Labs.LABS_PDV;
+using Labs.Main;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using static Labs.LABS_PDV.Modelos;
+using static Labs.Main.Modelos;
 using Color = System.Windows.Media.Color;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 

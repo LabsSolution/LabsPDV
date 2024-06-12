@@ -1,6 +1,6 @@
 ﻿using Labs.Janelas.LabsEstoque.Dependencias;
 using Labs.Janelas.LabsPDV.Dependencias;
-using Labs.LABS_PDV;
+using Labs.Main;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using static Labs.LABS_PDV.Modelos;
+using static Labs.Main.Modelos;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
 namespace Labs.Janelas.LabsEstoque
@@ -30,6 +30,8 @@ namespace Labs.Janelas.LabsEstoque
 
         List<Produto> Produtos = [];
 		//
+		List<Fornecedor> Fornecedores = [];
+		//
 		List<Produto> ProdutosComDefeito = [];
         //
         List<Devolucao> Devolucoes = [];
@@ -38,61 +40,10 @@ namespace Labs.Janelas.LabsEstoque
         {
             InitializeComponent();
             LoadFromDataBase();
+			
         }
-        //
-        private void UpdateQuantidadeLabel() 
-		{ 
-			if(ListaProdutosCadastrados == null) { return; }
-			if(ListaProdutosComDefeito == null) { return; }
-			if(ListaProdutosDevolvidos == null) { return; }
-			if(Estoque_Tab?.IsSelected == true)
-			{
-				QuantidadeProdutosLabel.Content = $"Mostrando {ListaProdutosCadastrados.Items.Count} Produtos"; 
-			}
-			if(Devolucoes_Tab?.IsSelected == true)
-			{
-				QuantidadeProdutosLabel.Content = $"Mostrando {ListaProdutosDevolvidos.Items.Count} Produtos"; 
-			}
-			if(Defeituosos_Tab?.IsSelected == true)
-			{
-				QuantidadeProdutosLabel.Content = $"Mostrando {ListaProdutosComDefeito.Items.Count} Produtos";
-			}
-		}
-		//
-        private async void LoadFromDataBase()
-        {
-            //Garantimos que todos os itens são limpos para evitar consumo de memória excessiva
-            Produtos.Clear();
-			ProdutosComDefeito.Clear();
-            Devolucoes.Clear();
-            //
-            ListaProdutosCadastrados.Items.Clear();
-            ListaProdutosDevolvidos.Items.Clear();
-			ListaProdutosComDefeito.Items.Clear();
-            //
-            Produtos = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.Produtos,_ => true);
-			ProdutosComDefeito = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.ProdutosComDefeito,_ => true);
-            Devolucoes = await CloudDataBase.GetManyLocalAsync<Devolucao>(Collections.Devolucoes, _ => true);
-			//
-			//Adicionamos direto na lista visual já que os itens apresentados são os próprios produtos
-			foreach (Produto produto in Produtos) { ListaProdutosCadastrados.Items.Add(produto); }
-			//
-			foreach (Produto produto in ProdutosComDefeito) { ListaProdutosComDefeito.Items.Add(produto); }
-            //
-            foreach (Devolucao devolucao in Devolucoes) { ListaProdutosDevolvidos.Items.Add(devolucao); }
-            //
-            ComboBox_Todos.IsSelected = true;
-            ComboBox_Descricao.IsSelected = true;
-            //
-            UpdateQuantidadeLabel();
-        }
-		//
-		private void UpdateByEvent(object? sender, EventArgs e)
-		{
-			LoadFromDataBase();
-			//
-			if (sender is Window window) { window.Closed -= UpdateByEvent; }
-		}
+		#region Métodos Estáticos
+
 		//-----------------------------------------//
 		//-------------MÉTODOS ESTÁTICOS!!!
 		//-----------------------------------------//
@@ -122,11 +73,67 @@ namespace Labs.Janelas.LabsEstoque
                 throw;
             }
         }
-		//EVENTOS
+		#endregion
+		//
+		#region Métodos Globais
+
+		private void Window_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.Key == Key.F5)
+			{
+				LoadFromDataBase();
+			}
+		}
+		//
+        private async void LoadFromDataBase()
+        {
+            //Garantimos que todos os itens são limpos para evitar consumo de memória excessiva
+            Produtos.Clear();
+			ProdutosComDefeito.Clear();
+			Fornecedores.Clear();
+            Devolucoes.Clear();
+            //
+            ListaProdutosCadastrados.Items.Clear();
+            ListaProdutosDevolvidos.Items.Clear();
+			ListaProdutosComDefeito.Items.Clear();
+			ListaFornecedores.Items.Clear();
+            //
+            Produtos = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.Produtos,_ => true);
+			ProdutosComDefeito = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.ProdutosComDefeito,_ => true);
+            Devolucoes = await CloudDataBase.GetManyLocalAsync<Devolucao>(Collections.Devolucoes, _ => true);
+			Fornecedores = await CloudDataBase.GetManyLocalAsync<Fornecedor>(Collections.Fornecedores, _ => true);
+			//
+			//Adicionamos direto na lista visual já que os itens apresentados são os próprios produtos
+			foreach (Produto produto in Produtos) { ListaProdutosCadastrados.Items.Add(produto); }
+			//
+			foreach (Produto produto in ProdutosComDefeito) { ListaProdutosComDefeito.Items.Add(produto); }
+            //
+            foreach (Devolucao devolucao in Devolucoes) { ListaProdutosDevolvidos.Items.Add(devolucao); }
+            //
+			foreach (Fornecedor fornecedor in Fornecedores) { ListaFornecedores.Items.Add(fornecedor); }
+			//
+            ComboBox_Todos.IsSelected = true;
+            ComboBox_Descricao.IsSelected = true;
+            //
+        }
+		#endregion
+		//
+		#region Eventos Estoque
+
+		//EVENTOS Estoque
+		private void UpdateByEvent(object? sender, EventArgs e)
+		{
+			LoadFromDataBase();
+			//
+			if (sender is Window window) { window.Closed -= UpdateByEvent; }
+		}
 		private void CadastrarProdutoButton_Click(object sender, RoutedEventArgs e)
 		{
+			if(Fornecedores.Count == 0) { var r = Modais.MostrarPergunta("Você Não Possui Fornecedores Cadastrados!, Deseja continuar?"); if (r == MessageBoxResult.No) { return; } }
+			//
 			LabsMain.IniciarDependencia<CadastrarProdutoWPF>(app =>
 			{
+
 				app.Closed += UpdateByEvent;
 			}, true);
 		}
@@ -172,25 +179,37 @@ namespace Labs.Janelas.LabsEstoque
 
 		private void OnSearchBarKeyDown(object sender, KeyEventArgs e)
 		{
-			if (e.Key == Key.Enter) { AtualizarListaProdutosVisual(CaixaDePesquisa.Text); }
+			if (e.Key == Key.Enter) { AtualizarEstoqueVisual(CaixaDePesquisa.Text); }
 		}
 
 		private void PesquisarButton_Click(object sender, RoutedEventArgs e)
 		{
-			AtualizarListaProdutosVisual(CaixaDePesquisa.Text);
+			AtualizarEstoqueVisual(CaixaDePesquisa.Text);
 		}
-		// Métodos de UTILIDADE
-		private void AtualizarListaProdutosVisual(string filter)
+		private void LimparFiltrosButton_Click(object sender, RoutedEventArgs e)
+		{
+			ComboBox_Descricao.IsSelected = true;
+			CaixaDePesquisa.Text = null!;
+			LoadFromDataBase();
+		}
+		private void ListarSelection_Changed(object sender, SelectionChangedEventArgs e)
+		{
+			FiltrarPorCategoria();
+		}
+		#endregion
+		//
+		#region Aba Estoque
+
+		// Métodos Estoque
+		private void AtualizarEstoqueVisual(string filter)
 		{
 			//Aqui a gente retorna se não tiver nada até porque não faz sentido gastar processamento atoa
-			if (filter.IsNullOrEmpty() && ListaProdutosCadastrados.Items.Count == Produtos.Count) { UpdateQuantidadeLabel(); return; }
+			if (filter.IsNullOrEmpty() && ListaProdutosCadastrados.Items.Count == Produtos.Count) { return; }
 			//
 			ListaProdutosCadastrados.Items.Clear();
-			ListaProdutosComDefeito.Items.Clear();
-			ListaProdutosDevolvidos.Items.Clear();
 			//
 			//
-			if (filter.IsNullOrEmpty()) { Produtos.ForEach(x => ListaProdutosCadastrados.Items.Add(x)); UpdateQuantidadeLabel(); return; }
+			if (filter.IsNullOrEmpty()) { Produtos.ForEach(x => ListaProdutosCadastrados.Items.Add(x)); return; }
 			else
 			{
 				if (ComboBox_Descricao.IsSelected)
@@ -199,16 +218,6 @@ namespace Labs.Janelas.LabsEstoque
 					Produtos.ForEach((x) =>
 					{
 						if (x.Descricao.Contains(filter, StringComparison.OrdinalIgnoreCase)) { ListaProdutosCadastrados.Items.Add(x); }
-					});
-					//
-					ProdutosComDefeito.ForEach(x => 
-					{
-						if (x.Descricao.Contains(filter, StringComparison.OrdinalIgnoreCase)) { ListaProdutosComDefeito.Items.Add(x); }
-					});
-					//
-					Devolucoes.ForEach(x => 
-					{ 
-						if(x.Descricao.Contains(filter, StringComparison.OrdinalIgnoreCase)) { ListaProdutosDevolvidos.Items.Add(x); }
 					});
 				}
 				//
@@ -236,18 +245,9 @@ namespace Labs.Janelas.LabsEstoque
 					});
 				}
 				//
-				UpdateQuantidadeLabel();
 			}
 			//
 		}
-
-		private void LimparFiltrosButton_Click(object sender, RoutedEventArgs e)
-		{
-			ComboBox_Descricao.IsSelected = true;
-			CaixaDePesquisa.Text = null!;
-			LoadFromDataBase();
-		}
-
 		//Filtro de produtos
 		private void FiltrarPorCategoria()
 		{
@@ -261,22 +261,11 @@ namespace Labs.Janelas.LabsEstoque
 				Produtos.ForEach(x => { if (x.Quantidade <= LabsMainAppWPF.QMDP) { ListaProdutosCadastrados.Items.Add(x); } });
 			}
 			//
-			UpdateQuantidadeLabel();
 		}
 		//
-
-		private void ListarSelection_Changed(object sender, SelectionChangedEventArgs e)
-		{
-			FiltrarPorCategoria();
-		}
-
-		private void ListasTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-		{
-			if(sender == ListasTabControl)
-			{
-				UpdateQuantidadeLabel();
-			}
-		}
+		#endregion
+		//
+		#region Aba de Devolução
 
 		private void RegistrarDevolucao_Click(object sender, RoutedEventArgs e)
 		{
@@ -312,13 +301,38 @@ namespace Labs.Janelas.LabsEstoque
 			}
 			await CloudDataBase.RemoveLocalAsync<Devolucao>(Collections.Devolucoes,x => x.ID == devolucao.ID);
 		}
+		#endregion
+		//
+		#region Aba Fornecedores
 
-		private void Window_KeyDown(object sender, KeyEventArgs e)
+		private void RegistrarFornecedorButton_Click(object sender, RoutedEventArgs e)
 		{
-			if(e.Key == Key.F5)
-			{
-				LoadFromDataBase();
-			}
+			LabsMain.IniciarDependencia<CadastrarFornecedorWPF>(null!,true,false);
 		}
+		//
+		private async void RemoverFornecedor()
+		{
+			if(ListaFornecedores.SelectedItem is not Fornecedor fornecedor) { Modais.MostrarAviso("Você Deve Selecionar um fornecedor"); return; }
+			var r = Modais.MostrarPergunta($"Você Deseja Remover o Fornecedor {fornecedor.NomeEmpresa}?\nESTA AÇÃO NÃO PODE SER DESFEITA!");
+			//
+			if(r == MessageBoxResult.No) { return; }
+			// Tentar descobrir porque essa porcaria não deleta no cloud
+			if (LabsMain.Cliente.PossuiPlanoCloud)
+			{
+				await CloudDataBase.RemoveCloudAsync<Fornecedor>(Collections.Fornecedores,x => x.ID == fornecedor.ID);
+			}
+			await CloudDataBase.RemoveLocalAsync<Fornecedor>(Collections.Fornecedores,x => x.ID == fornecedor.ID);
+			//
+			ListaFornecedores.Items.Remove(fornecedor);
+			Modais.MostrarInfo($"Fornecedor {fornecedor.NomeEmpresa} Removido com Sucesso!");
+		}
+		//
+		private void RemoverFornecedorButton_Click(object sender, RoutedEventArgs e)
+		{
+			RemoverFornecedor();
+		}
+		#endregion
+
+
 	}
 }

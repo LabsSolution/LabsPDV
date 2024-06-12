@@ -1,4 +1,4 @@
-﻿using Labs.LABS_PDV;
+﻿using Labs.Main;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using static Labs.LABS_PDV.Modelos;
+using static Labs.Main.Modelos;
 
 namespace Labs.Janelas.LabsEstoque.Dependencias
 {
@@ -33,6 +33,7 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
             PrecoInputBox.Text = null!;
             CodigoInputBox.Text = null!;
         }
+
         //METODOS
         private async void CadastrarProduto(string Desc, int QTD, double Preco, string CodBarras)
         {
