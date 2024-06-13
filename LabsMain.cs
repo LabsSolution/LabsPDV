@@ -10,8 +10,6 @@ using Labs.Janelas.LabsPDV;
 using static Labs.Main.Modelos;
 using System.Windows;
 using System.Net.NetworkInformation;
-using Application = System.Windows.Application;
-//
 namespace Labs
 {
 
@@ -21,21 +19,22 @@ namespace Labs
 		public bool IsClosed { get; set; } = IsClosed;
 	}
 	//
-	internal static class LabsMain
+	/// <summary>
+	/// Interaction logic for LabsMain.xaml
+	/// </summary>
+	public partial class LabsMain : Application
 	{
 		//Controle de Instâncias (Endereçamento de memória)
 		private static Dictionary<string, LabWindow> RunningApps = new();
 		//
-		public static string TradeMark = "© Lab Soluções © ";
+		public const string TradeMark = "© Lab Soluções © ";
 		//
-		public static string LabsCloudDataBaseConnectionURI = "mongodb+srv://labscentral:solution2024@labs-central.vqvqvje.mongodb.net/";
+		public const string LabsCloudDataBaseConnectionURI = "mongodb+srv://labscentral:solution2024@labs-central.vqvqvje.mongodb.net/";
 		//
 		// Acessores Públicos para a database do cliente
 		public static string ClientDataBase = null!; // Nome da database do cliente
 		public static string CloudDataBaseConnectionURI = null!;
 		public static string LocalDataBaseConnectionURI = null!;
-		//
-		public static Application Application = new();
 		//
 		/// <summary>
 		/// Objeto de Controle Cliente Labs
@@ -46,39 +45,27 @@ namespace Labs
 		/// Propriedade para verificar a conexão com a internet
 		/// </summary>
 		public static Task<PingReply> CheckInternet { get { return new Ping().SendPingAsync("www.google.com"); } }
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
-        [STAThread]
-		static void Main() // Desabilitado Por Enquanto
-		{	
+		//
+        public static void INIT()
+		{
+			//Inicializamos as dependências obrigatória
 			//A Criptografia é algo essencial para a segurança dos nossos clientes!
 			// Politica LGPD
-			//Descriptografa a database local
-			if(LabsCripto.Decript("L_Data",out string LDecripted)) { LocalDataBaseConnectionURI = LDecripted; }
-			//Descriptografa a Database Remota
-			if(LabsCripto.Decript("C_Data",out string CDecripted)) { CloudDataBaseConnectionURI = CDecripted; }
-			//Descriptografa o nome da Database da empresa
-			if(LabsCripto.Decript("N_Data",out string NDecripted)) { ClientDataBase = NDecripted; }
-			//
-			LabsMainAppWPF App = new(); // Altere esse campo para modificar a primeira janela a ser aberta (Utilizar somente para debug)             //
-            INIT(App);
-        }
-        static void INIT<T>(T App) where T : Window
-		{
-			//Inicializamos as dependências obrigatórias
-			//Verifica a pasta config (se não tiver, vai criar uma)
 			bool init = JsonManager.InitializeJsonManager();
+			//Verifica a pasta config (se não tiver, vai criar uma)
+			//O Init só é falso caso dê algo de errado na pasta config e não seja possível inicializar
 			if (!init) 
 			{ 
-				//O Init só é falso caso dê algo de errado na pasta config e não seja possível inicializar
 				var r = Modais.MostrarErro("Não Foi Possivel Iniciar o Sistema Por Conter Erros Críticos!");
-				if(r == MessageBoxResult.OK) { INIT(App); return; }
-				return; 
+				return;
 			}
-			// Somente após o sistema verificar tudo é que inicializamos
-			Application.Run(App);
-            //
+			//Descriptografa a database local
+			if (LabsCripto.Decript("L_Data", out string LDecripted)) { LocalDataBaseConnectionURI = LDecripted; }
+			//Descriptografa a Database Remota
+			if (LabsCripto.Decript("C_Data", out string CDecripted)) { CloudDataBaseConnectionURI = CDecripted; }
+			//Descriptografa o nome da Database da empresa
+			if (LabsCripto.Decript("N_Data", out string NDecripted)) { ClientDataBase = NDecripted; }
+			//
         }
         //
         //EVENTOS//

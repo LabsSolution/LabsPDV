@@ -26,14 +26,14 @@
             </Grid.ColumnDefinitions>
             <!-- Botoes de Cima -->
             <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0">
-                <Button x:Name="LabsEstoqueButton" Click="OnLabsEstoqueClick" Content="Estoque" Width="150" Height="80" FontSize="18" FontFamily="Segoe UI Black" FontWeight="Bold" Margin="10,0" Background="#FFFFFF">
+                <Button x:Name="LabsEstoqueButton" Style="{StaticResource RoundButton20px}" Click="OnLabsEstoqueClick" Content="Estoque" Width="150" Height="80" FontSize="18" FontFamily="Segoe UI Black" FontWeight="Bold" Margin="10,0" Background="#FFFFFF">
                 </Button>
-                <Button x:Name="LabsPDVButton" Click="OnLabsPDVClick" Content="PDV" Width="150" Height="80" FontSize="18" FontFamily="Segoe UI Black" FontWeight="Bold" Margin="10,0" Background="#FFFFFF"/>
+                <Button x:Name="LabsPDVButton" Style="{StaticResource RoundButton20px}" Click="OnLabsPDVClick" Content="PDV" Width="150" Height="80" FontSize="18" FontFamily="Segoe UI Black" FontWeight="Bold" Margin="10,0" Background="#FFFFFF"/>
             </StackPanel>
             <!-- Botoes de Baixo -->
             <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10,0">
-                <Button x:Name="ConfigButton" Click="OnLabsConfigClick" Content="Configurações" Width="150" Height="80" FontSize="18" FontFamily="Segoe UI Black" FontWeight="Bold" Margin="10,0" Background="#FFFFFF"/>
-                <Button x:Name="SairButton" Click="OnLabsSairClick" Content="Sair" Width="150" Height="80" FontSize="18" FontFamily="Segoe UI Black" FontWeight="Bold" Margin="10,0" Background="#FFFFFF"/>
+                <Button x:Name="ConfigButton" Style="{StaticResource RoundButton20px}" Click="OnLabsConfigClick" Content="Configurações" Width="150" Height="80" FontSize="18" FontFamily="Segoe UI Black" FontWeight="Bold" Margin="10,0" Background="#FFFFFF"/>
+                <Button x:Name="SairButton" Style="{StaticResource RoundButton20px}" Click="OnLabsSairClick" Content="Sair" Width="150" Height="80" FontSize="18" FontFamily="Segoe UI Black" FontWeight="Bold" Margin="10,0" Background="#FFFFFF"/>
             </StackPanel>
             <DockPanel Grid.Row="2" Grid.Column="0" Margin="20,0,0,0">
                 <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Left">

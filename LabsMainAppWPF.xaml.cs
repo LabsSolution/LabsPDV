@@ -45,6 +45,9 @@ namespace Labs
         public LabsMainAppWPF()
         {
             InitializeComponent();
+            //Antes mesmo de inicializar, Chamamos o método INIT para configurar tudo
+            LabsMain.INIT();
+            //
             if (App == null) { App = this; }
             //Caso tenha uma instância rodando, fechamos esta janela e jogamos um erro
             //Dando a informação para que se o erro persistir, entrar em contato com o suporte técnico.
@@ -139,7 +142,7 @@ namespace Labs
         private void OnLabsSairClick(object sender, RoutedEventArgs e)
         {
             this.Close();
-            LabsMain.Application.Shutdown();
+            Labs.App.Current?.Shutdown();
         }
         //
     }

@@ -17,10 +17,7 @@
 
 
                 <!--ABA DO ESTOQUE-->
-                <TabItem Margin="10,0,0,0" Padding="10,5,20,5"  Header="Estoque" Name="Estoque_Tab" IsSelected="True">
-                    
-                    
-                    
+                <TabItem  Style="{StaticResource BetterTabItem}"  Header="Estoque" Name="Estoque_Tab" IsSelected="True">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition MaxHeight="100"/>
@@ -33,18 +30,18 @@
                             <ColumnDefinition Width="1223*"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Orientation="Horizontal" Margin="0,10,0,0" Grid.ColumnSpan="2">
-                            <Button x:Name="CadastrarProdutoButton" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Cadastrar Produto(s)" Click="CadastrarProdutoButton_Click">
+                            <Button x:Name="CadastrarProdutoButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Cadastrar Produto(s)" Click="CadastrarProdutoButton_Click">
                                 <TextBlock TextWrapping="Wrap" TextAlignment="Center">Cadastrar Produto(s)</TextBlock>
                             </Button>
-                            <Button x:Name="AtualizarProdutoButton" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Atualizar Produto Selecionado" Click="AtualizarProdutoButton_Click">
+                            <Button x:Name="AtualizarProdutoButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Atualizar Produto Selecionado" Click="AtualizarProdutoButton_Click">
                                 <TextBlock TextWrapping="Wrap" TextAlignment="Center">Editar Produto Selecionado</TextBlock>
                             </Button>
-                            <Button x:Name="RemoverProdutoButton" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Atualizar Produto Selecionado" Click="RemoverProdutoButton_Click">
+                            <Button x:Name="RemoverProdutoButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Atualizar Produto Selecionado" Click="RemoverProdutoButton_Click">
                                 <TextBlock TextWrapping="Wrap" TextAlignment="Center">Remover Produto Selecionado</TextBlock>
                             </Button>
                         </StackPanel>
                         <!--CAIXA DE PESQUISA-->
-                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,10,10,0" VerticalAlignment="Top" Grid.ColumnSpan="2">
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,10,10,10" VerticalAlignment="Top" Grid.ColumnSpan="2">
                             <Label Name="PesquisarProdutoLabel"  Content="Pesquisar Produto:" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f6f6f6" Width="Auto" Height="Auto" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                             <ComboBox HorizontalAlignment="Left" FontFamily="Segoe UI" FontWeight="Bold" FontSize="14" Margin="0,0,5,0" VerticalAlignment="Center" Height="Auto" Width="120">
                                 <ComboBoxItem Name="ComboBox_Descricao" IsSelected="True" Content="Descrição"/>
@@ -52,9 +49,9 @@
                                 <ComboBoxItem Name="ComboBox_ID" IsSelected="False" Content="ID"/>
                                 <ComboBoxItem Name="ComboBox_Preco" IsSelected="False" Content="Preço"/>
                             </ComboBox>
-                            <TextBox x:Name="CaixaDePesquisa" FontSize="20" VerticalAlignment="Center" KeyDown="OnSearchBarKeyDown" HorizontalAlignment="Stretch" Width="350"/>
-                            <Button x:Name="PesquisarButton" Content="Pesquisar" FontFamily="Segoe UI" FontSize="14" Background="#f6f6f6" FontWeight="Bold" Click="PesquisarButton_Click" MinWidth="70" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,0,0"/>
-                            <Button x:Name="LimparFiltrosButton" Content="Limpar Filtros" ToolTip="Limpa todos os filtros e puxa novamente os itens do Banco de Dados" FontFamily="Segoe UI" FontSize="14" Background="#f6f6f6" FontWeight="Bold" Click="LimparFiltrosButton_Click" MinWidth="70" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                            <TextBox x:Name="CaixaDePesquisa" Style="{StaticResource RoundTextBox}" FontSize="20" VerticalAlignment="Stretch" KeyDown="OnSearchBarKeyDown" HorizontalAlignment="Stretch" Width="350" Height="Auto"/>
+                            <Button x:Name="PesquisarButton" Style="{StaticResource RoundButton10px}" Content="Pesquisar" FontFamily="Segoe UI" FontSize="14" Background="#f6f6f6" FontWeight="Bold" Click="PesquisarButton_Click" MinWidth="70" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                            <Button x:Name="LimparFiltrosButton" Style="{StaticResource RoundButton10px}" Content="Limpar Filtros" ToolTip="Limpa todos os filtros e puxa novamente os itens do Banco de Dados" FontFamily="Segoe UI" FontSize="14" Background="#f6f6f6" FontWeight="Bold" Click="LimparFiltrosButton_Click" MinWidth="70" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,0,0"/>
                         </StackPanel>
                         <DockPanel Grid.Row="1" Grid.ColumnSpan="2">
                             <StackPanel Name="ListarPorCategoriasPanel" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,10,10,0" VerticalAlignment="Center">
@@ -66,7 +63,7 @@
                             </StackPanel>
                         </DockPanel>
                         <!--CAIXA DE PESQUISA-->
-                        <ListView x:Name="ListaProdutosCadastrados" Grid.Row="1" ClipToBounds="True" ToolTip="Lista de Produtos" Margin="0,41,0,0" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                        <ListView x:Name="ListaProdutosCadastrados" Grid.Row="2" ClipToBounds="True" ToolTip="Lista de Produtos" Margin="0,0,0,0" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}" Grid.ColumnSpan="2" Grid.RowSpan="2">
                             <ListView.View>
                                 <GridView AllowsColumnReorder="False">
                                     <GridViewColumn Header="Descrição" DisplayMemberBinding="{Binding Descricao}" Width="200"/>
@@ -85,7 +82,7 @@
                 </TabItem>
 
                 <!--Aba dos Fornecedores-->
-                <TabItem Margin="10,0,0,0" Padding="10,5,20,5" Name="Fornecedores_Tab" IsSelected="False" Header="Fornecedores">
+                <TabItem Style="{StaticResource BetterTabItem}" Name="Fornecedores_Tab" IsSelected="False" Header="Fornecedores">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -121,11 +118,11 @@
                     </Grid>
                 </TabItem>
                 <!--Aba dos Registros de Entradas-->
-                <TabItem Margin="10,0,0,0" Padding="10,5,20,5" Name="Entradas_Tab" IsSelected="False" Header="Entradas">
+                <TabItem Style="{StaticResource BetterTabItem}" Name="Entradas_Tab" IsSelected="False" Header="Entradas">
                     
                 </TabItem>
                 <!--Aba dos produtos Devolvidos-->
-                <TabItem Margin="10,0,0,0" Padding="10,5,20,5" Name="Devolucoes_Tab" IsSelected="False" Header="Devoluções">
+                <TabItem Style="{StaticResource BetterTabItem}" Name="Devolucoes_Tab" IsSelected="False" Header="Devoluções">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -161,7 +158,7 @@
 
 
                 <!--Aba dos produtos com defeito-->
-                <TabItem Margin="10,0,0,0" Padding="10,0,20,0" Name="Defeituosos_Tab" IsSelected="False" Header="Produtos Com Defeito">
+                <TabItem Style="{StaticResource BetterTabItem}" Name="Defeituosos_Tab" IsSelected="False" Header="Produtos Com Defeito">
                     <ListView x:Name="ListaProdutosComDefeito" ClipToBounds="True" VerticalAlignment="Stretch" ToolTip="Lista de Produtos" Margin="0,0,0,0" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}">
                         <ListView.View>
                             <GridView AllowsColumnReorder="False">
@@ -186,7 +183,7 @@
                     <Label Margin="10,0,0,0" Content="Atualizar (F5)" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f6f6f6" Width="Auto" Height="Auto" HorizontalAlignment="Left"/>
                 </StackPanel>
                 <!---->
-                <Button x:Name="VoltarButton" HorizontalAlignment="Right" Background="#F6F6F6" Width="80" Height="50" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Voltar" Click="VoltarButton_Click">
+                <Button x:Name="VoltarButton" Style="{StaticResource RoundButton10px}" HorizontalAlignment="Right" Background="#F6F6F6" Width="80" Height="50" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Voltar" Click="VoltarButton_Click">
                     <TextBlock TextWrapping="Wrap" TextAlignment="Center">Voltar</TextBlock>
                 </Button>
             </DockPanel>
