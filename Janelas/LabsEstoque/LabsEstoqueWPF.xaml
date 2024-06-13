@@ -17,7 +17,10 @@
 
 
                 <!--ABA DO ESTOQUE-->
-                <TabItem Header="Estoque" Name="Estoque_Tab" IsSelected="True">
+                <TabItem Margin="10,0,0,0" Padding="10,5,20,5"  Header="Estoque" Name="Estoque_Tab" IsSelected="True">
+                    
+                    
+                    
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition MaxHeight="100"/>
@@ -81,10 +84,48 @@
                     </Grid>
                 </TabItem>
 
+                <!--Aba dos Fornecedores-->
+                <TabItem Margin="10,0,0,0" Padding="10,5,20,5" Name="Fornecedores_Tab" IsSelected="False" Header="Fornecedores">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
 
+                        <DockPanel>
+                            <StackPanel Orientation="Horizontal" Margin="10">
 
+                                <Button x:Name="RegistrarFornecedorButton" Padding="10" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Cadastrar Novo Fornecedor" Click="RegistrarFornecedorButton_Click">
+                                    <TextBlock TextWrapping="Wrap" TextAlignment="Center">Cadastrar Novo Fornecedor</TextBlock>
+                                </Button>
+
+                                <Button x:Name="RemoverFornecedorButton" Padding="10" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Remover Fornecedor Selecionado" Click="RemoverFornecedorButton_Click">
+                                    <TextBlock TextWrapping="Wrap" TextAlignment="Center">Remover Fornecedor</TextBlock>
+                                </Button>
+                            </StackPanel>
+                        </DockPanel>
+                        <!--Lista de Fornecedores-->
+                        <ListView x:Name="ListaFornecedores" Grid.Row="1" FontSize="14" ClipToBounds="True" VerticalAlignment="Stretch" ToolTip="Lista de Fornecedores" Margin="0,0,0,0" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="False">
+                                    <GridViewColumn Header="CNPJ" DisplayMemberBinding="{Binding CNPJ}" Width="200"/>
+                                    <GridViewColumn Header="Empresa" DisplayMemberBinding="{Binding NomeEmpresa}" Width="200"/>
+                                    <GridViewColumn Header="Contato" DisplayMemberBinding="{Binding Contato}" Width="200"/>
+                                    <GridViewColumn Header="E-Mail" DisplayMemberBinding="{Binding Email}" Width="200"/>
+                                    <GridViewColumn Header="CEP" DisplayMemberBinding="{Binding Endereco.Cep}" Width="150"/>
+                                    <GridViewColumn Header="Endereço" DisplayMemberBinding="{Binding EnderecoFormatado}" Width="300"/>
+                                    <GridViewColumn Header="Total Comprado" DisplayMemberBinding="{Binding TotalCompradoFormatado}" Width="200"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </TabItem>
+                <!--Aba dos Registros de Entradas-->
+                <TabItem Margin="10,0,0,0" Padding="10,5,20,5" Name="Entradas_Tab" IsSelected="False" Header="Entradas">
+                    
+                </TabItem>
                 <!--Aba dos produtos Devolvidos-->
-                <TabItem Name="Devolucoes_Tab" IsSelected="False" Header="Devoluções">
+                <TabItem Margin="10,0,0,0" Padding="10,5,20,5" Name="Devolucoes_Tab" IsSelected="False" Header="Devoluções">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -120,7 +161,7 @@
 
 
                 <!--Aba dos produtos com defeito-->
-                <TabItem Name="Defeituosos_Tab" IsSelected="False" Header="Produtos Com Defeito">
+                <TabItem Margin="10,0,0,0" Padding="10,0,20,0" Name="Defeituosos_Tab" IsSelected="False" Header="Produtos Com Defeito">
                     <ListView x:Name="ListaProdutosComDefeito" ClipToBounds="True" VerticalAlignment="Stretch" ToolTip="Lista de Produtos" Margin="0,0,0,0" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}">
                         <ListView.View>
                             <GridView AllowsColumnReorder="False">
@@ -133,43 +174,7 @@
                     </ListView>
                 </TabItem>
                 
-                <!--Aba dos Fornecedores-->
-                <TabItem Name="Fornecedores_Tab" IsSelected="False" Header="Fornecedores">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-
-                        <DockPanel>
-                            <StackPanel Orientation="Horizontal" Margin="10">
-                                
-                                <Button x:Name="RegistrarFornecedorButton" Padding="10" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Cadastrar Novo Fornecedor" Click="RegistrarFornecedorButton_Click">
-                                    <TextBlock TextWrapping="Wrap" TextAlignment="Center">Cadastrar Novo Fornecedor</TextBlock>
-                                </Button>
-
-                                <Button x:Name="RemoverFornecedorButton" Padding="10" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Remover Fornecedor Selecionado" Click="RemoverFornecedorButton_Click">
-                                    <TextBlock TextWrapping="Wrap" TextAlignment="Center">Remover Fornecedor</TextBlock>
-                                </Button>
-                            </StackPanel>
-                        </DockPanel>
-                        <!--Lista de Fornecedores-->
-                        <ListView x:Name="ListaFornecedores" Grid.Row="1" FontSize="14" ClipToBounds="True" VerticalAlignment="Stretch" ToolTip="Lista de Fornecedores" Margin="0,0,0,0" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}">
-                            <ListView.View>
-                                <GridView AllowsColumnReorder="False">
-                                    <GridViewColumn Header="CNPJ" DisplayMemberBinding="{Binding CNPJ}" Width="200"/>
-                                    <GridViewColumn Header="Empresa" DisplayMemberBinding="{Binding NomeEmpresa}" Width="200"/>
-                                    <GridViewColumn Header="Contato" DisplayMemberBinding="{Binding Contato}" Width="200"/>
-                                    <GridViewColumn Header="E-Mail" DisplayMemberBinding="{Binding Email}" Width="200"/>
-                                    <GridViewColumn Header="CEP" DisplayMemberBinding="{Binding Endereco.Cep}" Width="150"/>
-                                    <GridViewColumn Header="Endereço" DisplayMemberBinding="{Binding EnderecoFormatado}" Width="300"/>
-                                    <GridViewColumn Header="Total Comprado" DisplayMemberBinding="{Binding TotalCompradoFormatado}" Width="200"/>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </Grid>
-                </TabItem>
-
+                
 
 
             </TabControl>
