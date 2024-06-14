@@ -92,11 +92,11 @@
                         <DockPanel>
                             <StackPanel Orientation="Horizontal" Margin="10">
 
-                                <Button x:Name="RegistrarFornecedorButton" Padding="10" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Cadastrar Novo Fornecedor" Click="RegistrarFornecedorButton_Click">
+                                <Button x:Name="RegistrarFornecedorButton" Style="{StaticResource RoundButton10px}" Height="80" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Cadastrar Novo Fornecedor" Click="RegistrarFornecedorButton_Click">
                                     <TextBlock TextWrapping="Wrap" TextAlignment="Center">Cadastrar Novo Fornecedor</TextBlock>
                                 </Button>
 
-                                <Button x:Name="RemoverFornecedorButton" Padding="10" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Remover Fornecedor Selecionado" Click="RemoverFornecedorButton_Click">
+                                <Button x:Name="RemoverFornecedorButton" Style="{StaticResource RoundButton10px}" Height="80" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Remover Fornecedor Selecionado" Click="RemoverFornecedorButton_Click">
                                     <TextBlock TextWrapping="Wrap" TextAlignment="Center">Remover Fornecedor</TextBlock>
                                 </Button>
                             </StackPanel>

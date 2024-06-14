@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Labs.Janelas.LabsPDV"
         mc:Ignorable="d"
-        Title="LabsPDVWPF" x:Name="LabsPDV" Width="1920" Height="1080" KeyUp="OnPDVKeyUp" Loaded="LabsPDVLoaded" WindowStyle="None" WindowState="Maximized" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent">
+        Title="LabsPDVWPF" x:Name="LabsPDV" Width="1366" Height="768" KeyUp="OnPDVKeyUp" Loaded="LabsPDVLoaded" WindowStyle="None" WindowState="Maximized" ResizeMode="NoResize" AllowsTransparency="True" Background="Transparent">
     <Border Background="#202020" CornerRadius="20">
         <Border Margin="10" Background="#404040" CornerRadius="20">
             <Grid>
@@ -134,12 +134,6 @@
                         <Button Name="ExcluirItemButton" Click="ExcluirItemButton_Click" VerticalAlignment="Bottom" BorderThickness="0" Margin="5,0,5,0" Background="#FFFFBC5A" Width="200" Height="70" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20">
                             <Button.Content>
                                 <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="Exluir Item (F3)"/>
-                            </Button.Content>
-                        </Button>
-                        <!--Devolução-->
-                        <Button Name="DevolucaoButtom" Click="DevolucaoButton_Click" VerticalAlignment="Bottom" BorderThickness="0" Margin="5,0,5,0" Background="#9900EE" Width="200" Height="70" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="20">
-                            <Button.Content>
-                                <TextBlock TextWrapping="Wrap" TextAlignment="Center" Text="Devolução"/>
                             </Button.Content>
                         </Button>
                         <!--Stack Lateral-->
