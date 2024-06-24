@@ -447,7 +447,7 @@ namespace Labs.Main
         {
             try
             {
-                var collection = ConnectToMongoLocal<T>(collectionName);
+                var collection = ConnectToMongoCloud<T>(collectionName);
                 await collection.DeleteOneAsync(predicate);
             }
             catch (Exception ex)

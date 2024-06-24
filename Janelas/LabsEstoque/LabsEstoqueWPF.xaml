@@ -30,14 +30,22 @@
                             <ColumnDefinition Width="1223*"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Orientation="Horizontal" Margin="0,10,0,0" Grid.ColumnSpan="2">
+                            
+                            <!--Cadastrar Produto-->
                             <Button x:Name="CadastrarProdutoButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Cadastrar Produto(s)" Click="CadastrarProdutoButton_Click">
                                 <TextBlock TextWrapping="Wrap" TextAlignment="Center">Cadastrar Produto(s)</TextBlock>
                             </Button>
+                            <!--Atualizar Produto-->
                             <Button x:Name="AtualizarProdutoButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Atualizar Produto Selecionado" Click="AtualizarProdutoButton_Click">
                                 <TextBlock TextWrapping="Wrap" TextAlignment="Center">Editar Produto Selecionado</TextBlock>
                             </Button>
+                            <!--Remover Produto-->
                             <Button x:Name="RemoverProdutoButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Atualizar Produto Selecionado" Click="RemoverProdutoButton_Click">
                                 <TextBlock TextWrapping="Wrap" TextAlignment="Center">Remover Produto Selecionado</TextBlock>
+                            </Button>
+                            <!--Registrar Entrada-->
+                            <Button x:Name="RegistrarEntradaButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Atualizar Produto Selecionado" Click="RegistrarEntradaButton_Click">
+                                <TextBlock TextWrapping="Wrap" TextAlignment="Center">Realizar Entrada de Produtos</TextBlock>
                             </Button>
                         </StackPanel>
                         <!--CAIXA DE PESQUISA-->
@@ -70,9 +78,9 @@
                                     <GridViewColumn Header="Fornecedor" DisplayMemberBinding="{Binding Fornecedor.NomeEmpresa}" Width="200"/>
                                     <GridViewColumn Header="Unidade de Medida" DisplayMemberBinding="{Binding UnidadeDeMedida.Descricao}" Width="200"/>
                                     <GridViewColumn Header="Estoque" DisplayMemberBinding="{Binding Quantidade}" Width="100"/>
-                                    <GridViewColumn Header="EstoqueMin" DisplayMemberBinding="{Binding QuantidadeMin}" Width="100"/>
-                                    <GridViewColumn Header="Custo Unitário" DisplayMemberBinding="{Binding Custo}" Width="100"/>
-                                    <GridViewColumn Header="Preço Unitário" DisplayMemberBinding="{Binding Preco}" Width="100"/>
+                                    <GridViewColumn Header="Estoque Mínimo" DisplayMemberBinding="{Binding QuantidadeMin}" Width="100"/>
+                                    <GridViewColumn Header="Custo Unitário" DisplayMemberBinding="{Binding CustoFormatado}" Width="100"/>
+                                    <GridViewColumn Header="Preço Unitário" DisplayMemberBinding="{Binding PrecoFormatado}" Width="100"/>
                                     <GridViewColumn Header="Cód Barras" DisplayMemberBinding="{Binding CodBarras}" Width="150"/>
                                     <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" Width="150"/>
                                 </GridView>
@@ -119,7 +127,26 @@
                 </TabItem>
                 <!--Aba dos Registros de Entradas-->
                 <TabItem Style="{StaticResource BetterTabItem}" Name="Entradas_Tab" IsSelected="False" Header="Entradas">
-                    
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <!--Lista-->
+                        <ListView x:Name="ListaRegistroDeEntradas" Grid.Row="1" ClipToBounds="True" ToolTip="Lista de Produtos" Margin="0,10,0,0" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}" Grid.ColumnSpan="2">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="False">
+                                    <GridViewColumn Header="Data da Compra" DisplayMemberBinding="{Binding DataCompra}" Width="150"/>
+                                    <GridViewColumn Header="Produto" DisplayMemberBinding="{Binding Produto.Descricao}" Width="200"/>
+                                    <GridViewColumn Header="Fornecedor" DisplayMemberBinding="{Binding Fornecedor.NomeEmpresa}" Width="200"/>
+                                    <GridViewColumn Header="Quantidade" DisplayMemberBinding="{Binding Quantidade}" Width="150"/>
+                                    <GridViewColumn Header="Custo Unitário" DisplayMemberBinding="{Binding CustoUnitario}" Width="150"/>
+                                    <GridViewColumn Header="Preço de Venda" DisplayMemberBinding="{Binding PrecoDeVenda}" Width="150"/>
+                                    <GridViewColumn Header="Valor Total da Compra" DisplayMemberBinding="{Binding ValorTotalCompra}" Width="150"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
                 </TabItem>
                 <!--Aba dos produtos Devolvidos-->
                 <TabItem Style="{StaticResource BetterTabItem}" Name="Devolucoes_Tab" IsSelected="False" Header="Devoluções">
@@ -131,10 +158,10 @@
                         <!--Botoes-->
                         <DockPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,10,0,0" Grid.ColumnSpan="2">
-                                <Button x:Name="RegistrarDevolucaoButton" Padding="10" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Registrar Devolução de Produto" Click="RegistrarDevolucao_Click">
+                                <Button x:Name="RegistrarDevolucaoButton" Padding="10" Style="{StaticResource RoundButton10px}" Height="80" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Registrar Devolução de Produto" Click="RegistrarDevolucao_Click">
                                     <TextBlock TextWrapping="Wrap" TextAlignment="Center">Registrar Devolução</TextBlock>
                                 </Button>
-                                <Button x:Name="RemoverDevolucaoButton" Padding="10" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Remover Registro de Devolução" Click="RemoverDevolucao_Click">
+                                <Button x:Name="RemoverDevolucaoButton" Padding="10" Style="{StaticResource RoundButton10px}" Height="80" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Remover Registro de Devolução" Click="RemoverDevolucao_Click">
                                     <TextBlock TextWrapping="Wrap" TextAlignment="Center">Remover Devolução</TextBlock>
                                 </Button>
                             </StackPanel>

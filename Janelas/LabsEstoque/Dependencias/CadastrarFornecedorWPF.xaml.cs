@@ -64,7 +64,6 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 			Endereco endereco = await ViaCepClient.GetEnderecoAsync(CepInputBox.Text);
 			//
 			Fornecedor fornecedor = new(CNPJInputBox.Text, NomeEmpresaInputBox.Text, ContatoInputBox.Text, EmailInputBox.Text, endereco);
-			Modais.MostrarInfo(fornecedor.ID);
 			//
 			if (LabsMain.Cliente.PossuiPlanoCloud)
 			{

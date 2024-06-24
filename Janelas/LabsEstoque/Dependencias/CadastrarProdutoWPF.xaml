@@ -5,47 +5,63 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Labs.Janelas.LabsEstoque.Dependencias"
         mc:Ignorable="d"
-        Title="CadastrarProdutoWPF" Name="Cadastrar_Produto" Height="500" Width="600" WindowStyle="None" AllowsTransparency="True" Background="Transparent" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="CadastrarProdutoWPF" Name="Cadastrar_Produto" Height="380" Width="600" WindowStyle="None" AllowsTransparency="True" Background="Transparent" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Border CornerRadius="20" Background="#202020">
         <Border Margin="10" CornerRadius="10" Background="#404040">
             <Grid Margin="5">
                 <!--Config Colunas/Linhas-->
                 <Grid.RowDefinitions>
-                    <RowDefinition Name="Titulo" Height="Auto"/>
-                    <RowDefinition Name="Conteudo" Height="*"/>
-                    <RowDefinition Name="Rodape" Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <!--Conteúdo-->
-                <Label Content="Cadastro de Produto(s)" Grid.Row="0" FontFamily="Segoe UI" FontSize="30" FontWeight="Bold" Foreground="#f0f0f0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Label Content="Cadastro de Produto(s)" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
                 <!--Conteúdo-->
-                <StackPanel Grid.Row="1">
-                    <Label Content="Descrição do Produto:" FontSize="24" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f0f0f0"/>
-                    <TextBox x:Name="DescricaoInputBox" FontSize="24" Margin="10,0,10,0"/>
-                    
-                    <Label Content="Quantidade Para Estoque:" FontSize="24" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f0f0f0"/>
-                    <TextBox x:Name="QuantidadeInputBox" FontSize="24" Margin="10,0,10,0"/>
-                    
-                    <Label Content="Preço Unitário:" FontSize="24" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f0f0f0"/>
-                    <TextBox x:Name="PrecoInputBox" FontSize="24" Margin="10,0,10,0"/>
-                    
-                    <Label Content="Código Barras:" FontSize="24" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f0f0f0"/>
-                    <TextBox x:Name="CodigoInputBox" FontSize="24" Margin="10,0,10,0"/>
+                <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="0,5,0,5">
+                    <Label Content="Descrição:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
+                    <TextBox Margin="5,0,5,0" x:Name="DescricaoInputBox" FontFamily="Segoe UI" FontSize="16" Style="{StaticResource RoundTextBox10px}"/>
                 </StackPanel>
+                
+                <!--Código do Produto-->
+                <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Margin="0,5,0,5">
+                    <Label Content="Código do Produto:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
+                    <TextBox Name="CodBarrasInputBox" VerticalContentAlignment="Center" FontSize="16" Style="{StaticResource RoundTextBox10px}" HorizontalAlignment="Stretch" Height="25"/>
+                </StackPanel>
+                
+                <!--Dockpanel para unidade-->
+                <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.Row="3" Grid.Column="0" Margin="0,5,0,5">
+                    <Label Content="UN. de Medida:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
+                    <ComboBox Name="UnidadeDeMedidaComboBox" HorizontalAlignment="Stretch" FontFamily="Segoe UI" FontSize="16" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Height="25"/>
+                </DockPanel>
+
+                <!--Dockpanel para Estoque Minimo-->
+                <DockPanel HorizontalAlignment="Stretch"  Grid.Row="3" Grid.Column="1" Margin="0,5,0,5">
+                    <Label Content="Estoque Mínimo:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
+                    <TextBox Name="EstoqueMinimoInputBox" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" FontSize="18" Style="{StaticResource RoundTextBox10px}" HorizontalAlignment="Stretch" Height="25"/>
+                </DockPanel>
+
+                <!--Dockpanel para Fornecedor-->
+                <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,5,0,5">
+                    <Label Content="Fornecedor:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
+                    <ComboBox Name="FornecedorComboBox" HorizontalAlignment="Stretch" FontFamily="Segoe UI" FontSize="16" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Height="25"/>
+                </DockPanel>
+
                 <!--Rodapé (Botões)-->
-                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Name="CadastrarButton" Margin="10" MinHeight="60" MinWidth="150" Background="LightGreen" VerticalAlignment="Center" Click="CadastrarButton_Click">
-                        <Label Content="Cadastrar" FontSize="24" FontFamily="Segoe UI" FontWeight="Bold"/>
-                    </Button>
-                    <Button Name="LimparTudoButton" Margin="10" MinHeight="60" MinWidth="150" Background="#FFFF80" VerticalAlignment="Center" Click="LimparTudoButton_Click">
-                        <Label Content="Limpar Tudo" FontSize="24" FontFamily="Segoe UI" FontWeight="Bold"/>
-                    </Button>
-                    <Button Name="SairButton" Margin="10" MinHeight="60" MinWidth="150" Background="#F08080" VerticalAlignment="Center" Click="SairButton_Click">
-                        <Label Content="Sair" FontSize="24" FontFamily="Segoe UI" FontWeight="Bold"/>
-                    </Button>
-                </StackPanel>
+                <DockPanel Grid.Row="5" Grid.ColumnSpan="2" Margin="0,20,0,10" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                    <StackPanel Orientation="Horizontal">
+                        <Button Margin="0,0,20,0" FontSize="15" Name="Cadastrar" Click="CadastrarButton_Click" Content="Cadastrar Produto" Background="LightGreen" Style="{StaticResource RoundButton10px}" Height="50" Width="150"/>
+                        <Button Margin="0,0,20,0" FontSize="15" Name="LimparTudo" Click="LimparTudoButton_Click" Content="Limpar Campos" Background="#FFFF80" Style="{StaticResource RoundButton10px}" Height="50" Width="150"/>
+                        <Button Name="Sair" FontSize="15" Content="Sair" Click="SairButton_Click" Background="#F08080" Style="{StaticResource RoundButton10px}" Height="50" Width="150"/>
+                    </StackPanel>
+                </DockPanel>
             </Grid>
         </Border>
     </Border>

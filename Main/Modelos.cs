@@ -15,6 +15,7 @@ namespace Labs.Main
 	public class UnidadesDeMedida
 	{
 		public static UnidadeDeMedida Unidade { get; } = new("UN", "Unidade");
+		public static UnidadeDeMedida Pacote { get; } = new("PC","Pacote");
 		public static UnidadeDeMedida Kg { get; } = new("Kg", "Quilograma");
 		public static UnidadeDeMedida G { get; } = new("g", "Grama");
 		public static UnidadeDeMedida Mg { get; } = new("mg", "Miligrama");
@@ -431,8 +432,16 @@ namespace Labs.Main
 			public Fornecedor Fornecedor { get; set; } = Fornecedor;
 			//
 			public double Custo { get; set; } = Custo;
+			/// <summary>
+			/// Devolve o custo formatado em R$
+			/// </summary>
+			public string CustoFormatado { get { return $"R$ {Utils.FormatarValor(Custo)}"; } }
 			//
 			public double Preco { get; set; } = Preco;
+			/// <summary>
+			/// Devolve o Preco formatado em R$
+			/// </summary>
+			public string PrecoFormatado { get { return $"R$ {Utils.FormatarValor(Preco)}"; } }
 			//
 			public string CodBarras { get; set; } = CodBarras;
 			//

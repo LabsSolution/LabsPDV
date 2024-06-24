@@ -30,7 +30,7 @@ namespace Labs.Main
 		/// <param name="QMDP">Valor de quantidade minima</param>
 		/// <returns>Retorna Aguardável (Task) </returns>
 		/// 
-		public static async Task VerificarEstoque(int QMDP,JanelaCarregamentoWPF JDC)
+		public static async Task VerificarEstoque(JanelaCarregamentoWPF JDC)
 		{
 			await Task.Delay(3000);
             //
@@ -41,7 +41,7 @@ namespace Labs.Main
 			{
 				produto.Status = "OK";
 				//
-				if (produto.Quantidade <= QMDP) { produto.Status = "Produto em Baixa"; ProdutosEmBaixa++; }
+				if (produto.Quantidade <= produto.QuantidadeMin) { produto.Status = "Produto em Baixa"; ProdutosEmBaixa++; }
                 //
 				await Task.Delay(1);
             }
@@ -70,6 +70,9 @@ namespace Labs.Main
 			await Task.Delay(1000);
 			//
 			var ProdutosLocais = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.Produtos,_ => true);
+			//Se for a primeira inicialização Criamos um produto Dummy para que a busca de estoque funcione corretamente
+			if (ProdutosLocais.Count == 0) { ProdutosLocais.Add(new Produto("a", 0, 0, null!, null!, 0, 0, "000", false, null!)); }
+			//
 			var ProdutosCloud = await CloudDataBase.GetManyCloudAsync<Produto>(Collections.Produtos,_ => true);
 			//
 			List<Produto> produtosEspelhados = [];

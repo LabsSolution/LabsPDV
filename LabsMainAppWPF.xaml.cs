@@ -28,8 +28,6 @@ namespace Labs
         //Referencia de Instancia
         public static LabsMainAppWPF App { get; private set; } = null!;
         //
-        public static int QMDP { get; private set; } = -1;
-        //
         // Esses campos serão setados ao carregar as impressoras configuradas
         public static string ImpressoraTermica { get; private set; } = null!;
         public static string ImpressoraA4 { get; private set; } = null!;
@@ -76,11 +74,6 @@ namespace Labs
         //
         private void LoadConfigs()
         {
-            //Aqui Lemos as Configs do App.Config;
-            if (Utils.TryParseToInt(LabsConfigs.GetConfigValue("QMDP"), out int value))
-            {
-                QMDP = value;
-            }
             //Aqui Puxamos as Impressoras Configuradas Para uso do sistema (Configuradas pelo painel de Configs);
             // o valor vai ser retornado como Null caso não tenha nenhuma impressora configurada!
             ImpressoraTermica = LabsConfigs.GetConfigValue("ImpressoraTermica");
@@ -100,7 +93,7 @@ namespace Labs
         static async void VerificacoesPreventivas()
         {
             var JDC = GerenciadorPDV.Initiate("Sincronizando Banco de Dados...");
-            await GerenciadorPDV.VerificarEstoque(QMDP,JDC);
+            await GerenciadorPDV.VerificarEstoque(JDC);
             await Task.Delay(3000);
             //
             if (!IsConnectedToInternet)
@@ -115,7 +108,7 @@ namespace Labs
                 return;
             }
             //Só queremos garantir que espelhamos os itens para a cloud
-            await CloudDataBaseSync.SyncDatabase(JDC,false);
+            await CloudDataBaseSync.SyncDatabase(JDC,true);
             await Task.Delay(3000);
             await GerenciadorPDV.Terminate(JDC);
         }

@@ -4,14 +4,24 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using static Labs.Main.Modelos;
 
 namespace Labs.Main
 {
-	internal class Utils
+	partial class Utils
 	{
+		//Métodos Parciais
+
+		[GeneratedRegex("[^0-9]+")]
+		public static partial Regex OnlyNumber();
+		[GeneratedRegex("[^0-9.,]+")]
+		public static partial Regex OnlyMonetary();
+		[GeneratedRegex("[^A-Za-z]+")]
+		public static partial Regex OnlyAlphabet();
+
 		//propriedades Privadas
 		private static Dictionary<string, string> nKeys = new() { { "D0", "0" },{ "D1", "1" },{ "D2", "2" },{ "D3", "3" },{ "D4", "4" },{ "D5", "5" },{ "D6", "6" },{ "D7", "7" },{ "D8", "8" },{ "D9", "9" },{ "NumPad0", "0" },{ "NumPad1", "1" },{ "NumPad2", "2" },{ "NumPad3", "3" },{ "NumPad4", "4" },{ "NumPad5", "5" },{ "NumPad6", "6" },{ "NumPad7", "7" },{ "NumPad8", "8" },{ "NumPad9", "9" },};
 
@@ -103,6 +113,11 @@ namespace Labs.Main
 				value = -1;
 				return false;
 			}
+		}
+		//
+		public static double GetInverseRelativeValue(double value, double min, double max)
+		{
+			return (value-min)/(max-min)-1;
 		}
 		/// <summary>
 		/// Formata um valor para string preservando os campos

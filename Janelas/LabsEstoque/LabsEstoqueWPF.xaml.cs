@@ -129,7 +129,7 @@ namespace Labs.Janelas.LabsEstoque
 		}
 		private void CadastrarProdutoButton_Click(object sender, RoutedEventArgs e)
 		{
-			if(Fornecedores.Count == 0) { var r = Modais.MostrarPergunta("Você Não Possui Fornecedores Cadastrados!, Deseja continuar?"); if (r == MessageBoxResult.No) { return; } }
+			if(Fornecedores.Count == 0) { Modais.MostrarAviso("Você Não Possui Fornecedores Cadastrados!"); return; }
 			//
 			LabsMain.IniciarDependencia<CadastrarProdutoWPF>(app =>
 			{
@@ -170,6 +170,15 @@ namespace Labs.Janelas.LabsEstoque
 				//
 				LoadFromDataBase();
 			}
+		}
+		//
+		private void RegistrarEntradaButton_Click(object sender, RoutedEventArgs e)
+		{
+			if(ListaProdutosCadastrados.SelectedItem is not Produto produto) { Modais.MostrarAviso("Você deve selecionar um produto!"); return; }
+			LabsMain.IniciarDependencia<RegistroDeEntradaWPF>(app =>
+			{
+				app.SetarProduto(produto);
+			});
 		}
 		//
 		private void VoltarButton_Click(object sender, RoutedEventArgs e)
@@ -258,7 +267,7 @@ namespace Labs.Janelas.LabsEstoque
 			//
 			if (ComboBox_EmBaixa.IsSelected)
 			{
-				Produtos.ForEach(x => { if (x.Quantidade <= LabsMainAppWPF.QMDP) { ListaProdutosCadastrados.Items.Add(x); } });
+				Produtos.ForEach(x => { if (x.Quantidade <= x.QuantidadeMin) { ListaProdutosCadastrados.Items.Add(x); } });
 			}
 			//
 		}
@@ -331,8 +340,7 @@ namespace Labs.Janelas.LabsEstoque
 		{
 			RemoverFornecedor();
 		}
+
 		#endregion
-
-
 	}
 }

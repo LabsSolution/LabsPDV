@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,25 +25,60 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
         public CadastrarProdutoWPF()
         {
             InitializeComponent();
+            InitiateComboBox();
+		}
+        //
+        private async void InitiateComboBox()
+        {
+            //Inicia as Medidas
+            Type type = typeof(UnidadesDeMedida);
+            PropertyInfo[] properties = type.GetProperties(BindingFlags.Static | BindingFlags.Public);
+            //
+            foreach (var prop in properties)
+            {
+                if(prop.PropertyType == typeof(UnidadeDeMedida))
+                {
+                    UnidadeDeMedida Uni = (UnidadeDeMedida)prop.GetValue(null)!;
+                    UnidadeDeMedidaComboBox.Items.Add(Uni);
+                    UnidadeDeMedidaComboBox.DisplayMemberPath = "Descricao";
+                }
+            }
+            //Inicia a lista de fornecedores
+            var Fornecedores = await CloudDataBase.GetManyLocalAsync<Fornecedor>(Collections.Fornecedores,_ => true);
+            //
+            if(Fornecedores != null)
+            {
+                foreach (var fornecedor in Fornecedores)
+                {
+                    FornecedorComboBox.Items.Add(fornecedor);
+                    FornecedorComboBox.DisplayMemberPath = "NomeEmpresa";
+                }
+            }
         }
         //
         private void ResetInterface()
         {
             DescricaoInputBox.Text = null!;
-            QuantidadeInputBox.Text = null!;
-            PrecoInputBox.Text = null!;
-            CodigoInputBox.Text = null!;
+            EstoqueMinimoInputBox.Text = null!;
+            CodBarrasInputBox.Text = null!;
+            //
+            UnidadeDeMedidaComboBox.Text = null!;
+            UnidadeDeMedidaComboBox.SelectedItem = null!;
+            //
+            FornecedorComboBox.Text = null!;
+            FornecedorComboBox.SelectedItem = null!;
         }
 
         //METODOS
-        private async void CadastrarProduto(string Desc, int QTD, double Preco, string CodBarras)
+        private async void CadastrarProduto(string Desc, int QTD, UnidadeDeMedida Unidade,Fornecedor fornecedor, string CodBarras)
         {
             Produto produto = new()
             {
                 CodBarras = CodBarras,
                 Descricao = Desc,
-                Preco = Preco,
-                Quantidade = QTD,
+                Fornecedor = fornecedor,
+                QuantidadeMin = QTD,
+                UnidadeDeMedida = Unidade,
                 Status = "OK",
             };
             //
@@ -58,16 +94,17 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
         private void CadastrarButton_Click(object sender, RoutedEventArgs e)
         {
             string Desc = DescricaoInputBox.Text;
-            var isQTD = Utils.TryParseToInt(QuantidadeInputBox.Text,out int QTD);
-            var isPreco = Utils.TryParseToDouble(PrecoInputBox.Text,out double Preco);
-            string CodBarras = CodigoInputBox.Text; 
+			var isQTD = Utils.TryParseToInt(EstoqueMinimoInputBox.Text, out int QTD);
+			string CodBarras = CodBarrasInputBox.Text; 
             //Validação dos Campos
+            if (UnidadeDeMedidaComboBox.SelectedItem is not UnidadeDeMedida Uni) { Modais.MostrarAviso("Não é possível registrar um produto sem Unidade de Medida!"); return; }
+            if (FornecedorComboBox.SelectedItem is not Fornecedor fornecedor) { Modais.MostrarAviso("Você não selecionou um fornecedor para o produto."); return; }
+            //
             if (Desc.IsNullOrEmpty()) { Modais.MostrarAviso("Não é possível registrar um produto sem nome!"); return; }
             if (!isQTD || QTD < 0) { Modais.MostrarAviso("Você deve inserir uma quantidade válida"); return; }
-            if (!isPreco || Preco < 0) { Modais.MostrarAviso("Você deve inserir um Preço válido"); return; }
             if (!Utils.IsValidBarCode(CodBarras)) { Modais.MostrarAviso("Você deve inserir um código válido"); return; }
             //Passou em todos os validadores?
-            CadastrarProduto(Desc,QTD,Preco,CodBarras);
+            CadastrarProduto(Desc,QTD,Uni,fornecedor,CodBarras);
         }
         private void LimparTudoButton_Click(object sender, RoutedEventArgs e)
         {
