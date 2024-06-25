@@ -13,7 +13,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using static Labs.Main.Modelos;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
 namespace Labs.Janelas.LabsPDV.Dependencias
@@ -169,7 +168,12 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                 // Aqui faz a impressão do cupom fiscal (ou não fiscal)
                 using (var PM = new PrintManager())
                 {
-                    PM.ImprimirCupomNaoFiscalLoja(PrintManager.ImpressoraDefault, venda);
+                    MessageBoxResult re = Modais.MostrarPergunta("Imprimir Via do Estabelecimento?");
+                    if(re == MessageBoxResult.Yes)
+                    {
+                        PM.ImprimirCupomNaoFiscalLoja(PrintManager.ImpressoraDefault, venda);
+                    }
+                    //
                     //
                     MessageBoxResult r = Modais.MostrarPergunta("Imprimir Via do Cliente?");
                     if (r == MessageBoxResult.Yes)

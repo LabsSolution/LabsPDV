@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using static Labs.Main.Modelos;
 using Brushes = System.Drawing.Brushes;
 using FontFamily = System.Drawing.FontFamily;
 using FontStyle = System.Drawing.FontStyle;

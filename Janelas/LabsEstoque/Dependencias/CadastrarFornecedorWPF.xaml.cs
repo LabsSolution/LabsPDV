@@ -13,7 +13,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using static Labs.Main.Modelos;
 
 namespace Labs.Janelas.LabsEstoque.Dependencias
 {
@@ -71,6 +70,8 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 			}
 			//
 			await CloudDataBase.RegisterLocalAsync(Collections.Fornecedores, fornecedor);
+			//
+			Modais.MostrarInfo("Fornecedor Cadastrado com Sucesso!");
 		}
 		//
 		private void RegistrarFornecedorButton_Click(object sender, RoutedEventArgs e)

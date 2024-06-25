@@ -2,7 +2,6 @@
 using MongoDB.Driver;
 using System.Windows;
 using System.Windows.Controls;
-using static Labs.Main.Modelos;
 
 namespace Labs.Janelas.Configuracoes.Dependencias
 {

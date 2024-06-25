@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Labs.Janelas.LabsEstoque.Dependencias"
         mc:Ignorable="d"
-        Title="RegistroDeEntradaWPF" Height="450" Width="800" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" AllowsTransparency="True" Background="Transparent">
+        Title="RegistroDeEntradaWPF" Height="480" Width="800" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" AllowsTransparency="True" Background="Transparent">
     <Border Background="#202020" CornerRadius="20">
         <Border Background="#404040" Margin="10" CornerRadius="20">
             <Grid ShowGridLines="False">
@@ -15,7 +15,10 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -40,30 +43,34 @@
                     <DatePicker Name="TabelaDeDatas" VerticalContentAlignment="Center" FontSize="15" IsTodayHighlighted="True"/>
                 </DockPanel>
 
-                <DockPanel Margin="5" Grid.Row="3" Grid.Column="1">
-                    <Label Content="Quantidade:" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Left" FontFamily="Segoe UI Black" FontSize="25" Foreground="#f0f0f0"/>
-                    <TextBox Name="QuantidadeInputBox" PreviewTextInput="CheckInputBox" FontWeight="Bold" FontSize="18" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource RoundTextBox20px}"/>
-                </DockPanel>
-
                 <DockPanel Margin="5" Grid.Row="4" Grid.Column="0">
-                    <Label Content="Custo Unitário:" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Left" FontFamily="Segoe UI Black" FontSize="25" Foreground="#f0f0f0"/>
-                    <TextBox Name="CustoUnitarioInputBox" PreviewTextInput="CheckInputBoxMonetary" FontWeight="Bold" FontSize="18" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource RoundTextBox20px}"/>
+                    <Label Content="Quantidade:" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Left" FontFamily="Segoe UI Black" FontSize="25" Foreground="#f0f0f0"/>
+                    <TextBox Name="QuantidadeInputBox" PreviewTextInput="CheckInputBox" HorizontalAlignment="Right" Width="150" FontWeight="Bold" FontSize="18" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource RoundTextBox20px}"/>
                 </DockPanel>
 
-                <DockPanel Margin="5" Grid.Row="4" Grid.Column="1">
-                    <Label Content="Preço de Venda:" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Left" FontFamily="Segoe UI Black" FontSize="25" Foreground="#f0f0f0"/>
-                    <TextBox Name="PrecoDeVendaInputBox" PreviewTextInput="CheckInputBoxMonetary" FontWeight="Bold" FontSize="18" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource RoundTextBox20px}"/>
+                <DockPanel Margin="5" Grid.Row="5" Grid.Column="0">
+                    <Label Content="Custo Unitário:" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Left" FontFamily="Segoe UI Black" FontSize="25" Foreground="#f0f0f0"/>
+                    <TextBox Name="CustoUnitarioInputBox" PreviewTextInput="CheckInputBoxMonetary" HorizontalAlignment="Right" Width="150" FontWeight="Bold" FontSize="18" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource RoundTextBox20px}"/>
                 </DockPanel>
-                <StackPanel Grid.Row="5" Grid.ColumnSpan="2">
-                    <DockPanel>
-                        <Label Content="Valor Total da Compra R$:" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Segoe UI Black" FontSize="25" Foreground="#f0f0f0"/>
-                        <Label Name="ValorTotalLabel" Content="" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Segoe UI Black" FontSize="25" Foreground="#f0f0f0"/>
-                    </DockPanel>
-                    <DockPanel>
-                        <Label Content="Margem de Lucro:" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Segoe UI Black" FontSize="25" Foreground="#f0f0f0"/>
-                        <Label Name="MargemDeLucroLabel" Content="" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Segoe UI Black" FontSize="25" Foreground="#f0f0f0"/>
-                    </DockPanel>
-                </StackPanel>
+
+                <DockPanel Margin="5" Grid.Row="6" Grid.Column="0">
+                    <Label Content="Preço de Venda:" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Left" FontFamily="Segoe UI Black" FontSize="25" Foreground="#f0f0f0"/>
+                    <TextBox Name="PrecoDeVendaInputBox" PreviewTextInput="CheckInputBoxMonetary" HorizontalAlignment="Right" Width="150" FontWeight="Bold" FontSize="18" Height="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource RoundTextBox20px}"/>
+                </DockPanel>
+
+                <DockPanel Margin="5" Grid.Row="7" Grid.Column="0">
+                    <Label Content="Total da Compra R$:" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Segoe UI Black" FontSize="25" Foreground="#f0f0f0"/>
+                    <Label Name="ValorTotalLabel" Content="" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Segoe UI Black" FontSize="25" Foreground="#f0f0f0"/>
+                </DockPanel>
+                <DockPanel Margin="5" Grid.Row="8" Grid.Column="0">
+                    <Label Content="Margem de Lucro:" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Segoe UI Black" FontSize="25" Foreground="#f0f0f0"/>
+                    <Label Name="MargemDeLucroLabel" Content="" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Segoe UI Black" FontSize="25" Foreground="#f0f0f0"/>
+                </DockPanel>
+                <!--Botões-->
+                <DockPanel Margin="5" Grid.Row="8" Grid.Column="1">
+                    <Button x:Name="RegistrarEntradaButton" Content="Registrar Entrada" Width="200" Margin="0,0,10,0" Style="{StaticResource RoundButton20px}" FontSize="20" Background="LightGreen" Click="RegistrarEntradaButton_Click"/>
+                    <Button x:Name="Cancelar" Content="Sair" Width="150" Margin="0,0,10,0" Style="{StaticResource RoundButton20px}" FontSize="20" Background="#F08080" Click="Cancelar_Click"/>
+                </DockPanel>
             </Grid>
         </Border>
     </Border>

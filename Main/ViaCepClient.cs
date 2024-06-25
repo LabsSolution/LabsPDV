@@ -6,7 +6,6 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using static Labs.Main.Modelos;
 
 namespace Labs.Main
 {

@@ -86,8 +86,8 @@ namespace Labs
             //Quando forem repassadas para wpf reativar
 
             if (!VerifyDataBases()) { ModoSegurança = true; Modais.MostrarAviso("MODO DE SEGURANÇA HABILITADO!\nPara Sair Desse Modo, Os Conflitos Devem ser Resolvidos\ne Logo Após o Sistema Deve Ser Reiniciado!"); return; }
-            //
-            //VerificacoesPreventivas();
+            // Desabilitado somente para debug
+            // VerificacoesPreventivas();
         }
         //
         static async void VerificacoesPreventivas()

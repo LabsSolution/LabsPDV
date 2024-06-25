@@ -18,7 +18,6 @@ using Labs.Janelas.Configuracoes.Dependencias;
 using Labs.Janelas.LabsPDV;
 using Labs.Main;
 using static System.Formats.Asn1.AsnWriter;
-using static Labs.Main.Modelos;
 
 namespace Labs
 {

@@ -16,7 +16,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using static Labs.Main.Modelos;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
 namespace Labs.Janelas.LabsEstoque
@@ -35,6 +34,8 @@ namespace Labs.Janelas.LabsEstoque
 		List<Produto> ProdutosComDefeito = [];
         //
         List<Devolucao> Devolucoes = [];
+		//
+		List<EntradaDeProduto> EntradaDeProdutos = [];
         //
         public LabsEstoqueWPF()
         {
@@ -92,16 +93,19 @@ namespace Labs.Janelas.LabsEstoque
 			ProdutosComDefeito.Clear();
 			Fornecedores.Clear();
             Devolucoes.Clear();
+			EntradaDeProdutos.Clear();
             //
             ListaProdutosCadastrados.Items.Clear();
             ListaProdutosDevolvidos.Items.Clear();
 			ListaProdutosComDefeito.Items.Clear();
 			ListaFornecedores.Items.Clear();
+			ListaRegistroDeEntradas.Items.Clear();
             //
             Produtos = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.Produtos,_ => true);
 			ProdutosComDefeito = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.ProdutosComDefeito,_ => true);
             Devolucoes = await CloudDataBase.GetManyLocalAsync<Devolucao>(Collections.Devolucoes, _ => true);
 			Fornecedores = await CloudDataBase.GetManyLocalAsync<Fornecedor>(Collections.Fornecedores, _ => true);
+			EntradaDeProdutos = await CloudDataBase.GetManyLocalAsync<EntradaDeProduto>(Collections.Entradas, _ => true);
 			//
 			//Adicionamos direto na lista visual já que os itens apresentados são os próprios produtos
 			foreach (Produto produto in Produtos) { ListaProdutosCadastrados.Items.Add(produto); }
@@ -111,6 +115,8 @@ namespace Labs.Janelas.LabsEstoque
             foreach (Devolucao devolucao in Devolucoes) { ListaProdutosDevolvidos.Items.Add(devolucao); }
             //
 			foreach (Fornecedor fornecedor in Fornecedores) { ListaFornecedores.Items.Add(fornecedor); }
+			//
+			foreach(EntradaDeProduto entrada in EntradaDeProdutos) { ListaRegistroDeEntradas.Items.Add(entrada); }
 			//
             ComboBox_Todos.IsSelected = true;
             ComboBox_Descricao.IsSelected = true;
@@ -178,6 +184,7 @@ namespace Labs.Janelas.LabsEstoque
 			LabsMain.IniciarDependencia<RegistroDeEntradaWPF>(app =>
 			{
 				app.SetarProduto(produto);
+				app.Closed += UpdateByEvent;
 			});
 		}
 		//

@@ -7,7 +7,6 @@ using System.Configuration;
 using Labs.Janelas.Configuracoes.Dependencias;
 using Labs.Janelas.LabsPDV.Dependencias;
 using Labs.Janelas.LabsPDV;
-using static Labs.Main.Modelos;
 using System.Windows;
 using System.Net.NetworkInformation;
 namespace Labs

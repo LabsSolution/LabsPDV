@@ -8,7 +8,6 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Unimake.Business.DFe.Xml.NFe;
-using static Labs.Main.Modelos;
 
 /// TODOS OS MEMBROS DEFINIDOS AQUI DEVEM SER DO TIPO TASK!
 
