@@ -4,6 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,12 +16,11 @@ namespace Labs.Main
 	public class UnidadesDeMedida
 	{
 		public static UnidadeDeMedida Unidade { get; } = new("UN", "Unidade");
-		public static UnidadeDeMedida Pacote { get; } = new("PC", "Pacote");
-		public static UnidadeDeMedida Kg { get; } = new("Kg", "Quilograma");
-		public static UnidadeDeMedida G { get; } = new("g", "Grama");
-		public static UnidadeDeMedida Mg { get; } = new("mg", "Miligrama");
+		public static UnidadeDeMedida Peca { get; } = new("PC", "Peça");
+		public static UnidadeDeMedida Pacote { get; } = new("PACOTE","Pacote");
+		public static UnidadeDeMedida Kg { get; } = new("KG", "Quilograma");
 		public static UnidadeDeMedida L { get; } = new("L", "Litro");
-		public static UnidadeDeMedida Ml { get; } = new("ml", "Mililitro");
+		public static UnidadeDeMedida M { get; } = new("M","Metro");
 	}
 
 	//
@@ -29,7 +29,16 @@ namespace Labs.Main
 		public string Unidade { get; } = Unidade;
 		public string Descricao { get; } = Descricao;
 	}
+	//
+	public class NotaFiscalXml
+	{
+		[BsonId]
+		[BsonRepresentation(BsonType.ObjectId)]
 
+		public string ID { get; set; } = null!;
+		public string XML { get; set; } = null!;
+	}
+	//
 	public class EntradaDeProduto(string DataDaCompra, Produto Produto, Fornecedor Fornecedor, int Quantidade, double CustoUnitario, double PrecoDeVenda, double ValorTotalDaCompra)
 	{
 		[BsonId]
@@ -323,6 +332,32 @@ namespace Labs.Main
 		public bool ClienteLabs { get; private set; } = ClienteLabs;
 	}
 
+	public class ClienteLoja()
+	{
+		/// <summary>
+		/// ID Deste Objeto na Database
+		/// </summary>
+		[BsonId]
+		[BsonRepresentation(BsonType.ObjectId)]
+		public string ID { get; set; } = null!;
+		//
+		public string Nome { get; set; }
+		//
+		public string CPF { get; set; }
+		//
+		public string CNPJ { get; set; }
+		//
+		public string Fone { get; set; }
+		//
+		public string DataUltimaCompra { get; set; }
+		//
+		public string HoraUltimaCompra { get; set; }
+		//
+		public DateTime DataUltimaCompraFormatada { get { return DateTime.ParseExact(DataUltimaCompra,"dd/MM/yyyy",CultureInfo.InvariantCulture); } }
+		//
+		public DateTime HoraUltimaCompraFormatada { get { return DateTime.ParseExact(HoraUltimaCompra,"HH:mm:ss",CultureInfo.InvariantCulture); } }
+	}
+
 
 	//MODELOS DE Objetos (Structs)
 	public class PagamentoEfetuado(int ID, string DescPagamento, double Valor, double ValorTroco)
@@ -428,42 +463,72 @@ namespace Labs.Main
 		public string EnderecoFormatado { get { return $"{Endereco.Logradouro}, {Endereco.Bairro}, {Endereco.Localidade}-{Endereco.Uf}"; } }
 	}
 	//
-	public class Produto(string Descricao = null!, int Quantidade = 0, int QuantidadeMin = 0, UnidadeDeMedida UnidadeDeMedida = null!, Fornecedor Fornecedor = null!, double Custo = 0, double Preco = 0, string CodBarras = null!, bool ComDefeito = false, string Status = null!)
+	public class Produto(string Descricao = null!, int Quantidade = 0, int QuantidadeMin = 0, string NCM = null!, UnidadeDeMedida UnidadeDeMedida = null!, Fornecedor Fornecedor = null!, double Custo = 0, double Preco = 0, string CodBarras = null!, string CodInterno = null!, bool ComDefeito = false, string Status = null!)
 	{
 		//Identificador na database
 		[BsonId]
 		[BsonRepresentation(BsonType.ObjectId)]
 		public string ID { get; set; } = null!;
-		//Parâmetros
+		/// <summary>
+		/// Nome do produto (Descrição do mesmo)
+		/// </summary>
 		public string Descricao { get; set; } = Descricao;
-		//
+		/// <summary>
+		/// Quantidade de produtos em estoque
+		/// </summary>
 		public int Quantidade { get; set; } = Quantidade;
-		//
+		/// <summary>
+		/// Quantidade Minima do produto no estoque
+		/// </summary>
 		public int QuantidadeMin { get; set; } = QuantidadeMin;
-		//
+		/// <summary>
+		/// Unidade de Medida do produto (Isso irá constar na nota fiscal)
+		/// </summary>
 		public UnidadeDeMedida UnidadeDeMedida { get; set; } = UnidadeDeMedida;
-		//
+		/// <summary>
+		/// Fornecedor do produto
+		/// </summary>
 		public Fornecedor Fornecedor { get; set; } = Fornecedor;
-		//
+		/// <summary>
+		/// Custo Unitário do produto (Custo do fornecedor)
+		/// </summary>
 		public double Custo { get; set; } = Custo;
 		/// <summary>
 		/// Devolve o custo formatado em R$
 		/// </summary>
 		public string CustoFormatado { get { return $"R$ {Utils.FormatarValor(Custo)}"; } }
-		//
+		/// <summary>
+		/// Preço de venda do produto
+		/// </summary>
 		public double Preco { get; set; } = Preco;
 		/// <summary>
 		/// Devolve o Preco formatado em R$
 		/// </summary>
 		public string PrecoFormatado { get { return $"R$ {Utils.FormatarValor(Preco)}"; } }
-		//
+		/// <summary>
+		/// Código GTIN do produto
+		/// </summary>
 		public string CodBarras { get; set; } = CodBarras;
-		//
+		/// <summary>
+		/// Nomenclatura Comum do Mercosul - NCM do produto
+		/// </summary>
+		public string NCM { get; set; } = NCM;
+		/// <summary>
+		/// Código de Identificação Interna do produto (Não é Código GTIN)
+		/// </summary>
+		public string CodInterno { get; set; } = CodInterno;
+		/// <summary>
+		/// Status do produto no estoque (Gerenciado pelo sistema)
+		/// </summary>
 		public string Status { get; set; } = Status;
-		//
+		/// <summary>
+		/// Indicador se o produto foi devolvido com defeito ou não (usado somente no objeto de devolução)
+		/// </summary>
 		public bool ComDefeito { get; set; } = ComDefeito;
 	}
-	//
+	/// <summary>
+	/// Objeto de Endereço Interno do Sistema
+	/// </summary>
 	public class Endereco
 	{
 		public string Cep { get; set; } = null!;
@@ -477,4 +542,5 @@ namespace Labs.Main
 		public string Ddd { get; set; } = null!;
 		public string Siafi { get; set; } = null!;
 	}
+	//
 }

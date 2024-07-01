@@ -27,7 +27,9 @@ namespace Labs
     {
         //Referencia de Instancia
         public static LabsMainAppWPF App { get; private set; } = null!;
-        //
+        // Esses Campos são referentes as configurações gerais
+        public static string NomeEmpresa { get; private set; } = "N/A";
+        public static string EnderecoEmpresa { get; private set; } = "N/A";
         // Esses campos serão setados ao carregar as impressoras configuradas
         public static string ImpressoraTermica { get; private set; } = null!;
         public static string ImpressoraA4 { get; private set; } = null!;
@@ -78,6 +80,9 @@ namespace Labs
             // o valor vai ser retornado como Null caso não tenha nenhuma impressora configurada!
             ImpressoraTermica = LabsConfigs.GetConfigValue("ImpressoraTermica");
             ImpressoraA4 = LabsConfigs.GetConfigValue("ImpressoraA4");
+            //Configs Gerais
+            NomeEmpresa = LabsConfigs.GetConfigValue("NomeEmpresa");
+            EnderecoEmpresa = LabsConfigs.GetConfigValue("EnderecoEmpresa");
             //
         }
         //
@@ -87,7 +92,7 @@ namespace Labs
 
             if (!VerifyDataBases()) { ModoSegurança = true; Modais.MostrarAviso("MODO DE SEGURANÇA HABILITADO!\nPara Sair Desse Modo, Os Conflitos Devem ser Resolvidos\ne Logo Após o Sistema Deve Ser Reiniciado!"); return; }
             // Desabilitado somente para debug
-            // VerificacoesPreventivas();
+            //VerificacoesPreventivas();
         }
         //
         static async void VerificacoesPreventivas()
@@ -113,12 +118,18 @@ namespace Labs
             await GerenciadorPDV.Terminate(JDC);
         }
         //
+        //
         private void OnLabsEstoqueClick(object sender, RoutedEventArgs e)
         {
             //
             if (ModoSegurança) { Modais.MostrarAviso("Sem Conexão Primária com o Banco de Dados!\nSe o problema persistir, entre em contato com o nosso suporte."); return; }
             //
-            LabsMain.IniciarApp<LabsEstoqueWPF>(true,false,true);
+            //LabsNFe.ConsultaGTIN();
+            //LabsNFe.teste();
+            
+            LabsNFe.EmitirNotaFiscalDeConsumidor();
+            
+            //LabsMain.IniciarApp<LabsEstoqueWPF>(true,false,true);
         }
 
         private void OnLabsPDVClick(object sender, RoutedEventArgs e)

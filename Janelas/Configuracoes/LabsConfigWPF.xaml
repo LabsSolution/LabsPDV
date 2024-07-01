@@ -31,8 +31,17 @@
             <Label FontSize="30" Height="50" Content="Painel de Configurações" HorizontalAlignment="Left" Grid.ColumnSpan="2" Foreground="#f0f0f0" FontFamily="Segoe UI" FontWeight="Black"/>
             <!--Config Usuário-->
             <StackPanel x:Name="ConfigUsuario" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0">
+                <!--Meio de pagamento-->
                 <Button x:Name="MeioPagamentoButton" Width="200" Height="40" Margin="0,0,10,10" HorizontalAlignment="Left" Background="#f0f0f0" BorderThickness="0" Click="MeioPagamento_Click">
                     <TextBlock Text="Meios de Pagamento" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold"/>
+                </Button>
+                <!--Configuração de Impressora-->
+                <Button x:Name="Impressoras" Width="200" Height="40" Margin="0,0,10,10" HorizontalAlignment="Left" Background="#f0f0f0" BorderThickness="0" Click="Impressoras_Click">
+                    <TextBlock Text="Impressoras" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold"/>
+                </Button>
+                <!--Configuração Geral-->
+                <Button x:Name="ConfigGeral" Width="200" Height="40" Margin="0,0,10,10" HorizontalAlignment="Left" Background="#f0f0f0" BorderThickness="0" Click="ConfigGeral_Click">
+                    <TextBlock Text="Configurações Gerais" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold"/>
                 </Button>
             </StackPanel>
             <!--Config Técnico-->

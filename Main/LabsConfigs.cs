@@ -19,7 +19,11 @@ namespace Labs.Main
             // Abre o arquivo de configuração do aplicativo
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             // Adiciona um novo valor ou atualiza um existente
-            config.AppSettings.Settings[NomeDaConfig].Value = Valor;
+            if (config.AppSettings.Settings[NomeDaConfig] != null) { config.AppSettings.Settings[NomeDaConfig].Value = Valor; }
+            else
+            {
+                config.AppSettings.Settings.Add(NomeDaConfig, Valor);
+            }
             // Salva as alterações
             config.Save(ConfigurationSaveMode.Modified);
             // Força uma recarga das seções alteradas do arquivo de configuração

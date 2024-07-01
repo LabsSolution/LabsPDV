@@ -25,6 +25,8 @@ namespace Labs.Main
 		private static Dictionary<string, string> nKeys = new() { { "D0", "0" },{ "D1", "1" },{ "D2", "2" },{ "D3", "3" },{ "D4", "4" },{ "D5", "5" },{ "D6", "6" },{ "D7", "7" },{ "D8", "8" },{ "D9", "9" },{ "NumPad0", "0" },{ "NumPad1", "1" },{ "NumPad2", "2" },{ "NumPad3", "3" },{ "NumPad4", "4" },{ "NumPad5", "5" },{ "NumPad6", "6" },{ "NumPad7", "7" },{ "NumPad8", "8" },{ "NumPad9", "9" },};
 
 		//Propriedades Públicas
+		public static string HoraFormatada { get { return $"{DateTime.Now:HH:mm:ss}"; } }
+		public static string DataFormatada { get { return $"{DateTime.Now:dd/MM/yyyy}"; } }
 		public static string[] ValidNumberKeys { get; } = ["D0", "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "NumPad0", "NumPad1", "NumPad2", "NumPad3", "NumPad4", "NumPad5", "NumPad6", "NumPad7", "NumPad8", "NumPad9"];
 
 		//------------------------------------//

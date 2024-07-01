@@ -110,9 +110,12 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                 //Gera a devolução
                 Devolucao dev = new(Produto.Descricao,MeiosDevolucaoComboBox.Text,MotivoTextBox.Text,Produto, $"{DateTime.Now:dd/MM/yyyy}", $"{DateTime.Now:HH:mm:ss}");
 			    await CloudDataBase.RegisterLocalAsync(Collections.Devolucoes, dev);
+                if (LabsMain.Cliente.PossuiPlanoCloud) { await CloudDataBase.RegisterCloudAsync(Collections.Devolucoes,dev); }
                 //Salva na coleção de produtos com defeito (Atualiza a quantidade caso o produto seja o mesmo)
                 var sProd = await CloudDataBase.GetLocalAsync<Produto>(Collections.ProdutosComDefeito,x => x.ID == Produto.ID);
                 if(sProd != null) { Produto.Quantidade += sProd.Quantidade; }
+                //
+                if (LabsMain.Cliente.PossuiPlanoCloud) { await CloudDataBase.RegisterCloudAsync(Collections.ProdutosComDefeito,Produto,Builders<Produto>.Filter.Eq("ID",Produto.ID)); }
 				await CloudDataBase.RegisterLocalAsync(Collections.ProdutosComDefeito,Produto,Builders<Produto>.Filter.Eq("ID",Produto.ID));
             }
             Modais.MostrarInfo("Devolução Registrada com Sucesso!");

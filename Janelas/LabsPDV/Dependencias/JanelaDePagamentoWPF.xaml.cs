@@ -171,14 +171,14 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                     MessageBoxResult re = Modais.MostrarPergunta("Imprimir Via do Estabelecimento?");
                     if(re == MessageBoxResult.Yes)
                     {
-                        PM.ImprimirCupomNaoFiscalLoja(PrintManager.ImpressoraDefault, venda);
+                        PM.ImprimirCupomNaoFiscalLoja(LabsMainAppWPF.ImpressoraTermica, venda);
                     }
                     //
                     //
                     MessageBoxResult r = Modais.MostrarPergunta("Imprimir Via do Cliente?");
                     if (r == MessageBoxResult.Yes)
                     {
-                        PM.ImprimirCupomNaoFiscalCliente(PrintManager.ImpressoraDefault, venda);
+                        PM.ImprimirCupomNaoFiscalCliente(LabsMainAppWPF.ImpressoraTermica, venda);
                     }
                 }
                 // Sinaliza que a venda foi finalizada com sucesso

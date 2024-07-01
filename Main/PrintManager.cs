@@ -18,9 +18,6 @@ namespace Labs.Main
 	public class PrintManager : PrintDocument
 	{
         //
-        public const string ImpressoraDefault = "POS-58 Baisec";
-        //public const string ImpressoraDefault = "HP LaserJet Professional P1102w";
-        //
         private Size Papel58mm = new(58, 210);
         //
         private Size Papel76mm = new(76, 210);
@@ -214,10 +211,10 @@ namespace Labs.Main
             float yPos = 0; // Variável responsável por determinar a posição da agulha
             //
             //print header
-            graphics.DrawString("NOME DA EMPRESA", Bold, Brushes.Black, 0, yPos);
+            graphics.DrawString(LabsMainAppWPF.NomeEmpresa, Bold, Brushes.Black, 0, yPos);
             yPos += 15;
             //
-            var endereco = Utils.FormatarTexto("ENDEREÇO DA EMPRESA" + " Nº " + "NUMERO DA EMPRESA", RegularEndereco, graphics, LarguraPapel, out float yEndereco);
+            var endereco = Utils.FormatarTexto(LabsMainAppWPF.EnderecoEmpresa, RegularEndereco, graphics, LarguraPapel, out float yEndereco);
             // Usamos o limite gerado pela função de formatação e printamos a linha limite :D
             graphics.DrawString(endereco, RegularEndereco, Brushes.Black, 0, yPos);
             yPos += yEndereco;

@@ -143,15 +143,16 @@ namespace Labs.Janelas.LabsPDV.Dependencias
 					};
 					// Registramos na database local
 					await CloudDataBase.RegisterLocalAsync(Collections.Fechamentos, Fechamento);
-					// Caso o cliente tenha a assinatura cloud, refletimos para a database cloud
-					//Realizar espelhamento aqui.
+                    // Caso o cliente tenha a assinatura cloud, refletimos para a database cloud
+                    //Realizar espelhamento aqui.
+                    if (LabsMain.Cliente.PossuiPlanoCloud) { await CloudDataBase.RegisterCloudAsync(Collections.Fechamentos,Fechamento); }
 					//Logo após imprimimos o cupom de fechamento
 					MessageBoxResult r = Modais.MostrarPergunta("Deseja Imprimir a Nota de Fechamento?");
 					if (r == MessageBoxResult.Yes)
 					{
 						using (var PM = new PrintManager())
 						{
-							PM.ImprimirCupomFechamentoDeCaixa(PrintManager.ImpressoraDefault, Fechamento);
+							PM.ImprimirCupomFechamentoDeCaixa(LabsMainAppWPF.ImpressoraTermica, Fechamento);
 						}
 					}
 					//

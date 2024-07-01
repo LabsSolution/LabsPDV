@@ -39,6 +39,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Janelas\Configuracoes\Dependencias\ConfigGeraisWPF.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -55,6 +58,15 @@
 
   <ItemGroup>
     <None Update="Certificado\labsCert.pfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="NFe\Assinadas\Init.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="NFe\Init.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="NFe\ParaAssinar\Init.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Recursos\Fundos\cerebelo.png">
@@ -74,6 +86,7 @@
   <ItemGroup>
     <Folder Include="Connected Services\" />
     <Folder Include="Janelas\DependenciasGerais\" />
+    <Folder Include="NFe\Autorizadas\" />
     <Folder Include="Recursos\Icones\" />
     <Folder Include="Resources\" />
   </ItemGroup>

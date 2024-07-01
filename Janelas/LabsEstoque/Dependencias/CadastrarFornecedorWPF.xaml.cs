@@ -42,10 +42,13 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 		private async void BuscaEndereco(string cep)
 		{
 			Endereco endereco = await ViaCepClient.GetEnderecoAsync(cep);
-			BairroInputBox.Text = endereco.Bairro;
-			CidadeInputBox.Text = $"{endereco.Localidade}-{endereco.Uf}";
-			EnderecoInputBox.Text = $"{endereco.Logradouro}";
-			ComplementoInputBox.Text = $"{endereco.Complemento}";
+			if (endereco != null) 
+			{ 
+				BairroInputBox.Text = endereco.Bairro;
+				CidadeInputBox.Text = $"{endereco.Localidade}-{endereco.Uf}";
+				EnderecoInputBox.Text = $"{endereco.Logradouro}";
+				ComplementoInputBox.Text = $"{endereco.Complemento}";
+			}
 		}
 
 		private void CepInputBox_KeyDown(object sender, KeyEventArgs e)

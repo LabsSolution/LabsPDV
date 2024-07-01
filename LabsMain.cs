@@ -85,7 +85,7 @@ namespace Labs
 				App.SizeChanged -= OnAppSizeChange;
                 //se a janela existe no mapeamento, dizemos que ela foi fechada
                 //
-                if (RunningApps.TryGetValue(App.Name, out _)) { RunningApps[App.Name].IsClosed = true; }
+                if (RunningApps.TryGetValue(App.Title, out _)) { RunningApps[App.Title].IsClosed = true; }
 				//
                 LabsMainAppWPF.App?.Show();
             }
@@ -114,7 +114,7 @@ namespace Labs
 			    App.SizeChanged -= OnAppSizeChange;
 				//se a janela existe no mapeamento, dizemos que ela foi fechada
 				//
-                if (RunningApps.TryGetValue(App.Name, out _)) { RunningApps[App.Name].IsClosed = true; }
+                if (RunningApps.TryGetValue(App.Title, out _)) { RunningApps[App.Title].IsClosed = true; }
                 //
             }
         }
@@ -142,14 +142,14 @@ namespace Labs
 			T? App = new();
 			//
             // Verifica se a aplicação já está rodando
-            if (RunningApps.TryGetValue(App.Name, out LabWindow? existingLabWindow))
+            if (RunningApps.TryGetValue(App.Title, out LabWindow? existingLabWindow))
             {
-				RunningApps[App.Name].Window = new T();
+				RunningApps[App.Title].Window = new T();
             }
             else
             {
                 existingLabWindow = new(App, true);
-                RunningApps.Add(App.Name, existingLabWindow);
+                RunningApps.Add(App.Title, existingLabWindow);
 			}
 			//	
 			if (existingLabWindow != null && App != null)
@@ -164,7 +164,7 @@ namespace Labs
 				//Chamamos a Janela
 				existingLabWindow.Window.Show();
 				// Registramos que foi Aberta(Padronização)
-				if (RunningApps.TryGetValue(App.Name, out _)) { RunningApps[App.Name].IsClosed = false; }
+				if (RunningApps.TryGetValue(App.Title, out _)) { RunningApps[App.Title].IsClosed = false; }
 				//Retornamos a Janela
 				return App;
 			}
@@ -182,7 +182,7 @@ namespace Labs
 		{
 			T? App = new();
             // Verifica se a aplicação já está rodando
-            if (RunningApps.TryGetValue(App.Name, out LabWindow? existingLabWindow))
+            if (RunningApps.TryGetValue(App.Title, out LabWindow? existingLabWindow))
             {
                 App = existingLabWindow.Window as T;
             }
@@ -190,7 +190,7 @@ namespace Labs
             {
                 // Cria uma nova instância da aplicação se ela ainda não estiver rodando
 				existingLabWindow = new(App, true);
-                RunningApps.Add(App.Name, existingLabWindow);
+                RunningApps.Add(App.Title, existingLabWindow);
             }
             // Verifica se a aplicação só está escondida e a janela está ativa
 			// Se o container existe

@@ -17,7 +17,8 @@ namespace Labs.Main
 		{
 			if (string.IsNullOrWhiteSpace(cep))
 			{
-				throw new ArgumentException("O CEP não pode ser nulo ou vazio.", nameof(cep));
+				Modais.MostrarErro("O CEP não pode ser nulo ou vazio.");
+				return null!;
 			}
 
 			string url = $"https://viacep.com.br/ws/{cep}/json/";
@@ -29,11 +30,12 @@ namespace Labs.Main
 				string jsonResponse = await response.Content.ReadAsStringAsync();
 				Endereco? address = JsonConvert.DeserializeObject<Endereco>(jsonResponse);
 
-				return address == null ? throw new Exception("Não foi possível desserializar a resposta JSON.") : address;
+				return address == null ? null! : address;
 			}
 			else
 			{
-				throw new HttpRequestException($"Erro ao obter o endereço. Status code: {response.StatusCode}");
+				Modais.MostrarErro($"Erro ao obter o endereço. Status code: {response.StatusCode}");
+				return null!;
 			}
 		}
 	}

@@ -44,10 +44,26 @@ namespace Labs.Janelas.Configuracoes
         {
             DataBaseConfig();
         }
+		private void Impressoras_Click(object sender, RoutedEventArgs e)
+		{
+            LabsMain.IniciarDependencia<ImpressorasConfigWPF>(app => 
+            {
+                app.ListarImpressoras();
+            });
+		}
+		private void ConfigGeral_Click(object sender, RoutedEventArgs e)
+		{
+            LabsMain.IniciarDependencia<ConfigGeraisWPF>(app =>
+            {
+                app.CarregarConfigs();
+            });
+		}
 
-        private void Sair_Click(object sender, RoutedEventArgs e)
+		private void Sair_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
-    }
+
+		
+	}
 }
