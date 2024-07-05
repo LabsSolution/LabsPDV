@@ -36,7 +36,14 @@ namespace Labs.Main
 		[BsonRepresentation(BsonType.ObjectId)]
 
 		public string ID { get; set; } = null!;
-		public string XML { get; set; } = null!;
+		/// <summary>
+		/// XML da autorização de uso retornado do web service
+		/// </summary>
+		public string XmlAuto { get; set; } = null!;
+		/// <summary>
+		/// Xml original da nota Assinado Digitalmente
+		/// </summary>
+		public string XmlNota { get; set; } = null!;
 	}
 	//
 	public class EntradaDeProduto(string DataDaCompra, Produto Produto, Fornecedor Fornecedor, int Quantidade, double CustoUnitario, double PrecoDeVenda, double ValorTotalDaCompra)
@@ -463,7 +470,7 @@ namespace Labs.Main
 		public string EnderecoFormatado { get { return $"{Endereco.Logradouro}, {Endereco.Bairro}, {Endereco.Localidade}-{Endereco.Uf}"; } }
 	}
 	//
-	public class Produto(string Descricao = null!, int Quantidade = 0, int QuantidadeMin = 0, string NCM = null!, UnidadeDeMedida UnidadeDeMedida = null!, Fornecedor Fornecedor = null!, double Custo = 0, double Preco = 0, string CodBarras = null!, string CodInterno = null!, bool ComDefeito = false, string Status = null!)
+	public class Produto(string Descricao = null!, int Quantidade = 0, int QuantidadeMin = 0, UnidadeDeMedida UnidadeDeMedida = null!, Fornecedor Fornecedor = null!, double Custo = 0, double Preco = 0,string CodBarras = null!,bool ComDefeito = false, string Status = null!, string NCM = null!, string CST = null!,string CodInterno = null!)
 	{
 		//Identificador na database
 		[BsonId]
@@ -513,6 +520,9 @@ namespace Labs.Main
 		/// Nomenclatura Comum do Mercosul - NCM do produto
 		/// </summary>
 		public string NCM { get; set; } = NCM;
+		//
+		public string CST { get; set; } = CST;
+		//
 		/// <summary>
 		/// Código de Identificação Interna do produto (Não é Código GTIN)
 		/// </summary>

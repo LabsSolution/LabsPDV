@@ -80,7 +80,7 @@
                                     <GridViewColumn Header="Estoque" DisplayMemberBinding="{Binding Quantidade}" Width="100"/>
                                     <GridViewColumn Header="Estoque Mínimo" DisplayMemberBinding="{Binding QuantidadeMin}" Width="100"/>
                                     <GridViewColumn Header="Custo Unitário" DisplayMemberBinding="{Binding CustoFormatado}" Width="100"/>
-                                    <GridViewColumn Header="Preço Unitário" DisplayMemberBinding="{Binding PrecoFormatado}" Width="100"/>
+                                    <GridViewColumn Header="Preço de Venda" DisplayMemberBinding="{Binding PrecoFormatado}" Width="100"/>
                                     <GridViewColumn Header="Cód Barras" DisplayMemberBinding="{Binding CodBarras}" Width="150"/>
                                     <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" Width="150"/>
                                 </GridView>

@@ -126,8 +126,11 @@ namespace Labs
             //
             //LabsNFe.ConsultaGTIN();
             //LabsNFe.teste();
-            
-            LabsNFe.EmitirNotaFiscalDeConsumidor();
+            for (int i = 0; i <= 8; i++)
+            {
+                var prod = new Produto("",1,1,UnidadesDeMedida.Unidade,null!,0,120,"",false,null!,"",$"{i}60","");
+                LabsNFe.EmitirNotaFiscalDeConsumidorEletronica(prod);
+            }
             
             //LabsMain.IniciarApp<LabsEstoqueWPF>(true,false,true);
         }
