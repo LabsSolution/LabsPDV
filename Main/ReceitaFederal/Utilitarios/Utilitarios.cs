@@ -12,6 +12,68 @@ namespace Labs.Main.ReceitaFederal.Utilitarios
 	public class Utilitarios
 	{
 		/// <summary>
+		/// Essa função Retorna o CST convertido do Regime Normal para o Simples Nacional
+		/// Os códigos CSON 103 e 400 não são permitidos no RJ
+		/// </summary>
+		/// <returns>Retorna um CST Convertido</returns>
+		public static string ConversorCSTParaCSON(string CodCST,TipoDFe DFE)
+		{
+			// Possíveis CSON de Retorno:
+			// 102, 300, 500 NFC-e.
+			// 101, 201, 203 NF-e.
+			// se o código informado ja for um CSON simplesmente ignoramos
+			if(CodCST.Length > 3) { return null!; }
+			var cst = $"{CodCST[1]}{CodCST[2]}";
+			switch (DFE)
+			{
+				case TipoDFe.NFCe:
+					switch (cst)
+					{
+						case "00":
+							return $"{CodCST[0]}102";
+						case "20":
+							return $"{CodCST[0]}102";
+						case "40":
+							return $"{CodCST[0]}300";
+						case "41":
+							return $"{CodCST[0]}300";
+						case "60":
+							return $"{CodCST[0]}500";
+					}
+					break;
+				case TipoDFe.NFe:
+					switch (cst)
+					{
+
+					}
+					break;
+			}
+			return null!;
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		/// <summary>
 		/// Essa função retorna o Tipo de ICMS refetente ao CST do produto, listado como 'A''B''B'
 		/// </summary>
 		/// <param name="CodCST"> Código CST do Produto, Ele Determina o tipo de ICMS a ser Pago</param>
