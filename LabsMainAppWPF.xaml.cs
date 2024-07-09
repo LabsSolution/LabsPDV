@@ -122,15 +122,15 @@ namespace Labs
         private void OnLabsEstoqueClick(object sender, RoutedEventArgs e)
         {
             //
-            if (ModoSegurança) { Modais.MostrarAviso("Sem Conexão Primária com o Banco de Dados!\nSe o problema persistir, entre em contato com o nosso suporte."); return; }
+            //if (ModoSegurança) { Modais.MostrarAviso("Sem Conexão Primária com o Banco de Dados!\nSe o problema persistir, entre em contato com o nosso suporte."); return; }
             //
             //LabsNFe.ConsultaGTIN();
             //LabsNFe.teste();
-            for (int i = 0; i <= 8; i++)
-            {
-                var prod = new Produto("",1,1,UnidadesDeMedida.Unidade,null!,0,120,"",false,null!,"",$"{i}60","");
+            //for (int i = 0; i <= 8; i++)
+            //{
+                var prod = new Produto("",1,1,UnidadesDeMedida.Unidade,null!,0,120,"",false,null!,"",$"{0}30","");
                 LabsNFe.EmitirNotaFiscalDeConsumidorEletronica(prod);
-            }
+            //}
             
             //LabsMain.IniciarApp<LabsEstoqueWPF>(true,false,true);
         }

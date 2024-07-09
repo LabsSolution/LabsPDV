@@ -16,13 +16,13 @@ namespace Labs.Main.ReceitaFederal.Utilitarios
 		/// Os códigos CSON 103 e 400 não são permitidos no RJ
 		/// </summary>
 		/// <returns>Retorna um CST Convertido</returns>
-		public static string ConversorCSTParaCSON(string CodCST,TipoDFe DFE)
+		public static string ConversorCSTParaCSON(string CodCST,TipoDFe DFE,double PRedBSCT = 0,double PICMSST = 0)
 		{
 			// Possíveis CSON de Retorno:
 			// 102, 300, 500 NFC-e.
 			// 101, 201, 203 NF-e.
-			// se o código informado ja for um CSON simplesmente ignoramos
-			if(CodCST.Length > 3) { return null!; }
+			// se o código informado ja for um CSON simplesmente retornamos o próprio código
+			if(CodCST.Length > 3) { return CodCST; }
 			var cst = $"{CodCST[1]}{CodCST[2]}";
 			switch (DFE)
 			{
@@ -42,11 +42,20 @@ namespace Labs.Main.ReceitaFederal.Utilitarios
 					}
 					break;
 				case TipoDFe.NFe:
-					switch (cst)
+					if ((cst == "10" && PICMSST == 0 && PRedBSCT == 0) || (cst == "70" && PRedBSCT != 0 && PICMSST >= 0))
 					{
-
+						return $"{CodCST[0]}201";
 					}
-					break;
+					if ((cst == "10" && PRedBSCT == 0 && PICMSST != 0) || (cst == "30" && PRedBSCT == 0 && PICMSST >= 0))
+					{
+						return $"{CodCST[0]}202";
+					}
+					if (cst == "70" && PRedBSCT == 0 && PICMSST == 0)
+					{
+						return $"{CodCST[0]}203";
+					}
+					return null!;
+
 			}
 			return null!;
 		}

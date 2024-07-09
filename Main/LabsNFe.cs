@@ -415,7 +415,7 @@ namespace Labs.Main
 										Fone = "22988041803",
 									},
 									IE = "14800271",
-									CRT = CRT.RegimeNormal, // Se for simples nacional usa o ICMSSN102(ICMS Simples Nacional 102)
+									CRT = CRT.SimplesNacional, // Se for simples nacional usa o ICMSSN102(ICMS Simples Nacional 102)
 								},							// Se não será usado o cálculo de imposto diretamente na nota usando a aliquota do estado contribuinte.
 								//Não precisa de Destinatário mas colocaremos por questão fiscal
 								//Nesse caso o destinatário é o consumidor final (o que pagou a nota)
@@ -458,7 +458,7 @@ namespace Labs.Main
 										Imposto = new Imposto
 										{
 											//O Código icms é diretamente relacionado ao código CST do produto, e a aliquota de cada produto está presente na nota fiscal de aquisição
-											ICMS = Utilitarios.GetICMS(Produto.CST,
+											ICMS = Utilitarios.GetICMS(Utilitarios.ConversorCSTParaCSON(Produto.CST,TipoDFe.NFe,0,0),
 											out double VBCOUT, 
 											out double VFCPOUT,
 											out double VBCSTOUT,
@@ -584,7 +584,8 @@ namespace Labs.Main
 				CSC = "4E5DB7F3-EBEC-4455-A62C-11054D901E80",
 				CSCIDToken = 1,
 				//CertificadoDigital = Colocar aqui a seleção de certificado pela configuração do LabsMainApp
-				CertificadoDigital = new X509Certificate2("C:\\Users\\Pc\\Desktop\\LabSolution.pfx", "solution2024")
+				//CertificadoDigital = new X509Certificate2("C:\\Users\\Pc\\Desktop\\LabSolution.pfx", "solution2024")
+				CertificadoDigital = new X509Certificate2("C:\\Users\\maria\\OneDrive\\Área de Trabalho\\LabSolution.pfx", "solution2024")
 			};
 			
 			// Idealmente deveríamos trabalhar de forma assíncrona para a emissão!, (Faremos isso futuramente)
@@ -615,7 +616,7 @@ namespace Labs.Main
 						case 302: // Uso Denegado: Irregularidade Fiscal do Destinatário
 						case 303: // Uso Denegado: Destinatário não habilitado a operar na UF
 						default:
-							Modais.MostrarErro($"{Auto.Result.ProtNFe.InfProt.CStat}: {Auto.Result.ProtNFe.InfProt.XMotivo}");
+							Modais.MostrarErro($"CSON/CST({Utilitarios.ConversorCSTParaCSON(Produto.CST, TipoDFe.NFe, 0, 1)}) Erro ({Auto.Result.ProtNFe.InfProt.CStat}): {Auto.Result.ProtNFe.InfProt.XMotivo}");
 							break;
 					}
 				}
