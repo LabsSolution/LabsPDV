@@ -17,8 +17,8 @@ using Unimake.Exceptions;
 
 namespace Labs.Main
 {
-    public class LabsNFe
-    {
+	public class LabsNFe
+	{
 
 		public static void ConsultaGTIN()
 		{
@@ -36,7 +36,7 @@ namespace Labs.Main
 			//
 			try
 			{
-				var consGTIN = new CcgConsGTIN(xml,config);
+				var consGTIN = new CcgConsGTIN(xml, config);
 				consGTIN.Executar();
 				Modais.MostrarInfo(consGTIN.RetornoWSString);
 				//
@@ -68,7 +68,7 @@ namespace Labs.Main
 			{
 				Modais.MostrarErro(ex.GetLastException().Message);
 			}
-			catch (Exception ex) 
+			catch (Exception ex)
 			{
 				Modais.MostrarErro(ex.GetLastException().Message);
 			}
@@ -359,7 +359,12 @@ namespace Labs.Main
 		// Final da Det => new Total => new ICMSTot
 		// Final do Total, new Transp
 		// Final do Transp
-		public static async void EmitirNotaFiscalDeConsumidorEletronica(Produto Produto) // PosteriorMente vai receber uma lista de produtos para a emissão de nota
+		/// <summary>
+		/// Função para construção e autorização de uso da Nota fiscal Eletrônica
+		/// </summary>
+		/// <param name="NaturezaOperacao"></param>
+		/// <param name="Produto"></param>
+		public static async void EmitirNotaFiscalDeConsumidorEletronica(string NaturezaOperacao, Produto Produto) // PosteriorMente vai receber uma lista de produtos para a emissão de nota
 		{
 			var xmlNFCE = new EnviNFe
 			{
@@ -378,9 +383,9 @@ namespace Labs.Main
 								Versao = "4.00",
 								Ide =  new Ide // Objeto de Identificação da Nota
 								{
-									CUF = UFBrasil.RJ, // Estado Emitente
+									CUF = UFBrasil.RJ, // Estado Emitente - Rio de Janeiro
 									NatOp = "VENDA TESTE DO ESTABELECIMENTO", // Natureza de Operação
-									Mod = ModeloDFe.NFCe, // Modelo do documento
+									Mod = ModeloDFe.NFCe, // Modelo do documento- Nesse caso é NFC-e
 									Serie = 1, // Numero de Série do documento
 									NNF = 25, // Numero da Nota Fiscal (Incremental)
 									DhEmi = DateTime.Now, // Data e Hora Emitida
@@ -394,7 +399,7 @@ namespace Labs.Main
 									FinNFe = FinalidadeNFe.Normal, // Finalidade da NFE
 									IndFinal = SimNao.Sim, // Indica se a nota é pra consumidor Final
 									IndPres = IndicadorPresenca.OperacaoPresencial, // Indica se a operação de venda é presencial ou nao
-									ProcEmi = ProcessoEmissao.AplicativoContribuinte, // Indica se a nota está sendo emitida de um aplicativo Contribuinte (Nesse caso, SIM) 
+									ProcEmi = ProcessoEmissao.AplicativoContribuinte, // Indica se a nota está sendo emitida de um aplicativo usado pelo Contribuinte (Nesse caso, SIM) 
 									VerProc = "TESTE 1.00", // Versão do Procedimento
 								},
 								//Emitente da Nota fiscal eletrônica (Identifica o estabelecimento Emissor)
@@ -441,7 +446,7 @@ namespace Labs.Main
 											CEAN = "SEM GTIN", // Código GTIN do Produto
 											XProd = "NOTA FISCAL EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL", // Descrição do Produto
 											NCM = "85272900", // Nomenclatura comum do Mercosul (Geralmente retorna pela consulta GTIN) 
-											CFOP = "5405", // Código CFOP do produto;
+											CFOP = "5102", // Código CFOP do produto;
 											UCom = Produto.UnidadeDeMedida.Unidade, // Unidade Comercial.
 											QCom = 1, // Quantidade Comercial (aparentemente é a quantidade vendida do produto)
 											VUnCom = (decimal)Produto.Preco, // Valor da unidade comercial (valor da unidade vendida)
@@ -458,8 +463,8 @@ namespace Labs.Main
 										Imposto = new Imposto
 										{
 											//O Código icms é diretamente relacionado ao código CST do produto, e a aliquota de cada produto está presente na nota fiscal de aquisição
-											ICMS = Utilitarios.GetICMS(Utilitarios.ConversorCSTParaCSON(Produto.CST,TipoDFe.NFe,0,0),
-											out double VBCOUT, 
+											ICMS = Utilitarios.GetICMS(Produto.CST,
+											out double VBCOUT,
 											out double VFCPOUT,
 											out double VBCSTOUT,
 											out double VICMSOUT,
@@ -584,23 +589,23 @@ namespace Labs.Main
 				CSC = "4E5DB7F3-EBEC-4455-A62C-11054D901E80",
 				CSCIDToken = 1,
 				//CertificadoDigital = Colocar aqui a seleção de certificado pela configuração do LabsMainApp
-				//CertificadoDigital = new X509Certificate2("C:\\Users\\Pc\\Desktop\\LabSolution.pfx", "solution2024")
-				CertificadoDigital = new X509Certificate2("C:\\Users\\maria\\OneDrive\\Área de Trabalho\\LabSolution.pfx", "solution2024")
+				CertificadoDigital = new X509Certificate2("C:\\Users\\Pc\\Desktop\\LabSolution.pfx", "solution2024")
+				//CertificadoDigital = new X509Certificate2("C:\\Users\\maria\\OneDrive\\Área de Trabalho\\LabSolution.pfx", "solution2024")
 			};
-			
+			var s = xmlNFCE.GerarXML();
 			// Idealmente deveríamos trabalhar de forma assíncrona para a emissão!, (Faremos isso futuramente)
 			try
 			{
 				var Auto = new Unimake.Business.DFe.Servicos.NFCe.Autorizacao(xmlNFCE, configNFCe); // Aqui usamos o namespace para trabalhar com a autorização da NFc-e
 				Auto.Executar();
 				//
-				Modais.MostrarInfo(Auto.Result.XMotivo);
+				Modais.MostrarInfo($"CSTAT({Auto.Result.CStat}) : {Auto.Result.XMotivo}");
 				if (Auto.Result.ProtNFe != null)
 				{
 					switch (Auto.Result.ProtNFe.InfProt.CStat)
 					{
 						case 100: // NFE Autorizada
-							// Geramos o xml e salvamos no banco de dados para facilitar e assegurar o nosso cliente.
+								  // Geramos o xml e salvamos no banco de dados para facilitar e assegurar o nosso cliente.
 							var xAuto = Auto.Result.GerarXML().OuterXml;//
 							var xNota = Auto.ConteudoXMLAssinado.OuterXml;
 							var t = new NotaFiscalXml { XmlAuto = xAuto, XmlNota = xNota };
@@ -616,364 +621,16 @@ namespace Labs.Main
 						case 302: // Uso Denegado: Irregularidade Fiscal do Destinatário
 						case 303: // Uso Denegado: Destinatário não habilitado a operar na UF
 						default:
-							Modais.MostrarErro($"CSON/CST({Utilitarios.ConversorCSTParaCSON(Produto.CST, TipoDFe.NFe, 0, 1)}) Erro ({Auto.Result.ProtNFe.InfProt.CStat}): {Auto.Result.ProtNFe.InfProt.XMotivo}");
+							Modais.MostrarErro($"CSON/CST({Produto.CST}) Erro ({Auto.Result.ProtNFe.InfProt.CStat}): {Auto.Result.ProtNFe.InfProt.XMotivo}");
 							break;
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				Modais.MostrarAviso("Não Foi possível processar o lote: "+ex);
-			}
-			
-			//
-		}
-		public static void teste()
-		{
-			var xml = new EnviNFe
-			{
-				Versao = "4.00",
-				IdLote = "000000000001",
-				IndSinc = SimNao.Sim,
-				NFe = new List<NFe>
-				{
-					new NFe
-					{
-						InfNFe = new List<InfNFe>
-						{
-							new InfNFe
-							{
-								Versao = "4.00",
-								Ide = new Ide
-								{
-									CUF = UFBrasil.RJ,
-									NatOp = "VENDA TESTE DO ESTABELECIMENTO",
-									Mod = ModeloDFe.NFe,
-									Serie = 1,
-									NNF = 0000000000000000004,
-									DhEmi = DateTime.Now,
-									DhSaiEnt = DateTime.Now,
-									TpNF = TipoOperacao.Saida,
-									IdDest = DestinoOperacao.OperacaoInterna,
-									CMunFG = 3305505,
-									TpImp = FormatoImpressaoDANFE.NormalRetrato,
-									TpEmis = TipoEmissao.Normal,
-									TpAmb = TipoAmbiente.Homologacao,
-									FinNFe = FinalidadeNFe.Normal,
-									IndFinal = SimNao.Sim,
-									IndPres = IndicadorPresenca.OperacaoPresencial,
-									ProcEmi = ProcessoEmissao.AplicativoContribuinte,
-									VerProc = "TESTE 1.00",
-								},
-								Emit = new Emit
-								{
-									CNPJ = "54781393000147",
-									XNome = "IGOR DOS SANTOS MOURA",
-									XFant = "Lab Soluções",
-									EnderEmit = new EnderEmit
-									{
-										XLgr = "RUA CARLOS LACERDA",
-										Nro = "N/A",
-										XBairro = "BOQUEIRAO",
-										CMun = 3305505,
-										XMun = "SAQUAREMA",
-										UF = UFBrasil.RJ,
-										CEP = "28990524",
-										Fone = "22988041803",
-									},
-									IE = "14800271",
-									IM = "ISENTO",
-									CRT = CRT.SimplesNacional,
-								},
-								Dest = new Dest
-								{
-									CPF = "15758383708",
-									XNome = "NF-E EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL",
-									EnderDest = new EnderDest
-									{
-										XLgr = "RUA CARLOS LACERDA",
-										Nro = "N/A",
-										XBairro = "BOQUEIRAO",
-										CMun = 3305505,
-										XMun = "SAQUAREMA",
-										UF = UFBrasil.RJ,
-										CEP = "28990524",
-										Fone = "22988041803",
-									},
-									IndIEDest = IndicadorIEDestinatario.NaoContribuinte,
-									Email = "igordossantos.00@hotmail.com",
-									IE = "0000000000",
-								},
-								Det = new List<Det>
-								{
-									new Det
-									{
-										NItem = 1,
-										Prod = new Prod
-										{
-											CProd = "5102",
-											CEAN = "SEM GTIN",
-											XProd = "NF-E EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL",
-											NCM = "84714900",
-											CFOP = "5102",
-											UCom = "LU",
-											QCom = 1.00m,
-											VUnCom = 84.9000000000m,
-											VProd = 84.90,
-											CEANTrib = "SEM GTIN",
-											UTrib = "LU",
-											QTrib = 1.00m,
-											VUnTrib = 84.9000000000m,
-											IndTot = SimNao.Sim,
-											XPed = "300474",
-											NItemPed = "1",
-										},
-										Imposto = new Imposto
-										{
-											ICMS = new ICMS
-											{
-												ICMSSN101 = new ICMSSN101
-												{
-													Orig = OrigemMercadoria.Nacional,
-													CSOSN = "101",
-													PCredSN = 2.8255,
-													VCredICMSSN = 2.40,
-												}
-											},
-											PIS = new PIS
-											{
-												PISOutr = new PISOutr
-												{
-													CST = "99",
-													VBC = 0,
-													PPIS = 0,
-													VPIS = 0,
-												}
-											},
-											COFINS = new COFINS
-											{
-												COFINSOutr = new COFINSOutr
-												{
-													CST = "99",
-													VBC = 0.00,
-													PCOFINS = 0.00,
-													VCOFINS = 0.00,
-												}
-											}
-										}
-									}
-								},
-								Total = new Total
-								{
-									ICMSTot = new ICMSTot
-									{
-										VBC = 0,
-										VICMS = 0,
-										VICMSDeson = 0,
-										VFCP = 0,
-										VBCST = 0,
-										VST = 0,
-										VFCPST = 0,
-										VFCPSTRet = 0,
-										VProd = 84.90,
-										VFrete = 0,
-										VSeg = 0,
-										VDesc = 0,
-										VII = 0,
-										VIPI = 0,
-										VIPIDevol = 0,
-										VPIS = 0,
-										VCOFINS = 0,
-										VOutro = 0,
-										VNF = 84.90,
-									}
-								},
-								Transp = new Transp
-								{
-									ModFrete = ModalidadeFrete.SemOcorrenciaTransporte,
-									Vol = new List<Vol>
-									{
-										new Vol
-										{
-											QVol = 1,
-											Esp = "LU",
-											Marca = "Lab Soluções",
-											PesoL = 0.000,
-											PesoB = 0.000,
-										}
-									}
-								},
-								Cobr = new Cobr
-								{
-									Fat = new Fat
-									{
-										NFat = "057910",
-										VOrig = 84.90,
-										VDesc = 0,
-										VLiq = 84.90
-									},
-									Dup = new List<Dup>
-									{
-										new Dup
-										{
-											NDup = "001",
-											DVenc = DateTime.Now,
-											VDup = 84.90
-										}
-									}
-								},
-								//
-								Pag = new Pag
-								{
-									DetPag = new List<DetPag>()
-									{
-										new DetPag
-										{
-											IndPag = IndicadorPagamento.PagamentoVista,
-											TPag = MeioPagamento.Dinheiro,
-											VPag = 84.90,
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			};
-			//
-			var config = new Configuracao
-			{
-				TipoDFe = TipoDFe.NFe,
-				TipoEmissao = TipoEmissao.Normal,
-				TipoAmbiente = TipoAmbiente.Homologacao,
-				CertificadoDigital = new X509Certificate2("C:\\Users\\Pc\\Desktop\\LabSolution.pfx", "solution2024")
-			};
-			var auto = new Autorizacao(xml,config);
-			auto.Executar();
-			//
-			Modais.MostrarInfo(auto.Result.XMotivo);
-			if(auto.Result.ProtNFe != null)
-			{
-				Modais.MostrarInfo(auto.Result.ProtNFe.InfProt.CStat.ToString());
-				switch (auto.Result.ProtNFe.InfProt.CStat)
-				{
-					case 100: // NFE Autorizada
-					case 110: // Uso Denegado
-					case 150: // Autorizado o Uso, Autorização Fora de Prazo
-					case 205: // NF-e Está denegada na base de dados da Sefaz
-					case 301: // Uso Denegado: Irregularidade Fiscal do Emitente
-					case 302: // Uso Denegado: Irregularidade Fiscal do Destinatário
-					case 303: // Uso Denegado: Destinatário não habilitado a operar na UF
-						Modais.MostrarInfo(auto.NfeProcResult.NomeArquivoDistribuicao);
-						auto.GravarXmlDistribuicao(@"Nfe\");
-						break;
-					default:
-						Modais.MostrarErro(auto.Result.ProtNFe.InfProt.XMotivo);
-						break;
-				}
+				Modais.MostrarAviso("Não Foi possível processar o lote: " + ex);
 			}
 			//
-
-		}
-
-
-
-
-		/// <summary>
-		/// Cria uma nova nota fiscal contendo os Parâmetr	os definidos na configuração
-		/// </summary>
-		public static XmlDocument CriarNotaFiscal()
-		{
-			// Criação do XML da NF-e
-			XmlDocument xmlDoc = new();
-
-			XmlElement root = xmlDoc.CreateElement("NFe");
-			xmlDoc.AppendChild(root);
-
-			XmlElement infNFe = xmlDoc.CreateElement("infNFe");
-			infNFe.SetAttribute("versao", "4.00");
-			root.AppendChild(infNFe);
-
-			XmlElement ide = xmlDoc.CreateElement("ide");
-			XmlElement cUF = xmlDoc.CreateElement("cUF");
-			cUF.InnerText = "35"; // Código do estado de São Paulo
-			ide.AppendChild(cUF);
-			infNFe.AppendChild(ide);
-
-			XmlElement emit = xmlDoc.CreateElement("emit");
-			XmlElement CNPJ = xmlDoc.CreateElement("CNPJ");
-			CNPJ.InnerText = "54781393000147"; // CNPJ da empresa emitente
-			emit.AppendChild(CNPJ);
-			infNFe.AppendChild(emit);
-
-			// Continue a construção do XML de acordo com o layout da NF-e
-
-			// Salvar o XML em um arquivo usando um ID único
-			//
-			string id = $"{DateTime.Now:HH-mm-ss}-{DateTime.Now:dd-MM-yyyy}";
-			//
-			xmlDoc.Save($@"NFe\ParaAssinar\NFE ({id}).xml");
-			return xmlDoc;
-		}
-		//
-		public static XmlDocument AssinarNotaFiscal(XmlDocument Nfe)
-		{
-			// Carregar o certificado digital
-			X509Certificate2 cert = new("C:\\Users\\Pc\\Desktop\\LabSolution.pfx", "solution2024");
-
-			// Carregar o XML da NF-e
-
-			// Assinar o XML
-			SignedXml signedXml = new(Nfe);
-			signedXml.SigningKey = cert.GetRSAPrivateKey();
-
-			Reference reference = new();
-			reference.Uri = "";
-
-			XmlDsigEnvelopedSignatureTransform env = new();
-			reference.AddTransform(env);
-
-			signedXml.AddReference(reference);
-			signedXml.ComputeSignature();
-
-			XmlElement xmlDigitalSignature = signedXml.GetXml();
-			Nfe.DocumentElement!.AppendChild(Nfe.ImportNode(xmlDigitalSignature, true));
-
-			// Salvar o XML Assinado em um arquivo usando um ID único
-			//
-			string id = $"{DateTime.Now:HH-mm-ss}-{DateTime.Now:dd-MM-yyyy}";
-			//
-			Nfe.Save($@"NFe\Assinadas\NFE Assinada ({id}).xml");
-			//
-			return Nfe;
-		}
-		//
-		public static async void EmitirNotaFiscal(XmlDocument NfeAssinada)
-		{
-
-			string nfeXmlString = NfeAssinada.OuterXml;
-
-			// Enviar a NF-e para a SEFAZ
-			using (HttpClient client = new())
-			{
-				var content = new StringContent(nfeXmlString, Encoding.UTF8, "application/xml");
-
-				// Endereço do webservice da SEFAZ
-				string sefazUrl = "https://homologacao.nfe.fazenda.sp.gov.br/ws/nfeautorizacao4.asmx";
-
-				HttpResponseMessage response = await client.PostAsync(sefazUrl, content);
-
-				if (response.IsSuccessStatusCode)
-				{
-					string responseXml = await response.Content.ReadAsStringAsync();
-					Modais.MostrarInfo("NF-e enviada com sucesso!");
-					Modais.MostrarInfo(responseXml);
-				}
-				else
-				{
-					Modais.MostrarInfo("Erro ao enviar NF-e: " + response.StatusCode);
-				}
-			}
 		}
 	}
 }

@@ -128,11 +128,11 @@ namespace Labs
             //LabsNFe.teste();
             //for (int i = 0; i <= 8; i++)
             //{
-                var prod = new Produto("",1,1,UnidadesDeMedida.Unidade,null!,0,120,"",false,null!,"",$"{0}30","");
-                LabsNFe.EmitirNotaFiscalDeConsumidorEletronica(prod);
+                //var prod = new Produto("",1,1,UnidadesDeMedida.Unidade,null!,0,120,"",false,null!,"",$"{0}102","");
+                //LabsNFe.EmitirNotaFiscalDeConsumidorEletronica("Venda Teste",prod);
             //}
             
-            //LabsMain.IniciarApp<LabsEstoqueWPF>(true,false,true);
+            LabsMain.IniciarApp<LabsEstoqueWPF>(true,false,true);
         }
 
         private void OnLabsPDVClick(object sender, RoutedEventArgs e)

@@ -12,77 +12,6 @@ namespace Labs.Main.ReceitaFederal.Utilitarios
 	public class Utilitarios
 	{
 		/// <summary>
-		/// Essa função Retorna o CST convertido do Regime Normal para o Simples Nacional
-		/// Os códigos CSON 103 e 400 não são permitidos no RJ
-		/// </summary>
-		/// <returns>Retorna um CST Convertido</returns>
-		public static string ConversorCSTParaCSON(string CodCST,TipoDFe DFE,double PRedBSCT = 0,double PICMSST = 0)
-		{
-			// Possíveis CSON de Retorno:
-			// 102, 300, 500 NFC-e.
-			// 101, 201, 203 NF-e.
-			// se o código informado ja for um CSON simplesmente retornamos o próprio código
-			if(CodCST.Length > 3) { return CodCST; }
-			var cst = $"{CodCST[1]}{CodCST[2]}";
-			switch (DFE)
-			{
-				case TipoDFe.NFCe:
-					switch (cst)
-					{
-						case "00":
-							return $"{CodCST[0]}102";
-						case "20":
-							return $"{CodCST[0]}102";
-						case "40":
-							return $"{CodCST[0]}300";
-						case "41":
-							return $"{CodCST[0]}300";
-						case "60":
-							return $"{CodCST[0]}500";
-					}
-					break;
-				case TipoDFe.NFe:
-					if ((cst == "10" && PICMSST == 0 && PRedBSCT == 0) || (cst == "70" && PRedBSCT != 0 && PICMSST >= 0))
-					{
-						return $"{CodCST[0]}201";
-					}
-					if ((cst == "10" && PRedBSCT == 0 && PICMSST != 0) || (cst == "30" && PRedBSCT == 0 && PICMSST >= 0))
-					{
-						return $"{CodCST[0]}202";
-					}
-					if (cst == "70" && PRedBSCT == 0 && PICMSST == 0)
-					{
-						return $"{CodCST[0]}203";
-					}
-					return null!;
-
-			}
-			return null!;
-		}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		/// <summary>
 		/// Essa função retorna o Tipo de ICMS refetente ao CST do produto, listado como 'A''B''B'
 		/// </summary>
 		/// <param name="CodCST"> Código CST do Produto, Ele Determina o tipo de ICMS a ser Pago</param>
@@ -131,7 +60,6 @@ namespace Labs.Main.ReceitaFederal.Utilitarios
 			//
 			if (CodCST.Length > 4) { Modais.MostrarAviso("O Código CST Informado Tem Mais de 4 Dígitos"); return null!; }
 			//
-			
 			//ModalidadeBaseCalculoICMS.MargemValorAgregado, // Usado em ICMSST
 			//ModalidadeBaseCalculoICMS.PrecoTabeladoMaximo, // Usado quando o preço é tabulado, geralmente Combustível e Medicamento
 			//ModalidadeBaseCalculoICMS.Pauta, // Geralmente Utilizado em produtos com grande variação de preço, como Fumo e Bebidas Alcoólicas
@@ -293,7 +221,7 @@ namespace Labs.Main.ReceitaFederal.Utilitarios
 					case "60":
 						return new ICMS
 						{
-							ICMS60 = new ICMS60 // Já foi cobrado no preco da distribuidora, só é necessário informar a origem
+							ICMS60 = new ICMS60 //  Usado quando a venda for feita para um consumidor final, ou se a empresa compradora for do simples nacional
 							{
 								Orig = Origem,
 							}
