@@ -339,25 +339,38 @@ namespace Labs.Main
 		public bool ClienteLabs { get; private set; } = ClienteLabs;
 	}
 
-	public class ClienteLoja()
+	public class ClienteLoja(string Nome = null!, string CPF = null!, string CNPJ = null!, string Fone = null!, string DataUltimaCompra = null!, string HoraUltimaCompra = null!)
 	{
+		//Colocar lista de produtos comprados e etc
 		/// <summary>
 		/// ID Deste Objeto na Database
 		/// </summary>
 		[BsonId]
 		[BsonRepresentation(BsonType.ObjectId)]
 		public string ID { get; set; } = null!;
-		//
+		/// <summary>
+		/// Nome do Cliente
+		/// </summary>
 		public string Nome { get; set; }
-		//
+		/// <summary>
+		/// CPF do Cliente
+		/// </summary>
 		public string CPF { get; set; }
-		//
+		/// <summary>
+		/// CNPJ do cliente
+		/// </summary>
 		public string CNPJ { get; set; }
-		//
+		/// <summary>
+		/// Telefone do Cliente
+		/// </summary>
 		public string Fone { get; set; }
-		//
+		/// <summary>
+		/// Data da Ultima Compra, Formato Obrigatório (dd/MM/yyyy)
+		/// </summary>
 		public string DataUltimaCompra { get; set; }
-		//
+		/// <summary>
+		/// Hora da Ultima Compra, Formato Obrigatório (HH:mm:ss) 
+		/// </summary>
 		public string HoraUltimaCompra { get; set; }
 		//
 		public DateTime DataUltimaCompraFormatada { get { return DateTime.ParseExact(DataUltimaCompra,"dd/MM/yyyy",CultureInfo.InvariantCulture); } }

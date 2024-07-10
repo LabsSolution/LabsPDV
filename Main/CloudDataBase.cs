@@ -31,25 +31,33 @@ namespace Labs.Main
         //
         /// <summary>
         /// Verifica a Conexão com as Databases e Retorna o Status de Cada Uma.
+        /// Retorna os Status em Array Na Seguinte Ordem [0]=Local,[1]=Cloud,[2]=LabsCloud
         /// </summary>
-        /// <param name="LocalOK">True se a Database local estiver OK</param>
-        /// <param name="CloudOK">True se a Database Remota estiver OK</param>
-        /// <param name="LabsCloudOK">True se a Database da Labs estiver OK</param>
         /// <returns>Retorna True se todas as conexões estiverem funcionando corretamente</returns>
-		public static bool CheckDataBaseConnection(out bool LocalOK, out bool CloudOK, out bool LabsCloudOK)
+		public static async Task<bool[]> CheckDataBaseConnection()
         {
-            var local = ConnectToMongoLocal<Produto>(Collections.Produtos);
-            var cloud = ConnectToMongoCloud<Produto>(Collections.Produtos);
+            var LocalDatabase = GetLocalDataBase();
+            var CloudDatabase = LabsMain.Cliente.PossuiPlanoCloud? GetCloudDataBase() : null!; // Se o cliente não possui plano cloud nem tentamos fazer a atribuição
+            var LabsCloudDataBase = GetLabsCloudDataBase();
+			//Fazemos as Verificações e atribuimos os valores
+			bool LocalOK;
+			bool CloudOK;
+            bool LabsCloudOK;
             //
-            var labsCloud = ConnectToLabsMongoCloud<Cliente>(Collections.Clientes);
+            var command = (Command<BsonDocument>)"{ping:1}";
+			//
+            if(LocalDatabase == null) { LocalOK = false; }
+            else { try { await LocalDatabase.RunCommandAsync(command); LocalOK = true; } catch { LocalOK = false; } }
+			//
+            
+            if (CloudDatabase == null) { CloudOK = false; }
+            else { try { await CloudDatabase.RunCommandAsync(command); CloudOK = true; } catch { CloudOK = false; } }
             //
-            LocalOK = local != null;
+
+            if(LabsCloudDataBase == null) { LabsCloudOK = false; }
+            else { try { await LabsCloudDataBase.RunCommandAsync(command); LabsCloudOK = true; } catch { LabsCloudOK = false; } }
             //
-            CloudOK = cloud != null; // só retorna aconexão cloud caso o cliente possua esse plano
-            //
-            LabsCloudOK = labsCloud != null;
-            //
-            return LocalOK && CloudOK && LabsCloudOK;
+            return [ LocalOK, CloudOK, LabsCloudOK ];
         }
         /// <summary>
         /// Retorna a Database Pura do Servidor Local
@@ -62,9 +70,8 @@ namespace Labs.Main
                 var client = new MongoClient(LabsMain.LocalDataBaseConnectionURI);
                 return client.GetDatabase(LabsMain.ClientDataBase);
             }
-            catch (Exception ex)
+            catch
             {
-				Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
 				return null!;
 			}
         }
@@ -79,9 +86,24 @@ namespace Labs.Main
                 var client = new MongoClient(LabsMain.CloudDataBaseConnectionURI);
                 return client.GetDatabase(LabsMain.ClientDataBase);
             }
-            catch (Exception ex)
+            catch
             {
-				Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
+				return null!;
+			}
+        }
+        /// <summary>
+        /// Retorna a Database Pura do Servidor Cloud Labs
+        /// </summary>
+        /// <returns>Database</returns>
+        public static IMongoDatabase GetLabsCloudDataBase()
+        {
+            try
+            {
+                var client = new MongoClient(LabsMain.LabsCloudDataBaseConnectionURI);
+                return client.GetDatabase(LabsDataBase);
+            }
+            catch
+            {
 				return null!;
 			}
         }
@@ -343,9 +365,13 @@ namespace Labs.Main
         {
             try
             {
-                var collection = ConnectToMongoCloud<T>(collectionName);
-                var results = await collection.FindAsync(predicate);
-                return results.ToList().FirstOrDefault()!;
+                if (LabsMainAppWPF.IsConnectedToInternet)
+                {
+					var collection = ConnectToMongoCloud<T>(collectionName);
+					var results = await collection.FindAsync(predicate);
+					return results.ToList().FirstOrDefault()!;
+				}
+                return default!;
             }
             catch (Exception ex)
             {
@@ -364,9 +390,13 @@ namespace Labs.Main
         {
             try
             {
-                var collection = ConnectToMongoCloud<T>(collectionName);
-                var results = await collection.FindAsync<T>(predicate);
-                return results.ToList();
+                if (LabsMainAppWPF.IsConnectedToInternet)
+                {
+					var collection = ConnectToMongoCloud<T>(collectionName);
+					var results = await collection.FindAsync<T>(predicate);
+					return results.ToList();
+				}
+                return default!;
             }
             catch (Exception ex)
             {
@@ -385,13 +415,15 @@ namespace Labs.Main
         {
             try
             {
-                var collection = ConnectToMongoCloud<T>(collectionName);
-                await collection.InsertOneAsync(ToRegisterObject);
+                if (LabsMainAppWPF.IsConnectedToInternet)
+                {
+					var collection = ConnectToMongoCloud<T>(collectionName);
+					await collection.InsertOneAsync(ToRegisterObject);
+				}
             }
             catch (Exception ex)
             {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw;
             }
         }
         //
@@ -406,14 +438,16 @@ namespace Labs.Main
         {
             try
             {
-                var collection = ConnectToMongoCloud<T>(collectionName);
-                var options = new ReplaceOptions { IsUpsert = true };
-                await collection.ReplaceOneAsync(filter, ToRegisterObject, options);
+                if (LabsMainAppWPF.IsConnectedToInternet)
+                {
+					var collection = ConnectToMongoCloud<T>(collectionName);
+					var options = new ReplaceOptions { IsUpsert = true };
+					await collection.ReplaceOneAsync(filter, ToRegisterObject, options);
+				}
             }
             catch (Exception ex)
             {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw;
             }
         }
         /// <summary>
@@ -427,13 +461,15 @@ namespace Labs.Main
         {
             try
             {
-                var collection = ConnectToMongoCloud<T>(collectionName);
-                await collection.ReplaceOneAsync(filter, toUpdateObject, new ReplaceOptions { IsUpsert = true });
+                if (LabsMainAppWPF.IsConnectedToInternet)
+                {
+					var collection = ConnectToMongoCloud<T>(collectionName);
+					await collection.ReplaceOneAsync(filter, toUpdateObject, new ReplaceOptions { IsUpsert = true });
+				}
             }
             catch (Exception ex)
             {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw;
             }
         }
         /// <summary>
@@ -446,13 +482,15 @@ namespace Labs.Main
         {
             try
             {
-                var collection = ConnectToMongoCloud<T>(collectionName);
-                await collection.DeleteOneAsync(predicate);
+                if (LabsMainAppWPF.IsConnectedToInternet)
+                {
+					var collection = ConnectToMongoCloud<T>(collectionName);
+					await collection.DeleteOneAsync(predicate);
+				}
             }
             catch (Exception ex)
             {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw;
             }
         }
         /// <summary>
@@ -465,12 +503,16 @@ namespace Labs.Main
         {
             try
             {
-                var collection = ConnectToMongoCloud<T>(collectionName);
-                if (collection != null)
+                if (LabsMainAppWPF.IsConnectedToInternet)
                 {
-                    var filter = Builders<T>.Filter.Empty;
-                    return await collection.CountDocumentsAsync(filter);
-                }
+					var collection = ConnectToMongoCloud<T>(collectionName);
+					if (collection != null)
+					{
+						var filter = Builders<T>.Filter.Empty;
+						return await collection.CountDocumentsAsync(filter);
+					}
+					return -1;
+				}
                 return -1;
             }
             catch (Exception ex)
@@ -484,9 +526,13 @@ namespace Labs.Main
         {
             try
             {
-                var collection = ConnectToLabsMongoCloud<T>(collectionName);
-                var results = await collection.FindAsync(predicate);
-                return results.ToList().FirstOrDefault()!;
+                if (LabsMainAppWPF.IsConnectedToInternet)
+                {
+					var collection = ConnectToLabsMongoCloud<T>(collectionName);
+					var results = await collection.FindAsync(predicate);
+					return results.ToList().FirstOrDefault()!;
+				}
+                return default!;
             }
             catch (Exception ex)
             {
@@ -509,10 +555,14 @@ namespace Labs.Main
         {
             try
             {
-                var Admins = ConnectToLabsMongoCloud<AdminLabs>(Collections.LabAdmins);
-                //
-                var results = await Admins.FindAsync(x => x.Auth0ID == Auth0ID);
-                return results.ToList().FirstOrDefault()!;
+                if (LabsMainAppWPF.IsConnectedToInternet)
+                {
+					var Admins = ConnectToLabsMongoCloud<AdminLabs>(Collections.LabAdmins);
+					//
+					var results = await Admins.FindAsync(x => x.Auth0ID == Auth0ID);
+					return results.ToList().FirstOrDefault()!;
+				}
+                return null!;
             }
             catch (Exception ex)
             {
@@ -528,13 +578,15 @@ namespace Labs.Main
         {
             try
             {
-                var Admins = ConnectToLabsMongoCloud<AdminLabs>(Collections.LabAdmins);
-                await Admins.InsertOneAsync(admin);
+                if (LabsMainAppWPF.IsConnectedToInternet)
+                {
+					var Admins = ConnectToLabsMongoCloud<AdminLabs>(Collections.LabAdmins);
+					await Admins.InsertOneAsync(admin);
+				}
             }
             catch (Exception ex)
             {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw;
             }
         }
         //----------------------------------------------------------------//
@@ -549,11 +601,15 @@ namespace Labs.Main
         {
             try
             {
-                var Clientes = ConnectToLabsMongoCloud<Cliente>(Collections.Clientes);
-                //
-                var results = await Clientes.FindAsync(x => x.Auth0ID == Auth0ID);
-                //
-                return results.ToList().FirstOrDefault()!;
+                if (LabsMainAppWPF.IsConnectedToInternet)
+                {
+					var Clientes = ConnectToLabsMongoCloud<Cliente>(Collections.Clientes);
+					//
+					var results = await Clientes.FindAsync(x => x.Auth0ID == Auth0ID);
+					//
+					return results.ToList().FirstOrDefault()!;
+				}
+                return null!;
             }
             catch (Exception ex)
             {
@@ -569,13 +625,15 @@ namespace Labs.Main
         {
             try
             {
-                var Clientes = ConnectToLabsMongoCloud<Cliente>(Collections.Clientes);
-                await Clientes.InsertOneAsync(cliente);
+                if (LabsMainAppWPF.IsConnectedToInternet)
+                {
+					var Clientes = ConnectToLabsMongoCloud<Cliente>(Collections.Clientes);
+					await Clientes.InsertOneAsync(cliente);
+				}
             }
             catch (Exception ex)
             {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw;
             }
         }
         /// <summary>
@@ -586,15 +644,17 @@ namespace Labs.Main
         {
             try
             {
-                var Clientes = ConnectToLabsMongoCloud<Cliente>(Collections.Clientes);
-                //
-                var filter = Builders<Cliente>.Filter.Eq("DataBaseID", cliente.DataBaseID);
-                await Clientes.ReplaceOneAsync(filter, cliente, new ReplaceOptions { IsUpsert = true });
+                if (LabsMainAppWPF.IsConnectedToInternet)
+                {
+					var Clientes = ConnectToLabsMongoCloud<Cliente>(Collections.Clientes);
+					//
+					var filter = Builders<Cliente>.Filter.Eq("DataBaseID", cliente.DataBaseID);
+					await Clientes.ReplaceOneAsync(filter, cliente, new ReplaceOptions { IsUpsert = true });
+				}
             }
             catch (Exception ex)
             {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw;
             }
 
         }
@@ -603,15 +663,16 @@ namespace Labs.Main
         {
             try
             {
-                var Clientes = ConnectToMongoLocal<Cliente>(Collections.Clientes);
-                await Clientes.DeleteOneAsync(c => c.DataBaseID == cliente.DataBaseID);
+                if (LabsMainAppWPF.IsConnectedToInternet)
+                {
+					var Clientes = ConnectToMongoLocal<Cliente>(Collections.Clientes);
+					await Clientes.DeleteOneAsync(c => c.DataBaseID == cliente.DataBaseID);
+				}
             }
             catch (Exception ex)
             {
                 Modais.MostrarErro($"ERRO CRÍTICO\n{ex.Message}");
-                throw;
             }
-
         }
     }
 }

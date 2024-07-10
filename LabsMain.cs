@@ -9,6 +9,7 @@ using Labs.Janelas.LabsPDV.Dependencias;
 using Labs.Janelas.LabsPDV;
 using System.Windows;
 using System.Net.NetworkInformation;
+using System.Windows.Threading;
 namespace Labs
 {
 
@@ -35,6 +36,8 @@ namespace Labs
 		public static string CloudDataBaseConnectionURI = null!;
 		public static string LocalDataBaseConnectionURI = null!;
 		//
+		public static DispatcherTimer Timer = null!;
+		//
 		/// <summary>
 		/// Objeto de Controle Cliente Labs
 		/// </summary>
@@ -45,17 +48,22 @@ namespace Labs
 		/// </summary>
 		public static Task<PingReply> CheckInternet { get { return new Ping().SendPingAsync("www.google.com"); } }
 		//
-        public static void INIT()
+		public static void INIT()
 		{
-			//Inicializamos as dependências obrigatória
+			//Inicializamos as dependências obrigatórias
+			//Iniciamos o relógio
+			Timer = new();
+			Timer.Interval = TimeSpan.FromSeconds(1);
+			Timer.Start();
+			//
 			//A Criptografia é algo essencial para a segurança dos nossos clientes!
 			// Politica LGPD
 			bool init = JsonManager.InitializeJsonManager();
 			//Verifica a pasta config (se não tiver, vai criar uma)
 			//O Init só é falso caso dê algo de errado na pasta config e não seja possível inicializar
-			if (!init) 
-			{ 
-				var r = Modais.MostrarErro("Não Foi Possivel Iniciar o Sistema Por Conter Erros Críticos!");
+			if (!init)
+			{
+				Modais.MostrarErro("Não Foi Possivel Iniciar o Sistema Por Conter Erros Críticos!");
 				return;
 			}
 			//Descriptografa a database local
@@ -65,11 +73,11 @@ namespace Labs
 			//Descriptografa o nome da Database da empresa
 			if (LabsCripto.Decript("N_Data", out string NDecripted)) { ClientDataBase = NDecripted; }
 			//
-        }
-        //
-        //EVENTOS//
-        //Previne o Cliente de Minimizar o sistema
-        private static void OnAppSizeChange(object? sender, SizeChangedEventArgs e)
+		}
+		//
+		//EVENTOS//
+		//Previne o Cliente de Minimizar o sistema
+		private static void OnAppSizeChange(object? sender, SizeChangedEventArgs e)
 		{
 			if (sender is Window App)
 			{

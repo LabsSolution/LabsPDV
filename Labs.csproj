@@ -36,6 +36,7 @@
     <PackageReference Include="System.ServiceModel.NetTcp" Version="6.0.*" />
     <PackageReference Include="System.ServiceModel.Security" Version="6.0.*" />
     <PackageReference Include="Unimake.DFe" Version="20240705.1514.13" />
+    <PackageReference Include="Unimake.Utils" Version="20240612.1842.1" />
   </ItemGroup>
 
   <ItemGroup>

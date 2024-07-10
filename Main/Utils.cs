@@ -148,8 +148,9 @@ namespace Labs.Main
 		/// <param name="Altura">Altura total do texto</param>
 		/// <returns></returns>
 		public static string FormatarTexto(string texto, Font font, Graphics graphics, float larguraPagina, out float Altura)
-        {
-            string[] palavras = texto.Split(' ');
+		{
+			if (texto == null) { Altura = 0; return texto!; }
+			string[] palavras = texto.Split(' ');
             StringBuilder linhaAtual = new StringBuilder();
             StringBuilder textoFormatado = new StringBuilder();
 

@@ -54,6 +54,18 @@
                         <TextBlock x:Name="IndicadorPlanoCloud" Visibility="Collapsed" Text="(Não está disponível no seu plano atual)" Margin="10,0,5,0" VerticalAlignment="Bottom" Width="Auto" TextAlignment="Left" HorizontalAlignment="Left" FontSize="16" FontFamily="Segoe UI Black" Foreground="#F0F0F0" />
                     </StackPanel>
                 </StackPanel>
+                <DockPanel VerticalAlignment="Stretch">
+                    <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Data: " Foreground="#f0f0f0" TextAlignment="Center" VerticalAlignment="Bottom" FontSize="20" FontFamily="Segoe UI Black"/>
+                            <TextBlock Name="DataLabel" Text="DD/MM/YYYY" TextAlignment="Center" VerticalAlignment="Bottom" Foreground="#f0f0f0" FontSize="20" FontFamily="Segoe UI Black"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Hora: " VerticalAlignment="Bottom" TextAlignment="Center" Foreground="#f0f0f0" FontSize="20" FontFamily="Segoe UI Black"/>
+                            <TextBlock Name="HoraLabel" VerticalAlignment="Bottom" TextAlignment="Center" Text="HH:mm:ss" Foreground="#f0f0f0" FontSize="20" FontFamily="Segoe UI Black"/>
+                        </StackPanel>
+                    </StackPanel>
+                </DockPanel>
             </DockPanel>
         </Grid>
     </Border>

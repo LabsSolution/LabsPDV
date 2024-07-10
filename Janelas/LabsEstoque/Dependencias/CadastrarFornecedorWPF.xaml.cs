@@ -28,26 +28,33 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 		}
 		private bool VerificarCampos()
 		{
-			if (BairroInputBox.Text.IsNullOrEmpty()) { return false; }
-			if (CidadeInputBox.Text.IsNullOrEmpty()) { return false; }
-			if (EnderecoInputBox.Text.IsNullOrEmpty()) { return false; }
-			if (ComplementoInputBox.Text.IsNullOrEmpty()) { return false; }
-			if (NomeEmpresaInputBox.Text.IsNullOrEmpty()) { return false; }
-			if (ContatoInputBox.Text.IsNullOrEmpty()) { return false; }
-			if (EmailInputBox.Text.IsNullOrEmpty()) { return false; }
-			if (CNPJInputBox.Text.IsNullOrEmpty()) { return false; }
+			if (NomeEmpresaInputBox.Text.IsNullOrEmpty()) { Modais.MostrarAviso("Por Favor, Preencha o Nome do Fornecedor!"); return false; }
+			if (BairroInputBox.Text.IsNullOrEmpty()) { BairroInputBox.Text = "N/A"; }
+			if (CidadeInputBox.Text.IsNullOrEmpty()) { CidadeInputBox.Text = "N/A"; }
+			if (EnderecoInputBox.Text.IsNullOrEmpty()) { EnderecoInputBox.Text = "N/A"; }
+			if (ComplementoInputBox.Text.IsNullOrEmpty()) { ComplementoInputBox.Text = "N/A"; }
+			if (ContatoInputBox.Text.IsNullOrEmpty()) { ContatoInputBox.Text = "N/A"; }
+			if (EmailInputBox.Text.IsNullOrEmpty()) { EmailInputBox.Text = "N/A"; }
+			if (CNPJInputBox.Text.IsNullOrEmpty()) { CNPJInputBox.Text = "N/A"; }
 			return true;
 		}
 		//
 		private async void BuscaEndereco(string cep)
 		{
-			Endereco endereco = await ViaCepClient.GetEnderecoAsync(cep);
-			if (endereco != null) 
-			{ 
-				BairroInputBox.Text = endereco.Bairro;
-				CidadeInputBox.Text = $"{endereco.Localidade}-{endereco.Uf}";
-				EnderecoInputBox.Text = $"{endereco.Logradouro}";
-				ComplementoInputBox.Text = $"{endereco.Complemento}";
+			try
+			{
+				Endereco endereco = await ViaCepClient.GetEnderecoAsync(cep);
+				if (endereco != null)
+				{
+					BairroInputBox.Text = endereco.Bairro;
+					CidadeInputBox.Text = $"{endereco.Localidade}-{endereco.Uf}";
+					EnderecoInputBox.Text = $"{endereco.Logradouro}";
+					ComplementoInputBox.Text = $"{endereco.Complemento}";
+				}
+			}
+			catch
+			{
+				Modais.MostrarAviso("Não Foi Possível Realizar a Pesquisa.");
 			}
 		}
 
@@ -63,7 +70,17 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 		//
 		private async void RegistrarFornecedor()
 		{
-			Endereco endereco = await ViaCepClient.GetEnderecoAsync(CepInputBox.Text);
+
+			Endereco endereco;
+			try { endereco = await ViaCepClient.GetEnderecoAsync(CepInputBox.Text); } catch { endereco = new Endereco
+			{
+				Bairro = "N/A",
+				Cep = "N/A",
+				Complemento = "N/A",
+				Localidade = "N/A",
+				Uf = "N/A",
+				Logradouro = "N/A"
+			}; }
 			//
 			Fornecedor fornecedor = new(CNPJInputBox.Text, NomeEmpresaInputBox.Text, ContatoInputBox.Text, EmailInputBox.Text, endereco);
 			//
@@ -79,7 +96,7 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 		//
 		private void RegistrarFornecedorButton_Click(object sender, RoutedEventArgs e)
 		{
-			if (!VerificarCampos()) { Modais.MostrarAviso("Preencha Todos os Campos!"); return; }
+			if (!VerificarCampos()) { Modais.MostrarAviso("Preencha os Campos Obrigatórios"); return; }
 			// caso esteja tudo ok, registramos a Empresa
 			RegistrarFornecedor();
 

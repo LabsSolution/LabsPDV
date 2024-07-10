@@ -54,24 +54,51 @@ namespace Labs
             else { this.Close(); Modais.MostrarAviso("ERRO-800 \n UMA INSTÂNCIA DO APLICATIVO JÁ ESTÁ EM EXECUCÃO\n Caso o erro persista recomendamos entrar em contato com o suporte."); }
             //Carrega as Configs/
             LoadConfigs();
+			//
+			LabsMain.Timer.Tick += InternalTimer;
         }
         //
-        bool VerifyDataBases()
+		private void InternalTimer(object? sender, EventArgs e)
+		{
+            //Atualiza a hora e data
+            HoraLabel.Text = DateTime.Now.ToString("HH:mm:ss");
+            DataLabel.Text = DateTime.Now.ToString("dd/MM/yyyy");
+            //
+            DataBaseAndInternetChecker();
+		}
+		//
+        private async void DataBaseAndInternetChecker()
         {
-            IsDatabaseConnected = CloudDataBase.CheckDataBaseConnection(out bool LocalOK, out bool CloudOK, out bool LabsCloudOK);
+            // Faz checagens a cada segundo
+            bool Internet = Unimake.Net.Utility.HasInternetConnection();
+            // Aqui verificamos se o Testador Retornou um valor diferente
+            if(Internet != IsConnectedToInternet) 
+            { 
+                if(Internet == false) { Modais.MostrarAviso("A Sua Máquina Está sem Conexão com a Internet!\nVocê será notificado assim que a conexão for reestabelecida."); }
+                if(Internet == true) { Modais.MostrarInfo("A Conexão com a Internet foi Reestabelecida!"); }
+                IsConnectedToInternet = Internet;
+            }
+            //
+			await VerifyDataBases();
+		}
+		//
+		async Task<bool> VerifyDataBases()
+        {
+            var bools = await CloudDataBase.CheckDataBaseConnection();
+            IsDatabaseConnected = bools[0];
             bool planoCloud = LabsMain.Cliente.PossuiPlanoCloud;
             //
             IndicadorPlanoCloud.Visibility = planoCloud? Visibility.Collapsed: Visibility.Visible;
             //
-            IndicadorDatabaseLocal.Fill = LocalOK ? new SolidColorBrush(Color.FromArgb(255,80,255,90)) : new SolidColorBrush(Color.FromArgb(255,225,80,80));
-            IndicadorDatabaseCloud.Fill = CloudOK ? new SolidColorBrush(Color.FromArgb(255,80,255,90)) : new SolidColorBrush(Color.FromArgb(255,225,80,80));
-            IndicadorDatabaseLabs.Fill = LabsCloudOK ? new SolidColorBrush(Color.FromArgb(255,80,255,90)) : new SolidColorBrush(Color.FromArgb(255,225,80,80));
+            IndicadorDatabaseLocal.Fill = bools[0] ? new SolidColorBrush(Color.FromArgb(255,80,255,90)) : new SolidColorBrush(Color.FromArgb(255,225,80,80));
+            IndicadorDatabaseCloud.Fill = bools[1] ? new SolidColorBrush(Color.FromArgb(255,80,255,90)) : new SolidColorBrush(Color.FromArgb(255,225,80,80));
+            IndicadorDatabaseLabs.Fill = bools[2] ? new SolidColorBrush(Color.FromArgb(255,80,255,90)) : new SolidColorBrush(Color.FromArgb(255,225,80,80));
             //
-            LocalDatabasePanel.ToolTip = LocalOK ? "Conectado" : "Sem Conexão";
-            CloudDatabasePanel.ToolTip = CloudOK ? "Conectado" : "Sem Conexão";
-            LabsDatabasePanel.ToolTip = LabsCloudOK ? "Conectado" : "Sem Conexão";
+            LocalDatabasePanel.ToolTip = bools[0] ? "Conectado" : "Sem Conexão";
+            CloudDatabasePanel.ToolTip = bools[1] ? "Conectado" : "Sem Conexão";
+            LabsDatabasePanel.ToolTip = bools[2] ? "Conectado" : "Sem Conexão";
             //
-            return LocalOK;
+            return IsDatabaseConnected;
         }
         //
         private void LoadConfigs()
@@ -88,29 +115,35 @@ namespace Labs
         //
         private void OnLabsMainAppLoad(object sender, RoutedEventArgs e)
         {
-            //Quando forem repassadas para wpf reativar
-
-            if (!VerifyDataBases()) { ModoSegurança = true; Modais.MostrarAviso("MODO DE SEGURANÇA HABILITADO!\nPara Sair Desse Modo, Os Conflitos Devem ser Resolvidos\ne Logo Após o Sistema Deve Ser Reiniciado!"); return; }
-            // Desabilitado somente para debug
-            //VerificacoesPreventivas();
+            SetModoSeguranca();
         }
         //
-        static async void VerificacoesPreventivas()
+        private async void SetModoSeguranca()
+        {
+			if (!await VerifyDataBases()) { ModoSegurança = true; Modais.MostrarAviso("MODO DE SEGURANÇA HABILITADO!\nPara Sair Desse Modo, Os Conflitos Devem ser Resolvidos\ne Logo Após o Sistema Deve Ser Reiniciado!"); return; }
+            DataBaseAndInternetChecker();
+            // Desabilitado somente para debug
+			VerificacoesPreventivas();
+		}
+		//
+		static async void VerificacoesPreventivas()
         {
             var JDC = GerenciadorPDV.Initiate("Sincronizando Banco de Dados...");
             await GerenciadorPDV.VerificarEstoque(JDC);
             await Task.Delay(3000);
             //
             if (!IsConnectedToInternet)
-            { 
-                Modais.MostrarAviso("Sua máquina esta sem acesso a internet!\n assim que a conexão retornar você será notificado(a)");
-                return;
+            {
+                Modais.MostrarAviso("Não foi possível iniciar o espelhamento de estoque!\n\nMotivo: Sem Conexão com a Internet.\n\nVocê será notificado assim que a conexão for reestabelecida.");
+				await GerenciadorPDV.Terminate(JDC);
+				return;
             }
-            //
             if (!IsDatabaseConnected) { Modais.MostrarAviso("Sua Máquina está sem acesso ao Banco de dados remoto.\n" +
                 "Iniciando com acesso restrito ao banco de dados local\n" +
                 "Caso a conexão com o banco de dados remoto seja recuperada você será notificado(a)");
-                return;
+				await Task.Delay(3000);
+				await GerenciadorPDV.Terminate(JDC);
+				return;
             }
             //Só queremos garantir que espelhamos os itens para a cloud
             await CloudDataBaseSync.SyncDatabase(JDC,true);
