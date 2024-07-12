@@ -12,6 +12,10 @@ using Unimake.Business.DFe.Xml.GNRE;
 
 namespace Labs.Main
 {
+	/// <summary>
+	/// ATENÇÃO!!!! TODOS OS MODELOS ABAIXO SÃO DE ALTO NÍVEL DE IMPORTÂNCIA!!!!, QUALQUER ALTERAÇÃO DESCUIDADA PODE OCASIONAR PROBLEMAS!!!
+	/// ANTES DE ALTERAR QUALQUER VALOR, CERTIFIQUE-SE DE CONFIRMAR A NÃO UTILIZAÇÃO DO ITEM NO CÓDIGO!!!
+	/// </summary>
 	//
 	public class UnidadesDeMedida
 	{
@@ -63,10 +67,6 @@ namespace Labs.Main
 		public string ValorTotalDaCompraFormatado { get { return $"R$ {Utils.FormatarValor(ValorTotalDaCompra)}"; } }
 	}
 
-	/// <summary>
-	/// ATENÇÃO!!!! TODOS OS MODELOS ABAIXO SÃO DE ALTO NÍVEL DE IMPORTÂNCIA!!!!, QUALQUER ALTERAÇÃO DESCUIDADA PODE OCASIONAR PROBLEMAS!!!
-	/// ANTES DE ALTERAR QUALQUER VALOR, CERTIFIQUE-SE DE CONFIRMAR A NÃO UTILIZAÇÃO DO ITEM NO CÓDIGO!!!
-	/// </summary>
 	public class Collections
 	{
 		public static string Produtos { get; } = "Produtos";
@@ -220,7 +220,9 @@ namespace Labs.Main
 		public bool RealizandoVenda { get; set; } = false;
 	}
 
-	//
+	/// <summary>
+	/// Objeto de Venda (Usado para controle interno das vendas realizadas e futuramente ciencia de dados.)
+	/// </summary>
 	public class VendaRealizada
 	{
 		/// <summary>
@@ -248,7 +250,11 @@ namespace Labs.Main
 		/// </summary>
 		public PagamentoEfetuado[] PagamentosEfetuados { get; set; } = null!;
 	}
-	//
+	/// <summary>
+	/// Objeto de Referenciamento ao Meio de Pagamento
+	/// </summary>
+	/// <param name="NomeDoMeio">Nome do Meio de Pagamento</param>
+	/// <param name="SLDV">Sem Limite De Valor</param>
 	public class Meio(string NomeDoMeio, bool SLDV = false)
 	{
 		[BsonId]
@@ -339,9 +345,30 @@ namespace Labs.Main
 		public bool ClienteLabs { get; private set; } = ClienteLabs;
 	}
 
+	public class CompraCliente(string DataDaCompra = null!, string HoraDaCompra = null!, List<Produto> ProdutosComprados = null!)
+	{
+		/// <summary>
+		/// ID Deste Objeto na Database
+		/// </summary>
+		[BsonId]
+		[BsonRepresentation(BsonType.ObjectId)]
+		public string ID { get; set; } = null!;
+		/// <summary>
+		/// Data da Compra, Formato Obrigatório (dd/MM/yyyy)
+		/// </summary>
+		public string DataDaCompra { get; set; } = DataDaCompra;
+		/// <summary>
+		/// Hora da Compra, Formato Obrigatório (HH:mm:ss) 
+		/// </summary>
+		public string HoraDaCompra { get; set; } = HoraDaCompra;
+		/// <summary>
+		/// Lista de Produtos Comprados Pelo Cliente
+		/// </summary>
+		public List<Produto> ProdutosComprados { get; set; } = ProdutosComprados;
+	}
+
 	public class ClienteLoja(string Nome = null!, string CPF = null!, string CNPJ = null!, string Fone = null!, string DataUltimaCompra = null!, string HoraUltimaCompra = null!)
 	{
-		//Colocar lista de produtos comprados e etc
 		/// <summary>
 		/// ID Deste Objeto na Database
 		/// </summary>
@@ -351,35 +378,39 @@ namespace Labs.Main
 		/// <summary>
 		/// Nome do Cliente
 		/// </summary>
-		public string Nome { get; set; }
+		public string Nome { get; set; } = Nome;
 		/// <summary>
 		/// CPF do Cliente
 		/// </summary>
-		public string CPF { get; set; }
+		public string CPF { get; set; } = CPF;
 		/// <summary>
 		/// CNPJ do cliente
 		/// </summary>
-		public string CNPJ { get; set; }
+		public string CNPJ { get; set; } = CNPJ;
 		/// <summary>
 		/// Telefone do Cliente
 		/// </summary>
-		public string Fone { get; set; }
+		public string Fone { get; set; } = Fone;
 		/// <summary>
 		/// Data da Ultima Compra, Formato Obrigatório (dd/MM/yyyy)
 		/// </summary>
-		public string DataUltimaCompra { get; set; }
+		public string DataUltimaCompra { get; set; } = DataUltimaCompra;
 		/// <summary>
 		/// Hora da Ultima Compra, Formato Obrigatório (HH:mm:ss) 
 		/// </summary>
-		public string HoraUltimaCompra { get; set; }
-		//
+		public string HoraUltimaCompra { get; set; } = HoraUltimaCompra;
+		/// <summary>
+		/// Retorna a Data da Ultima compra Formatada em DD/MM/YYYY.
+		/// </summary>
 		public DateTime DataUltimaCompraFormatada { get { return DateTime.ParseExact(DataUltimaCompra,"dd/MM/yyyy",CultureInfo.InvariantCulture); } }
-		//
+		/// <summary>
+		/// Retorna a Hora da Ultima Compra Formatada em HH/MM/SS
+		/// </summary>
 		public DateTime HoraUltimaCompraFormatada { get { return DateTime.ParseExact(HoraUltimaCompra,"HH:mm:ss",CultureInfo.InvariantCulture); } }
 	}
 
-
-	//MODELOS DE Objetos (Structs)
+	//
+	//MODELOS DE Objetos (Classes)
 	public class PagamentoEfetuado(int ID, string DescPagamento, double Valor, double ValorTroco)
 	{
 		/// <summary>
@@ -397,53 +428,7 @@ namespace Labs.Main
 		public double ValorTroco { get; private set; } = ValorTroco;
 	}
 	//
-	public class MeioDePagamento(string Meio, bool PodeUltrapassarOValorTotal = false, bool PossuiModos = false, List<ModoDePagamento> Modos = default!)
-	{
-		[BsonId]
-		[BsonRepresentation(BsonType.ObjectId)]
-		public string ID { get; set; } = null!;
-		/// <summary>
-		/// Nome do Meio de Pagamento (Grupo Utilizado como biblioteca para o Modo)
-		/// </summary>
-		public string Meio { get; set; } = Meio;
-		/// <summary>
-		/// Determinador se esse meio de pagamento possui mais de um modo.
-		/// </summary>
-		public bool PossuiModos { get; set; } = PossuiModos;
-		public bool PodeUltrapassarOValorTotal { get; set; } = PodeUltrapassarOValorTotal;
-		public List<ModoDePagamento> Modos { get; set; } = Modos;
-	}
-	//
-	public class ModoDePagamento(string Modo, bool PossuiBandeira = false, List<string> Bandeiras = default!, bool PossuiParcelas = false, int Parcelas = 0, double Taxa = 0.0)
-	{
-		[BsonId]
-		[BsonRepresentation(BsonType.ObjectId)]
-		public string ID { get; set; } = null!;
-		/// <summary>
-		/// Nome do Modo de Pagamento (Usado Para a Biblioteca de Meios de Pagamento)
-		/// </summary>
-		public string Modo { get; set; } = Modo;
-		/// <summary>
-		/// Diz se esse modo de pagamento Possui Bandeira
-		/// </summary>
-		public bool PossuiBandeira { get; set; } = PossuiBandeira;
-		/// <summary>
-		/// Bandeira Representante do Modo de Pagamento (Usado em Cartões)
-		/// </summary>
-		public List<string> Bandeiras { get; set; } = Bandeiras;
-		/// <summary>
-		/// Indicador se Possui Parcelas
-		/// </summary>
-		public bool PossuiParcelas { get; set; } = PossuiParcelas;
-		/// <summary>
-		/// Quantidade de Parcelas do Modo de pagamento
-		/// </summary>
-		public int Parcelas { get; set; } = Parcelas;
-		/// <summary>
-		/// Taxa Adicional do Modo de Pagamento (Geralmente Cartão de Crédito faz isso).
-		/// </summary>
-		public double Taxa { get; set; } = Taxa;
-	}
+	// Os Objetos que estavam nesta posição foram removidos por falta de uso.
 	//
 	public class Fornecedor(string CNPJ, string NomeEmpresa, string Contato, string Email, Endereco Endereco)
 	{
@@ -533,7 +518,9 @@ namespace Labs.Main
 		/// Nomenclatura Comum do Mercosul - NCM do produto
 		/// </summary>
 		public string NCM { get; set; } = NCM;
-		//
+		/// <summary>
+		/// Código de Situação Tributária
+		/// </summary>
 		public string CST { get; set; } = CST;
 		//
 		/// <summary>

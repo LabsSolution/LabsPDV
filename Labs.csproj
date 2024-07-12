@@ -15,11 +15,14 @@
     <PackageReference Include="Auth0.OidcClient.WPF" Version="4.0.0" />
     <PackageReference Include="Dapper" Version="2.1.44" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.61" />
+    <PackageReference Include="Lucene.Net" Version="4.8.0-beta00016" />
+    <PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00016" />
+    <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00016" />
     <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="7.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="MongoDB.Driver" Version="2.25.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.27.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NSwag.ApiDescription.Client" Version="13.18.2">
       <PrivateAssets>all</PrivateAssets>
@@ -28,14 +31,13 @@
     <PackageReference Include="RestSharp" Version="111.2.0" />
     <PackageReference Include="SharpVectors" Version="1.8.4" />
     <PackageReference Include="Svg" Version="3.4.7" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
     <PackageReference Include="System.ServiceModel.Duplex" Version="6.0.*" />
     <PackageReference Include="System.ServiceModel.Federation" Version="6.0.*" />
     <PackageReference Include="System.ServiceModel.Http" Version="6.0.*" />
     <PackageReference Include="System.ServiceModel.NetNamedPipe" Version="6.0.*" />
     <PackageReference Include="System.ServiceModel.NetTcp" Version="6.0.*" />
     <PackageReference Include="System.ServiceModel.Security" Version="6.0.*" />
-    <PackageReference Include="Unimake.DFe" Version="20240705.1514.13" />
+    <PackageReference Include="Unimake.DFe" Version="20240710.1628.15" />
     <PackageReference Include="Unimake.Utils" Version="20240612.1842.1" />
   </ItemGroup>
 

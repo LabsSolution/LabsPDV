@@ -27,6 +27,8 @@ namespace Labs
     {
         //Referencia de Instancia
         public static LabsMainAppWPF App { get; private set; } = null!;
+        //
+        public static MotorDeBusca MotorDeBusca = new ();
         // Esses Campos são referentes as configurações gerais
         public static string NomeEmpresa { get; private set; } = "N/A";
         public static string EnderecoEmpresa { get; private set; } = "N/A";
@@ -56,6 +58,7 @@ namespace Labs
             LoadConfigs();
 			//
 			LabsMain.Timer.Tick += InternalTimer;
+            //
         }
         //
 		private void InternalTimer(object? sender, EventArgs e)
@@ -123,7 +126,7 @@ namespace Labs
 			if (!await VerifyDataBases()) { ModoSegurança = true; Modais.MostrarAviso("MODO DE SEGURANÇA HABILITADO!\nPara Sair Desse Modo, Os Conflitos Devem ser Resolvidos\ne Logo Após o Sistema Deve Ser Reiniciado!"); return; }
             DataBaseAndInternetChecker();
             // Desabilitado somente para debug
-			VerificacoesPreventivas();
+			//VerificacoesPreventivas();
 		}
 		//
 		static async void VerificacoesPreventivas()
@@ -157,21 +160,21 @@ namespace Labs
             //
             //if (ModoSegurança) { Modais.MostrarAviso("Sem Conexão Primária com o Banco de Dados!\nSe o problema persistir, entre em contato com o nosso suporte."); return; }
             //
-            //LabsNFe.ConsultaGTIN();
-            //LabsNFe.teste();
-            //for (int i = 0; i <= 8; i++)
-            //{
-                //var prod = new Produto("",1,1,UnidadesDeMedida.Unidade,null!,0,120,"",false,null!,"",$"{0}102","");
-                //LabsNFe.EmitirNotaFiscalDeConsumidorEletronica("Venda Teste",prod);
-            //}
+            MotorDeBusca.RealizarIndexacaoDosProdutos();
             
-            LabsMain.IniciarApp<LabsEstoqueWPF>(true,false,true);
+            //LabsMain.IniciarApp<LabsEstoqueWPF>(true,false,true);
         }
 
         private void OnLabsPDVClick(object sender, RoutedEventArgs e)
         {
             if (ModoSegurança) { Modais.MostrarAviso("Sem Conexão Primária com o Banco de Dados!\nSe o problema persistir, entre em contato com o nosso suporte."); return; }
-            LabsMain.IniciarApp<LabsPDVWPF>(true,false,true);
+            //LabsMain.IniciarApp<LabsPDVWPF>(true,false,true);
+            t();
+        }
+
+        private async void t()
+        {
+            await MotorDeBusca.ProcurarProduto("Notebo");
         }
 
         private void OnLabsConfigClick(object sender, RoutedEventArgs e)
