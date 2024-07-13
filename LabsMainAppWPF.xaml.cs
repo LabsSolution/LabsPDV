@@ -126,7 +126,7 @@ namespace Labs
 			if (!await VerifyDataBases()) { ModoSegurança = true; Modais.MostrarAviso("MODO DE SEGURANÇA HABILITADO!\nPara Sair Desse Modo, Os Conflitos Devem ser Resolvidos\ne Logo Após o Sistema Deve Ser Reiniciado!"); return; }
             DataBaseAndInternetChecker();
             // Desabilitado somente para debug
-			//VerificacoesPreventivas();
+			VerificacoesPreventivas();
 		}
 		//
 		static async void VerificacoesPreventivas()
@@ -162,19 +162,19 @@ namespace Labs
             //
             MotorDeBusca.RealizarIndexacaoDosProdutos();
             
-            //LabsMain.IniciarApp<LabsEstoqueWPF>(true,false,true);
+            LabsMain.IniciarApp<LabsEstoqueWPF>(true,false,true);
         }
 
         private void OnLabsPDVClick(object sender, RoutedEventArgs e)
         {
             if (ModoSegurança) { Modais.MostrarAviso("Sem Conexão Primária com o Banco de Dados!\nSe o problema persistir, entre em contato com o nosso suporte."); return; }
-            //LabsMain.IniciarApp<LabsPDVWPF>(true,false,true);
-            t();
+            LabsMain.IniciarApp<LabsPDVWPF>(true,false,true);
+            //t();
         }
 
         private async void t()
         {
-            await MotorDeBusca.ProcurarProduto("Notebo");
+            await MotorDeBusca.ProcurarProduto("bishito");
         }
 
         private void OnLabsConfigClick(object sender, RoutedEventArgs e)

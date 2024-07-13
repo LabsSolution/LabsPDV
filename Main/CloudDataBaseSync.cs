@@ -22,7 +22,13 @@ namespace Labs.Main
 
 			var localDatabase = CloudDataBase.GetLocalDataBase();
 			var cloudDatabase = CloudDataBase.GetCloudDataBase();
-			var collectionNames = await localDatabase.ListCollectionNames().ToListAsync();
+			//
+			List<string> collectionNames = null!; 
+			//
+			collectionNames = await localDatabase.ListCollectionNames().ToListAsync();
+			if (collectionNames.Count == 0 || collectionNames == null!) { collectionNames = await cloudDatabase.ListCollectionNames().ToListAsync(); }; 
+			if (collectionNames.Count == 0 || collectionNames == null!) { collectionNames = [Collections.Produtos]; }
+			//
 			JDC.ConfigBarraDeCarregamento(0, collectionNames.Count);
 			JDC.SetarValorBarra(0);
 			foreach (var collectionName in collectionNames)
@@ -50,19 +56,21 @@ namespace Labs.Main
 				}
 				//
 				// Sincronizar documentos da nuvem para o local
-				if(SyncFromCloud == false) { return; }
-				//
-				foreach (var document in cloudDocuments)
+				if(SyncFromCloud == true)
 				{
-					var filter = Builders<BsonDocument>.Filter.Eq("_id", document["_id"]);
-					var existingDocument = await localCollection.Find(filter).FirstOrDefaultAsync();
-					if (existingDocument == null)
+					//
+					foreach (var document in cloudDocuments)
 					{
-						await localCollection.InsertOneAsync(document);
-					}
-					else
-					{
-						await localCollection.ReplaceOneAsync(filter, document);
+						var filter = Builders<BsonDocument>.Filter.Eq("_id", document["_id"]);
+						var existingDocument = await localCollection.Find(filter).FirstOrDefaultAsync();
+						if (existingDocument == null)
+						{
+							await localCollection.InsertOneAsync(document);
+						}
+						else
+						{
+							await localCollection.ReplaceOneAsync(filter, document);
+						}
 					}
 				}
 				JDC.AumentarBarraDeCarregamento(1);

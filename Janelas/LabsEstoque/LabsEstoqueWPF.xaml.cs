@@ -217,50 +217,28 @@ namespace Labs.Janelas.LabsEstoque
 		#region Aba Estoque
 
 		// Métodos Estoque
-		private void AtualizarEstoqueVisual(string filter)
+		private async void AtualizarEstoqueVisual(string searchFilter)
 		{
 			//Aqui a gente retorna se não tiver nada até porque não faz sentido gastar processamento atoa
-			if (filter.IsNullOrEmpty() && ListaProdutosCadastrados.Items.Count == Produtos.Count) { return; }
+			if (searchFilter.IsNullOrEmpty() && ListaProdutosCadastrados.Items.Count == Produtos.Count) { return; }
 			//
 			ListaProdutosCadastrados.Items.Clear();
 			//
 			//
-			if (filter.IsNullOrEmpty()) { Produtos.ForEach(x => ListaProdutosCadastrados.Items.Add(x)); return; }
+			if (searchFilter.IsNullOrEmpty()) { Produtos.ForEach(x => ListaProdutosCadastrados.Items.Add(x)); return; }
+			//
 			else
 			{
+				var filteredIDs = await LabsMainAppWPF.MotorDeBusca.ProcurarProduto(searchFilter.Replace(" ",""));
 				if (ComboBox_Descricao.IsSelected)
 				{
 					//
 					Produtos.ForEach((x) =>
 					{
-						if (x.Descricao.Contains(filter, StringComparison.OrdinalIgnoreCase)) { ListaProdutosCadastrados.Items.Add(x); }
+						if (filteredIDs.Contains(x.ID)) { ListaProdutosCadastrados.Items.Add(x); }
 					});
 				}
-				//
-				if (ComboBox_Codigo.IsSelected)
-				{
-					Produtos.ForEach((x) =>
-					{
-						if (x.CodBarras.Contains(filter, StringComparison.OrdinalIgnoreCase)) { ListaProdutosCadastrados.Items.Add(x); }
-					});
-				}
-				//
-				if (ComboBox_ID.IsSelected)
-				{
-					Produtos.ForEach((x) =>
-					{
-						if (x.ID.Contains(filter, StringComparison.OrdinalIgnoreCase)) { ListaProdutosCadastrados.Items.Add(x); }
-					});
-				}
-				//
-				if (ComboBox_Preco.IsSelected)
-				{
-					Produtos.ForEach((x) =>
-					{
-						if (Utils.FormatarValor(x.Preco).Contains(filter, StringComparison.OrdinalIgnoreCase)) { ListaProdutosCadastrados.Items.Add(x); }
-					});
-				}
-				//
+				// Aqui teremos como pesquisar somente por Descriçao (Nome).
 			}
 			//
 		}
