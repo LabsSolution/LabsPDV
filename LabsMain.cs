@@ -37,16 +37,16 @@ namespace Labs
 		public static string LocalDataBaseConnectionURI = null!;
 		//
 		public static DispatcherTimer Timer = null!;
+		/// <summary>
+		/// Motor de Busca de Produtos do Sistema (Posteriormente vai ser adaptado paraa pesquisa de outros termos como Forncedores e etc..).
+		/// </summary>
+		public static MotorDeBusca MotorDeBusca { get; private set; } = new();
 		//
 		/// <summary>
 		/// Objeto de Controle Cliente Labs
 		/// </summary>
 		//Estamos iniciando aqui por conta de Desenvolvimento
 		public static Cliente Cliente { get; private set; } = new("0029310",true,true,true); // aqui testamos as configs
-        /// <summary>
-		/// Propriedade para verificar a conexão com a internet
-		/// </summary>
-		public static Task<PingReply> CheckInternet { get { return new Ping().SendPingAsync("www.google.com"); } }
 		//
 		public static void INIT()
 		{

@@ -229,16 +229,42 @@ namespace Labs.Janelas.LabsEstoque
 			//
 			else
 			{
-				var filteredIDs = await LabsMainAppWPF.MotorDeBusca.ProcurarProduto(searchFilter.Replace(" ",""));
 				if (ComboBox_Descricao.IsSelected)
 				{
+					var filteredIDs = await LabsMain.MotorDeBusca.ProcurarProduto("Descricao",searchFilter);
 					//
 					Produtos.ForEach((x) =>
 					{
 						if (filteredIDs.Contains(x.ID)) { ListaProdutosCadastrados.Items.Add(x); }
 					});
 				}
-				// Aqui teremos como pesquisar somente por Descriçao (Nome).
+				if (ComboBox_Fornecedor.IsSelected)
+				{
+					var filteredIDs = await LabsMain.MotorDeBusca.ProcurarProduto("Fornecedor",searchFilter);
+					//
+					Produtos.ForEach((x) =>
+					{
+						if (filteredIDs.Contains(x.ID)) { ListaProdutosCadastrados.Items.Add(x); }
+					});
+				}
+				if (ComboBox_PrecoMaiorQue.IsSelected)
+				{
+					if(!Utils.TryParseToDouble(searchFilter,out double valor)) { Modais.MostrarAviso("Insira um valor Válido!"); return; }
+					//
+					Produtos.ForEach((x) =>
+					{
+						if(x.Preco >= valor) { ListaProdutosCadastrados.Items.Add(x); }
+					});
+				}
+				if (ComboBox_PrecoMenorQue.IsSelected)
+				{
+					if (!Utils.TryParseToDouble(searchFilter, out double valor)) { Modais.MostrarAviso("Insira um valor Válido!"); return; }
+					//
+					Produtos.ForEach((x) =>
+					{
+						if (x.Preco <= valor) { ListaProdutosCadastrados.Items.Add(x); }
+					});
+				}
 			}
 			//
 		}

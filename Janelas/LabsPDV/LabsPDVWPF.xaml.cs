@@ -1,4 +1,5 @@
-﻿using Labs.Janelas.LabsPDV.Dependencias;
+﻿using Labs.Janelas.DependenciasGerais;
+using Labs.Janelas.LabsPDV.Dependencias;
 using Labs.Main;
 using MongoDB.Driver;
 using System;
@@ -445,5 +446,22 @@ namespace Labs.Janelas.LabsPDV
             if (EstaAberto) { FecharCaixa(); return; }
             if (!EstaAberto) { AbrirCaixa(); return; }
         }
-    }
+
+		private void PesquisaButton_Click(object sender, RoutedEventArgs e)
+		{
+            LabsMain.IniciarDependencia<PesquisaProdutos>(app =>
+            {
+                app.ListarProdutos();
+				app.OnProdutoSelect += ProdutoPesquisado;
+            });
+		}
+
+		private void ProdutoPesquisado(string CodBarras, PesquisaProdutos app)
+		{
+            CodBarrasInput.Text = CodBarras;
+            OnAddProduto();
+            //Desatrelamos o evento assim que a janela for encerrada
+            app.OnProdutoSelect -= ProdutoPesquisado;
+		}
+	}
 }
