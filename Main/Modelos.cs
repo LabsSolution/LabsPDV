@@ -317,7 +317,7 @@ namespace Labs.Main
 		public int PermLevel { get; set; } = PermLevel;
 	}
 	//Clientes
-	public class Cliente(string Auth0ID, bool ClienteLabs = false, bool AssinaturaAtiva = false, bool PossuiPlanoCloud = false)
+	public class ClienteLabs(string Auth0ID, bool PrimeiroLogin = false, bool AssinaturaAtiva = false, bool PossuiPlanoCloud = false)
 	{
 		/// <summary>
 		/// ID deste Objeto na Database
@@ -342,7 +342,7 @@ namespace Labs.Main
 		/// <summary>
 		/// Define se é o primeiro Login do Cliente no Sistema (False se Acabou de Registrar)
 		/// </summary>
-		public bool ClienteLabs { get; private set; } = ClienteLabs;
+		public bool PrimeiroLogin { get; private set; } = PrimeiroLogin;
 	}
 
 	public class CompraCliente(string DataDaCompra = null!, string HoraDaCompra = null!, List<Produto> ProdutosComprados = null!)
@@ -367,7 +367,7 @@ namespace Labs.Main
 		public List<Produto> ProdutosComprados { get; set; } = ProdutosComprados;
 	}
 
-	public class ClienteLoja(string Nome = null!, string CPF = null!, string CNPJ = null!, string Fone = null!, string DataUltimaCompra = null!, string HoraUltimaCompra = null!)
+	public class ClienteLoja(string Nome = null!, string CPF = null!, string CNPJ = null!, string Fone = null!,string Email = null!,List<CompraCliente> compras = null!, string DataUltimaCompra = null!, string HoraUltimaCompra = null!)
 	{
 		/// <summary>
 		/// ID Deste Objeto na Database
@@ -392,6 +392,14 @@ namespace Labs.Main
 		/// </summary>
 		public string Fone { get; set; } = Fone;
 		/// <summary>
+		/// Email do Cliente
+		/// </summary>
+		public string Email { get; set; } = Email;
+		/// <summary>
+		/// Objeto que lista todas as compras realizadas pelo cliente (com data, produtos comprados, etc)
+		/// </summary>
+		public List<CompraCliente> Compras { get; set; } = compras;
+		/// <summary>
 		/// Data da Ultima Compra, Formato Obrigatório (dd/MM/yyyy)
 		/// </summary>
 		public string DataUltimaCompra { get; set; } = DataUltimaCompra;
@@ -407,6 +415,7 @@ namespace Labs.Main
 		/// Retorna a Hora da Ultima Compra Formatada em HH/MM/SS
 		/// </summary>
 		public DateTime HoraUltimaCompraFormatada { get { return DateTime.ParseExact(HoraUltimaCompra,"HH:mm:ss",CultureInfo.InvariantCulture); } }
+		//
 	}
 
 	//

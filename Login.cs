@@ -79,7 +79,7 @@ namespace Labs
         /// Realiza o Login Do Cliente, Caso não exista retorna Nulo
         /// </summary>
         /// <returns>Objeto de Cliente</returns>
-        public async Task<Cliente> RealizarLoginCliente()
+        public async Task<ClienteLabs> RealizarLoginCliente()
         {
             LoginResult result = await Client.LoginAsync();
             if (result.IsError) { return null!; }
@@ -89,7 +89,7 @@ namespace Labs
             {
                 if(claim.Type == "sub")
                 {
-                    Cliente cliente = await CloudDataBase.GetClienteAsync(claim.Value);
+                    ClienteLabs cliente = await CloudDataBase.GetClienteAsync(claim.Value);
                     if(cliente == null) 
                     { 
                         cliente = new(claim.Value); 

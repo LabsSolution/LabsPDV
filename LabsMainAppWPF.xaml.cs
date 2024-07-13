@@ -1,4 +1,5 @@
 ﻿using Labs.Janelas.Configuracoes;
+using Labs.Janelas.LabsClientes;
 using Labs.Janelas.LabsEstoque;
 using Labs.Janelas.LabsEstoque.Dependencias;
 using Labs.Janelas.LabsPDV;
@@ -27,8 +28,6 @@ namespace Labs
     {
         //Referencia de Instancia
         public static LabsMainAppWPF App { get; private set; } = null!;
-        //
-        public static MotorDeBusca MotorDeBusca = new ();
         // Esses Campos são referentes as configurações gerais
         public static string NomeEmpresa { get; private set; } = "N/A";
         public static string EnderecoEmpresa { get; private set; } = "N/A";
@@ -38,7 +37,7 @@ namespace Labs
         /// <summary>
         /// Habilitado Somente Caso Algum Erro Crítico de Inicialização for Detectado
         /// </summary>
-        public static bool ModoSegurança { get; private set; } = false;
+        public static bool ModoSeguranca { get; private set; } = false;
         //
         public static bool IsDatabaseConnected { get; private set; }
         //
@@ -123,10 +122,10 @@ namespace Labs
         //
         private async void SetModoSeguranca()
         {
-			if (!await VerifyDataBases()) { ModoSegurança = true; Modais.MostrarAviso("MODO DE SEGURANÇA HABILITADO!\nPara Sair Desse Modo, Os Conflitos Devem ser Resolvidos\ne Logo Após o Sistema Deve Ser Reiniciado!"); return; }
+			if (!await VerifyDataBases()) { ModoSeguranca = true; Modais.MostrarAviso("MODO DE SEGURANÇA HABILITADO!\nPara Sair Desse Modo, Os Conflitos Devem ser Resolvidos\ne Logo Após o Sistema Deve Ser Reiniciado!"); return; }
             DataBaseAndInternetChecker();
             // Desabilitado somente para debug
-			VerificacoesPreventivas();
+			//VerificacoesPreventivas();
 		}
 		//
 		static async void VerificacoesPreventivas()
@@ -151,33 +150,33 @@ namespace Labs
             //Só queremos garantir que espelhamos os itens para a cloud
             await CloudDataBaseSync.SyncDatabase(JDC,true);
             await Task.Delay(3000);
-            await GerenciadorPDV.Terminate(JDC);
+            JDC.SetTextoFrontEnd("Indexando Produtos...");
+            LabsMain.MotorDeBusca.RealizarIndexacaoDosProdutos();
+            await Task.Delay(3000);
+			await GerenciadorPDV.Terminate(JDC);
         }
-        //
         //
         private void OnLabsEstoqueClick(object sender, RoutedEventArgs e)
         {
             //
-            //if (ModoSegurança) { Modais.MostrarAviso("Sem Conexão Primária com o Banco de Dados!\nSe o problema persistir, entre em contato com o nosso suporte."); return; }
+            if (ModoSeguranca) { Modais.MostrarAviso("Sem Conexão Primária com o Banco de Dados!\nSe o problema persistir, entre em contato com o nosso suporte."); return; }
             //
-            MotorDeBusca.RealizarIndexacaoDosProdutos();
-            
             LabsMain.IniciarApp<LabsEstoqueWPF>(true,false,true);
         }
-
+        //
         private void OnLabsPDVClick(object sender, RoutedEventArgs e)
         {
-            if (ModoSegurança) { Modais.MostrarAviso("Sem Conexão Primária com o Banco de Dados!\nSe o problema persistir, entre em contato com o nosso suporte."); return; }
+            if (ModoSeguranca) { Modais.MostrarAviso("Sem Conexão Primária com o Banco de Dados!\nSe o problema persistir, entre em contato com o nosso suporte."); return; }
             LabsMain.IniciarApp<LabsPDVWPF>(true,false,true);
-            //t();
         }
-
-        private async void t()
-        {
-            await MotorDeBusca.ProcurarProduto("bishito");
-        }
-
-        private void OnLabsConfigClick(object sender, RoutedEventArgs e)
+        //
+		private void LabsClientes_Click(object sender, RoutedEventArgs e)
+		{
+            if (ModoSeguranca) { Modais.MostrarAviso("Sem Conexão Primária com o Banco de Dados!\nSe o problema persistir, entre em contato com o nosso suporte."); return; }
+            LabsMain.IniciarApp<LabsClientesWPF>(true,false,true);
+		}
+        //
+		private void OnLabsConfigClick(object sender, RoutedEventArgs e)
         {
             LabsMain.IniciarApp<LabsConfigWPF>(true,false,false);
         }
@@ -187,6 +186,6 @@ namespace Labs
             this.Close();
             Labs.App.Current?.Shutdown();
         }
-        //
-    }
+		//
+	}
 }

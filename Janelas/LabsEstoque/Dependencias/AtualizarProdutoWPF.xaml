@@ -5,12 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Labs.Janelas.LabsEstoque.Dependencias"
         mc:Ignorable="d"
-        Title="AtualizarProdutoWPF" Name="Atualizar_Produto" Height="380" Width="600" WindowStyle="None" AllowsTransparency="True" Background="Transparent" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="AtualizarProdutoWPF" Name="Atualizar_Produto" Height="430" Width="600" WindowStyle="None" AllowsTransparency="True" Background="Transparent" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Border CornerRadius="20" Background="#202020">
         <Border Margin="10" CornerRadius="10" Background="#404040">
             <Grid Margin="5">
                 <!--Config Colunas/Linhas-->
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -48,14 +49,20 @@
                     <TextBox Name="EstoqueMinimoInputBox" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" FontSize="18" Style="{StaticResource RoundTextBox10px}" HorizontalAlignment="Stretch" Height="25"/>
                 </DockPanel>
 
+                <!--Dockpanel para Correção de Estoque-->
+                <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="1" Margin="0,5,0,5">
+                    <Label Content="Corrigir Estoque:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
+                    <TextBox Name="CorrigirEstoqueInputBox" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" FontSize="18" Style="{StaticResource RoundTextBox10px}" HorizontalAlignment="Stretch" Height="25"/>
+                </DockPanel>
+                
                 <!--Dockpanel para Fornecedor-->
-                <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,5,0,5">
+                <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,5,0,5">
                     <Label Content="Fornecedor:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
                     <ComboBox Name="FornecedorComboBox" HorizontalAlignment="Stretch" FontFamily="Segoe UI" FontSize="16" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Height="25"/>
                 </DockPanel>
 
                 <!--Rodapé (Botões)-->
-                <DockPanel Grid.Row="5" Grid.ColumnSpan="2" Margin="0,20,0,10" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                <DockPanel Grid.Row="6" Grid.ColumnSpan="2" Margin="0,20,0,10" HorizontalAlignment="Center" VerticalAlignment="Bottom">
                     <StackPanel Orientation="Horizontal">
                         <Button Margin="0,0,20,0" FontSize="15" Name="Atualizar" Click="AtualizarButton_Click" Content="Atualizar Produto" Background="LightGreen" Style="{StaticResource RoundButton10px}" Height="50" Width="150"/>
                         <Button Name="Sair" FontSize="15" Content="Sair" Click="SairButton_Click" Background="#F08080" Style="{StaticResource RoundButton10px}" Height="50" Width="150"/>

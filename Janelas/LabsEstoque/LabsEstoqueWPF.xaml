@@ -40,11 +40,11 @@
                                 <TextBlock TextWrapping="Wrap" TextAlignment="Center">Editar Produto Selecionado</TextBlock>
                             </Button>
                             <!--Remover Produto-->
-                            <Button x:Name="RemoverProdutoButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Atualizar Produto Selecionado" Click="RemoverProdutoButton_Click">
+                            <Button x:Name="RemoverProdutoButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Remover Produto Selecionado" Click="RemoverProdutoButton_Click">
                                 <TextBlock TextWrapping="Wrap" TextAlignment="Center">Remover Produto Selecionado</TextBlock>
                             </Button>
                             <!--Registrar Entrada-->
-                            <Button x:Name="RegistrarEntradaButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Atualizar Produto Selecionado" Click="RegistrarEntradaButton_Click">
+                            <Button x:Name="RegistrarEntradaButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Registrar Entrada de Produto" Click="RegistrarEntradaButton_Click">
                                 <TextBlock TextWrapping="Wrap" TextAlignment="Center">Realizar Entrada de Produtos</TextBlock>
                             </Button>
                         </StackPanel>
@@ -53,9 +53,9 @@
                             <Label Name="PesquisarProdutoLabel"  Content="Pesquisar Produto:" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f6f6f6" Width="Auto" Height="Auto" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                             <ComboBox HorizontalAlignment="Left" FontFamily="Segoe UI" FontWeight="Bold" FontSize="14" Margin="0,0,5,0" VerticalAlignment="Center" Height="Auto" Width="120">
                                 <ComboBoxItem Name="ComboBox_Descricao" IsSelected="True" Content="Descrição"/>
-                                <ComboBoxItem Name="ComboBox_Codigo" IsSelected="False" Content="Código"/>
-                                <ComboBoxItem Name="ComboBox_ID" IsSelected="False" Content="ID"/>
-                                <ComboBoxItem Name="ComboBox_Preco" IsSelected="False" Content="Preço"/>
+                                <ComboBoxItem Name="ComboBox_Fornecedor" IsSelected="False" Content="Fornecedor"/>
+                                <ComboBoxItem Name="ComboBox_PrecoMaiorQue" IsSelected="False" Content="Preço Maior Que"/>
+                                <ComboBoxItem Name="ComboBox_PrecoMenorQue" IsSelected="False" Content="Preço Menor Que"/>
                             </ComboBox>
                             <TextBox x:Name="CaixaDePesquisa" Style="{StaticResource RoundTextBox}" FontSize="20" VerticalAlignment="Stretch" KeyDown="OnSearchBarKeyDown" HorizontalAlignment="Stretch" Width="350" Height="Auto"/>
                             <Button x:Name="PesquisarButton" Style="{StaticResource RoundButton10px}" Content="Pesquisar" FontFamily="Segoe UI" FontSize="14" Background="#f6f6f6" FontWeight="Bold" Click="PesquisarButton_Click" MinWidth="70" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,0,0"/>
@@ -74,7 +74,7 @@
                         <ListView x:Name="ListaProdutosCadastrados" Grid.Row="2" ClipToBounds="True" ToolTip="Lista de Produtos" Margin="0,0,0,0" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}" Grid.ColumnSpan="2" Grid.RowSpan="2">
                             <ListView.View>
                                 <GridView AllowsColumnReorder="False">
-                                    <GridViewColumn Header="Descrição" DisplayMemberBinding="{Binding Descricao}" Width="200"/>
+                                    <GridViewColumn Header="Descrição" DisplayMemberBinding="{Binding Descricao}" Width="Auto"/>
                                     <GridViewColumn Header="Fornecedor" DisplayMemberBinding="{Binding Fornecedor.NomeEmpresa}" Width="200"/>
                                     <GridViewColumn Header="Unidade de Medida" DisplayMemberBinding="{Binding UnidadeDeMedida.Descricao}" Width="200"/>
                                     <GridViewColumn Header="Estoque" DisplayMemberBinding="{Binding Quantidade}" Width="100"/>
@@ -82,7 +82,7 @@
                                     <GridViewColumn Header="Custo Unitário" DisplayMemberBinding="{Binding CustoFormatado}" Width="100"/>
                                     <GridViewColumn Header="Preço de Venda" DisplayMemberBinding="{Binding PrecoFormatado}" Width="100"/>
                                     <GridViewColumn Header="Cód Barras" DisplayMemberBinding="{Binding CodBarras}" Width="150"/>
-                                    <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" Width="150"/>
+                                    <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" Width="Auto"/>
                                 </GridView>
                             </ListView.View>
                         </ListView>

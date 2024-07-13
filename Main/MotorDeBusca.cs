@@ -1,4 +1,5 @@
-﻿using Lucene.Net.Analysis.Standard;
+﻿using Amazon.SecurityToken.Model;
+using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.QueryParsers.Classic;
@@ -12,6 +13,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unimake.Business.DFe.Xml.ESocial;
 
 namespace Labs.Main
 {
@@ -29,8 +31,43 @@ namespace Labs.Main
 			var _directory = FSDirectory.Open(Dir);
 			_writer = new IndexWriter(_directory,config);
 		}
+		/// <summary>
+		/// Indexa o produto logo após ser salvo na database (é necessário por conta do ID)
+		/// </summary>
+		/// <param name="Produto">Produto que foi adicionado no banco de dados</param>
+		public async void IndexarNovoProduto(Produto Produto)
+		{
+			//Criamos um novo documento e adicionamos o produto
+			await Task.Delay(0);
+			//
+			string NomeFornecedor = null!;
+			if(Produto.Fornecedor != null) { NomeFornecedor = Produto.Fornecedor.NomeEmpresa; }
+			//
+			var doc = new Document
+			{
+				new StringField("ID",Produto.ID,Field.Store.YES),
+				new TextField("Descricao",Produto.Descricao,Field.Store.YES),
+				new TextField("Fornecedor",NomeFornecedor,Field.Store.YES),
+			};
+			_writer.AddDocument(doc);
+			_writer.Flush(triggerMerge: false, applyAllDeletes: false);
+			_writer.Commit();
+			//
+		}
 		//
-
+		/// <summary>
+		/// Rempove um produto da lista de indexação de busca (Método usado quando um produto é removido da lista do estoque)
+		/// </summary>
+		/// <param name="ID">ID do produto a ser removido (Produto.ID)</param>
+		public async void RemoverProdutoIndexado(string ID)
+		{
+			var term = new Term("ID",ID);
+			_writer.DeleteDocuments(term);
+			_writer.Flush(triggerMerge: false, applyAllDeletes: false);
+			_writer.Commit();
+			await Task.Delay(0);
+		}
+		//
 		/// <summary>
 		/// Esse processo é importantíssimo ser realizado a cada inicialização
 		/// </summary>
@@ -44,47 +81,70 @@ namespace Labs.Main
 				var term = new Term("ID",prod.ID);
 				_writer.DeleteDocuments(term);
 				//Aqui temos certeza que os documentos duplicados estão sendo removidos.
-
+				string nomeFornecedor = null!;
+				if(prod.Fornecedor != null) { nomeFornecedor = prod.Fornecedor.NomeEmpresa; }
 				var doc = new Document
 				{
 					new StringField("ID",prod.ID,Field.Store.YES),
-					new TextField("Descricao",prod.Descricao,Field.Store.YES)
+					new TextField("Descricao",prod.Descricao,Field.Store.YES),
+					new TextField("Fornecedor",nomeFornecedor,Field.Store.YES)
 				};
+				//
+				// Aqui criamos o objeto com o campo fornecedor podendo ser nulo, para facilitar nossa vida na indexação :D
+				//
 				_writer.AddDocument(doc);
 			}
 			_writer.Flush(triggerMerge: false, applyAllDeletes: false);
 			_writer.Commit();
-			var dir = FSDirectory.Open(Dir);
-			var reader = DirectoryReader.Open(dir);
 			//
-			//
-			Modais.MostrarInfo("Indexação Finalizada!");
 		}
 		/// <summary>
 		/// Mecanismo de Busca Melhorado para pesquisa de produtos
 		/// </summary>
 		/// <param name="Descricao"> Descrição do produto a ser buscado </param>
+		/// <param name="NameSpace"> Namespace de Busca, No caso Seria "Descricao ou Fornecedor" </param>
 		/// <returns> Retorna uma lista de ID's que coincidem com a busca do produto </returns>
-		public async Task<List<string>> ProcurarProduto(string Descricao)
+		public async Task<List<string>> ProcurarProduto(string NameSpace,string Descricao)
 		{
-			//Método Ássíncrono pois não queremos que uma função de busca trave nosso sistema :D
+			// Método assíncrono para não travar o sistema
 			var dir = FSDirectory.Open(Dir);
 			var reader = DirectoryReader.Open(dir);
 			var searcher = new IndexSearcher(reader);
+			//Parser
+			var parser = new QueryParser(version, NameSpace, _analyzer);
+			// Dividir a descrição em termos
+			var terms = Descricao.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 			//
-			var query = new FuzzyQuery(new Term("Descricao", Descricao));
-			var hits = searcher.Search(query, 10).ScoreDocs;
-			List<string> s = [];
+			// Construir a query baseando-se no NameSpace atribuido.
+			var booleanQuery = new BooleanQuery();
+			//
+			foreach (var term in terms)
+			{
+				var fuzzyQuery = new FuzzyQuery(new Term(NameSpace, term));
+				booleanQuery.Add(fuzzyQuery, Occur.SHOULD);
+
+				var phraseQuery = new PhraseQuery
+				{
+					new Term(NameSpace, term)
+				};
+				booleanQuery.Add(phraseQuery, Occur.SHOULD);
+			}
+			//
+			// Executar a busca
+			var hits = searcher.Search(booleanQuery, 10).ScoreDocs;
+			var resultado = new List<string>();
 			foreach (var hit in hits)
 			{
 				var foundDoc = searcher.Doc(hit.Doc);
-				s.Add(foundDoc.Get("ID"));
-				await Task.Delay(0);
+				resultado.Add(foundDoc.Get("ID"));
+				await Task.Delay(0); // Simulação de espera assíncrona
 			}
+
 			reader.Dispose();
 			dir.Dispose();
-			//
-			return s!; // Devolvemos com o indicador de nullidade por questões óbvias
+
+			// Retornar os resultados
+			return resultado!;
 		}
 	}
 }

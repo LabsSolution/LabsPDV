@@ -77,13 +77,14 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
             CodBarrasInputBox.Text = Produto.CodBarras;
             EstoqueMinimoInputBox.Text = $"{Produto.QuantidadeMin}";
         }
-        private async void AtualizarProduto(string Desc, int QTD,UnidadeDeMedida Uni, Fornecedor fornecedor, string CodBarras)
+        private async void AtualizarProduto(string Desc, int QTD,UnidadeDeMedida Uni, Fornecedor fornecedor, string CodBarras,int CorrecaoDeEstoque = 0)
         {
             Produto.Descricao = Desc;
             Produto.QuantidadeMin = QTD;
             Produto.UnidadeDeMedida = Uni;
             Produto.Fornecedor = fornecedor;
             Produto.CodBarras = CodBarras;
+			Produto.Quantidade = CorrecaoDeEstoque > 0 ? CorrecaoDeEstoque : Produto.Quantidade;
             //
             if (LabsMain.Cliente.PossuiPlanoCloud)
             {
@@ -100,16 +101,35 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
         {
             string Desc = DescricaoInputBox.Text;
             var isQTD = Utils.TryParseToInt(EstoqueMinimoInputBox.Text, out int QTD);
+			var isCorrEst = Utils.TryParseToInt(CorrigirEstoqueInputBox.Text, out int Corr);
             string CodBarras = CodBarrasInputBox.Text;
 			//Validação dos Campos
 			if (UnidadeDeMedidaComboBox.SelectedItem is not UnidadeDeMedida Uni) { Modais.MostrarAviso("Não é possível registrar um produto sem Unidade de Medida!"); return; }
 			if (FornecedorComboBox.SelectedItem is not Fornecedor fornecedor) { Modais.MostrarAviso("Você não selecionou um fornecedor para o produto."); return; }
 			//
+			if (!CorrigirEstoqueInputBox.Text.IsNullOrEmpty() && !isCorrEst) { Modais.MostrarAviso("Você deve inserir uma quantidade válida para a correção de estoque!"); return; }
 			if (Desc.IsNullOrEmpty()) { Modais.MostrarAviso("Não é possível Atualizar um produto sem nome!"); return; }
             if (!isQTD || QTD < 0) { Modais.MostrarAviso("Você deve inserir uma quantidade válida"); return; }
             if (!Utils.IsValidBarCode(CodBarras)) { Modais.MostrarAviso("Você deve inserir um código válido"); return; }
-            //Passou em todos os validadores?
-            AtualizarProduto(Desc, QTD,Uni,fornecedor,CodBarras);
+			//Passou em todos os validadores?
+			if (CorrigirEstoqueInputBox.Text.IsNullOrEmpty() && !isCorrEst)
+			{
+				AtualizarProduto(Desc, QTD,Uni,fornecedor,CodBarras);
+			}
+			else
+			{
+				Modais.MostrarAviso("Você Informou uma quantidade para correção de estoque!\nPor favor leia com atenção o próximo aviso!");
+				var r = Modais.MostrarPergunta("Uma Quantidade foi informada para a correção de estoque.\n" +
+					"Tenha ciência de que o uso desse campo não é recomendado para inserção de estoque!\n" +
+					"Para isso utilize o botão (Realizar Entrada de Produtos).\n\n" +
+					"O campo de correção de estoque é para ser usado APENAS e SOMENTE em caso de discrepância da quantidade de produtos entre o sistema e o estabelecimento.\n\n" +
+					"Tendo conhecimento das condições, Deseja prosseguir?");
+				if(r == MessageBoxResult.Yes)
+				{
+					AtualizarProduto(Desc,QTD,Uni,fornecedor,CodBarras,Corr);
+				}
+			}
+			//
         }
         //
         private void SairButton_Click(object sender, RoutedEventArgs e)

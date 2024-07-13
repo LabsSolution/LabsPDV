@@ -597,13 +597,13 @@ namespace Labs.Main
         /// </summary>
         /// <param name="Auth0ID">Auth0ID Requerido</param>
         /// <returns>Retorna Cliente, caso não exista retorna nulo</returns>
-        public static async Task<Cliente> GetClienteAsync(string Auth0ID)
+        public static async Task<ClienteLabs> GetClienteAsync(string Auth0ID)
         {
             try
             {
                 if (LabsMainAppWPF.IsConnectedToInternet)
                 {
-					var Clientes = ConnectToLabsMongoCloud<Cliente>(Collections.Clientes);
+					var Clientes = ConnectToLabsMongoCloud<ClienteLabs>(Collections.Clientes);
 					//
 					var results = await Clientes.FindAsync(x => x.Auth0ID == Auth0ID);
 					//
@@ -621,13 +621,13 @@ namespace Labs.Main
         /// Registra um Cliente No Banco de Dados da LABS
         /// </summary>
         /// <param name="cliente">Objeto de Cliente para Registro</param>
-        public static async Task RegisterClienteAsync(Cliente cliente)
+        public static async Task RegisterClienteAsync(ClienteLabs cliente)
         {
             try
             {
                 if (LabsMainAppWPF.IsConnectedToInternet)
                 {
-					var Clientes = ConnectToLabsMongoCloud<Cliente>(Collections.Clientes);
+					var Clientes = ConnectToLabsMongoCloud<ClienteLabs>(Collections.Clientes);
 					await Clientes.InsertOneAsync(cliente);
 				}
             }
@@ -640,15 +640,15 @@ namespace Labs.Main
         /// Atualiza um Cliente no Banco de Dados da LABS
         /// </summary>
         /// <param name="cliente">Objeto de cliente para ser atualizado</param>
-        public static async Task UpdateClienteAsync(Cliente cliente)
+        public static async Task UpdateClienteAsync(ClienteLabs cliente)
         {
             try
             {
                 if (LabsMainAppWPF.IsConnectedToInternet)
                 {
-					var Clientes = ConnectToLabsMongoCloud<Cliente>(Collections.Clientes);
+					var Clientes = ConnectToLabsMongoCloud<ClienteLabs>(Collections.Clientes);
 					//
-					var filter = Builders<Cliente>.Filter.Eq("DataBaseID", cliente.DataBaseID);
+					var filter = Builders<ClienteLabs>.Filter.Eq("DataBaseID", cliente.DataBaseID);
 					await Clientes.ReplaceOneAsync(filter, cliente, new ReplaceOptions { IsUpsert = true });
 				}
             }
@@ -659,13 +659,13 @@ namespace Labs.Main
 
         }
         //
-        public static async Task RemoverClienteAsync(Cliente cliente)
+        public static async Task RemoverClienteAsync(ClienteLabs cliente)
         {
             try
             {
                 if (LabsMainAppWPF.IsConnectedToInternet)
                 {
-					var Clientes = ConnectToMongoLocal<Cliente>(Collections.Clientes);
+					var Clientes = ConnectToMongoLocal<ClienteLabs>(Collections.Clientes);
 					await Clientes.DeleteOneAsync(c => c.DataBaseID == cliente.DataBaseID);
 				}
             }

@@ -88,7 +88,6 @@
 
   <ItemGroup>
     <Folder Include="Connected Services\" />
-    <Folder Include="Janelas\DependenciasGerais\" />
     <Folder Include="NFe\Autorizadas\" />
     <Folder Include="Recursos\Icones\" />
     <Folder Include="Resources\" />

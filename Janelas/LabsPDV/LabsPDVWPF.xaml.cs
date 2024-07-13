@@ -1,4 +1,5 @@
-﻿using Labs.Janelas.LabsPDV.Dependencias;
+﻿using Labs.Janelas.DependenciasGerais;
+using Labs.Janelas.LabsPDV.Dependencias;
 using Labs.Main;
 using MongoDB.Driver;
 using System;
@@ -343,6 +344,9 @@ namespace Labs.Janelas.LabsPDV
                 case Key.F4:
                     QuantidadeInput.Focus();
                     break;
+                case Key.F5:
+                    AbrirJanelaDePesquisa();
+                    break;
             }
         }
         //Chamado quando alguma tecla é pressionada na área de Quantidade
@@ -445,5 +449,28 @@ namespace Labs.Janelas.LabsPDV
             if (EstaAberto) { FecharCaixa(); return; }
             if (!EstaAberto) { AbrirCaixa(); return; }
         }
-    }
+
+        private void AbrirJanelaDePesquisa()
+        {
+			if (!EstaAberto) { Modais.MostrarAviso("Realize a abertura do caixa primeiro!"); return; }
+			LabsMain.IniciarDependencia<PesquisaProdutos>(app =>
+			{
+				app.ListarProdutos();
+				app.OnProdutoSelect += ProdutoPesquisado;
+			});
+		}
+
+		private void PesquisaButton_Click(object sender, RoutedEventArgs e)
+		{
+            AbrirJanelaDePesquisa();
+		}
+
+		private void ProdutoPesquisado(string CodBarras, PesquisaProdutos app)
+		{
+            CodBarrasInput.Text = CodBarras;
+            OnAddProduto();
+            //Desatrelamos o evento assim que a janela for encerrada
+            app.OnProdutoSelect -= ProdutoPesquisado;
+		}
+	}
 }

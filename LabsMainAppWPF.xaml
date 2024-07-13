@@ -17,6 +17,7 @@
         <Grid Margin="5,10,0,10" HorizontalAlignment="Stretch">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
@@ -25,10 +26,14 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <!-- Botoes de Cima -->
-            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0">
+            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
                 <Button x:Name="LabsEstoqueButton" Style="{StaticResource RoundButton20px}" Click="OnLabsEstoqueClick" Content="Estoque" Width="150" Height="80" FontSize="18" FontFamily="Segoe UI Black" FontWeight="Bold" Margin="10,0" Background="#FFFFFF">
                 </Button>
                 <Button x:Name="LabsPDVButton" Style="{StaticResource RoundButton20px}" Click="OnLabsPDVClick" Content="PDV" Width="150" Height="80" FontSize="18" FontFamily="Segoe UI Black" FontWeight="Bold" Margin="10,0" Background="#FFFFFF"/>
+            </StackPanel>
+            <!-- Botoes de Cima -->
+            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                <Button x:Name="LabsClientes" Style="{StaticResource RoundButton20px}" Click="LabsClientes_Click" Content="Clientes" Width="150" Height="80" FontSize="18" FontFamily="Segoe UI Black" FontWeight="Bold" Margin="10,0" Background="#FFFFFF"/>
             </StackPanel>
             <!-- Botoes de Baixo -->
             <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10,0">

@@ -86,7 +86,53 @@ namespace Labs.Janelas.LabsEstoque
 			}
 		}
 		//
-        private async void LoadFromDataBase()
+		private void AddProdutoToList(Produto produto)
+		{
+			var item = new ListViewItem { Content = produto };
+			//
+			double Threshold = (produto.QuantidadeMin * 0.5f) + produto.QuantidadeMin;
+			//
+			item.Foreground = Brushes.Black;
+			item.FontSize = 15;
+			item.FontFamily = new FontFamily("Segoe UI");
+			item.Selected += Item_Selected;
+			item.Unselected += Item_Unselected;
+			//
+			if (produto.Quantidade > Threshold) { item.Background = Brushes.LightGreen; produto.Status = "Ok"; }
+			if (produto.Quantidade <= Threshold) { item.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFF80")); produto.Status = "Chegando no Estoque Mínimo"; }
+			if (produto.Quantidade < produto.QuantidadeMin) { item.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#f08080")); produto.Status = "Produto em Baixa"; }
+			//
+			ListaProdutosCadastrados.Items.Add(item);
+		}
+		//
+		private void UpdateContent(ListViewItem item)
+		{
+			if(item.Content is not Produto produto) { return; }
+			double Threshold = (produto.QuantidadeMin * 0.5f) + produto.QuantidadeMin;
+			//
+			item.Foreground = Brushes.Black;
+			//
+			if (produto.Quantidade > Threshold) { item.Background = Brushes.LightGreen; produto.Status = "Ok"; }
+			if (produto.Quantidade <= Threshold) { item.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFF80")); produto.Status = "Chegando no Estoque Mínimo"; }
+			if (produto.Quantidade < produto.QuantidadeMin) { item.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#f08080")); produto.Status = "Produto em Baixa"; }
+		}
+		//
+		private void Item_Selected(object sender, RoutedEventArgs e)
+		{
+			if(sender is ListViewItem item)
+			{
+				item.Background = new SolidColorBrush(Color.FromArgb(150,40,40,255));
+			}
+		}
+		private void Item_Unselected(object sender, RoutedEventArgs e)
+		{
+			if(sender is ListViewItem item)
+			{
+				UpdateContent(item);
+			}
+		}
+		//
+		private async void LoadFromDataBase()
         {
             //Garantimos que todos os itens são limpos para evitar consumo de memória excessiva
             Produtos.Clear();
@@ -108,7 +154,8 @@ namespace Labs.Janelas.LabsEstoque
 			EntradaDeProdutos = await CloudDataBase.GetManyLocalAsync<EntradaDeProduto>(Collections.Entradas, _ => true);
 			//
 			//Adicionamos direto na lista visual já que os itens apresentados são os próprios produtos
-			foreach (Produto produto in Produtos) { ListaProdutosCadastrados.Items.Add(produto); }
+			// Aqui fazemos uma iteração básica para definir a cor de cada produto baseado na quantidade
+			foreach (var produto in Produtos) { AddProdutoToList(produto); }
 			//
 			foreach (Produto produto in ProdutosComDefeito) { ListaProdutosComDefeito.Items.Add(produto); }
             //
@@ -139,15 +186,15 @@ namespace Labs.Janelas.LabsEstoque
 			//
 			LabsMain.IniciarDependencia<CadastrarProdutoWPF>(app =>
 			{
-
 				app.Closed += UpdateByEvent;
 			}, true);
 		}
-
 		//
 		private void AtualizarProdutoButton_Click(object sender, RoutedEventArgs e)
 		{
-			if (ListaProdutosCadastrados.SelectedItem is not Produto produto) { Modais.MostrarAviso("Você deve selecionar o produto que deseja atualizar!"); return; }
+			if (ListaProdutosCadastrados.SelectedItem is not ListViewItem Itemproduto) { Modais.MostrarAviso("Você deve selecionar o produto que deseja atualizar!"); return; }
+			//
+			if(Itemproduto.Content is not Produto produto){ Modais.MostrarAviso("Algo deu errado ao chamar o editor"); return; }
 			//
 			LabsMain.IniciarDependencia<AtualizarProdutoWPF>(app =>
 			{
@@ -172,6 +219,8 @@ namespace Labs.Janelas.LabsEstoque
 				//
 				await CloudDataBase.RemoveLocalAsync<Produto>(Collections.Produtos, x => x.ID == produto.ID);
 				//
+				LabsMain.MotorDeBusca.RemoverProdutoIndexado(produto.ID);
+				//
 				Modais.MostrarInfo($"Produto: {produto.Descricao}\nRemovido com Sucesso!");
 				//
 				LoadFromDataBase();
@@ -180,7 +229,8 @@ namespace Labs.Janelas.LabsEstoque
 		//
 		private void RegistrarEntradaButton_Click(object sender, RoutedEventArgs e)
 		{
-			if(ListaProdutosCadastrados.SelectedItem is not Produto produto) { Modais.MostrarAviso("Você deve selecionar um produto!"); return; }
+			if(ListaProdutosCadastrados.SelectedItem is not ListViewItem ItemProduto) { Modais.MostrarAviso("Você deve selecionar um produto!"); return; }
+			if(ItemProduto.Content is not Produto produto) { Modais.MostrarAviso("Algo deu errado ao chamar a janela."); return; }
 			LabsMain.IniciarDependencia<RegistroDeEntradaWPF>(app =>
 			{
 				app.SetarProduto(produto);
@@ -225,20 +275,46 @@ namespace Labs.Janelas.LabsEstoque
 			ListaProdutosCadastrados.Items.Clear();
 			//
 			//
-			if (searchFilter.IsNullOrEmpty()) { Produtos.ForEach(x => ListaProdutosCadastrados.Items.Add(x)); return; }
+			if (searchFilter.IsNullOrEmpty()) { Produtos.ForEach(AddProdutoToList); return; }
 			//
 			else
 			{
-				var filteredIDs = await LabsMainAppWPF.MotorDeBusca.ProcurarProduto(searchFilter.Replace(" ",""));
 				if (ComboBox_Descricao.IsSelected)
 				{
+					var filteredIDs = await LabsMain.MotorDeBusca.ProcurarProduto("Descricao",searchFilter);
 					//
 					Produtos.ForEach((x) =>
 					{
-						if (filteredIDs.Contains(x.ID)) { ListaProdutosCadastrados.Items.Add(x); }
+						if (filteredIDs.Contains(x.ID)) { AddProdutoToList(x); }
 					});
 				}
-				// Aqui teremos como pesquisar somente por Descriçao (Nome).
+				if (ComboBox_Fornecedor.IsSelected)
+				{
+					var filteredIDs = await LabsMain.MotorDeBusca.ProcurarProduto("Fornecedor",searchFilter);
+					//
+					Produtos.ForEach((x) =>
+					{
+						if (filteredIDs.Contains(x.ID)) { AddProdutoToList(x); }
+					});
+				}
+				if (ComboBox_PrecoMaiorQue.IsSelected)
+				{
+					if(!Utils.TryParseToDouble(searchFilter,out double valor)) { Modais.MostrarAviso("Insira um valor Válido!"); return; }
+					//
+					Produtos.ForEach((x) =>
+					{
+						if(x.Preco >= valor) { AddProdutoToList(x); }
+					});
+				}
+				if (ComboBox_PrecoMenorQue.IsSelected)
+				{
+					if (!Utils.TryParseToDouble(searchFilter, out double valor)) { Modais.MostrarAviso("Insira um valor Válido!"); return; }
+					//
+					Produtos.ForEach((x) =>
+					{
+						if (x.Preco <= valor) { AddProdutoToList(x); }
+					});
+				}
 			}
 			//
 		}
@@ -252,7 +328,7 @@ namespace Labs.Janelas.LabsEstoque
 			//
 			if (ComboBox_EmBaixa.IsSelected)
 			{
-				Produtos.ForEach(x => { if (x.Quantidade <= x.QuantidadeMin) { ListaProdutosCadastrados.Items.Add(x); } });
+				Produtos.ForEach(x => { if (x.Quantidade <= x.QuantidadeMin) { AddProdutoToList(x); } });
 			}
 			//
 		}
