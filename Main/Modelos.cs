@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unimake.Business.DFe.Servicos;
 using Unimake.Business.DFe.Xml.GNRE;
 
 namespace Labs.Main
@@ -50,6 +51,45 @@ namespace Labs.Main
 		public string XmlNota { get; set; } = null!;
 	}
 	//
+	public class EnumeradorNotaFiscalHomologacao
+	{
+		[BsonId]
+		[BsonRepresentation(BsonType.ObjectId)]
+		public string ID { get; set; } = null!;
+		//
+		/// <summary>
+		/// Número de Notas Fiscais Eletônicas Emitidas
+		/// </summary>
+		public int NFe_Homo { get; set; } = 0;
+		/// <summary>
+		/// Número de Notas Fiscais Eletônicas de Consumidor Emitidas
+		/// </summary>
+		public int NFCe_Homo { get; set; } = 0;
+		/// <summary>
+		/// Número de Notas Fiscais de Serviço Eletônicas Emitidas
+		/// </summary>
+		public int NFSe_Homo { get; set; } = 0;
+	}
+	public class EnumeradorNotaFiscalProducao
+	{
+		[BsonId]
+		[BsonRepresentation(BsonType.ObjectId)]
+		public string ID { get; set; } = null!;
+		//
+		/// <summary>
+		/// Número de Notas Fiscais Eletônicas Emitidas
+		/// </summary>
+		public int NFe_Prod { get; set; } = 0;
+		/// <summary>
+		/// Número de Notas Fiscais Eletônicas de Consumidor Emitidas
+		/// </summary>
+		public int NFCe_Prod { get; set; } = 0;
+		/// <summary>
+		/// Número de Notas Fiscais de Serviço Eletônicas Emitidas
+		/// </summary>
+		public int NFSe_Prod { get; set; } = 0;
+	}
+	//
 	public class EntradaDeProduto(string DataDaCompra, Produto Produto, Fornecedor Fornecedor, int Quantidade, double CustoUnitario, double PrecoDeVenda, double ValorTotalDaCompra)
 	{
 		[BsonId]
@@ -77,6 +117,9 @@ namespace Labs.Main
 		public static string Devolucoes { get; } = "Devolucoes";
 		public static string EstadoCaixa { get; } = "EstadoCaixa";
 		public static string Fechamentos { get; } = "Fechamentos";
+		public static string EnumeradoresNFe { get; } = "EnumeradoresNFe";
+		public static string NotasFiscaisProducao { get; } = "NotasProducao";
+		public static string NotasFiscaisHomologacao { get; } = "NotasHomologacao";
 		public static string Vendas { get; } = "Vendas";
 		public static string Clientes { get; } = "Clientes";
 		public static string MeiosDePagamento { get; } = "MeiosDePagamento";
@@ -109,29 +152,6 @@ namespace Labs.Main
 		/// </summary>
 		public string Hora { get; set; } = Hora;
 	}
-	//
-	/// <summary>
-	/// Essa classe precisa ser instanciada como objeto para poder funcionar corretamente!
-	/// </summary>
-	public class MeiosPagamento
-	{
-		/// <summary>
-		/// ID Para Representação no banco de dados
-		/// </summary>
-		[BsonId]
-		[BsonRepresentation(BsonType.ObjectId)]
-		public string ID { get; set; } = null!;
-		//
-		/// <summary>
-		/// Lista contendo todos os Nomes de Meios de pagamento
-		/// </summary>
-		public List<Meio> Meios { get; private set; } = null!;
-		/// <summary>
-		/// Construtor Padrão
-		/// </summary>
-		public MeiosPagamento() { Meios = [new("DINHEIRO", true)]; }
-	}
-	//
 	//
 	public class ValorFechamento(string Nome, double ValorSistema, double ValorAferido)
 	{
@@ -250,25 +270,36 @@ namespace Labs.Main
 		/// </summary>
 		public PagamentoEfetuado[] PagamentosEfetuados { get; set; } = null!;
 	}
-	/// <summary>
-	/// Objeto de Referenciamento ao Meio de Pagamento
-	/// </summary>
-	/// <param name="NomeDoMeio">Nome do Meio de Pagamento</param>
-	/// <param name="SLDV">Sem Limite De Valor</param>
-	public class Meio(string NomeDoMeio, bool SLDV = false)
+	public class MeiosPagamentoNotaFiscal()
 	{
 		[BsonId]
 		[BsonRepresentation(BsonType.ObjectId)]
 		public string ID { get; set; } = null!;
 		//
+		public List<MeioPagamentoNotaFiscal> Meios = [ new MeioPagamentoNotaFiscal(MeioPagamento.Dinheiro, false, null!, true) ];
+	}
+	public class MeioPagamentoNotaFiscal(MeioPagamento Meio, bool AceitaParcelas = false, string NomeDoMeio = null!, bool SLDV = false)
+	{
 		/// <summary>
-		/// Nome do Meio de Pagamento
+		/// Identificador do Meio de Pagamento Escolhido
 		/// </summary>
-		public string Item1 { get; set; } = NomeDoMeio;
+		public MeioPagamento MeioPagamento { get; set; } = Meio;
 		/// <summary>
-		/// Indicador SLDV
+		/// Retorna o MeioPagamento em formato String (Nome)
 		/// </summary>
-		public bool Item2 { get; set; } = SLDV;
+		public string MeioPagamentoFormat { get { return NomeDoMeio.IsNullOrEmpty()? Enum.GetName(MeioPagamento)! : NomeDoMeio; } }
+		/// <summary>
+		/// Identificador se esse meio de pagamento aceita parcelas ou não
+		/// </summary>
+		public bool AceitaParcelas { get; set; } = AceitaParcelas;
+		/// <summary>
+		/// Descrição do Meio de pagamento se ele foi adicionado artificialmente (99-Outros)
+		/// </summary>
+		public string NomeDoMeio { get; set; } = NomeDoMeio;
+		/// <summary>
+		/// Sem Limite de Valor. (Indica se esse meio de pagamento pode ultrapassar o valor final da compra [Geralmente Dinheiro, já que é muito dificil não precisar fornecer troco])
+		/// </summary>
+		public bool SLDV { get; set; } = SLDV;
 	}
 	//----------------------------------------------------------------------------------------//
 	/// <summary>
@@ -345,7 +376,7 @@ namespace Labs.Main
 		public bool PrimeiroLogin { get; private set; } = PrimeiroLogin;
 	}
 
-	public class CompraCliente(string DataDaCompra = null!, string HoraDaCompra = null!, List<Produto> ProdutosComprados = null!)
+	public class CompraCliente(string IDVenda = null!,string DataDaCompra = null!, string HoraDaCompra = null!,double TotalDaCompra = 0,double TotalPago = 0,double Troco = 0,int Parcelas = 1,List<Produto> ProdutosComprados = null!)
 	{
 		/// <summary>
 		/// ID Deste Objeto na Database
@@ -354,6 +385,10 @@ namespace Labs.Main
 		[BsonRepresentation(BsonType.ObjectId)]
 		public string ID { get; set; } = null!;
 		/// <summary>
+		/// ID Da Venda referente a esta compra.
+		/// </summary>
+		public string IDVenda { get; set; } = IDVenda;
+		/// <summary>
 		/// Data da Compra, Formato Obrigatório (dd/MM/yyyy)
 		/// </summary>
 		public string DataDaCompra { get; set; } = DataDaCompra;
@@ -361,6 +396,19 @@ namespace Labs.Main
 		/// Hora da Compra, Formato Obrigatório (HH:mm:ss) 
 		/// </summary>
 		public string HoraDaCompra { get; set; } = HoraDaCompra;
+		/// <summary>
+		/// Total cobrado pela compra
+		/// </summary>
+		public double TotalDaCompra { get; set; } = TotalDaCompra;
+		/// <summary>
+		/// Total Pago pelo cliente nessa compra
+		/// </summary>
+		public double TotalPago { get; set; } = TotalPago;
+		/// <summary>
+		/// Total de troco nessa compra
+		/// </summary>
+		public double Troco { get; set; } = Troco;
+		public PagamentoEfetuado[] PagamentosEfetuados { get; set; } = null!;
 		/// <summary>
 		/// Lista de Produtos Comprados Pelo Cliente
 		/// </summary>
@@ -408,24 +456,23 @@ namespace Labs.Main
 		/// </summary>
 		public string HoraUltimaCompra { get; set; } = HoraUltimaCompra;
 		/// <summary>
-		/// Retorna a Data da Ultima compra Formatada em DD/MM/YYYY.
+		/// Status do cliente da loja (Ativo, não ativo.. etc)
 		/// </summary>
-		public DateTime DataUltimaCompraFormatada { get { return DateTime.ParseExact(DataUltimaCompra,"dd/MM/yyyy",CultureInfo.InvariantCulture); } }
-		/// <summary>
-		/// Retorna a Hora da Ultima Compra Formatada em HH/MM/SS
-		/// </summary>
-		public DateTime HoraUltimaCompraFormatada { get { return DateTime.ParseExact(HoraUltimaCompra,"HH:mm:ss",CultureInfo.InvariantCulture); } }
-		//
+		public string Status { get; set; } = null!;
 	}
 
 	//
 	//MODELOS DE Objetos (Classes)
-	public class PagamentoEfetuado(int ID, string DescPagamento, double Valor, double ValorTroco)
+	public class PagamentoEfetuado(int ID, int EnumID, string DescPagamento, double Valor, double ValorTroco)
 	{
 		/// <summary>
 		/// Identificador do RegistroInterno
 		/// </summary>
 		public int ID { get; private set; } = ID;
+		/// <summary>
+		/// Identificador do Enumerador do Pagamento Efetuado
+		/// </summary>
+		public int EnumID { get; private set; } = EnumID;
 		/// <summary>
 		/// Descrição do pagamento efetuado
 		/// </summary>
@@ -434,7 +481,22 @@ namespace Labs.Main
 		/// Valor do pagamento efetuado
 		/// </summary>
 		public double Valor { get; private set; } = Valor;
+		/// <summary>
+		/// Valor de Troco do pagamento efetuado
+		/// </summary>
 		public double ValorTroco { get; private set; } = ValorTroco;
+		/// <summary>
+		/// Define em quantas vezes foi parcelado esse pagamento
+		/// </summary>
+		public int Parcelas { get; set; } = 1;
+		/// <summary>
+		/// Define o valor de cada parcela (Aprox)
+		/// </summary>
+		public double ValorParcela { get; set; } = 0;
+		/// <summary>
+		/// Retorna o Numero de parcelas em ( Nx )
+		/// </summary>
+		public string ParcelasFormat { get { return $"{Parcelas}x"; } }
 	}
 	//
 	// Os Objetos que estavam nesta posição foram removidos por falta de uso.
@@ -477,7 +539,34 @@ namespace Labs.Main
 		public string EnderecoFormatado { get { return $"{Endereco.Logradouro}, {Endereco.Bairro}, {Endereco.Localidade}-{Endereco.Uf}"; } }
 	}
 	//
-	public class Produto(string Descricao = null!, int Quantidade = 0, int QuantidadeMin = 0, UnidadeDeMedida UnidadeDeMedida = null!, Fornecedor Fornecedor = null!, double Custo = 0, double Preco = 0,string CodBarras = null!,bool ComDefeito = false, string Status = null!, string NCM = null!, string CST = null!,string CodInterno = null!)
+	public class Produto(string Descricao = null!, 
+	int Quantidade = 0, 
+	int QuantidadeMin = 0, 
+	UnidadeDeMedida UnidadeDeMedida = null!, 
+	Fornecedor Fornecedor = null!, 
+	double Custo = 0, 
+	double Preco = 0,
+	string CodBarras = null!,
+	bool ComDefeito = false, 
+	string Status = null!,
+	//Campos Necessários para a nota fiscal (Alguns são Opcionais)
+	string NCM = null!, 
+	string CST = null!,
+	string CodInterno = null!,
+	string CFOP = null!,
+	string CBENEF = null!,
+	double VICMSDESON = 0,
+	double PICMS = 0,
+	double PICMSST = 0,
+	double PMVAST = 0,
+	double PFCP = 0,
+	double PredBCST = 0,
+	double PredBC = 0,
+	double PICMSDIF = 0,
+	double PCredSN = 0,
+	int BaseDeCalculoICMS = 0,
+	int BaseDeCalculoICMSST = 0,
+	int MotivoDesoneracaoICMS = 0)
 	{
 		//Identificador na database
 		[BsonId]
@@ -531,6 +620,62 @@ namespace Labs.Main
 		/// Código de Situação Tributária
 		/// </summary>
 		public string CST { get; set; } = CST;
+		/// <summary>
+		/// Código CFOP da Natureza de Operação de Venda Referente a Este produto.
+		/// </summary>
+		public string CFOP { get; set; } = CFOP;
+		/// <summary>
+		/// Código de Benefício Tributário do Produto.
+		/// </summary>
+		public string CBENEF { get; set; } = CBENEF;
+		/// <summary>
+		/// Valor do ICMS Desonerado
+		/// </summary>
+		public double VICMSDESON { get; set; } = VICMSDESON;
+		/// <summary>
+		/// Porcentagem da Aliquota do ICMS
+		/// </summary>
+		public double PICMS { get; set;} = PICMS;
+		/// <summary>
+		/// Porcentagem da Aliquota do ICMS ST.
+		/// </summary>
+		public double PICMSST { get; set; } = PICMSST;
+		/// <summary>
+		/// Porcentagem da Aliquota da Margem de Lucro de Valor Agregado ST.
+		/// </summary>
+		public double PMVAST { get; set; } = PMVAST;
+		/// <summary>
+		/// Porcentagem da Aliquota do Fundo Contra Pobreza.
+		/// </summary>
+		public double PFCP { get; set; } = PFCP;
+		/// <summary>
+		/// Porcentagem da Redução da Base de Cálculo ST.
+		/// </summary>
+		public double PRedBCST { get; set; } = PredBCST;
+		/// <summary>
+		/// Porcentagem da Redução da Base de Cálculo.
+		/// </summary>
+		public double PRedBC { get; set; } = PredBC;
+		/// <summary>
+		/// Porcentagem de Diferimento do ICMS.
+		/// </summary>
+		public double PICMSDIF { get; set; } = PICMSDIF;
+		/// <summary>
+		/// Porcentagem de Crédito do Simples Nacional (Exclusivo SN).
+		/// </summary>
+		public double PCredSN { get; set; } = PCredSN;
+		/// <summary>
+		/// Identificador da Base de Cálculo do ICMS.
+		/// </summary>
+		public int BaseDeCalculoICMS { get; set; } = BaseDeCalculoICMS;
+		/// <summary>
+		/// Identificador da Base de Cálculo do ICMS ST
+		/// </summary>
+		public int BaseDeCalculoICMSST { get; set; } = BaseDeCalculoICMSST;
+		/// <summary>
+		/// Identificador do Motivo de Desoneração do ICMS
+		/// </summary>
+		public int MotivoDesoneracaoICMS { get; set; } = MotivoDesoneracaoICMS;
 		//
 		/// <summary>
 		/// Código de Identificação Interna do produto (Não é Código GTIN)

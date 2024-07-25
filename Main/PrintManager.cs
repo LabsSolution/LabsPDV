@@ -26,6 +26,7 @@ namespace Labs.Main
         //Holders
         //Para a impressão de Cupons ( e depois emissão de nota fiscal )
         VendaRealizada Venda = null!;
+        ClienteLoja Cliente = null!;
         FechamentoDeCaixa Fechamento = null!;
         //
         int LarguraPapel = 210; // largura em mm (usado como limitador) (Por algum motivo o segundo valor é o que vale) (o porque eu não sei)
@@ -65,12 +66,13 @@ namespace Labs.Main
             Print();
         }
         //
-        public void ImprimirCupomNaoFiscalCliente(string Impressora,VendaRealizada Venda)
+        public void ImprimirCupomNaoFiscalCliente(string Impressora,VendaRealizada Venda,ClienteLoja Cliente)
         {
             if (!PrinterExists(Impressora)) { return; }
             //Realizamos as configs iniciais
             PrinterSettings.PrinterName = Impressora;
             this.Venda = Venda;
+            this.Cliente = Cliente;
             //Começamos o processo de Print
             PrintPage += ICNFCliente;
             EndPrint += OnEndPrinting;
@@ -225,6 +227,19 @@ namespace Labs.Main
             yPos += 15;
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             yPos += 30;
+            //
+            if(Cliente != null)
+            {
+                graphics.DrawLine(Pens.Black,0,yPos,LarguraPapel,yPos);
+                graphics.DrawString("CLIENTE",Regular,Brushes.Black,0,yPos);
+                yPos += 15;
+                graphics.DrawString($"Nome: {Cliente.Nome}", RegularItens, Brushes.Black, 0, yPos);
+                yPos += 15;
+                graphics.DrawString($"CPF: {Cliente.CPF}",RegularItens,Brushes.Black,0,yPos);
+                yPos += 15;
+                graphics.DrawLine(Pens.Black,0,yPos,LarguraPapel,yPos);
+                yPos += 30;
+            }
             //
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             graphics.DrawString($"PEDIDO / VENDA: {Venda.IDVenda}", RegularPedido, Brushes.Black, 0, yPos);

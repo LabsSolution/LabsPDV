@@ -1,0 +1,53 @@
+﻿<Window x:Class="Labs.Janelas.LabsClientes.Dependencias.AtualizarClienteWPF"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Labs.Janelas.LabsClientes.Dependencias"
+        mc:Ignorable="d"
+        Title="AtualizarClienteWPF" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize" Background="Transparent" AllowsTransparency="True" Height="450" Width="500">
+    <Border Background="#202020" CornerRadius="20">
+        <Border Margin="10" Background="#505050" CornerRadius="10">
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <!--Container Pai-->
+                <StackPanel>
+                    <!--Campo Nome-->
+                    <StackPanel Margin="5">
+                        <Label Content="Nome: " FontSize="18" FontFamily="Segoe UI Black" Foreground="#f0f0f0"/>
+                        <TextBox x:Name="NomeInputBox" VerticalContentAlignment="Center" Style="{StaticResource RoundTextBox10px}" FontSize="18"/>
+                    </StackPanel>
+                    <!--Campo CPF-->
+                    <StackPanel Margin="5">
+                        <Label Content="CPF: " FontSize="18" FontFamily="Segoe UI Black" Foreground="#f0f0f0"/>
+                        <TextBox x:Name="CPFInputBox" VerticalContentAlignment="Center" Style="{StaticResource RoundTextBox10px}" FontSize="18"/>
+                    </StackPanel>
+                    <!--Campo CNPJ-->
+                    <StackPanel Margin="5">
+                        <Label Content="CNPJ: " FontSize="18" FontFamily="Segoe UI Black" Foreground="#f0f0f0"/>
+                        <TextBox x:Name="CNPJInputBox" VerticalContentAlignment="Center" Style="{StaticResource RoundTextBox10px}" FontSize="18"/>
+                    </StackPanel>
+                    <!--Campo FONE-->
+                    <StackPanel Margin="5">
+                        <Label Content="Telefone: " FontSize="18" FontFamily="Segoe UI Black" Foreground="#f0f0f0"/>
+                        <TextBox x:Name="TelefoneInputBox" VerticalContentAlignment="Center" Style="{StaticResource RoundTextBox10px}" FontSize="18"/>
+                    </StackPanel>
+                    <!--Campo Email-->
+                    <StackPanel Margin="5">
+                        <Label Content="E-Mail: " FontSize="18" FontFamily="Segoe UI Black" Foreground="#f0f0f0"/>
+                        <TextBox x:Name="EmailInputBox" VerticalContentAlignment="Center" Style="{StaticResource RoundTextBox10px}" FontSize="18"/>
+                    </StackPanel>
+                </StackPanel>
+                <!--Botões Rodapé-->
+                <StackPanel Grid.Row="2" Margin="0,20,0,0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                    <Button FontSize="16" Name="AtualizarClienteButton" Width="150" Height="50" Background="#80FF80" VerticalAlignment = "Bottom" Style="{StaticResource RoundButton15px}" Margin="0,10,0,0" HorizontalAlignment="Left" Content="Atualizar Cliente" Click="AtualizarClienteButton_Click"/>
+                    <Button FontSize="16" Name="SairButton" Width="150" Height="50" Background="#F08080" VerticalAlignment = "Bottom" Style="{StaticResource RoundButton15px}" Margin="10,10,0,0"  HorizontalAlignment="Right" Content="Sair" Click="SairButton_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Border>
+</Window>

@@ -1,5 +1,8 @@
-﻿using Labs.Janelas.LabsEstoque;
+﻿using Labs.Janelas.DependenciasGerais;
+using Labs.Janelas.LabsEstoque;
 using Labs.Main;
+using Labs.Main.ReceitaFederal;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Unimake.Business.DFe.Servicos;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
 namespace Labs.Janelas.LabsPDV.Dependencias
@@ -27,9 +31,13 @@ namespace Labs.Janelas.LabsPDV.Dependencias
         public event PagamentoFinalizado OnPagamentoFinalizado = null!;
         //
         //
-        MeiosPagamento MeiosPagamento { get; set; } = null!;
+        MeiosPagamentoNotaFiscal MeiosPagamento { get; set; } = null!;
         //
         List<PagamentoEfetuado> PagamentosEfetuados { get; set; } = new();
+        //
+        CompraCliente CompraCliente { get; set; } = new();
+        //
+        ClienteLoja ClienteLoja { get; set; } = null!;
         //
         List<Produto> Produtos { get; set; } = new();
         //
@@ -59,7 +67,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                 MeioDePagamentoComboBox.Items.Clear();
                 foreach (var Meio in MeiosPagamento.Meios)
                 {
-                    MeioDePagamentoComboBox.Items.Add(Meio.Item1);
+                    MeioDePagamentoComboBox.Items.Add(Meio.MeioPagamentoFormat);
                 }
             }
         }
@@ -120,6 +128,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
             this.ValorTotal = ValorTotal;
             this.LabsPDV = LabsPDV;
             Produtos.ForEach(this.Produtos.Add);
+            CompraCliente.ProdutosComprados = this.Produtos;
             //
             DescontoBox.Text = "0";
             //
@@ -134,16 +143,18 @@ namespace Labs.Janelas.LabsPDV.Dependencias
         async void Finalizar()
         {
             //Previne que a venda seja finalizada sem receber o valor total do pagamento.
-            //
             if (FaltaReceber > 0) { Modais.MostrarInfo($"Ainda Falta Receber R$: {FaltaReceber} !"); return; }
             // Adiciona o valor Recebido ao meio correspondente
             if (LabsPDV != null)
             {
+                int Parcelas = 0;
                 foreach (var pagEfet in PagamentosEfetuados)
                 {
                     var index = pagEfet.ID;
                     double valorR = Math.Round(pagEfet.Valor - pagEfet.ValorTroco,2);
                     // ValorR é o cálculo de quanto foi recebido de fato através desse pagamento (para evitar problemas na contabilidade final do caixa)
+                    //
+                    Parcelas += pagEfet.Parcelas;
                     LabsPDV.CaixaLabs.AdicionarCapitalAoMeio(index, valorR);
                 }
                 //
@@ -160,29 +171,66 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                     TotalComDesconto = ValorTotalComDesconto,
                     ValorPago = ValorTotalRecebido,
                     Troco = ValorTroco,
-                    PagamentosEfetuados = [.. PagamentosEfetuados],//Repassa pra array
+                    PagamentosEfetuados = [.. PagamentosEfetuados], //Repassa pra array
                     IDVenda = IDVenda
                 };
                 await CloudDataBase.RegisterLocalAsync(Collections.Vendas, venda);
-                //
-                // Aqui faz a impressão do cupom fiscal (ou não fiscal)
-                using (var PM = new PrintManager())
+                //Aqui cuidamos da parte de compras do cliente
+                if(ClienteLoja != null)
                 {
-                    MessageBoxResult re = Modais.MostrarPergunta("Imprimir Via do Estabelecimento?");
-                    if(re == MessageBoxResult.Yes)
+                    var data = $"{DateTime.Now:dd/MM/yyyy}";
+                    var hora = $"{DateTime.Now:HH:mm:ss}";
+                    CompraCliente.IDVenda = IDVenda;
+					CompraCliente.DataDaCompra = data;
+                    CompraCliente.HoraDaCompra = hora;
+                    CompraCliente.TotalDaCompra = ValorTotalComDesconto;
+                    CompraCliente.TotalPago = ValorTotalRecebido;
+                    CompraCliente.Troco = ValorTroco;
+                    CompraCliente.PagamentosEfetuados = [..PagamentosEfetuados]; // Repassa pra array
+                    //
+                    ClienteLoja.Compras.Add(CompraCliente);
+                    //
+                    ClienteLoja.DataUltimaCompra = data;
+                    ClienteLoja.HoraUltimaCompra = hora;
+                    //
+                    if(LabsMain.Cliente.PossuiPlanoCloud && LabsMainAppWPF.IsConnectedToInternet)
                     {
-                        PM.ImprimirCupomNaoFiscalLoja(LabsMainAppWPF.ImpressoraTermica, venda);
+                        await CloudDataBase.RegisterCloudAsync(Collections.Clientes, ClienteLoja, Builders<ClienteLoja>.Filter.Eq("ID", ClienteLoja.ID));
                     }
-                    //
-                    //
-                    MessageBoxResult r = Modais.MostrarPergunta("Imprimir Via do Cliente?");
-                    if (r == MessageBoxResult.Yes)
+                    await CloudDataBase.RegisterLocalAsync(Collections.Clientes, ClienteLoja, Builders<ClienteLoja>.Filter.Eq("ID", ClienteLoja.ID));
+                }
+                // Aqui faz a impressão do cupom fiscal (ou não fiscal)
+                var res = Modais.MostrarPergunta("Imprimir via do Cliente?");
+                if(res == MessageBoxResult.Yes)
+                {
+                    if(Parcelas > 1)
                     {
-                        PM.ImprimirCupomNaoFiscalCliente(LabsMainAppWPF.ImpressoraTermica, venda);
+                        await LabsNFe.EmitirNotaFiscalDeConsumidorEletronicaAsync("VENDA TESTE DO ESTABELECIMENTO",IDVenda,this.ValorTroco,true,Produtos,this.PagamentosEfetuados,TipoAmbiente.Homologacao);
+                        //Faz a emissão da notinha auxiliar de Parcelamento
+                    }
+                    else
+                    {
+                        await LabsNFe.EmitirNotaFiscalDeConsumidorEletronicaAsync("VENDA TESTE DO ESTABELECIMENTO",IDVenda,this.ValorTroco,false,Produtos,this.PagamentosEfetuados,TipoAmbiente.Homologacao);
                     }
                 }
-                // Sinaliza que a venda foi finalizada com sucesso
                 //
+                //using (var PM = new PrintManager())
+                //{
+                //    MessageBoxResult re = Modais.MostrarPergunta("Imprimir Via do Estabelecimento?");
+                //    if(re == MessageBoxResult.Yes)
+                //    {
+                //        PM.ImprimirCupomNaoFiscalLoja(LabsMainAppWPF.ImpressoraTermica, venda);
+                //    }
+                //    //
+                //    MessageBoxResult r = Modais.MostrarPergunta("Imprimir Via do Cliente?");
+                //    if (r == MessageBoxResult.Yes)
+                //    {
+                //        //Aqui Geramos a nota fiscal (Passado para DANFE).
+                //        //PM.ImprimirCupomNaoFiscalCliente(LabsMainAppWPF.ImpressoraTermica, venda, ClienteLoja!);
+                //        //
+                //    }
+                //}
+                // Sinaliza que a venda foi finalizada com sucesso
                 await LabsEstoqueWPF.AbaterProdutosEmEstoqueAsync(Produtos);
                 Modais.MostrarInfo("Venda Finalizada com Sucesso!");
                 OnPagamentoFinalizado?.Invoke(this);
@@ -224,12 +272,17 @@ namespace Labs.Janelas.LabsPDV.Dependencias
         void AdicionarPagamento()
         {
             if (MeioDePagamentoComboBox.Items.Count < 1) { Modais.MostrarErro("Nenhum Meio de Pagamento Registrado!"); return; }
-            if (MeioDePagamentoComboBox.Text.IsNullOrEmpty()) { Modais.MostrarAviso("Selecione um Meio de Pagamento!"); return; }
-            //
-            string valorSTR = PagamentoBoxInput.Text;
+            if (MeioDePagamentoComboBox.SelectedIndex == -1) { Modais.MostrarAviso("Selecione um Meio de Pagamento!"); return; }
+			//
+			//Previne erros nas parcelas
+			if (ParcelasInputBox.Text.IsNullOrEmpty()) { ParcelasInputBox.Text = "1"; } // Por padrão definimos para uma unica parcela
+			if (!Utils.TryParseToInt(ParcelasInputBox.Text, out int Parcelas)) { Modais.MostrarInfo("Um valor incorreto foi informado no campo ( Parcelas )!"); return; }
+			//
+			string valorSTR = PagamentoBoxInput.Text;
             string descSTR = DescontoBox.Text;
-            bool SLDV = MeiosPagamento.Meios[MeioDePagamentoComboBox.SelectedIndex].Item2; // Item2 é SLDV
-                                                                                           //
+            bool SLDV = MeiosPagamento.Meios[MeioDePagamentoComboBox.SelectedIndex].SLDV;
+            int EnumID = (int)MeiosPagamento.Meios[MeioDePagamentoComboBox.SelectedIndex].MeioPagamento;
+            //                                                                           
             if (FaltaReceber > 0)
             {
                 //
@@ -242,7 +295,9 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                 //
                 RealizarCalculos(valorPag, getPorcentagem());
                 // é importante que o pagamento efetuado e a lista de pagamento sejam atualizados juntos para manter o mesmo index
-                PagamentoEfetuado pagEfet = new(MeioDePagamentoComboBox.SelectedIndex, MeioDePagamentoComboBox.Text, Math.Round(valorPag, 2),ValorTroco);
+                PagamentoEfetuado pagEfet = new(MeioDePagamentoComboBox.SelectedIndex,EnumID,MeioDePagamentoComboBox.Text, Math.Round(valorPag, 2),ValorTroco);
+                pagEfet.Parcelas = Parcelas;
+                pagEfet.ValorParcela = Math.Round(valorPag/Parcelas,2);
                 PagamentosEfetuados.Add(pagEfet);
                 //
                 ListaPagamentosEfetuados.Items.Add(pagEfet);
@@ -253,10 +308,9 @@ namespace Labs.Janelas.LabsPDV.Dependencias
         //
         void ExcluirUmPagamento()
         {
-            PagamentoEfetuado? pagEfet = ListaPagamentosEfetuados.SelectedItem as PagamentoEfetuado;
-            if (pagEfet == null) { Modais.MostrarAviso("Você Deve Selecionar um Pagamento da lista Para Removêlo"); return; }
-            //
-            MessageBoxResult r = Modais.MostrarPergunta("Você Deseja Remover o Pagamento Selecionado?");
+			if (ListaPagamentosEfetuados.SelectedItem is not PagamentoEfetuado pagEfet) { Modais.MostrarAviso("Você Deve Selecionar um Pagamento da lista Para Removêlo"); return; }
+			//
+			MessageBoxResult r = Modais.MostrarPergunta("Você Deseja Remover o Pagamento Selecionado?");
             if (r == MessageBoxResult.Yes)
             {
                 try
@@ -332,5 +386,22 @@ namespace Labs.Janelas.LabsPDV.Dependencias
         {
             Cancelar();
         }
-    }
+        //
+		private void BuscarClienteButton_Click(object sender, RoutedEventArgs e)
+		{
+            LabsMain.IniciarDependencia<PesquisaClientes>(app =>
+            {
+                app.ListarClientes();
+				app.OnClienteSelect += OnClienteSelected;
+            });
+		}
+
+		private void OnClienteSelected(ClienteLoja cliente, PesquisaClientes janela)
+		{
+            ClienteLoja = cliente;
+            NomeClienteBox.Text = cliente.Nome;
+            CPF_CNPJ_Box.Text = cliente.CPF;
+            EmailBox.Text = cliente.Email;
+		}
+	}
 }

@@ -1,0 +1,110 @@
+﻿<Window x:Class="Labs.Janelas.LabsEstoque.Dependencias.CadastrarInfosFiscais"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Labs.Janelas.LabsEstoque.Dependencias"
+        mc:Ignorable="d"
+        Title="CadastrarInfosFiscais" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="Transparent" AllowsTransparency="True" Height="500" Width="800">
+    <Border Background="#202020" CornerRadius="20">
+        <Border Margin="10" Background="#404040" CornerRadius="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <!--Content-->
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Cadastro de Informações Fiscais:" FontSize="20" FontFamily="Segoe UI Black" Foreground="#f0f0f0" HorizontalAlignment="Center"/>
+                <DockPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="5">
+                    <TextBlock Grid.Row="0" Text="Produto: " FontSize="20" FontFamily="Segoe UI Black" Foreground="#f0f0f0" HorizontalAlignment="left"/>
+                    <TextBox IsEnabled="False" Name="DescricaoProdutoBox" Text="Nome do Produto" VerticalContentAlignment="Center" FontSize="18" Style="{StaticResource RoundTextBox5px}" Background="#AAAAAA"/>
+                </DockPanel>
+                <DockPanel Grid.Row="2" Margin="8">
+                    <TextBlock Grid.Row="0" Text="Código NCM: " ToolTip="Código NCM do Produto (NCM - Nomenclatura )" FontSize="20" FontFamily="Segoe UI Black" Foreground="#f0f0f0" HorizontalAlignment="left"/>
+                    <TextBox IsEnabled="True" Name="NCMInputBox" VerticalContentAlignment="Center" FontSize="18" Style="{StaticResource RoundTextBox5px}"/>
+                </DockPanel>
+                <DockPanel Grid.Row="3" Margin="8">
+                    <TextBlock Grid.Row="0" Text="Código CST: " ToolTip="Código de Situação Tributária" FontSize="20" FontFamily="Segoe UI Black" Foreground="#f0f0f0" HorizontalAlignment="left"/>
+                    <TextBox IsEnabled="True" Name="CSTInputBox" VerticalContentAlignment="Center" FontSize="18" Style="{StaticResource RoundTextBox5px}"/>
+                </DockPanel>
+                <DockPanel Grid.Row="4" Margin="8">
+                    <TextBlock Grid.Row="0" Text="Código CFOP: " ToolTip="Codigo Fiscal de Operação" FontSize="20" FontFamily="Segoe UI Black" Foreground="#f0f0f0" HorizontalAlignment="left"/>
+                    <TextBox IsEnabled="True" Name="CFOPInputBox" VerticalContentAlignment="Center" FontSize="18" Style="{StaticResource RoundTextBox5px}"/>
+                </DockPanel>
+                <DockPanel Grid.Row="5" Margin="8">
+                    <TextBlock Grid.Row="0" Text="Código Benef. Fiscal: " ToolTip="Código do Beneficio Fiscal do Produto (Dependendo do CFOP é necessário informar)" FontSize="20" FontFamily="Segoe UI Black" Foreground="#f0f0f0" HorizontalAlignment="left"/>
+                    <TextBox IsEnabled="True" Name="CBENEFInputBox" VerticalContentAlignment="Center" FontSize="18" Style="{StaticResource RoundTextBox5px}"/>
+                </DockPanel>
+                <DockPanel Grid.Row="6" Margin="8">
+                    <TextBlock Grid.Row="0" Text="Val. do ICMS Deson.: " ToolTip="Valor do ICMS Desonerado do Produto" FontSize="20" FontFamily="Segoe UI Black" Foreground="#f0f0f0" HorizontalAlignment="left"/>
+                    <TextBox IsEnabled="True" Name="VICMSDESONInputBox" VerticalContentAlignment="Center" FontSize="18" Style="{StaticResource RoundTextBox5px}"/>
+                </DockPanel>
+                <DockPanel Grid.Row="7" Margin="8">
+                    <TextBlock Grid.Row="0" Text="Porcentagem ICMS: " ToolTip="Porcentagem da Aliquota de ICMS" FontSize="20" FontFamily="Segoe UI Black" Foreground="#f0f0f0" HorizontalAlignment="left"/>
+                    <TextBox IsEnabled="True" Name="PICMSInputBox" VerticalContentAlignment="Center" FontSize="18" Style="{StaticResource RoundTextBox5px}"/>
+                </DockPanel>
+                <DockPanel Grid.Row="8" Margin="8">
+                    <TextBlock Grid.Row="0" Text="Porcentagem ICMS ST: " ToolTip="Porcentagem da Aliquota de ICMS ST (Situação Tributária)" FontSize="20" FontFamily="Segoe UI Black" Foreground="#f0f0f0" HorizontalAlignment="left"/>
+                    <TextBox IsEnabled="True" Name="PICMSSTInputBox" VerticalContentAlignment="Center" FontSize="18" Style="{StaticResource RoundTextBox5px}"/>
+                </DockPanel>
+                <DockPanel Grid.Row="9" Margin="8">
+                    <TextBlock Grid.Row="0" Text="Porcentagem MVA ST: " ToolTip="Porcentagem da Margem de Valor Agregado ST (Situação Tributária)" FontSize="20" FontFamily="Segoe UI Black" Foreground="#f0f0f0" HorizontalAlignment="left"/>
+                    <TextBox IsEnabled="True" Name="PMVASTInputBox" VerticalContentAlignment="Center" FontSize="18" Style="{StaticResource RoundTextBox5px}"/>
+                </DockPanel>
+                <DockPanel Grid.Row="2" Grid.Column="1" Margin="8">
+                    <TextBlock Grid.Row="0" Text="Porcentagem FCP: " ToolTip="Porcentagem do Fundo Contra Pobreza" FontSize="20" FontFamily="Segoe UI Black" Foreground="#f0f0f0" HorizontalAlignment="left"/>
+                    <TextBox IsEnabled="True" Name="PFCPInputBox" VerticalContentAlignment="Center" FontSize="18" Style="{StaticResource RoundTextBox5px}"/>
+                </DockPanel>
+                <DockPanel Grid.Row="3" Grid.Column="1" Margin="8">
+                    <TextBlock Grid.Row="0" Text="Porcentagem RedBC: " ToolTip="Porcentagem De Redução de Base de Cálculo" FontSize="20" FontFamily="Segoe UI Black" Foreground="#f0f0f0" HorizontalAlignment="left"/>
+                    <TextBox IsEnabled="True" Name="PRedBCInputBox" VerticalContentAlignment="Center" FontSize="18" Style="{StaticResource RoundTextBox5px}"/>
+                </DockPanel>
+                <DockPanel Grid.Row="4" Grid.Column="1" Margin="8">
+                    <TextBlock Grid.Row="0" Text="Porcentagem RedBC ST: " ToolTip="Porcentagem De Redução de Base de Cálculo ST (Situação Tributária)" FontSize="20" FontFamily="Segoe UI Black" Foreground="#f0f0f0" HorizontalAlignment="left"/>
+                    <TextBox IsEnabled="True" Name="PRedBCSTInputBox" VerticalContentAlignment="Center" FontSize="18" Style="{StaticResource RoundTextBox5px}"/>
+                </DockPanel>
+                <DockPanel Grid.Row="5" Grid.Column="1" Margin="8">
+                    <TextBlock Grid.Row="0" Text="Porcentagem ICMS Dif: " ToolTip="Porcentagem do ICMS Diferido" FontSize="20" FontFamily="Segoe UI Black" Foreground="#f0f0f0" HorizontalAlignment="left"/>
+                    <TextBox IsEnabled="True" Name="PICMSDifInputBox" VerticalContentAlignment="Center" FontSize="18" Style="{StaticResource RoundTextBox5px}"/>
+                </DockPanel>
+                <DockPanel Grid.Row="6" Grid.Column="1" Margin="8">
+                    <TextBlock Grid.Row="0" Text="Porcentagem de Cred. SN: " ToolTip="Porcentagem de Crédito do Simples Nacional" FontSize="20" FontFamily="Segoe UI Black" Foreground="#f0f0f0" HorizontalAlignment="left"/>
+                    <TextBox IsEnabled="True" Name="PCredSNInputBox" VerticalContentAlignment="Center" FontSize="18" Style="{StaticResource RoundTextBox5px}"/>
+                </DockPanel>
+                <!--ComboBoxes-->
+                <DockPanel Grid.Row="7" Grid.Column="1" Margin="8">
+                    <TextBlock Grid.Row="0" Text="Base de Cálc. ICMS: " ToolTip="Modalidade de Base de Cálculo do ICMS" FontSize="20" FontFamily="Segoe UI Black" Foreground="#f0f0f0" HorizontalAlignment="left"/>
+                    <ComboBox Name="BaseCalculoICMS_ComboBox" FontFamily="Segoe UI Black" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
+                </DockPanel>
+                <DockPanel Grid.Row="8" Grid.Column="1" Margin="8">
+                    <TextBlock Grid.Row="0" Text="Base de Cálc. ICMS ST: " ToolTip="Modalidade de Base de Cálculo do ICMS ST(Situação Tributária)" FontSize="20" FontFamily="Segoe UI Black" Foreground="#f0f0f0" HorizontalAlignment="left"/>
+                    <ComboBox Name="BaseCalculoICMSST_ComboBox" FontFamily="Segoe UI Black" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
+                </DockPanel>
+                <DockPanel Grid.Row="9" Grid.Column="1" Margin="8">
+                    <TextBlock Grid.Row="0" Text="Mot. de Deson. ICMS: " ToolTip="Motivo de Desoneração do ICMS" FontSize="20" FontFamily="Segoe UI Black" Foreground="#f0f0f0" HorizontalAlignment="left"/>
+                    <ComboBox Name="MotivoDesoneracaoICMS_ComboBox" FontFamily="Segoe UI Black" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
+                </DockPanel>
+                <!--Botões-->
+                <DockPanel Grid.Row="10" Grid.Column="0" Margin="10">
+                    <Button x:Name="AplicarInfosButton" Content="Aplicar Informações Fiscais" HorizontalAlignment="Stretch" FontSize="18" Foreground="#202020" Background="LightGreen" DockPanel.Dock="Bottom" Style="{StaticResource RoundButton5px}" Click="AplicarInfosButton_Click"/>
+                </DockPanel>
+                <DockPanel Grid.Row="10" Grid.Column="1" Margin="10">
+                    <Button x:Name="SairButton" Content="Sair" Width="150" FontSize="18" Foreground="#202020" Background="#F08080" DockPanel.Dock="Bottom" HorizontalAlignment="Center" Style="{StaticResource RoundButton5px}" Click="SairButton_Click"/>
+                </DockPanel>
+            </Grid>
+        </Border>
+    </Border>
+</Window>

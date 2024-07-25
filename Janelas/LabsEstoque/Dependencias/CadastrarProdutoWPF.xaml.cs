@@ -1,4 +1,6 @@
 ﻿using Labs.Main;
+using Lucene.Net.Documents;
+using Microsoft.Web.WebView2.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +15,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Unimake.Business.DFe.Xml.CTe;
 
 namespace Labs.Janelas.LabsEstoque.Dependencias
 {
@@ -26,6 +29,8 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
             InitializeComponent();
             InitiateComboBox();
 		}
+        //
+        private Dictionary<string, string> InfosFiscais = null!;
         //
         private async void InitiateComboBox()
         {
@@ -80,10 +85,33 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
                 UnidadeDeMedida = Unidade,
                 Status = "OK",
             };
+            if(InfosFiscais != null)
+            {
+                produto.NCM = InfosFiscais["NCM"];
+                produto.CST = InfosFiscais["CST"];
+                produto.CFOP = InfosFiscais["CFOP"];
+                produto.CBENEF = InfosFiscais["CBENEF"];
+                produto.VICMSDESON = double.Parse(InfosFiscais["VICMSDESON"]);
+                produto.PICMS = double.Parse(InfosFiscais["PICMS"]);
+                produto.PICMSST = double.Parse(InfosFiscais["PICMSST"]);
+                produto.PMVAST = double.Parse(InfosFiscais["PMVAST"]);
+                produto.PFCP = double.Parse(InfosFiscais["PFCP"]);
+                produto.PRedBC = double.Parse(InfosFiscais["PredBC"]);
+                produto.PRedBCST = double.Parse(InfosFiscais["PredBCST"]);
+                produto.PICMSDIF = double.Parse(InfosFiscais["PICMSDIF"]);
+                produto.PCredSN = double.Parse(InfosFiscais["PCredSN"]);
+                produto.BaseDeCalculoICMS = int.Parse(InfosFiscais["BaseDeCalculoICMS"]);
+                produto.BaseDeCalculoICMSST = int.Parse(InfosFiscais["BaseDeCalculoICMSST"]);
+                produto.MotivoDesoneracaoICMS = int.Parse(InfosFiscais["MotivoDesoneracaoICMS"]);
+            }
             //
             if (LabsMain.Cliente.PossuiPlanoCloud) { await CloudDataBase.RegisterCloudAsync(Collections.Produtos, produto); }
             //
             await CloudDataBase.RegisterLocalAsync(Collections.Produtos,produto);
+            //
+            var prod = CloudDataBase.GetLocalAsync<Produto>(Collections.Produtos, x => x.CodBarras == produto.CodBarras);
+            //
+            LabsMainAppWPF.IndexarProdutos();
             //
             Modais.MostrarInfo("Produto cadastrado com sucesso!");
             //
@@ -113,5 +141,20 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
         {
             this.Close();
         }
-    }
+        //
+		private void CadastroInfoFiscalButton_Click(object sender, RoutedEventArgs e)
+		{
+            LabsMain.IniciarDependencia<CadastrarInfosFiscais>(app =>
+            {
+                app.INIT(DescricaoInputBox.Text);
+				app.OnInfosApplied += OnInfosFiscaisApply;
+            });
+        }
+
+		private void OnInfosFiscaisApply(CadastrarInfosFiscais Janela,Dictionary<string, string> Infos)
+		{
+            InfosFiscais = Infos;
+            Janela.OnInfosApplied -= OnInfosFiscaisApply;
+		}
+	}
 }

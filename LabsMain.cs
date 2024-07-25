@@ -27,7 +27,7 @@ namespace Labs
 		//Controle de Instâncias (Endereçamento de memória)
 		private static Dictionary<string, LabWindow> RunningApps = new();
 		//
-		public const string TradeMark = "© Lab Soluções © ";
+		public const string TradeMark = " © Lab Soluções © ";
 		//Deixar essa connection string Salva em segurança como binário.
 		public const string LabsCloudDataBaseConnectionURI = "mongodb+srv://labscentral:solution2024@labs-central.vqvqvje.mongodb.net/";
 		//

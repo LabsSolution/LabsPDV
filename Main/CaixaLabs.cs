@@ -43,7 +43,7 @@ namespace Labs.Main
             OperadorCaixa = operadorCaixa;
         }
         //
-        public MeiosPagamento Meios { get; private set; } = null!;
+        public MeiosPagamentoNotaFiscal Meios { get; private set; } = null!;
         /// <summary>
         /// Carrega os meios direto da database seguindo o espelhamento padrão
         /// </summary>
@@ -51,9 +51,9 @@ namespace Labs.Main
         private async Task LoadFromDataBase()
         {
             //Tentamos realizar a atribuição
-            Meios = await CloudDataBase.GetCloudAsync<MeiosPagamento>(Collections.MeiosDePagamento, _ => true);
+            Meios = await CloudDataBase.GetCloudAsync<MeiosPagamentoNotaFiscal>(Collections.MeiosDePagamento, _ => true);
             // Se não conseguir do cloud pega do local
-            Meios ??= await CloudDataBase.GetLocalAsync<MeiosPagamento>(Collections.MeiosDePagamento, _ => true);
+            Meios ??= await CloudDataBase.GetLocalAsync<MeiosPagamentoNotaFiscal>(Collections.MeiosDePagamento, _ => true);
             // A partir daqui Mostramos os Meios já registrados, caso não tenha criamos um novo objeto para a edição;
             Meios ??= new();
             //
@@ -63,8 +63,8 @@ namespace Labs.Main
                 //
                 for (int i = 0; i < Meios.Meios.Count; i++)
                 {
-                    string NomeMeio = Meios.Meios[i].Item1;
-                    bool SLDV = Meios.Meios[i].Item2;
+                    string NomeMeio = Meios.Meios[i].MeioPagamento.ToString();
+                    bool SLDV = Meios.Meios[i].SLDV;
                     //
                     RegistroInternoDePagamentos.Insert(i, new(NomeMeio, 0, SLDV));
                 }

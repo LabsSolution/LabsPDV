@@ -242,7 +242,7 @@ namespace Labs.Janelas.LabsPDV
             //
             TotalItem = Math.Round(produto.Quantidade * produto.Preco, 2); ; // geramos o total do item fazendo Quant * valor.
             //Adicionamos o item na lista visual
-            ListaDeVenda.Items.Add(new ProdutoVisual(Numero,produto.Descricao,produto.CodBarras,"UN",$"R$: {produto.Preco}", $"{produto.Quantidade}",$"{TotalItem}","N/A"));
+            ListaDeVenda.Items.Add(new ProdutoVisual(Numero,produto.Descricao,produto.CodBarras,"UN",$"R$: {produto.Preco}", $"{produto.Quantidade}",$"R$: {TotalItem}","N/A"));
             ListaDeVenda.ScrollIntoView(ListaDeVenda.Items[^1]);
             //Adicionamos o produto na lista de produtos da venda
             Produtos.Add(produto);

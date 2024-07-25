@@ -21,93 +21,89 @@ namespace Labs.Main
 	{
 		const LuceneVersion version = LuceneVersion.LUCENE_48;
 		private readonly StandardAnalyzer _analyzer;
-		private readonly IndexWriter _writer;
-		private readonly string Dir = "SearchEngineIndexer";
+		private readonly IndexWriterConfig Config;
 
 		public MotorDeBusca()
 		{
 			_analyzer = new StandardAnalyzer(version);
-			var config = new IndexWriterConfig(version,_analyzer);
-			var _directory = FSDirectory.Open(Dir);
-			_writer = new IndexWriter(_directory,config);
+			Config = new IndexWriterConfig(version,_analyzer);
 		}
+		//=========================================================================//
+		// METODOLOGIA GENÉRICA
+		//=========================================================================//
 		/// <summary>
-		/// Indexa o produto logo após ser salvo na database (é necessário por conta do ID)
+		/// Indexa um Novo Item no Banco de Dados do motor de busca.
 		/// </summary>
-		/// <param name="Produto">Produto que foi adicionado no banco de dados</param>
-		public async void IndexarNovoProduto(Produto Produto)
+		public void IndexarNovoDocumento(string CollectionName,Document document)
 		{
-			//Criamos um novo documento e adicionamos o produto
-			await Task.Delay(0);
 			//
-			string NomeFornecedor = null!;
-			if(Produto.Fornecedor != null) { NomeFornecedor = Produto.Fornecedor.NomeEmpresa; }
+			var dir = FSDirectory.Open(CollectionName);
+			var _writer = new IndexWriter(dir,Config);
 			//
-			var doc = new Document
-			{
-				new StringField("ID",Produto.ID,Field.Store.YES),
-				new TextField("Descricao",Produto.Descricao,Field.Store.YES),
-				new TextField("Fornecedor",NomeFornecedor,Field.Store.YES),
-			};
-			_writer.AddDocument(doc);
+			_writer.AddDocument(document);
 			_writer.Flush(triggerMerge: false, applyAllDeletes: false);
 			_writer.Commit();
+			_writer.Dispose();
 			//
 		}
 		//
 		/// <summary>
-		/// Rempove um produto da lista de indexação de busca (Método usado quando um produto é removido da lista do estoque)
+		/// Remove um item da pasta indexada de busca.
+		/// Exemplo de item Construido (new Term(FieldName,FieldValue)) =>
+		/// Se referem a o campo do documento que será verificado e deletado.
 		/// </summary>
-		/// <param name="ID">ID do produto a ser removido (Produto.ID)</param>
-		public async void RemoverProdutoIndexado(string ID)
+		/// <param name="CollectionName">Nome da Coleção em que o item se encontra</param>
+		/// <param name="FieldName">Nome do Campo a ser pesquisado</param>
+		/// <param name="FieldValue">Valor do campo Pesquisado</param>
+		public void RemoverItemIndexado(string CollectionName,string FieldName,string FieldValue)
 		{
-			var term = new Term("ID",ID);
+			//
+			var dir = FSDirectory.Open(CollectionName);
+			var _writer = new IndexWriter(dir,Config);
+			var term = new Term(FieldName,FieldValue);
 			_writer.DeleteDocuments(term);
 			_writer.Flush(triggerMerge: false, applyAllDeletes: false);
 			_writer.Commit();
-			await Task.Delay(0);
+			_writer.Dispose();
 		}
 		//
 		/// <summary>
-		/// Esse processo é importantíssimo ser realizado a cada inicialização
+		/// Realiza o processo de indexação em Lote, utilizando uma lista
 		/// </summary>
-		public async void RealizarIndexacaoDosProdutos()
+		/// <param name="documents">Documentos para serem indexados</param>
+		/// <param name="CollectionName">Nome da pasta em que os documentos serão indexados</param>
+		/// <param name="FieldName">Nome do campo para verificar duplicidade (geralmente o campo "ID")</param>
+		public void RealizarIndexacaoEmLote(List<Document> documents,string CollectionName, string FieldName)
 		{
-			//Pega todos os produtos
-			var produtos = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.Produtos,_ => true);
-			//
-			foreach (var prod in produtos)
+			var dir = FSDirectory.Open(CollectionName);
+			var conf = new IndexWriterConfig(version,_analyzer); // criamos um arquivo de conf novo, porque por algum motivo o indexWriter não aceita um estático.
+			using (var _writer = new IndexWriter(dir, conf)) 
 			{
-				var term = new Term("ID",prod.ID);
-				_writer.DeleteDocuments(term);
-				//Aqui temos certeza que os documentos duplicados estão sendo removidos.
-				string nomeFornecedor = null!;
-				if(prod.Fornecedor != null) { nomeFornecedor = prod.Fornecedor.NomeEmpresa; }
-				var doc = new Document
+				foreach (Document doc in documents)
 				{
-					new StringField("ID",prod.ID,Field.Store.YES),
-					new TextField("Descricao",prod.Descricao,Field.Store.YES),
-					new TextField("Fornecedor",nomeFornecedor,Field.Store.YES)
-				};
-				//
-				// Aqui criamos o objeto com o campo fornecedor podendo ser nulo, para facilitar nossa vida na indexação :D
-				//
-				_writer.AddDocument(doc);
+					//Aqui temos certeza que os documentos duplicados estão sendo removidos.
+					var term = new Term(FieldName, doc.Get(FieldName));
+					_writer.DeleteDocuments(term);
+					//
+					_writer.AddDocument(doc);
+				}
+				_writer.Flush(triggerMerge: false, applyAllDeletes: false);
+				_writer.Commit();
+				_writer.Dispose();
 			}
-			_writer.Flush(triggerMerge: false, applyAllDeletes: false);
-			_writer.Commit();
-			//
 		}
 		/// <summary>
-		/// Mecanismo de Busca Melhorado para pesquisa de produtos
+		/// Procura os Itens indexados baseados na descrição fornecida comparando com o valor do NameSpace fornecido.
 		/// </summary>
-		/// <param name="Descricao"> Descrição do produto a ser buscado </param>
-		/// <param name="NameSpace"> Namespace de Busca, No caso Seria "Descricao ou Fornecedor" </param>
+		/// <param name="CollectionName"> Nome da coleção em que o item está contido </param>
+		/// <param name="FieldName"> Nome do Campo Cujo valor irá ser retornado pelo método em formato de lista </param>
+		/// <param name="NameSpace"> Namespace de Busca, No caso Seria o Campo cujo valor de busca estaria contido para retorno </param>
+		/// <param name="Descricao"> Descrição do Item a ser buscado Baseado no valor contido no NameSpace </param>
 		/// <returns> Retorna uma lista de ID's que coincidem com a busca do produto </returns>
-		public async Task<List<string>> ProcurarProduto(string NameSpace,string Descricao)
+		public async Task<List<string>> ProcurarItem(string CollectionName,string FieldName,string NameSpace,string Descricao)
 		{
 			// Método assíncrono para não travar o sistema
-			var dir = FSDirectory.Open(Dir);
+			var dir = FSDirectory.Open(CollectionName);
 			var reader = DirectoryReader.Open(dir);
 			var searcher = new IndexSearcher(reader);
 			//Parser
@@ -136,13 +132,12 @@ namespace Labs.Main
 			foreach (var hit in hits)
 			{
 				var foundDoc = searcher.Doc(hit.Doc);
-				resultado.Add(foundDoc.Get("ID"));
+				resultado.Add(foundDoc.Get(FieldName));
 				await Task.Delay(0); // Simulação de espera assíncrona
 			}
 
 			reader.Dispose();
 			dir.Dispose();
-
 			// Retornar os resultados
 			return resultado!;
 		}

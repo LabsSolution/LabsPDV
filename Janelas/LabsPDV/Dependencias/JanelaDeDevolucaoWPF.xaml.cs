@@ -52,14 +52,14 @@ namespace Labs.Janelas.LabsPDV.Dependencias
             //Garantimos que os meios serão resetados já que essa função também é chamada no Reset();
             MeiosDevolucaoComboBox.Items.Clear();
             //
-            MeiosPagamento meios = await CloudDataBase.GetLocalAsync<MeiosPagamento>(Collections.MeiosDePagamento,_ => true);
-            if (meios == null && LabsMain.Cliente.PossuiPlanoCloud) { meios = await CloudDataBase.GetCloudAsync<MeiosPagamento>(Collections.MeiosDePagamento, _ => true); }
+            MeiosPagamentoNotaFiscal meios = await CloudDataBase.GetLocalAsync<MeiosPagamentoNotaFiscal>(Collections.MeiosDePagamento,_ => true);
+            if (meios == null && LabsMain.Cliente.PossuiPlanoCloud) { meios = await CloudDataBase.GetCloudAsync<MeiosPagamentoNotaFiscal>(Collections.MeiosDePagamento, _ => true); }
             //
             if(meios != null)
             {
                 foreach (var meio in meios.Meios)
                 {
-					MeiosDevolucaoComboBox.Items.Add(meio.Item1);
+					MeiosDevolucaoComboBox.Items.Add(meio.MeioPagamento);
 				}
                 MeiosDevolucaoComboBox.SelectedIndex = 0;
             }
@@ -109,14 +109,18 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                 //Nesse caso o produto fica relacionado com a devolução.
                 //Gera a devolução
                 Devolucao dev = new(Produto.Descricao,MeiosDevolucaoComboBox.Text,MotivoTextBox.Text,Produto, $"{DateTime.Now:dd/MM/yyyy}", $"{DateTime.Now:HH:mm:ss}");
+                //
 			    await CloudDataBase.RegisterLocalAsync(Collections.Devolucoes, dev);
+                //
                 if (LabsMain.Cliente.PossuiPlanoCloud) { await CloudDataBase.RegisterCloudAsync(Collections.Devolucoes,dev); }
                 //Salva na coleção de produtos com defeito (Atualiza a quantidade caso o produto seja o mesmo)
                 var sProd = await CloudDataBase.GetLocalAsync<Produto>(Collections.ProdutosComDefeito,x => x.ID == Produto.ID);
+                //
                 if(sProd != null) { Produto.Quantidade += sProd.Quantidade; }
                 //
                 if (LabsMain.Cliente.PossuiPlanoCloud) { await CloudDataBase.RegisterCloudAsync(Collections.ProdutosComDefeito,Produto,Builders<Produto>.Filter.Eq("ID",Produto.ID)); }
-				await CloudDataBase.RegisterLocalAsync(Collections.ProdutosComDefeito,Produto,Builders<Produto>.Filter.Eq("ID",Produto.ID));
+				//
+                await CloudDataBase.RegisterLocalAsync(Collections.ProdutosComDefeito,Produto,Builders<Produto>.Filter.Eq("ID",Produto.ID));
             }
             Modais.MostrarInfo("Devolução Registrada com Sucesso!");
             //

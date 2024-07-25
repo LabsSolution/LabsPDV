@@ -19,38 +19,38 @@ namespace Labs.Janelas.DependenciasGerais
 	/// <summary>
 	/// Lógica interna para PesquisaProdutos.xaml
 	/// </summary>
-	public partial class PesquisaProdutos : Window
+	public partial class PesquisaClientes : Window
 	{
 		//
-		List<Produto> Produtos = [];
+		List<ClienteLoja> Clientes = [];
 		//
-		public delegate void ProdutoSelecionado(string CodBarras,PesquisaProdutos janela);
+		public delegate void ProdutoSelecionado(ClienteLoja cliente,PesquisaClientes janela);
 		/// <summary>
 		/// Esse Evento Retorna o Código de Banco de Dados do produto selecionado. "ID".
 		/// </summary>
-		public event ProdutoSelecionado OnProdutoSelect = null!;
+		public event ProdutoSelecionado OnClienteSelect = null!;
 		//
-		public PesquisaProdutos()
+		public PesquisaClientes()
 		{
 			InitializeComponent();
 		}
 		/// <summary>
 		/// Faz a listagem inicial de todos os produtos disponíveis para estoque
 		/// </summary>
-		public async void ListarProdutos()
+		public async void ListarClientes()
 		{
-			Produtos = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.Produtos, _ => true);
+			Clientes = await CloudDataBase.GetManyLocalAsync<ClienteLoja>(Collections.Clientes, _ => true);
 			//
-			Produtos.ForEach(x => { ListaProdutosCadastrados.Items.Add(x); });
+			Clientes.ForEach(x => { ListaClientesCadastrados.Items.Add(x); });
 			//
 			PesquisaInputBox.Focus();
 		}
 		//
-		private void RetornarProdutoSelecionado()
+		private void RetornarClienteSelecionado()
 		{
-			if (ListaProdutosCadastrados.SelectedItem is not Produto prod) { return; }
+			if (ListaClientesCadastrados.SelectedItem is not ClienteLoja cliente) { return; }
 			//Invocamos o evento baseado no produto Selecionado.
-			OnProdutoSelect?.Invoke(prod.CodBarras,this);
+			OnClienteSelect?.Invoke(cliente,this);
 			//Após invocarmos o evento, simplesmente fechamos
 			this.Close();
 		}
@@ -60,30 +60,30 @@ namespace Labs.Janelas.DependenciasGerais
 			this.Close();
         }
 		//
-		private void ListaProdutosCadastrados_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+		private void ListaClientesCadastrados_MouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
-			RetornarProdutoSelecionado();
+			RetornarClienteSelecionado();
 		}
 
 		private void Item_KeyDown(object sender, KeyEventArgs e)
 		{
 			if(e.Key == Key.Enter)
 			{
-				if (ListaProdutosCadastrados.SelectedItem is not Produto prod) { AtualizarLista(); return; }
-				RetornarProdutoSelecionado();
+				if (ListaClientesCadastrados.SelectedItem is not ClienteLoja cliente) { AtualizarLista(); return; }
+				RetornarClienteSelecionado();
 			}
 		}
 
 		public async void AtualizarLista()
 		{
-			ListaProdutosCadastrados.Items.Clear();
-			if (PesquisaInputBox.Text.IsNullOrEmpty()) { Produtos.ForEach(x=> { ListaProdutosCadastrados.Items.Add(x); }); return; }
+			ListaClientesCadastrados.Items.Clear();
+			if (PesquisaInputBox.Text.IsNullOrEmpty()) { Clientes.ForEach(x=> { ListaClientesCadastrados.Items.Add(x); }); return; }
 			//Caso Tenha algo, Pesquisamos
-			var Cods = await LabsMain.MotorDeBusca.ProcurarItem(Collections.Produtos,"ID","Descricao",PesquisaInputBox.Text);
+			var Cods = await LabsMain.MotorDeBusca.ProcurarItem(Collections.Clientes,"ID","Nome",PesquisaInputBox.Text);
 			//
-			Produtos.ForEach(prod => 
+			Clientes.ForEach(cl => 
 			{
-				if (Cods.Contains(prod.ID)) { ListaProdutosCadastrados.Items.Add(prod); }
+				if (Cods.Contains(cl.ID)) { ListaClientesCadastrados.Items.Add(cl); }
 			});
 			//
 		}
@@ -95,7 +95,7 @@ namespace Labs.Janelas.DependenciasGerais
 
 		private void Selecionar_Click(object sender, RoutedEventArgs e)
 		{
-			RetornarProdutoSelecionado();
+			RetornarClienteSelecionado();
 		}
 	}
 }

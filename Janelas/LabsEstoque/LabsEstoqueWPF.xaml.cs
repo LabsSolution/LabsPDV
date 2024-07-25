@@ -205,7 +205,9 @@ namespace Labs.Janelas.LabsEstoque
 		//
 		private async void RemoverProdutoButton_Click(object sender, RoutedEventArgs e)
 		{
-			if (ListaProdutosCadastrados.SelectedItem is not Produto produto) { Modais.MostrarAviso("Você precisa selecionar o produto que deseja remover do estoque!"); return; }
+			if (ListaProdutosCadastrados.SelectedItem is not ListViewItem Itemproduto) { Modais.MostrarAviso("Você deve selecionar o produto que deseja remover!"); return; }
+			//
+			if (Itemproduto.Content is not Produto produto) { Modais.MostrarAviso("Algo deu errado ao realizar o comando de remoção"); return; }
 			MessageBoxResult r = Modais.MostrarPergunta($"Você deseja remover o Produto: {produto.Descricao}?\nESTA OPERAÇÃO NÃO PODE SER DESFEITA!");
 			if (r == MessageBoxResult.Yes)
 			{
@@ -219,7 +221,7 @@ namespace Labs.Janelas.LabsEstoque
 				//
 				await CloudDataBase.RemoveLocalAsync<Produto>(Collections.Produtos, x => x.ID == produto.ID);
 				//
-				LabsMain.MotorDeBusca.RemoverProdutoIndexado(produto.ID);
+				LabsMain.MotorDeBusca.RemoverItemIndexado(Collections.Produtos,"ID",produto.ID);
 				//
 				Modais.MostrarInfo($"Produto: {produto.Descricao}\nRemovido com Sucesso!");
 				//
@@ -281,7 +283,7 @@ namespace Labs.Janelas.LabsEstoque
 			{
 				if (ComboBox_Descricao.IsSelected)
 				{
-					var filteredIDs = await LabsMain.MotorDeBusca.ProcurarProduto("Descricao",searchFilter);
+					var filteredIDs = await LabsMain.MotorDeBusca.ProcurarItem(Collections.Produtos,"ID","Descricao",searchFilter);
 					//
 					Produtos.ForEach((x) =>
 					{
@@ -290,7 +292,7 @@ namespace Labs.Janelas.LabsEstoque
 				}
 				if (ComboBox_Fornecedor.IsSelected)
 				{
-					var filteredIDs = await LabsMain.MotorDeBusca.ProcurarProduto("Fornecedor",searchFilter);
+					var filteredIDs = await LabsMain.MotorDeBusca.ProcurarItem(Collections.Produtos, "ID", "Fornecedor", searchFilter);
 					//
 					Produtos.ForEach((x) =>
 					{

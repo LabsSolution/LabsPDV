@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Labs.Janelas.Configuracoes.Dependencias"
         mc:Ignorable="d"
-        Title="MeiosDePagamentoConfigWPF" Name="MeiosDePagamentoConfig" WindowStartupLocation="CenterScreen" AllowsTransparency="True" Background="Transparent" WindowStyle="None" ResizeMode="NoResize" Height="580" Width="540">
+        Title="MeiosDePagamentoConfigWPF" Name="MeiosDePagamentoConfig" WindowStartupLocation="CenterScreen" AllowsTransparency="True" Background="Transparent" WindowStyle="None" ResizeMode="NoResize" Height="580" Width="600">
     <Border Background="#202020" CornerRadius="20">
         <Border Margin="10" Background="#404040" CornerRadius="20">
             <Grid Margin="10">
@@ -15,17 +15,37 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
                 <!--Conteudo-->
-                <Label Content="Meios Registrados:" Grid.Row="0" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f0f0f0" FontSize="18"/>
-                <ListView x:Name="ListaMeiosRegistrados" Grid.Row="1" ClipToBounds="True" VerticalAlignment="Stretch" ToolTip="Lista de Meios de Pagamento" Margin="10,10,10,10" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}">
+                <Label Content="Meios Disponíveis:" Grid.Row="0" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f0f0f0" FontSize="18"/>
+                <Label Content="Meios Registrados:" Grid.Row="0" Grid.Column="2" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f0f0f0" FontSize="18"/>
+                <!--Meios Disponíveis-->
+                <ListView x:Name="ListaMeiosDisponiveis" Grid.Row="1" Grid.Column="0" ClipToBounds="True" VerticalAlignment="Stretch" ToolTip="Lista de Meios de Pagamento Registrados" Margin="10,10,10,10" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}">
                     <ListView.View>
                         <GridView AllowsColumnReorder="False">
-                            <GridViewColumn Header="Meios Registrados" DisplayMemberBinding="{Binding Item1}" Width="470"/>
+                            <GridViewColumn Header="Meios Disponíveis" DisplayMemberBinding="{Binding MeioPagamentoFormat}" Width="215"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <!--Botões do meio-->
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1">
+                    <Button Margin="10" x:Name="AdicionarMeioPagamento" Content="=>>" FontSize="18" Background="#f0f0f0" Style="{StaticResource RoundButton5px}" Width="50" Height="50" Click="AdicionarMeioPagamento_Click"/>
+                    <Button Margin="10" x:Name="RemoverMeioPagamento" Content="&lt;&lt;=" FontSize="18" Background="#f0f0f0" Style="{StaticResource RoundButton5px}" Width="50" Height="50" Click="RemoverMeioPagamento_Click"/>
+                </StackPanel>
+                <!--Meios Registrados-->
+                <ListView x:Name="ListaMeiosRegistrados" Grid.Row="1" Grid.Column="2" ClipToBounds="True" VerticalAlignment="Stretch" ToolTip="Lista de Meios de Pagamento Registrados" Margin="10,10,10,10" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}">
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="False">
+                            <GridViewColumn Header="Meios Registrados" DisplayMemberBinding="{Binding MeioPagamentoFormat}" Width="215"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
                 <!--Conteudo-->
-                <StackPanel Grid.Row="2">
+                <StackPanel Grid.Row="2" Grid.ColumnSpan="3">
                     <Grid Margin="10,0,0,0">
                         <!--Linhas-->
                         <Grid.RowDefinitions>
@@ -39,18 +59,22 @@
                         </Grid.ColumnDefinitions>
                         <!--Conteudo-->
                         <Label Content="Meio de Pagamento:" Grid.Row="0" Grid.Column="0" FontSize="14" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f0f0f0"/>
-                        <Label Content="SLDV : (Sem Limide De Valor):" Grid.Row="0" Grid.Column="1" FontSize="14" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f0f0f0"/>
                         <TextBox Name="MeioPagamentoInputBox" FontFamily="Segoe UI" FontSize="16" Grid.Row="1" Grid.Column="0"/>
-                        <CheckBox Name="SLDVCheckBox" Grid.Row="1" Grid.Column="1" Margin="5,0,0,0" Foreground="#f0f0f0" VerticalAlignment="Center" Content="SLDV?" FontFamily="Segoe UI" FontWeight="Bold" FontSize="14">
-                            <CheckBox.ToolTip>SLDV(Sem Limite de Valor) Define se o meio que deseja adicionar pode ultrapassar o valor de venda.</CheckBox.ToolTip>
-                        </CheckBox>
+                        <StackPanel Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Bottom">
+                            <CheckBox Name="SLDVCheckBox" Grid.Row="1" Grid.Column="1" Margin="5,0,0,0" Foreground="#f0f0f0" VerticalAlignment="Center" Content="SLDV?" FontFamily="Segoe UI" FontWeight="Bold" FontSize="14">
+                                <CheckBox.ToolTip>SLDV(Sem Limite de Valor) Define se o meio que deseja adicionar pode ultrapassar o valor de venda.</CheckBox.ToolTip>
+                            </CheckBox>
+                            <CheckBox Name="ParcelasCheckBox" Grid.Row="1" Grid.Column="1" Margin="5,0,0,0" Foreground="#f0f0f0" VerticalAlignment="Center" Content="Aceita Parcelas?" FontFamily="Segoe UI" FontWeight="Bold" FontSize="14">
+                                <CheckBox.ToolTip>Define se o modo que você está adicionando aceita parcelas</CheckBox.ToolTip>
+                            </CheckBox>
+                        </StackPanel>
                     </Grid>
                 </StackPanel>
-                <StackPanel Grid.Row="3" Margin="5,5,0,0" HorizontalAlignment="Left" Orientation="Horizontal">
-                    <Button Margin="5,0,0,0" x:Name="AdicionarButton" MinWidth="120" Height="40" Content="Adicionar" FontSize="16" FontWeight="Bold" FontFamily="Segoe UI" Background="LightGreen" Click="AdicionarButton_Click"/>
-                    <Button Margin="5,0,0,0" x:Name="RemoverButton" MinWidth="120" Height="40" Content="Remover" FontSize="16" FontWeight="Bold" FontFamily="Segoe UI" Background="#FFFF80" Click="RemoverButton_Click"/>
-                    <Button Margin="5,0,0,0" x:Name="SairButton" MinWidth="120" Height="40" Content="Sair" FontSize="16" FontWeight="Bold" FontFamily="Segoe UI" Background="#F08080" Click="SairButton_Click"/>
-                </StackPanel>
+                <DockPanel Grid.Row="3" Grid.ColumnSpan="3" Margin="5,5,0,0" HorizontalAlignment="Stretch">
+                    <Button Margin="5,0,0,0" x:Name="AdicionarButton" MinWidth="120" Height="40" Content="Adicionar" FontSize="16" FontWeight="Bold" FontFamily="Segoe UI" Style="{StaticResource RoundButton10px}" Background="LightGreen" Click="AdicionarButton_Click"/>
+                    <Button Margin="35,0,0,0" x:Name="RemoverButton" MinWidth="120" Height="40" Content="Remover" FontSize="16" FontWeight="Bold" FontFamily="Segoe UI" Style="{StaticResource RoundButton10px}" Background="#FFFF80" Click="RemoverButton_Click"/>
+                    <Button Margin="5,0,0,0" x:Name="SairButton" MinWidth="120" Height="40" Content="Sair" HorizontalAlignment="Right" FontSize="16" FontWeight="Bold" Style="{StaticResource RoundButton10px}" FontFamily="Segoe UI" Background="#F08080" Click="SairButton_Click"/>
+                </DockPanel>
             </Grid>
         </Border>
     </Border>

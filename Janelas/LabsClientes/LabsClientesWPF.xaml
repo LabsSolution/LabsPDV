@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Labs.Janelas.LabsClientes"
         mc:Ignorable="d"
-        Title="LabsClientesWPF" WindowStartupLocation="CenterScreen" WindowStyle="None" Background="Transparent" AllowsTransparency="True" Height="768" Width="1366">
+        Title="LabsClientesWPF" KeyUp="Window_KeyUp" WindowStartupLocation="CenterScreen" WindowStyle="None" Background="Transparent" AllowsTransparency="True" Height="768" Width="1366">
     <Border Background="#202020" CornerRadius="20">
         <Border Background="#404040" Margin="20" CornerRadius="0">
             <Grid Margin="10">
@@ -17,17 +17,16 @@
                 </Grid.RowDefinitions>
                 <!--Botões Superiores-->
                 <StackPanel Orientation="Horizontal" Height="80" Margin="0,10,0,0" Grid.Row="0">
-
                     <!--Cadastrar Produto-->
-                    <Button x:Name="CadastrarClienteButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Cadastrar Produto(s)">
+                    <Button x:Name="CadastrarClienteButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Cadastrar Produto(s)" Click="CadastrarClienteButton_Click">
                         <TextBlock TextWrapping="Wrap" TextAlignment="Center">Cadastrar Cliente(s)</TextBlock>
                     </Button>
                     <!--Atualizar Produto-->
-                    <Button x:Name="EditarClienteButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Atualizar Produto Selecionado">
+                    <Button x:Name="EditarClienteButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Atualizar Produto Selecionado" Click="EditarClienteButton_Click">
                         <TextBlock TextWrapping="Wrap" TextAlignment="Center">Editar Cliente Selecionado</TextBlock>
                     </Button>
                     <!--Remover Produto-->
-                    <Button x:Name="RemoverClienteButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Remover Produto Selecionado">
+                    <Button x:Name="RemoverClienteButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Remover Produto Selecionado" Click="RemoverClienteButton_Click">
                         <TextBlock TextWrapping="Wrap" TextAlignment="Center">Remover Cliente Selecionado</TextBlock>
                     </Button>
                 </StackPanel>
@@ -40,27 +39,28 @@
                         <ComboBoxItem Name="ComboBox_CNPJ" IsSelected="False" Content="CNPJ"/>
                         <ComboBoxItem Name="ComboBox_EMail" IsSelected="False" Content="E-mail"/>
                     </ComboBox>
-                    <TextBox x:Name="CaixaDePesquisa" Style="{StaticResource RoundTextBox}" FontSize="20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="350" Height="Auto"/>
-                    <Button x:Name="PesquisarButton" Style="{StaticResource RoundButton10px}" Content="Pesquisar" FontFamily="Segoe UI" FontSize="14" Background="#f6f6f6" FontWeight="Bold" MinWidth="70" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,0,0"/>
-                    <Button x:Name="LimparFiltrosButton" Style="{StaticResource RoundButton10px}" Content="Limpar Filtros" ToolTip="Limpa todos os filtros e puxa novamente os itens do Banco de Dados" FontFamily="Segoe UI" FontSize="14" Background="#f6f6f6" FontWeight="Bold" MinWidth="70" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                    <TextBox x:Name="CaixaDePesquisa" KeyDown="CaixaDePesquisa_KeyDown" Style="{StaticResource RoundTextBox}" FontSize="20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="350" Height="Auto"/>
+                    <Button x:Name="PesquisarButton" Style="{StaticResource RoundButton10px}" Content="Pesquisar" FontFamily="Segoe UI" FontSize="14" Background="#f6f6f6" FontWeight="Bold" MinWidth="70" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,0,0" Click="PesquisarButton_Click"/>
+                    <Button x:Name="LimparFiltrosButton" Style="{StaticResource RoundButton10px}" Content="Limpar Filtros" ToolTip="Limpa todos os filtros e puxa novamente os itens do Banco de Dados" FontFamily="Segoe UI" FontSize="14" Background="#f6f6f6" FontWeight="Bold" MinWidth="70" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,0,0" Click="LimparFiltrosButton_Click"/>
                 </StackPanel>
                 <!--Conteudo-->
-                <ListView x:Name="ListaProdutosCadastrados" Grid.Row="2" ClipToBounds="False" ToolTip="Lista de Clientes" Margin="0,0,0,0" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}" Grid.ColumnSpan="2">
+                <ListView x:Name="ListaClientesCadastrados" Grid.Row="2" ClipToBounds="False" ToolTip="Lista de Clientes" Margin="0,0,0,0" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}" Grid.ColumnSpan="2">
                     <ListView.View>
                         <GridView AllowsColumnReorder="False">
-                            <GridViewColumn Header="Nome" DisplayMemberBinding="{Binding Nome}" Width="Auto"/>
+                            <GridViewColumn Header="Nome" DisplayMemberBinding="{Binding Nome}" Width="350"/>
                             <GridViewColumn Header="CPF" DisplayMemberBinding="{Binding CPF}" Width="200"/>
                             <GridViewColumn Header="CNPJ" DisplayMemberBinding="{Binding CNPJ}" Width="200"/>
                             <GridViewColumn Header="Telefone" DisplayMemberBinding="{Binding Fone}" Width="150"/>
-                            <GridViewColumn Header="E-mail" DisplayMemberBinding="{Binding Email}" Width="100"/>
-                            <GridViewColumn Header="Última Compra" DisplayMemberBinding="{Binding DataUltimaCompraFormatada}" Width="150"/>
+                            <GridViewColumn Header="E-mail" DisplayMemberBinding="{Binding Email}" Width="Auto"/>
+                            <GridViewColumn Header="Última Compra" DisplayMemberBinding="{Binding DataUltimaCompra}" Width="150"/>
+                            <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" Width="Auto"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
                 <!--Rodapé-->
                 <DockPanel Grid.Row="3" Margin="10">
                     <Label DockPanel.Dock="Left" HorizontalAlignment="Left" Content="Atualizar (F5)" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="20"/>
-                    <Button x:Name="VoltarButton" Content="Voltar" Style="{StaticResource RoundButton15px}" Width="80" Height="40" Background="#f0f0f0" FontSize="16" HorizontalAlignment="Right" Click="VoltarButton_Click" />
+                    <Button x:Name="VoltarButton" Content="Voltar" Style="{StaticResource RoundButton15px}" Width="80" Height="50" Background="#f0f0f0" FontSize="16" HorizontalAlignment="Right" Click="VoltarButton_Click" />
                 </DockPanel>
             </Grid>
         </Border>

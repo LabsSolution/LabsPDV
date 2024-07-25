@@ -23,7 +23,10 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <!--Conteúdo-->
-                <Label Content="Cadastro de Produto(s)" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
+                <DockPanel Grid.Row="0" Grid.ColumnSpan="2">
+                    <Label Content="Cadastro de Produto(s)" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
+                    <Button Name="CadastroInfoFiscalButton" HorizontalAlignment="Right" Content="Cadastrar Informações Fiscais" Width="200" Height="30" Background="#FFA000" Style="{StaticResource RoundButton5px}" Click="CadastroInfoFiscalButton_Click"/>
+                </DockPanel>
                 <!--Conteúdo-->
                 <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="0,5,0,5">
                     <Label Content="Descrição:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>

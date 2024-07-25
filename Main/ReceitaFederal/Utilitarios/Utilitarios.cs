@@ -390,5 +390,154 @@ namespace Labs.Main.ReceitaFederal.Utilitarios
 			}
 			return null!;
 		}
+		//
+		//Retorna o pagamento com os campos preenchidos de acordo com o tipo mencionado
+		public static DetPag GetDetPag(MeioPagamento Meio, double ValorPagamento = 0, bool ComParcelas = false)
+		{
+			switch (Meio)
+			{
+				case MeioPagamento.Dinheiro:
+					return new DetPag
+					{
+						TPag = Meio,
+						VPag = ValorPagamento
+					};
+				case MeioPagamento.Cheque:
+					return new DetPag
+					{
+						TPag = Meio,
+						VPag = ValorPagamento
+					};
+				case MeioPagamento.CartaoCredito:
+					return new DetPag
+					{
+						TPag = Meio,
+						// CNPJPag -- CNPJ que representa a empresa TEF que está sendo a intermediadora.
+						// UFPag -- Determina o estado em que a empresa TEF reside.
+						IndPag = ComParcelas? IndicadorPagamento.PagamentoPrazo : IndicadorPagamento.PagamentoVista, // Aparentemente só serve pra informar se o valor passado foi parcelado ou não.
+						DPag = DateTime.Now, // Data em que o pagamento foi realizado
+						VPag = ValorPagamento,
+						Card = new Card
+						{
+							// CAut -- Código de Autorização de Pagamento
+							// CNPJ -- CNPJ da Credenciadora TEF
+							IdTermPag = "0", // Id do terminal em que foi realizado o pagamento (Maquininha)
+							CNPJReceb = "54781393000147", //-- CNPJ da empresa que está recebendo o pagamento. (Obrigatório)
+							TpIntegra = TipoIntegracaoPagamento.PagamentoNaoIntegrado,
+						}
+					};
+				case MeioPagamento.CartaoDebito:
+					return new DetPag
+					{
+						TPag = Meio,
+						// CNPJPag -- CNPJ que representa a empresa TEF que está sendo a intermediadora.
+						// UFPag -- Determina o estado em que a empresa TEF reside.
+						IndPag = IndicadorPagamento.PagamentoVista, // Deixa sempre como pagamento à vista já que débito n tem como parcelar kkk
+						DPag = DateTime.Now, // Data em que o pagamento foi realizado
+						VPag = ValorPagamento,
+						Card = new Card
+						{
+							// CAut -- Código de Autorização de Pagamento
+							// CNPJ -- CNPJ da Credenciadora TEF
+							IdTermPag = "0", // Id do terminal em que foi realizado o pagamento (Maquininha)
+							CNPJReceb = "54781393000147", // CNPJ da empresa que está recebendo o pagamento. (Obrigatório)
+							TpIntegra = TipoIntegracaoPagamento.PagamentoNaoIntegrado,
+						}
+					};
+				case MeioPagamento.CreditoLoja:
+					return new DetPag
+					{
+						TPag = Meio,
+						VPag = ValorPagamento,
+					};
+				case MeioPagamento.ValeAlimentacao:
+					return new DetPag
+					{
+						TPag = Meio,
+						VPag = ValorPagamento,
+					};
+				case MeioPagamento.ValeRefeicao:
+					return new DetPag
+					{
+						TPag = Meio,
+						VPag = ValorPagamento,
+					};
+				case MeioPagamento.ValePresente:
+					return new DetPag
+					{
+						TPag = Meio,
+						VPag = ValorPagamento,
+					};
+				case MeioPagamento.ValeCombustivel: // Não tem (Não por enquanto) (Mas deixamos habilitado porque... sim)
+					return new DetPag
+					{
+						TPag = Meio,
+						VPag = ValorPagamento,
+					};
+				case MeioPagamento.DuplicataMercantil: // Não tem (Desabilitado pela SEFAZ)
+					return null!;
+				case MeioPagamento.BoletoBancario:
+					return new DetPag
+					{
+						TPag = Meio,
+						VPag = ValorPagamento,
+					};
+				case MeioPagamento.DepositoBancario:
+					return new DetPag
+					{
+						TPag = Meio,
+						VPag = ValorPagamento,
+					};
+				case MeioPagamento.PagamentoInstantaneo: // Pix
+					return new DetPag
+					{
+						TPag = Meio,
+						VPag = ValorPagamento,
+						DPag = DateTime.Now,
+						Card = new Card
+						{
+							CNPJReceb = "54781393000147", // CNPJ de quem está recebendo o pagamento
+							TpIntegra = TipoIntegracaoPagamento.PagamentoNaoIntegrado
+						}
+					};
+				case MeioPagamento.TransferenciaBancaria:
+					return new DetPag
+					{
+						TPag = Meio,
+						VPag = ValorPagamento,
+					};
+				case MeioPagamento.ProgramaFidelidade:
+					return new DetPag
+					{
+						TPag = Meio,
+						VPag = ValorPagamento,
+					};
+				case MeioPagamento.PagamentoInstantaneoEstatico: // Por algum motivo não requer o CNPJ que recebeu o valor ?????
+					return new DetPag
+					{
+						TPag = Meio,
+						VPag = ValorPagamento,
+						DPag = DateTime.Now
+					};
+					
+				case MeioPagamento.CreditoEmLoja:
+					return new DetPag
+					{
+						TPag = Meio,
+						VPag = ValorPagamento,
+						DPag = DateTime.Now
+					};
+				case MeioPagamento.PagamentoEletronicoNaoInformado: // Não sei qual seria o motivo de utilizar esse campo, já que se o equipamento estiver com problema, o lojista vai usar outro meio...
+					return null!;
+				case MeioPagamento.SemPagamento: // ?? Pra que serve isso se não passa a nota
+					return new DetPag 
+					{ 
+						DPag = DateTime.Now,
+					};
+				case MeioPagamento.Outros: // Aqui colocamos o meio customizado pelo lojista (Por enquanto fica desabilitado.)
+					return null!;
+			}
+			return null!;
+		}
 	}
 }

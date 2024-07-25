@@ -92,7 +92,9 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 			}
             //
             await CloudDataBase.RegisterLocalAsync(Collections.Produtos, Produto, Builders<Produto>.Filter.Eq("ID",Produto.ID));
-            //
+			//
+			LabsMainAppWPF.IndexarProdutos();
+			//
             Modais.MostrarInfo("Produto Atualizado com sucesso!");
             //
         }

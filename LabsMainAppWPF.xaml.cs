@@ -4,6 +4,8 @@ using Labs.Janelas.LabsEstoque;
 using Labs.Janelas.LabsEstoque.Dependencias;
 using Labs.Janelas.LabsPDV;
 using Labs.Main;
+using Labs.Main.ReceitaFederal;
+using Lucene.Net.Documents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +20,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Unimake.Business.DFe.Servicos;
 
 namespace Labs
 {
@@ -127,7 +130,48 @@ namespace Labs
             // Desabilitado somente para debug
 			//VerificacoesPreventivas();
 		}
+        /// <summary>
+        /// Indexa Produtos utilizando o novo motor de busca.
+        /// </summary>
+        /// <returns></returns>
+        public static async void IndexarProdutos()
+        {
+            var produtos = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.Produtos,_ => true);
+            var docs = new List<Document>();
+            //
+            foreach (var prod in produtos)
+            {
+                string forn = prod.Fornecedor != null ? prod.Fornecedor.NomeEmpresa : null!; // verificamos se o fornecedor é nulo.
+                docs.Add(new()
+                {
+                    new StringField("ID",prod.ID,Field.Store.YES),
+                    new TextField("Descricao",prod.Descricao,Field.Store.YES),
+                    new TextField("Fornecedor",forn,Field.Store.YES)
+                });
+            }
+            //
+            LabsMain.MotorDeBusca.RealizarIndexacaoEmLote(docs,Collections.Produtos,"ID");
+        }
 		//
+        public static async void IndexarClientes()
+        {
+            var clientes = await CloudDataBase.GetManyLocalAsync<ClienteLoja>(Collections.Clientes, _ => true);
+            var docs = new List<Document>();
+            //
+            foreach (var cliente in clientes)
+            {
+                docs.Add(new()
+                {
+                    new StringField("ID",cliente.ID,Field.Store.YES),
+                    new TextField("Nome",cliente.Nome,Field.Store.YES),
+                    new TextField("CPF",cliente.CPF,Field.Store.YES),
+                    new TextField("CNPJ",cliente.CNPJ,Field.Store.YES),
+                    new TextField("Email",cliente.Email,Field.Store.YES)
+                });
+            }
+            //
+            LabsMain.MotorDeBusca.RealizarIndexacaoEmLote(docs,Collections.Clientes,"ID");
+        }
 		static async void VerificacoesPreventivas()
         {
             var JDC = GerenciadorPDV.Initiate("Sincronizando Banco de Dados...");
@@ -151,8 +195,11 @@ namespace Labs
             await CloudDataBaseSync.SyncDatabase(JDC,true);
             await Task.Delay(3000);
             JDC.SetTextoFrontEnd("Indexando Produtos...");
-            LabsMain.MotorDeBusca.RealizarIndexacaoDosProdutos();
-            await Task.Delay(3000);
+            IndexarProdutos();
+            await Task.Delay(1500);
+            JDC.SetTextoFrontEnd("Indexando Clientes...");
+            IndexarClientes();
+            await Task.Delay(1500);
 			await GerenciadorPDV.Terminate(JDC);
         }
         //
@@ -162,19 +209,32 @@ namespace Labs
             if (ModoSeguranca) { Modais.MostrarAviso("Sem Conexão Primária com o Banco de Dados!\nSe o problema persistir, entre em contato com o nosso suporte."); return; }
             //
             LabsMain.IniciarApp<LabsEstoqueWPF>(true,false,true);
+            //DANFE.teste();
         }
         //
         private void OnLabsPDVClick(object sender, RoutedEventArgs e)
         {
             if (ModoSeguranca) { Modais.MostrarAviso("Sem Conexão Primária com o Banco de Dados!\nSe o problema persistir, entre em contato com o nosso suporte."); return; }
             LabsMain.IniciarApp<LabsPDVWPF>(true,false,true);
+            //DANFE.ConfigsDANFE();
         }
         //
 		private void LabsClientes_Click(object sender, RoutedEventArgs e)
 		{
             if (ModoSeguranca) { Modais.MostrarAviso("Sem Conexão Primária com o Banco de Dados!\nSe o problema persistir, entre em contato com o nosso suporte."); return; }
             LabsMain.IniciarApp<LabsClientesWPF>(true,false,true);
-		}
+            
+            
+            //LabsNFe.EmitirNotaFiscalDeConsumidorEletronica("VENDA TESTE DO ESTABELECIMENTO", "6546372625437", 
+            //    [
+            //        new Produto("NOTA FISCAL EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL",1,0,UnidadesDeMedida.Unidade,null!,10,12.99,"SEM GTIN",false,"","85272900","0102","001","5101","RJ802008",0,22,0,0,0,0,0,0,0,(int)ModalidadeBaseCalculoICMS.ValorOperacao,(int)ModalidadeBaseCalculoICMSST.ValorOperacao,(int)MotivoDesoneracaoICMS.Outro),
+            //        //new Produto("Batata Frita",1,0,UnidadesDeMedida.Unidade,null!,10,12.99,"SEM GTIN",false,"","85272900","0102","001","5101","RJ802008",0,22,0,0,0,0,0,0,0,(int)ModalidadeBaseCalculoICMS.ValorOperacao,(int)ModalidadeBaseCalculoICMSST.ValorOperacao,(int)MotivoDesoneracaoICMS.Outro),
+            //        //new Produto("Biscoito Piraquê",1,0,UnidadesDeMedida.Unidade,null!,10,12.99,"SEM GTIN",false,"","85272900","0102","001","5101","RJ802008",0,22,0,0,0,0,0,0,0,(int)ModalidadeBaseCalculoICMS.ValorOperacao,(int)ModalidadeBaseCalculoICMSST.ValorOperacao,(int)MotivoDesoneracaoICMS.Outro),
+            //        //new Produto("Geleia de Mocotó",1,0,UnidadesDeMedida.Unidade,null!,10,12.99,"SEM GTIN",false,"","85272900","0102","001","5101","RJ802008",0,22,0,0,0,0,0,0,0,(int)ModalidadeBaseCalculoICMS.ValorOperacao,(int)ModalidadeBaseCalculoICMSST.ValorOperacao,(int)MotivoDesoneracaoICMS.Outro),
+            //        //new Produto("Leite Condensado - Moça",1,0,UnidadesDeMedida.Unidade,null!,10,12.99,"SEM GTIN",false,"","85272900","0102","001","5101","RJ802008",0,22,0,0,0,0,0,0,0,(int)ModalidadeBaseCalculoICMS.ValorOperacao,(int)ModalidadeBaseCalculoICMSST.ValorOperacao,(int)MotivoDesoneracaoICMS.Outro),
+            //    ],TipoAmbiente.Homologacao);
+            //
+        }
         //
 		private void OnLabsConfigClick(object sender, RoutedEventArgs e)
         {
