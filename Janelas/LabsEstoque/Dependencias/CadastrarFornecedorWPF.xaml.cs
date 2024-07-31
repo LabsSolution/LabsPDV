@@ -71,20 +71,21 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 		private async void RegistrarFornecedor()
 		{
 
-			Endereco endereco;
-			try { endereco = await ViaCepClient.GetEnderecoAsync(CepInputBox.Text); } catch { endereco = new Endereco
+			Endereco endereco = new()
 			{
-				Bairro = "N/A",
-				Cep = "N/A",
-				Complemento = "N/A",
-				Localidade = "N/A",
-				Uf = "N/A",
-				Logradouro = "N/A"
-			}; }
+				Bairro = BairroInputBox.Text.IsNullOrEmpty() ? "N/A" : BairroInputBox.Text,
+				Cep = CepInputBox.Text.IsNullOrEmpty() ? "N/A" : CepInputBox.Text,
+				Complemento = ComplementoInputBox.Text.IsNullOrEmpty() ? "N/A" : ComplementoInputBox.Text,
+				Localidade = BairroInputBox.Text.IsNullOrEmpty()? "N/A" : BairroInputBox.Text,
+				Uf = "RJ",
+				Logradouro = EnderecoInputBox.Text.IsNullOrEmpty()? "N/A" : EnderecoInputBox.Text,
+			};
+			//
+			try { var end = await ViaCepClient.GetEnderecoAsync(CepInputBox.Text); if (end != null) { endereco = end; } } catch { Modais.MostrarErro("Não foi possível Pesquisar pelo CEP Informado"); return; }
 			//
 			Fornecedor fornecedor = new(CNPJInputBox.Text, NomeEmpresaInputBox.Text, ContatoInputBox.Text, EmailInputBox.Text, endereco);
 			//
-			if (LabsMain.Cliente.PossuiPlanoCloud)
+			if (LabsMain.Cliente.PossuiPlanoCloud && LabsMainAppWPF.IsConnectedToInternet)
 			{
 				await CloudDataBase.RegisterCloudAsync(Collections.Fornecedores, fornecedor);
 			}

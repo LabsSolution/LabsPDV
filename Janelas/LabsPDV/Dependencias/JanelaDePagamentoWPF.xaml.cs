@@ -122,6 +122,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
             //Garante que todos os campos estejam limpos para receber novos valores
             Reset();
             //
+            //
             // seta o valor total visualmente pro operador de caixa
             SetPagamentoTotalBox(ValorTotal);
             //
@@ -161,7 +162,7 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                 LabsPDV.CaixaLabs.AtualizarCaixa(); // Atualizar é importante para termos controle dos Valores Recebidos!
                 //
                 // o ID da venda é literalmente o horario e a data do ano em que foi realizada (o que impede de ter ID's repetidos :D)
-                string IDVenda = $"{DateTime.Now:ddMMyyyyy}{DateTime.Now:HHmmss}";
+                string IDVenda = $"{DateTime.Now:ddMMyyyy}{DateTime.Now:HHmmss}";
                 // Geramos o objeto de venda e salvamos no banco de dados
                 VendaRealizada venda = new()
                 {
@@ -172,14 +173,22 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                     ValorPago = ValorTotalRecebido,
                     Troco = ValorTroco,
                     PagamentosEfetuados = [.. PagamentosEfetuados], //Repassa pra array
+                    DataVenda = $"{DateTime.Now:dd/MM/yyyy}", // A Data e Hora além de servir para pesquisa, vai servir para análise de dados!
+                    HoraVenda = $"{DateTime.Now:HH:mm:ss}", //
                     IDVenda = IDVenda
                 };
+                //
+                if(LabsMain.Cliente.PossuiPlanoCloud && LabsMainAppWPF.IsConnectedToInternet)
+                {
+                    await CloudDataBase.RegisterCloudAsync(Collections.Vendas,venda);
+                }
                 await CloudDataBase.RegisterLocalAsync(Collections.Vendas, venda);
                 //Aqui cuidamos da parte de compras do cliente
                 if(ClienteLoja != null)
                 {
                     var data = $"{DateTime.Now:dd/MM/yyyy}";
                     var hora = $"{DateTime.Now:HH:mm:ss}";
+                    // Montamos o ID das Compras do Cliente
                     CompraCliente.IDVenda = IDVenda;
 					CompraCliente.DataDaCompra = data;
                     CompraCliente.HoraDaCompra = hora;
@@ -187,9 +196,9 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                     CompraCliente.TotalPago = ValorTotalRecebido;
                     CompraCliente.Troco = ValorTroco;
                     CompraCliente.PagamentosEfetuados = [..PagamentosEfetuados]; // Repassa pra array
-                    //
+                    // Logo Após montado, adicionamos no objeto do cliente suas compras efetuadas
                     ClienteLoja.Compras.Add(CompraCliente);
-                    //
+                    // Ditamos a data e a hora e seguimos felizes :D
                     ClienteLoja.DataUltimaCompra = data;
                     ClienteLoja.HoraUltimaCompra = hora;
                     //
@@ -199,37 +208,35 @@ namespace Labs.Janelas.LabsPDV.Dependencias
                     }
                     await CloudDataBase.RegisterLocalAsync(Collections.Clientes, ClienteLoja, Builders<ClienteLoja>.Filter.Eq("ID", ClienteLoja.ID));
                 }
-                // Aqui faz a impressão do cupom fiscal (ou não fiscal)
-                var res = Modais.MostrarPergunta("Imprimir via do Cliente?");
-                if(res == MessageBoxResult.Yes)
+                await Task.Yield(); // Esperamos a interface atualizar
+                //
+                bool PossuiParcelas = false;
+                //
+                foreach (PagamentoEfetuado pe in PagamentosEfetuados)
                 {
-                    if(Parcelas > 1)
-                    {
-                        await LabsNFe.EmitirNotaFiscalDeConsumidorEletronicaAsync("VENDA TESTE DO ESTABELECIMENTO",IDVenda,this.ValorTroco,true,Produtos,this.PagamentosEfetuados,TipoAmbiente.Homologacao);
-                        //Faz a emissão da notinha auxiliar de Parcelamento
-                    }
-                    else
-                    {
-                        await LabsNFe.EmitirNotaFiscalDeConsumidorEletronicaAsync("VENDA TESTE DO ESTABELECIMENTO",IDVenda,this.ValorTroco,false,Produtos,this.PagamentosEfetuados,TipoAmbiente.Homologacao);
-                    }
+                    if(pe.Parcelas > 1) { PossuiParcelas = true; }
                 }
                 //
-                //using (var PM = new PrintManager())
-                //{
-                //    MessageBoxResult re = Modais.MostrarPergunta("Imprimir Via do Estabelecimento?");
-                //    if(re == MessageBoxResult.Yes)
-                //    {
-                //        PM.ImprimirCupomNaoFiscalLoja(LabsMainAppWPF.ImpressoraTermica, venda);
-                //    }
-                //    //
-                //    MessageBoxResult r = Modais.MostrarPergunta("Imprimir Via do Cliente?");
-                //    if (r == MessageBoxResult.Yes)
-                //    {
-                //        //Aqui Geramos a nota fiscal (Passado para DANFE).
-                //        //PM.ImprimirCupomNaoFiscalCliente(LabsMainAppWPF.ImpressoraTermica, venda, ClienteLoja!);
-                //        //
-                //    }
-                //}
+                using (var PM = new PrintManager())
+                {
+                    MessageBoxResult re = Modais.MostrarPergunta("Imprimir Via do Estabelecimento?");
+                    if(re == MessageBoxResult.Yes)
+                    {
+                        PM.ImprimirComprovanteDeVendaLoja(LabsMainAppWPF.ImpressoraTermica, venda);
+                    }
+                    //
+                    MessageBoxResult r = Modais.MostrarPergunta("Imprimir Via do Cliente?");
+                    if (r == MessageBoxResult.Yes)
+                    {
+                        //
+                        PM.ImprimirComprovanteDeVendaCliente(LabsMainAppWPF.ImpressoraTermica, venda, ClienteLoja!);
+                        //
+                        if (PossuiParcelas)
+                        {
+                            PM.ImprimirCupomAuxiliarDeParcelamento(LabsMainAppWPF.ImpressoraTermica,PagamentosEfetuados);
+                        }
+                    }
+                }
                 // Sinaliza que a venda foi finalizada com sucesso
                 await LabsEstoqueWPF.AbaterProdutosEmEstoqueAsync(Produtos);
                 Modais.MostrarInfo("Venda Finalizada com Sucesso!");

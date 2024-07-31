@@ -17,6 +17,9 @@ using Unimake.Business.DFe.Servicos.NFe;
 using Unimake.Business.DFe.Xml.CCG;
 using Unimake.Business.DFe.Xml.NFe;
 using Unimake.Exceptions;
+using Unimake.Unidanfe.Configurations;
+using Unimake.Unidanfe;
+using Unimake.Business.DFe.Utility;
 
 namespace Labs.Main
 {
@@ -76,6 +79,7 @@ namespace Labs.Main
 				Modais.MostrarErro(ex.GetLastException().Message);
 			}
 		}
+		//
 		//
 		public static async void EmitirNotaFiscalEletronicaAsync(Produto Produto)
 		{
@@ -605,10 +609,16 @@ namespace Labs.Main
 				}
 			}
 			};
+
+			//
+			Modais.MostrarInfo($"VtotProdutos: {vTotProdutos} | vtotTroco{vTotTroco}");
+			//
+
 			//Config Para Emissão
 			var configNFCe = new Configuracao
 			{
 				TipoDFe = TipoDFe.NFCe,
+				TimeOutWebServiceConnect = 5000,
 				TipoEmissao = TipoEmissao.Normal,
 				CSC = "4E5DB7F3-EBEC-4455-A62C-11054D901E80", // CSC de Homologação, Resumindo o lojista vai poder utilizar uma opção de emissão de nota de teste pela sefaz.
 				CSCIDToken = 1, // Id do token do CSC
@@ -616,11 +626,12 @@ namespace Labs.Main
 				CertificadoDigital = new X509Certificate2("C:\\Users\\Pc\\Desktop\\LabSolution.pfx", "solution2024")
 			};
 			// Envio Assíncrono foi Descartado da SEFAZ
-			bool FoiEmitido = false;
-			var Auto = new Unimake.Business.DFe.Servicos.NFCe.Autorizacao(xmlNFCE, configNFCe); // Aqui usamos o namespace para trabalhar com a autorização da NFc-e
-			if (LabsMainAppWPF.IsConnectedToInternet)
+			try
 			{
+				//Executamos em uma tarefa assíncrona para que se caso não seja realizado o envio o sistema não trave por completo
+				var Auto = new Unimake.Business.DFe.Servicos.NFCe.Autorizacao(xmlNFCE, configNFCe); // Aqui usamos o namespace para trabalhar com a autorização da NFc-e
 				Auto.Executar();
+				await Task.Yield();
 				if (Auto.Result.ProtNFe != null)
 				{
 					switch (Auto.Result.ProtNFe.InfProt.CStat)
@@ -632,8 +643,7 @@ namespace Labs.Main
 							await CloudDataBase.RegisterLocalAsync(Collections.NotasFiscaisHomologacao, new NotaFiscalXml { XmlAuto = xAuto, XmlNota = xNota });
 							Auto.GravarXmlDistribuicao(@"NFe\Autorizadas", $"NFCE-{IDVenda}.xml", xNota);
 							//
-							DANFE.ImprimirDANFE_NFCE(IDVenda);
-							FoiEmitido = true;
+							DANFE.ImprimirDANFE_NFCE(IDVenda, 1, false, true);
 							//
 							break;
 						case 204: // Nota Autorizada, Porém tem duplicata
@@ -650,41 +660,97 @@ namespace Labs.Main
 							break;
 					}
 				}
-			} 
-			// Caso não esteja conectado com a internet na hora do envio, puxamos essa saída aqui
-			else
+			}
+			catch // Deu Qualquer merda, imprime offline mesmo
 			{
+				await Task.Yield();
+				Modais.MostrarErro("Um Erro Ocorreu Durante a emissão de Nota\nClique em 'OK' para Iniciar o Protocolo de Emissão OFFLINE\n\nAssim que a conexão com a internet for reestabelecida, as notas pendentes serão enviadas para a SEFAZ e Armazenadas");
+				// Caso não esteja conectado com a internet na hora do envio, puxamos essa saída aqui
+				await Task.Yield();
 				Modais.MostrarInfo("Emitindo Nota Fiscal em Contingência Offline \n(Não foi possível entrar em contato com os servidores da SEFAZ)");
+				await Task.Yield();
 				// Informamos Campos Importantes para a emissão em contingência
 				xmlNFCE.NFe[0].InfNFe[0].Ide.TpEmis = TipoEmissao.ContingenciaOffLine;
 				xmlNFCE.NFe[0].InfNFe[0].Ide.DhCont = DateTime.Now;
 				xmlNFCE.NFe[0].InfNFe[0].Ide.XJust = "Emitido em Contingência devido a problemas técnicos";
 				//Prosseguimos após a informação dos campos necessários
 				StreamWriter writer = null!;
-				var arqNFCe = Path.Combine(@$".\NFe\ContOffline\NFCE -{IDVenda}-OFFLINE.xml");
+				var arqNFCe = Path.Combine(@$".\NFe\ContOffline\NFCE-{IDVenda}-OFFLINE.xml");
+				//Now the Auto will run properly
+				var Auto = new Unimake.Business.DFe.Servicos.NFCe.Autorizacao(xmlNFCE, configNFCe);
 				try
 				{
 					writer = File.CreateText(arqNFCe);
-					await writer.WriteAsync(Auto.ConteudoXMLAssinado.GetElementsByTagName("NFe")[0]!.OuterXml);
+					var xmlContent = Auto.ConteudoXMLAssinado.GetElementsByTagName("NFe")[0]!.OuterXml;
+					writer.Write(xmlContent);
+					// Por Questão de segurança ele gera a nota offline tbm
+					var nota = new NotaFiscalXml { XmlAuto = "OFFLINE", XmlNota = xmlContent};
+					await CloudDataBase.RegisterLocalAsync(Collections.NotasFiscaisHomologacao,nota);
 				}
 				catch
 				{
-					var nota = new NotaFiscalXml { XmlAuto = "OFFLINE", XmlNota = Auto.ConteudoXMLAssinado.GetElementsByTagName("NFe")[0]!.OuterXml };
-					await CloudDataBase.RegisterLocalAsync(Collections.NotasFiscaisHomologacao,nota);
-					//
+					///
+					await Task.Yield();
 					Modais.MostrarErro("Um Erro Inesperado ocorreu ao tentar Salvar a NFC-e no Disco Local!\nA Pasta contendo o sistema está em um local de acesso restrito?\n\n" +
 						"Por Segurança o conteúdo da Nota foi salvo no seu Banco de Dados Local!\n\nEste Erro é considerado grave, caso ocorra novamente Chame nossa equipe!");
 				}
 				finally
+				{ 
+					
+					await Task.Yield();
+					writer?.Close();
+				}
+				await Task.Yield();
+				Modais.MostrarAviso("Por Exigências Fiscais, na Contingência Offline é OBRIGATÓRIO a Impressão da via do Cliente e do Lojista!");
+				await Task.Yield();
+				// Por Regulamento é necessário 2 cópias, 1 para o contribuinte e outra para o cliente
+				DANFE.ImprimirDANFE_NFCE_Path(arqNFCe,2,true,false);
+			}
+		}
+	
+		public static async Task EmitirNotasFiscaisDeConsumidorGeradasOFFLINEAsync()
+		{
+			string[] Arquivos = Directory.GetFiles(@"NFe\ContOffline");
+			var configNFCe = new Configuracao
+			{
+				TipoDFe = TipoDFe.NFCe,
+				TimeOutWebServiceConnect = 5000,
+				TipoEmissao = TipoEmissao.Normal,
+				CSC = "4E5DB7F3-EBEC-4455-A62C-11054D901E80", // CSC de Homologação, Resumindo o lojista vai poder utilizar uma opção de emissão de nota de teste pela sefaz.
+				CSCIDToken = 1, // Id do token do CSC
+								//CertificadoDigital = Colocar aqui a seleção de certificado pela configuração do LabsMainApp
+				CertificadoDigital = new X509Certificate2("C:\\Users\\Pc\\Desktop\\LabSolution.pfx", "solution2024")
+			};
+			//
+			foreach (string arq in Arquivos)
+			{
+				string fName = arq.Replace(@"NFe\ContOffline\","");
+				
+				if (fName != "Init.txt") 
 				{
-					if(writer != null)
+					await Task.Yield();
+					var doc = new XmlDocument();
+					doc.Load(arq);
+					//
+					var xml = new EnviNFe
 					{
-						writer.Close();
-					}
+						IdLote = "0000000001",
+						Versao = "4.00",
+						IndSinc = SimNao.Sim,
+						NFe = new List<NFe>
+						{
+							XMLUtility.Deserializar<NFe>(doc)
+						}
+					};
+					//
+					//Config Para Emissão
+					//
+					var Auto = new Unimake.Business.DFe.Servicos.NFCe.Autorizacao(xml, configNFCe); // Aqui usamos o namespace para trabalhar com a autorização da NFc-e
+					Auto.Executar();
+					//Fazer os tratamentos dos status (Criar uma função para isso!).
 				}
 			}
-				
 		}
-			//
+	
 	}
 }

@@ -128,7 +128,7 @@ namespace Labs
 			if (!await VerifyDataBases()) { ModoSeguranca = true; Modais.MostrarAviso("MODO DE SEGURANÇA HABILITADO!\nPara Sair Desse Modo, Os Conflitos Devem ser Resolvidos\ne Logo Após o Sistema Deve Ser Reiniciado!"); return; }
             DataBaseAndInternetChecker();
             // Desabilitado somente para debug
-			//VerificacoesPreventivas();
+			VerificacoesPreventivas();
 		}
         /// <summary>
         /// Indexa Produtos utilizando o novo motor de busca.
@@ -137,40 +137,46 @@ namespace Labs
         public static async void IndexarProdutos()
         {
             var produtos = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.Produtos,_ => true);
-            var docs = new List<Document>();
-            //
-            foreach (var prod in produtos)
+            if(produtos != null)
             {
-                string forn = prod.Fornecedor != null ? prod.Fornecedor.NomeEmpresa : null!; // verificamos se o fornecedor é nulo.
-                docs.Add(new()
-                {
-                    new StringField("ID",prod.ID,Field.Store.YES),
-                    new TextField("Descricao",prod.Descricao,Field.Store.YES),
-                    new TextField("Fornecedor",forn,Field.Store.YES)
-                });
-            }
-            //
-            LabsMain.MotorDeBusca.RealizarIndexacaoEmLote(docs,Collections.Produtos,"ID");
+				var docs = new List<Document>();
+				//
+				foreach (var prod in produtos)
+				{
+					string forn = prod.Fornecedor != null ? prod.Fornecedor.NomeEmpresa : null!; // verificamos se o fornecedor é nulo.
+					docs.Add(new()
+				{
+					new StringField("ID",prod.ID,Field.Store.YES),
+					new TextField("Descricao",prod.Descricao,Field.Store.YES),
+					new TextField("Fornecedor",forn,Field.Store.YES)
+				});
+				}
+				//
+				LabsMain.MotorDeBusca.RealizarIndexacaoEmLote(docs, Collections.Produtos, "ID");
+			}
         }
 		//
         public static async void IndexarClientes()
         {
             var clientes = await CloudDataBase.GetManyLocalAsync<ClienteLoja>(Collections.Clientes, _ => true);
-            var docs = new List<Document>();
-            //
-            foreach (var cliente in clientes)
-            {
-                docs.Add(new()
+            if(clientes != null) 
+            { 
+                var docs = new List<Document>();
+                //
+                foreach (var cliente in clientes)
                 {
-                    new StringField("ID",cliente.ID,Field.Store.YES),
-                    new TextField("Nome",cliente.Nome,Field.Store.YES),
-                    new TextField("CPF",cliente.CPF,Field.Store.YES),
-                    new TextField("CNPJ",cliente.CNPJ,Field.Store.YES),
-                    new TextField("Email",cliente.Email,Field.Store.YES)
-                });
+                    docs.Add(new()
+                    {
+                        new StringField("ID",cliente.ID,Field.Store.YES),
+                        new TextField("Nome",cliente.Nome,Field.Store.YES),
+                        new TextField("CPF",cliente.CPF,Field.Store.YES),
+                        new TextField("CNPJ",cliente.CNPJ,Field.Store.YES),
+                        new TextField("Email",cliente.Email,Field.Store.YES)
+                    });
+                }
+                //
+                LabsMain.MotorDeBusca.RealizarIndexacaoEmLote(docs,Collections.Clientes,"ID");
             }
-            //
-            LabsMain.MotorDeBusca.RealizarIndexacaoEmLote(docs,Collections.Clientes,"ID");
         }
 		static async void VerificacoesPreventivas()
         {
@@ -223,8 +229,7 @@ namespace Labs
 		{
             if (ModoSeguranca) { Modais.MostrarAviso("Sem Conexão Primária com o Banco de Dados!\nSe o problema persistir, entre em contato com o nosso suporte."); return; }
             LabsMain.IniciarApp<LabsClientesWPF>(true,false,true);
-            
-            
+            //t();
             //LabsNFe.EmitirNotaFiscalDeConsumidorEletronica("VENDA TESTE DO ESTABELECIMENTO", "6546372625437", 
             //    [
             //        new Produto("NOTA FISCAL EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL",1,0,UnidadesDeMedida.Unidade,null!,10,12.99,"SEM GTIN",false,"","85272900","0102","001","5101","RJ802008",0,22,0,0,0,0,0,0,0,(int)ModalidadeBaseCalculoICMS.ValorOperacao,(int)ModalidadeBaseCalculoICMSST.ValorOperacao,(int)MotivoDesoneracaoICMS.Outro),
@@ -234,6 +239,10 @@ namespace Labs
             //        //new Produto("Leite Condensado - Moça",1,0,UnidadesDeMedida.Unidade,null!,10,12.99,"SEM GTIN",false,"","85272900","0102","001","5101","RJ802008",0,22,0,0,0,0,0,0,0,(int)ModalidadeBaseCalculoICMS.ValorOperacao,(int)ModalidadeBaseCalculoICMSST.ValorOperacao,(int)MotivoDesoneracaoICMS.Outro),
             //    ],TipoAmbiente.Homologacao);
             //
+        }
+        private async void t()
+        {
+            await LabsNFe.EmitirNotasFiscaisDeConsumidorGeradasOFFLINEAsync();
         }
         //
 		private void OnLabsConfigClick(object sender, RoutedEventArgs e)

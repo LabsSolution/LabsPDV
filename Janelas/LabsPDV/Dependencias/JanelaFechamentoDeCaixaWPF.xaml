@@ -25,11 +25,11 @@
                 <Label Grid.Row="0" Grid.Column="0" Content="Aferimento dos Meios Recebidos:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="20" HorizontalAlignment="Left" />
                 <Label Grid.Row="0" Grid.Column="1" x:Name="DataLabel" Content="DATA: dd/mm/yyyy | HORA: HH/mm" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="20" HorizontalAlignment="Right" />
                 <!--Linha 1-->
-                <DataGrid x:Name="ListaAferimentoMeios" SelectionMode="Single" CurrentCellChanged="OnCellChanged" Grid.Row="1" Grid.Column="0" FontSize="16" Grid.ColumnSpan="2"/>
+                <DataGrid x:Name="ListaAferimentoMeios" SelectionMode="Single" CanUserSortColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" CurrentCellChanged="OnCellChanged" Grid.Row="1" Grid.Column="0" FontSize="16" Grid.ColumnSpan="2"/>
                 <!--Linha 2-->
                 <Label Grid.Row="2" Grid.Column="0" Content="Aferimento Geral:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="20" HorizontalAlignment="Left" />
                 <!--Linha 3-->
-                <DataGrid x:Name="ListaAferimentoGeral" SelectionMode="Single" CellEditEnding="OnCellChanged" Grid.Row="3" Grid.Column="0" FontSize="16" Grid.ColumnSpan="2"/>
+                <DataGrid x:Name="ListaAferimentoGeral" SelectionMode="Single" CanUserSortColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" CellEditEnding="OnCellChanged" Grid.Row="3" Grid.Column="0" FontSize="16" Grid.ColumnSpan="2"/>
                 <!--Linha 4-->
                 <Button x:Name="RealizarFechamentoButton" Grid.Row="4" Grid.Column="0" Height="50" Width="200" HorizontalAlignment="Left" Background="#F0f0f0" BorderThickness="0" FontFamily="Segoe UI Black" FontSize="16"  Margin="10" Content="Realizar Fechamento" Click="RealizarFechamentoButton_Click"/>
                 <Button x:Name="VoltarButton" Grid.Row="4" Grid.Column="1" Height="50" Width="150" HorizontalAlignment="Right" Background="#F0f0f0" BorderThickness="0" FontFamily="Segoe UI Black" FontSize="16"  Margin="10" Content="Voltar" Click="VoltarButton_Click"/>

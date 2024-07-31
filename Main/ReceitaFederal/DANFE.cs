@@ -15,34 +15,32 @@ namespace Labs.Main.ReceitaFederal
 			UnidanfeServices.ShowConfigurationScreen();
 		}
 		//
-		public static void ImprimirDANFE_NFCE(string IDVenda)
+		public static void ImprimirDANFE_NFCE(string IDVenda,int Copias = 1, bool Visualize = false, bool Imprimir = true)
 		{
 			//
 			var Config = new UnidanfeConfiguration
 			{
 				Arquivo = $"Nfe/Autorizadas/NFCE-{IDVenda}.xml",
-				Copias = 1,
-				Visualizar = false,
-				Imprimir = true,
+				Copias = Copias,
+				Visualizar = Visualize,
+				Imprimir = Imprimir,
 				Impressora = LabsMainAppWPF.ImpressoraTermica
 			};
 			UnidanfeServices.Execute(Config);
 		}
-
-
-
-
-		public static void teste()
+		//
+		public static void ImprimirDANFE_NFCE_Path(string Path,int Copias = 1, bool Visualize = false, bool Imprimir = true)
 		{
-			var config = new UnidanfeConfiguration
+			//
+			var Config = new UnidanfeConfiguration
 			{
-				Arquivo = @"C:\Users\Pc\source\LabsSolution\LabsPDV\bin\Debug\net8.0-windows\NFe\Autorizadas\33240754781393000147650010000000271831726743-procnfe.xml",
-				Copias = 1,
-				Visualizar = true,
-				Imprimir = false,
+				Arquivo = Path,
+				Copias = Copias,
+				Visualizar = Visualize,
+				Imprimir = Imprimir,
 				Impressora = LabsMainAppWPF.ImpressoraTermica
 			};
-			UnidanfeServices.Execute(config);
+			UnidanfeServices.Execute(Config);
 		}
 	}
 }

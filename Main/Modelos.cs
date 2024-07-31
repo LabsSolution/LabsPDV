@@ -260,15 +260,32 @@ namespace Labs.Main
 		/// </summary>
 		public Produto[] Produtos { get; set; } = null!;
 		//
+		public int QuantidadeProdutosVendidos { get { return Produtos != null!? Produtos.Length : 0; } }
+		//
 		public double Total { get; set; }
+		public string TotalFormat { get { return $"R$ {Utils.FormatarValor(Total)}"; } }
+		//
 		public double Desconto { get; set; }
+		public string DescontoFormat { get { return $"{Utils.FormatarValor(Desconto)}%"; } }
+		//
 		public double TotalComDesconto { get; set; }
+		public string TotalComDescontoFormat { get { return $"R$ {Utils.FormatarValor(TotalComDesconto)}"; } }
+		//
 		public double ValorPago { get; set; }
+		public string ValorPagoFormat { get { return $"R$ {Utils.FormatarValor(ValorPago)}"; } }
+		//
 		public double Troco { get; set; }
+		public string TrocoFormat { get { return $"R$ {Utils.FormatarValor(Troco)}"; } }
+		//
+		public string DataVenda { get; set; } = null!;
+		//
+		public string HoraVenda { get; set; } = null!;
 		/// <summary>
 		/// Pagamentos efetuados durante a venda (Contendo nome e valor pago)
 		/// </summary>
 		public PagamentoEfetuado[] PagamentosEfetuados { get; set; } = null!;
+		//
+		public ClienteLoja ClienteLoja { get; set; } = null!;
 	}
 	public class MeiosPagamentoNotaFiscal()
 	{
@@ -689,6 +706,8 @@ namespace Labs.Main
 		/// Indicador se o produto foi devolvido com defeito ou não (usado somente no objeto de devolução)
 		/// </summary>
 		public bool ComDefeito { get; set; } = ComDefeito;
+		///
+		public bool PossuiInfosFiscais { get; set; } = false;
 	}
 	/// <summary>
 	/// Objeto de Endereço Interno do Sistema

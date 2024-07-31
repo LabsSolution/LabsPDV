@@ -32,7 +32,7 @@
                     <DockPanel>
                         <ComboBox x:Name="MeioDePagamentoComboBox" HorizontalAlignment="Left" FontFamily="Segoe UI" FontSize="14" Width="200" Margin="5,5,5,0"/>
                         <Label Content="Parcelas:" HorizontalAlignment="Left" FontFamily="Segoe UI Black" FontWeight="Bold" FontSize="18" Foreground="#F0f0f0"/>
-                        <TextBox x:Name="ParcelasInputBox" HorizontalAlignment="Left" FontFamily="Segoe UI" FontSize="14" Width="110" Margin="5,5,5,0"/>
+                        <TextBox x:Name="ParcelasInputBox" FontFamily="Segoe UI Black" FontSize="25.5" Width="105" Margin="5,5,5,0"/>
                     </DockPanel>
                     <!--Botão Remover Pagamento-->
                     <Button x:Name="ExcluirPagamento" Content="Remover Pagamento (F5)" Style="{StaticResource RoundButton5px}" HorizontalAlignment="Left" Height="40" MinWidth="210" Background="#f08080" BorderThickness="0" Margin="5,40,5,0" FontFamily="Segoe UI Black" FontSize="16" Click="ExcluirPagamento_Click" />

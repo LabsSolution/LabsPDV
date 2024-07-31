@@ -29,8 +29,9 @@
                             <ColumnDefinition MinWidth="120" Width="99*"/>
                             <ColumnDefinition Width="1223*"/>
                         </Grid.ColumnDefinitions>
+                        <!--BOTOES-->
                         <StackPanel Orientation="Horizontal" Margin="0,10,0,0" Grid.ColumnSpan="2">
-                            
+
                             <!--Cadastrar Produto-->
                             <Button x:Name="CadastrarProdutoButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Cadastrar Produto(s)" Click="CadastrarProdutoButton_Click">
                                 <TextBlock TextWrapping="Wrap" TextAlignment="Center">Cadastrar Produto(s)</TextBlock>
@@ -48,6 +49,8 @@
                                 <TextBlock TextWrapping="Wrap" TextAlignment="Center">Realizar Entrada de Produtos</TextBlock>
                             </Button>
                         </StackPanel>
+                        <!--BOTOES-->
+                        
                         <!--CAIXA DE PESQUISA-->
                         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,10,10,10" VerticalAlignment="Top" Grid.ColumnSpan="2">
                             <Label Name="PesquisarProdutoLabel"  Content="Pesquisar Produto:" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f6f6f6" Width="Auto" Height="Auto" VerticalAlignment="Center" HorizontalAlignment="Right"/>
@@ -61,6 +64,8 @@
                             <Button x:Name="PesquisarButton" Style="{StaticResource RoundButton10px}" Content="Pesquisar" FontFamily="Segoe UI" FontSize="14" Background="#f6f6f6" FontWeight="Bold" Click="PesquisarButton_Click" MinWidth="70" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,0,0"/>
                             <Button x:Name="LimparFiltrosButton" Style="{StaticResource RoundButton10px}" Content="Limpar Filtros" ToolTip="Limpa todos os filtros e puxa novamente os itens do Banco de Dados" FontFamily="Segoe UI" FontSize="14" Background="#f6f6f6" FontWeight="Bold" Click="LimparFiltrosButton_Click" MinWidth="70" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,0,0"/>
                         </StackPanel>
+                        <!--CAIXA DE PESQUISA-->
+                        
                         <DockPanel Grid.Row="1" Grid.ColumnSpan="2">
                             <StackPanel Name="ListarPorCategoriasPanel" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,10,10,0" VerticalAlignment="Center">
                                 <Label Name="ListarPorLabel" Content="Listar:" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f6f6f6" Width="Auto" Height="Auto" VerticalAlignment="Center" HorizontalAlignment="Right"/>
@@ -132,6 +137,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
+
                         <!--Lista-->
                         <ListView x:Name="ListaRegistroDeEntradas" Grid.Row="1" ClipToBounds="True" ToolTip="Lista de Produtos" Margin="0,10,0,0" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}" Grid.ColumnSpan="2">
                             <ListView.View>
@@ -143,6 +149,72 @@
                                     <GridViewColumn Header="Custo Unitário" DisplayMemberBinding="{Binding CustoUnitarioFormatado}" Width="150"/>
                                     <GridViewColumn Header="Preço de Venda" DisplayMemberBinding="{Binding PrecoDeVendaFormatado}" Width="150"/>
                                     <GridViewColumn Header="Valor Total da Compra" DisplayMemberBinding="{Binding ValorTotalDaCompraFormatado}" Width="150"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </TabItem>
+                <!--Aba dos Registros de Saidas-->
+                <TabItem Style="{StaticResource BetterTabItem}" Name="Saidas_Tab" IsSelected="False" Header="Saidas">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <!--BOTOES-->
+                        <StackPanel Orientation="Horizontal" Margin="0,10,0,0" Height="80" Grid.ColumnSpan="2">
+                            <!--Reimprimir Comprovante de Venda-->
+                            <Button x:Name="ImprimirComprovanteClienteButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Imprime uma 2° via do Comprovante do Cliente da Venda Selecionada" Click="ImprimirComprovanteClienteButton_Click">
+                                <TextBlock TextWrapping="Wrap" TextAlignment="Center">Imprimir Comprovante do Cliente</TextBlock>
+                            </Button>
+                            <!--Reimprimir Nota Fiscal-->
+                            <Button x:Name="ImprimirNotaFiscalButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Imprime O Documento Auxiliar da Nota Fiscal da Venda Selecionada" Click="ImprimirNotaFiscalButton_Click">
+                                <TextBlock TextWrapping="Wrap" TextAlignment="Center">Imprimir DANFE</TextBlock>
+                            </Button>
+                            <!--Remover Produto-->
+                            <Button x:Name="ImprimirComprovanteLojaButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Imprime uma 2° via da Nota de Controle Interno da Venda Selecionada" Click="ImprimirComprovanteLojaButton_Click">
+                                <TextBlock TextWrapping="Wrap" TextAlignment="Center">Imprimir Nota de Controle Interno (NCI)</TextBlock>
+                            </Button>
+                            <!--Registrar Entrada-->
+                            <Button x:Name="ImprimirAuxiliarParcelaButton" Style="{StaticResource RoundButton20px}" Background="#F6F6F6" Width="120" Margin="10,0,0,0" FontFamily="Segoe UI" FontSize="16" FontWeight="Bold" ToolTip="Imprime a 2° via da Nota Auxiliar de Parcelamento da Venda Selecionada" Click="ImprimirAuxiliarParcelaButton_Click">
+                                <TextBlock TextWrapping="Wrap" TextAlignment="Center">Imprimir Nota Auxiliar de Parcelamento</TextBlock>
+                            </Button>
+                        </StackPanel>
+                        <!--BOTOES-->
+
+                        <!--CAIXA DE PESQUISA-->
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,10,10,10" VerticalAlignment="Top" Grid.ColumnSpan="2">
+                            <Label Content="Pesquisar Venda:" FontSize="16" FontFamily="Segoe UI" FontWeight="Bold" Foreground="#f6f6f6" Width="Auto" Height="Auto" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                            <ComboBox HorizontalAlignment="Left" FontFamily="Segoe UI" FontWeight="Bold" FontSize="14" Margin="0,0,5,0" VerticalAlignment="Center" Height="Auto" Width="120">
+                                <ComboBoxItem Name="ComboBox_IDVenda" IsSelected="True" Content="ID Venda"/>
+                                <ComboBoxItem Name="ComboBox_Data" IsSelected="False" Content="Data-Hora"/>
+                                <ComboBoxItem Name="ComboBox_PagMaiorQue" IsSelected="False" Content="Pag. Maior Que"/>
+                                <ComboBoxItem Name="ComboBox_PagMenorQue" IsSelected="False" Content="Pag. Menor Que"/>
+                            </ComboBox>
+                            <TextBox x:Name="CaixaDePesquisaVenda" Style="{StaticResource RoundTextBox}" FontSize="20" VerticalAlignment="Stretch" KeyDown="CaixaDePesquisaVenda_KeyDown" HorizontalAlignment="Stretch" Width="350" Height="Auto"/>
+                            <Button x:Name="PesquisarVendaButton" Style="{StaticResource RoundButton10px}" Content="Pesquisar" FontFamily="Segoe UI" FontSize="14" Background="#f6f6f6" FontWeight="Bold" MinWidth="70" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,0,0" Click="PesquisarVendaButton_Click"/>
+                            <Button x:Name="LimparFiltrosVendaButton" Style="{StaticResource RoundButton10px}" Content="Limpar Filtros" ToolTip="Limpa todos os filtros e puxa novamente os itens do Banco de Dados" FontFamily="Segoe UI" FontSize="14" Background="#f6f6f6" FontWeight="Bold" MinWidth="70" Height="30" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,0,0" Click="LimparFiltrosVendaButton_Click"/>
+                        </StackPanel>
+                        <!--Lista as Vendas Realizadas HOJE-->
+                        <CheckBox x:Name="ListarVendasRealizadasHoje" Grid.Row="1" VerticalAlignment="Center" Margin="10,0,10,0" FontSize="20" FontFamily="Segoe Ui Black" Foreground="#f0f0f0" HorizontalAlignment="Right" VerticalContentAlignment="Center" Content="Listar Vendas de Hoje" Checked="ListarVendasRealizadasHoje_Checked" Unchecked="ListarVendasRealizadasHoje_Checked"/>
+                        <!--Lista as Vendas Realizadas HOJE-->
+                        <!--CAIXA DE PESQUISA-->
+
+
+                        <!--Lista-->
+                        <ListView x:Name="ListaRegistroDeSaidas" Grid.Row="2" ClipToBounds="True" ToolTip="Lista de Produtos" Margin="0,10,0,0" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}" Grid.ColumnSpan="2">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="False">
+                                    <GridViewColumn Header="ID da Venda" DisplayMemberBinding="{Binding IDVenda}" Width="180"/>
+                                    <GridViewColumn Header="Produtos Vendidos" DisplayMemberBinding="{Binding QuantidadeProdutosVendidos}" Width="120"/>
+                                    <GridViewColumn Header="Total" DisplayMemberBinding="{Binding TotalFormat}" Width="80"/>
+                                    <GridViewColumn Header="Desconto" DisplayMemberBinding="{Binding DescontoFormat}" Width="150"/>
+                                    <GridViewColumn Header="Total Com Desconto" DisplayMemberBinding="{Binding TotalComDescontoFormat}" Width="150"/>
+                                    <GridViewColumn Header="Valor Pago" DisplayMemberBinding="{Binding ValorPagoFormat}" Width="150"/>
+                                    <GridViewColumn Header="Troco" DisplayMemberBinding="{Binding TrocoFormat}" Width="150"/>
+                                    <GridViewColumn Header="Data" DisplayMemberBinding="{Binding DataVenda}" Width="150"/>
+                                    <GridViewColumn Header="Hora" DisplayMemberBinding="{Binding HoraVenda}" Width="150"/>
                                 </GridView>
                             </ListView.View>
                         </ListView>
@@ -180,30 +252,7 @@
                         </ListView>
                     </Grid>
                 </TabItem>
-
-
-
-
-                <!--Aba dos produtos com defeito-->
-                <TabItem Style="{StaticResource BetterTabItem}" Name="Defeituosos_Tab" IsSelected="False" Header="Produtos Com Defeito">
-                    <ListView x:Name="ListaProdutosComDefeito" ClipToBounds="True" VerticalAlignment="Stretch" ToolTip="Lista de Produtos" Margin="0,0,0,0" SelectionMode="Single" d:ItemsSource="{d:SampleData ItemCount=5}">
-                        <ListView.View>
-                            <GridView AllowsColumnReorder="False">
-                                <GridViewColumn Header="Descrição" DisplayMemberBinding="{Binding Descricao}" Width="200"/>
-                                <GridViewColumn Header="Quantidade" DisplayMemberBinding="{Binding Quantidade}" Width="100"/>
-                                <GridViewColumn Header="Cód Barras" DisplayMemberBinding="{Binding CodBarras}" Width="150"/>
-                                <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" Width="150"/>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </TabItem>
-                
-                
-
-
             </TabControl>
-
-
             <!--Estão Fora da Aba-->
             <DockPanel Grid.Row="1" HorizontalAlignment="Stretch">
                 <StackPanel>

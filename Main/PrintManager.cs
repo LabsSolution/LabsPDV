@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
@@ -17,30 +18,32 @@ namespace Labs.Main
 {
 	public class PrintManager : PrintDocument
 	{
+        // Depois irei fazer a formatação de cada papel (Baseado na bobina da impressora)
         //
-        private Size Papel58mm = new(58, 210);
+        private readonly Size Papel58mm = new(58, 210);
         //
-        private Size Papel76mm = new(76, 210);
+        private readonly Size Papel76mm = new(76, 210);
         //
-        private Size Papel80mm = new(80, 210);
+        private readonly Size Papel80mm = new(80, 210);
         //Holders
         //Para a impressão de Cupons ( e depois emissão de nota fiscal )
         VendaRealizada Venda = null!;
         ClienteLoja Cliente = null!;
         FechamentoDeCaixa Fechamento = null!;
-        //
-        int LarguraPapel = 210; // largura em mm (usado como limitador) (Por algum motivo o segundo valor é o que vale) (o porque eu não sei)
-        int LimiteNomeProduto = 30;
+        List<PagamentoEfetuado> PagamentosEfetuados = null!;
+		//
+		readonly int LarguraPapel = 210; // largura em mm (usado como limitador) (Por algum motivo o segundo valor é o que vale) (o porque eu não sei)
+		readonly int LimiteNomeProduto = 30;
 
-        private Font Bold = new(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
+        private readonly Font Bold = new(FontFamily.GenericSansSerif, 9, FontStyle.Bold);
         //
-        private Font Regular = new(FontFamily.GenericSansSerif, 8, FontStyle.Regular);
+        private readonly Font Regular = new(FontFamily.GenericSansSerif, 8, FontStyle.Regular);
         //
-        private Font RegularPedido = new(FontFamily.GenericSansSerif, 7, FontStyle.Regular);
+        private readonly Font RegularPedido = new(FontFamily.GenericSansSerif, 7, FontStyle.Regular);
         //
-        private Font RegularEndereco = new(FontFamily.GenericSansSerif, 6, FontStyle.Regular);
+        private readonly Font RegularEndereco = new(FontFamily.GenericSansSerif, 6, FontStyle.Regular);
         //
-        private Font RegularItens = new(FontFamily.GenericSansSerif, 6, FontStyle.Regular);
+        private readonly Font RegularItens = new(FontFamily.GenericSansSerif, 6, FontStyle.Regular);
         //
         // Criar função para cálculo de tamanho de texto
         //
@@ -53,7 +56,7 @@ namespace Labs.Main
             Modais.MostrarAviso("A Impressora Configurada Não Existe");
             return false;
         }
-        public void ImprimirCupomNaoFiscalLoja(string Impressora,VendaRealizada Venda)
+        public void ImprimirComprovanteDeVendaLoja(string Impressora,VendaRealizada Venda)
         {
             if (!PrinterExists(Impressora)) { return; }
             //Realizamos as configs iniciais
@@ -66,7 +69,7 @@ namespace Labs.Main
             Print();
         }
         //
-        public void ImprimirCupomNaoFiscalCliente(string Impressora,VendaRealizada Venda,ClienteLoja Cliente)
+        public void ImprimirComprovanteDeVendaCliente(string Impressora,VendaRealizada Venda,ClienteLoja Cliente)
         {
             if (!PrinterExists(Impressora)) { return; }
             //Realizamos as configs iniciais
@@ -93,13 +96,62 @@ namespace Labs.Main
 			// Mostra a pré-visualização antes de imprimir
 		    Print();
 		}
-        // Quando Terminam de Printar, Deserdam do evento
-        private void OnEndPrinting(object sender, PrintEventArgs e)
+        //
+        public void ImprimirCupomAuxiliarDeParcelamento(string Impressora, List<PagamentoEfetuado> PagamentosEfetuados)
+        {
+            if (!PrinterExists(Impressora)) { return; }
+            //
+            PrinterSettings.PrinterName = Impressora;
+            //
+            this.PagamentosEfetuados = PagamentosEfetuados;
+			//
+			PrintPage += ICAP;
+            EndPrint += OnEndPrinting;
+            //
+            Print();
+        }
+
+		private void ICAP(object sender, PrintPageEventArgs e)
+		{
+			Graphics? graphics = e.Graphics;
+			if (graphics == null) { return; }
+			float yPos = 0; // Variável responsável por determinar a posição da agulha
+			//
+			//print header
+			graphics.DrawString("NOTA AUX. PARCELAMENTO", Bold, Brushes.Black, 0, yPos);
+			yPos += 15;
+            graphics.DrawLine(Pens.Black,0,yPos,LarguraPapel,yPos);
+            yPos += 15;
+            graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
+            graphics.DrawString("DETALHES",Bold,Brushes.Black,0,yPos);
+            yPos += 15;
+            graphics.DrawLine(Pens.Black,0,yPos,LarguraPapel,yPos);
+            //
+            foreach (PagamentoEfetuado pagamento in this.PagamentosEfetuados)
+            {
+				graphics.DrawString($"{pagamento.DescPagamento}", RegularItens, Brushes.Black, 0, yPos);
+				yPos += 15;
+				graphics.DrawString($"R$: {Utils.FormatarValor(pagamento.Valor)}", RegularItens, Brushes.Black, 0, yPos);
+                yPos += 15;
+                graphics.DrawString($"{pagamento.Parcelas}x R$:{Utils.FormatarValor(pagamento.ValorParcela)}",RegularItens,Brushes.Black,0,yPos);
+				yPos += 15;
+				graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
+			}
+			yPos += 5;
+			//bottom
+			graphics.DrawString(LabsMain.TradeMark, RegularItens, Brushes.Black, 0, yPos);
+			//
+			e.HasMorePages = false;
+		}
+
+		// Quando Terminam de Printar, Deserdam do evento
+		private void OnEndPrinting(object sender, PrintEventArgs e)
         {
             //Automaticamente deserdam do evento para não sobreescrever
             PrintPage -= ICNFCliente;
             PrintPage -= ICNFLoja;
             PrintPage -= ICNFFechamento;
+            PrintPage -= ICAP;
             EndPrint -= OnEndPrinting;
         }
         //
@@ -154,7 +206,7 @@ namespace Labs.Main
         }
         #endregion
 
-        #region Impressão Cupom Não Fiscal Loja
+        #region Impressão Cupom Loja
         //
         private void ICNFLoja(object send, PrintPageEventArgs e)
         {
@@ -205,7 +257,7 @@ namespace Labs.Main
         }
         #endregion
         //
-        #region Impressão Cupom Não Fiscal Cliente
+        #region Impressão Cupom Cliente
         private void ICNFCliente(object send, PrintPageEventArgs e)
         {
             Graphics? graphics = e.Graphics;
@@ -223,7 +275,7 @@ namespace Labs.Main
             yPos += 20; // A Cada Impressão Atualizamos a posição Vertical da Agulha
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             //
-            graphics.DrawString("CUPOM NÃO FISCAL", Bold, Brushes.Black, 0, yPos);
+            graphics.DrawString("COMPROVANTE DE VENDA", Bold, Brushes.Black, 0, yPos);
             yPos += 15;
             graphics.DrawLine(Pens.Black, 0, yPos, LarguraPapel, yPos);
             yPos += 30;

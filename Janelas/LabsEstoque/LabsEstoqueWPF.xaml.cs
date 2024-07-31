@@ -1,6 +1,7 @@
 ﻿using Labs.Janelas.LabsEstoque.Dependencias;
 using Labs.Janelas.LabsPDV.Dependencias;
 using Labs.Main;
+using Lucene.Net.Util.Mutable;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -31,11 +32,11 @@ namespace Labs.Janelas.LabsEstoque
 		//
 		List<Fornecedor> Fornecedores = [];
 		//
-		List<Produto> ProdutosComDefeito = [];
-        //
         List<Devolucao> Devolucoes = [];
 		//
 		List<EntradaDeProduto> EntradaDeProdutos = [];
+		//
+		List<VendaRealizada> SaidaDeProdutos = [];
         //
         public LabsEstoqueWPF()
         {
@@ -136,34 +137,35 @@ namespace Labs.Janelas.LabsEstoque
         {
             //Garantimos que todos os itens são limpos para evitar consumo de memória excessiva
             Produtos.Clear();
-			ProdutosComDefeito.Clear();
 			Fornecedores.Clear();
             Devolucoes.Clear();
 			EntradaDeProdutos.Clear();
+			SaidaDeProdutos.Clear();
             //
             ListaProdutosCadastrados.Items.Clear();
             ListaProdutosDevolvidos.Items.Clear();
-			ListaProdutosComDefeito.Items.Clear();
 			ListaFornecedores.Items.Clear();
 			ListaRegistroDeEntradas.Items.Clear();
+			ListaRegistroDeSaidas.Items.Clear();
             //
             Produtos = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.Produtos,_ => true);
-			ProdutosComDefeito = await CloudDataBase.GetManyLocalAsync<Produto>(Collections.ProdutosComDefeito,_ => true);
             Devolucoes = await CloudDataBase.GetManyLocalAsync<Devolucao>(Collections.Devolucoes, _ => true);
 			Fornecedores = await CloudDataBase.GetManyLocalAsync<Fornecedor>(Collections.Fornecedores, _ => true);
 			EntradaDeProdutos = await CloudDataBase.GetManyLocalAsync<EntradaDeProduto>(Collections.Entradas, _ => true);
+			SaidaDeProdutos = await CloudDataBase.GetManyLocalAsync<VendaRealizada>(Collections.Vendas,_ => true);
+			//
 			//
 			//Adicionamos direto na lista visual já que os itens apresentados são os próprios produtos
 			// Aqui fazemos uma iteração básica para definir a cor de cada produto baseado na quantidade
 			foreach (var produto in Produtos) { AddProdutoToList(produto); }
 			//
-			foreach (Produto produto in ProdutosComDefeito) { ListaProdutosComDefeito.Items.Add(produto); }
-            //
             foreach (Devolucao devolucao in Devolucoes) { ListaProdutosDevolvidos.Items.Add(devolucao); }
             //
 			foreach (Fornecedor fornecedor in Fornecedores) { ListaFornecedores.Items.Add(fornecedor); }
 			//
 			foreach(EntradaDeProduto entrada in EntradaDeProdutos) { ListaRegistroDeEntradas.Items.Add(entrada); }
+			//
+			foreach(VendaRealizada venda in SaidaDeProdutos) { ListaRegistroDeSaidas.Items.Add(venda); }
 			//
             ComboBox_Todos.IsSelected = true;
             ComboBox_Descricao.IsSelected = true;
@@ -405,5 +407,184 @@ namespace Labs.Janelas.LabsEstoque
 		}
 
 		#endregion
+		//
+		#region Aba Saidas
+		//
+		// Métodos Estoque
+		private void AtualizarVendasVisual(string searchFilter,bool lp = false)
+		{
+			//Aqui a gente retorna se não tiver nada até porque não faz sentido gastar processamento atoa
+			if (searchFilter.IsNullOrEmpty() && ListaRegistroDeSaidas.Items.Count == SaidaDeProdutos.Count) 
+			{
+				if (lp)
+				{
+					ListaRegistroDeSaidas.Items.Clear();
+					SaidaDeProdutos.ForEach(x =>
+					{
+						if(Utils.IsToday(x.DataVenda)) { ListaRegistroDeSaidas.Items.Add(x); }
+					});
+					return;
+				}
+				return;
+			}
+			//
+			ListaRegistroDeSaidas.Items.Clear();
+			//
+			//
+			if (searchFilter.IsNullOrEmpty()) { SaidaDeProdutos.ForEach(x => ListaRegistroDeSaidas.Items.Add(x)); return; }
+			//
+			else
+			{
+				if (ComboBox_IDVenda.IsSelected)
+				{
+					SaidaDeProdutos.ForEach((x) =>
+					{
+						if (SaidaDeProdutos.Find(x => x.IDVenda.Contains(searchFilter,StringComparison.OrdinalIgnoreCase)) != null) { ListaRegistroDeSaidas.Items.Add(x); }
+					});
+				}
+				if (ComboBox_Data.IsSelected)
+				{
+					SaidaDeProdutos.ForEach((x) =>
+					{
+						if (SaidaDeProdutos.Find(x => $"{x.DataVenda}-{x.HoraVenda}".Contains(searchFilter)) != null) { ListaRegistroDeSaidas.Items.Add(x); }
+					});
+				}
+				if (ComboBox_PagMaiorQue.IsSelected)
+				{
+					if (!Utils.TryParseToDouble(searchFilter, out double valor)) { Modais.MostrarAviso("Insira um valor Válido!"); return; }
+					//
+					SaidaDeProdutos.ForEach((x) =>
+					{
+						if (x.TotalComDesconto >= valor) { ListaRegistroDeSaidas.Items.Add(x); }
+					});
+				}
+				if (ComboBox_PrecoMenorQue.IsSelected)
+				{
+					if (!Utils.TryParseToDouble(searchFilter, out double valor)) { Modais.MostrarAviso("Insira um valor Válido!"); return; }
+					//
+					SaidaDeProdutos.ForEach((x) =>
+					{
+						if (x.TotalComDesconto <= valor) { ListaRegistroDeSaidas.Items.Add(x); }
+					});
+				}
+			}
+			//
+		}
+
+		private void CaixaDePesquisaVenda_KeyDown(object sender, KeyEventArgs e)
+		{
+			if(e.Key == Key.Enter)
+			{
+				AtualizarVendasVisual(CaixaDePesquisaVenda.Text, (bool)ListarVendasRealizadasHoje.IsChecked!);
+			}
+		}
+
+		private void PesquisarVendaButton_Click(object sender, RoutedEventArgs e)
+		{
+			AtualizarVendasVisual(CaixaDePesquisaVenda.Text,(bool)ListarVendasRealizadasHoje.IsChecked!);
+		}
+
+		private void LimparFiltrosVendaButton_Click(object sender, RoutedEventArgs e)
+		{
+			ComboBox_IDVenda.IsSelected = true;
+			LoadFromDataBase();
+		}
+
+		private void ImprimirComprovanteClienteButton_Click(object sender, RoutedEventArgs e)
+		{
+			var r = Modais.MostrarPergunta("Deseja Imprimir a 2° Via do Comprovante de Venda do Cliente para a Venda Selecionada?");
+			if (r == MessageBoxResult.No) { return; }
+			//
+			if(ListaRegistroDeSaidas.SelectedItem is not VendaRealizada Venda) { Modais.MostrarAviso("Você deve selecionar uma venda para realizar a impressão!"); return; }
+			//
+			using (var Pm = new PrintManager())
+			{
+				Pm.ImprimirComprovanteDeVendaCliente(LabsMainAppWPF.ImpressoraTermica,Venda,Venda.ClienteLoja);
+			}
+		}
+		//
+		private async static void ImprimirDANFE(VendaRealizada Venda)
+		{
+			bool parcelado = false;
+			bool InfosFiscaisOk = true;
+			foreach (PagamentoEfetuado pe in Venda.PagamentosEfetuados) { if(pe.Parcelas > 1) { parcelado = true; } }
+			//
+			foreach (Produto prod in Venda.Produtos) { if (!prod.PossuiInfosFiscais) { InfosFiscaisOk = false; } }
+			//
+			if (!InfosFiscaisOk) 
+			{ 
+				Modais.MostrarAviso("Não foi possível imprimir a DANFE!\nUm ou mais produtos não estão com suas informações fiscais registradas!");
+				var r = Modais.MostrarPergunta("Deseja Corrigir as Informações para a Impressão?");
+				if(r == MessageBoxResult.No) { return; }
+
+				LabsMain.IniciarDependencia<CadastrarInfosFiscais>(app => 
+				{
+					app.InitMany([..Venda.Produtos]);
+					app.OnInfosApplied += UpdateProdutos; // Atrelamos a função local de atualização
+				});
+				//Função local disparada pelo Evento da janela de cadastro
+				void UpdateProdutos(CadastrarInfosFiscais Janela, Produto produto, List<Produto> Produtos)
+				{
+					Janela.OnInfosApplied -= UpdateProdutos;
+					//
+					if(Produtos == null) { return; }
+					//
+					Venda.Produtos = [..Produtos]; // Atualizamos os produtos da venda
+				}
+				//
+				return; 
+			}
+			//
+			await LabsNFe.EmitirNotaFiscalDeConsumidorEletronicaAsync("Venda para consumidor final.",Venda.IDVenda,Venda.Troco,parcelado, [.. Venda.Produtos], [.. Venda.PagamentosEfetuados]);
+		}
+		//
+		private void ImprimirNotaFiscalButton_Click(object sender, RoutedEventArgs e)
+		{
+			var r = Modais.MostrarPergunta("Deseja Imprimir a DANFE da Venda Selecionada?");
+			if(r == MessageBoxResult.No) { return; }
+			//
+			if(ListaRegistroDeSaidas.SelectedItem is not VendaRealizada Venda) { Modais.MostrarAviso("Você deve selecionar uma venda para realizar a Impressão!"); return; }
+			//
+			ImprimirDANFE(Venda);
+		}
+
+		private void ImprimirComprovanteLojaButton_Click(object sender, RoutedEventArgs e)
+		{
+			var r = Modais.MostrarPergunta("Deseja Imprimir a 2° Via da Nota de Controle Interno (NCI) da Venda Selecionada?");
+			if (r == MessageBoxResult.No) { return; }
+			//
+			if (ListaRegistroDeSaidas.SelectedItem is not VendaRealizada Venda) { Modais.MostrarAviso("Você deve selecionar uma venda para realizar a impressão!"); return; }
+			//
+			using (var Pm = new PrintManager())
+			{
+				Pm.ImprimirComprovanteDeVendaLoja(LabsMainAppWPF.ImpressoraTermica, Venda);
+			}
+		}
+
+		private void ImprimirAuxiliarParcelaButton_Click(object sender, RoutedEventArgs e)
+		{
+			var r = Modais.MostrarPergunta("Deseja Imprimir a 2° Via da Nota Auxiliar de Parcelamento?");
+			if(r == MessageBoxResult.No) { return; }
+			//
+			if(ListaRegistroDeSaidas.SelectedItem is not VendaRealizada Venda) { Modais.MostrarAviso("Você deve selecionar uma venda para realizar a impressão!"); return; }
+			//
+			using( var Pm = new PrintManager()) 
+			{
+				Pm.ImprimirCupomAuxiliarDeParcelamento(LabsMainAppWPF.ImpressoraTermica,[..Venda.PagamentosEfetuados]);
+			}
+		}
+		private void ListarVendasRealizadasHoje_Checked(object sender, RoutedEventArgs e)
+		{
+			bool? lvrh = ListarVendasRealizadasHoje.IsChecked;
+			if (lvrh.HasValue)
+			{
+				if(lvrh.Value == true) { AtualizarVendasVisual(CaixaDePesquisaVenda.Text, true); return; }
+				AtualizarVendasVisual(CaixaDePesquisaVenda.Text,false);
+			}
+		}
+		//
+		#endregion
+
+
 	}
 }

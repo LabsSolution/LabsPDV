@@ -32,9 +32,14 @@ namespace Labs.Main
 		//------------------------------------//
 		//Verificadores de acesso público
 		//------------------------------------//
-		public static bool IsNotValidString(string text)
+		/// <summary>
+		/// Define se a data fornecida é hoje
+		/// </summary>
+		/// <param name="Data">Data no formato dd/MM/yyyy</param>
+		/// <returns>Retorna verdadeiro se a data fornecida é hoje</returns>
+		public static bool IsToday(string Data) 
 		{
-			return string.IsNullOrWhiteSpace(text);
+			return Data == $"{DateTime.Now:dd/MM/yyyy}";
 		}
 		/// <summary>
 		/// Retorna um produto usando seu código de registro

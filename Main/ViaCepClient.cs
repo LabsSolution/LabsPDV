@@ -17,7 +17,6 @@ namespace Labs.Main
 		{
 			if (string.IsNullOrWhiteSpace(cep))
 			{
-				Modais.MostrarErro("O CEP não pode ser nulo ou vazio.");
 				return null!;
 			}
 
