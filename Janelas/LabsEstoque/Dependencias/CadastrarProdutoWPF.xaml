@@ -28,31 +28,38 @@
                     <Button Name="CadastroInfoFiscalButton" HorizontalAlignment="Right" Content="Cadastrar Informações Fiscais" Width="200" Height="30" Background="#FFA000" Style="{StaticResource RoundButton5px}" Click="CadastroInfoFiscalButton_Click"/>
                 </DockPanel>
                 <!--Conteúdo-->
-                <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="0,5,0,5">
+
+                <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="0,5,0,5" ToolTip="Descrição é basicamente o nome do produto, Exemplo: (Biscoito Piraque de Chocolate)">
                     <Label Content="Descrição:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
                     <TextBox Margin="5,0,5,0" x:Name="DescricaoInputBox" FontFamily="Segoe UI" FontSize="16" Style="{StaticResource RoundTextBox10px}"/>
                 </StackPanel>
                 
-                <!--Código do Produto-->
-                <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Margin="0,5,0,5">
-                    <Label Content="Código do Produto:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
+                <!--Código Interno do Produto-->
+                <StackPanel Grid.Row="2" Grid.ColumnSpan="1" Margin="0,5,5,5" ToolTip="O Código Interno é o identificador interno do produto utilizado no PDV (Também pode ser um Código GTIN))">
+                    <Label Content="Código Interno do Produto:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
+                    <TextBox Name="CodInternoInputBox" VerticalContentAlignment="Center" FontSize="16" Style="{StaticResource RoundTextBox10px}" HorizontalAlignment="Stretch" Height="25"/>
+                </StackPanel>
+                
+                <!--Código GTIN do Produto-->
+                <StackPanel Grid.Row="2" Grid.Column="2" Margin="5,5,0,5" ToolTip="O Código GTIN é o Código de Barras do Produto (Aqui é Obrigatório que seja um código GTIN válido. caso Não tenha ou não saiba, deixe em Branco)">
+                    <Label Content="Código GTIN do Produto:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
                     <TextBox Name="CodBarrasInputBox" VerticalContentAlignment="Center" FontSize="16" Style="{StaticResource RoundTextBox10px}" HorizontalAlignment="Stretch" Height="25"/>
                 </StackPanel>
                 
                 <!--Dockpanel para unidade-->
-                <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.Row="3" Grid.Column="0" Margin="0,5,0,5">
+                <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.Row="3" Grid.Column="0" ToolTip="Seletor de Unidade de Medida do Produto" Margin="0,5,0,5">
                     <Label Content="UN. de Medida:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
                     <ComboBox Name="UnidadeDeMedidaComboBox" HorizontalAlignment="Stretch" FontFamily="Segoe UI" FontSize="16" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Height="25"/>
                 </DockPanel>
 
                 <!--Dockpanel para Estoque Minimo-->
-                <DockPanel HorizontalAlignment="Stretch"  Grid.Row="3" Grid.Column="1" Margin="0,5,0,5">
+                <DockPanel HorizontalAlignment="Stretch"  Grid.Row="3" Grid.Column="1" ToolTip="Aqui é Definido o Estoque Mínimo desse produto, ou seja, a quantidade mínima para que não tenha falta desse produto no seu estoque" Margin="0,5,0,5">
                     <Label Content="Estoque Mínimo:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
                     <TextBox Name="EstoqueMinimoInputBox" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold" FontSize="18" Style="{StaticResource RoundTextBox10px}" HorizontalAlignment="Stretch" Height="25"/>
                 </DockPanel>
 
                 <!--Dockpanel para Fornecedor-->
-                <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,5,0,5">
+                <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,5,0,5" ToolTip="Seletor de Fornecedor. Aqui você seleciona qual é o fornecedor desse produto (Caso não tenha, Basta cadastrar o fornecedor na aba Fornecedores.)">
                     <Label Content="Fornecedor:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
                     <ComboBox Name="FornecedorComboBox" HorizontalAlignment="Stretch" FontFamily="Segoe UI" FontSize="16" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Height="25"/>
                 </DockPanel>

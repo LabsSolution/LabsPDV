@@ -42,10 +42,32 @@ namespace Labs.Main
 			return Data == $"{DateTime.Now:dd/MM/yyyy}";
 		}
 		/// <summary>
+		/// Verifica se um código GTIN13 é válido
+		/// </summary>
+		/// <param name="GTIN">Código</param>
+		/// <returns>Retorna Verdadeiro se o código é válido</returns>
+		public static bool IsValidGtin13(string GTIN)
+		{
+			List<int> ns = [];
+			//
+			if (GTIN.IsNullOrEmpty()) { return false; }
+			if(GTIN.Length > 13) { return false; } // retornamos se o gtin for maior que 13 digitos
+			// Fazemos a iteração dos digitos e retornamos caso tenha algum digito errado (Uma letra por exemplo)
+			foreach(char c in GTIN) { if (!int.TryParse($"{c}", out int r)) { return false; } ns.Add(r); }
+			//
+			int resPar = (ns[1] + ns[3] + ns[5] + ns[7] + ns[9] + ns[11]) * 3;
+			int resImpar = ns[0] + ns[2] + ns[4] + ns[6] + ns[8] + ns[10] + resPar;
+			// Agora Achamos o Digito Verificador (é literalmente o que falta adicionar para que o resultado do módulo por 10 seja 0)
+			int df = 0;
+			while ((resImpar + df) % 10 != 0) {df++;} // Aqui o loop while simplesmente quebra e retorna o digito verificador
+			// Agora verificamos se o último digito é valido ou não
+			return df == ns.Last();
+			//
+		}
+		/// <summary>
 		/// Retorna um produto usando seu código de registro
 		/// </summary>
 		/// <param name="Cod">Código de registro do produto</param>
-		/// <param name="produto">Retorno (out) do produto cadastrado</param>
 		/// <returns>Retorna um booleano representado se a busca foi bem sucedida ou não</returns>
 		public static async Task<Produto> GetProdutoByCode(string Cod)
 		{

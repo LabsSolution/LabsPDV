@@ -366,45 +366,42 @@ namespace Labs.Janelas.LabsPDV
         }
         //Chamado quando alguma tecla é pressionada na área de cód de barras
         //
-        private async void OnAddProduto()
+        private async void OnAddProduto(string ID = null!)
         {
             //
             if (QuantidadeBox.Text.Length < 1) { QuantidadeBox.Text = "1"; }
             //
-            if (Utils.IsValidBarCode(CodBarrasInput.Text))
+            Produto produto = await CloudDataBase.GetLocalAsync<Produto>(Collections.Produtos,x => (x.CodBarras == CodBarrasInput.Text || x.CodInterno == CodBarrasInput.Text || x.ID == ID));
+            if (produto != null)
             {
-                Produto produto = await Utils.GetProdutoByCode(CodBarrasInput.Text);
-                if (produto != null)
-                {
-                    // só prosseguimos com a adição na lista de venda, caso o produto exista
-                    // no banco de dados
-                    //
-                    // Alteramos a quantidade porque não queremos vender o estoque inteiro de uma vez só KKK
-                    int QTD = int.Parse(QuantidadeBox.Text);
-                    if (QTD > produto.Quantidade) { Modais.MostrarAviso("A quantidade passada é maior que a contida no estoque!"); return; } // caso a quantidade que estamos passando for maior que a disponível no estoque;
-                                                                                                                                             //
-                    produto.Quantidade = int.Parse(QuantidadeBox.Text);
-                    AddProduto(produto, out double TotalItem);
-                    // Ao Adicionar o produto na lista, limpamos o código de barras e resetamos a quantidade para somente 1 (para evitar de replicar a quantidade anterior);
-                    CodBarrasInput.Text = null;
-                    QuantidadeBox.Text = "1";
-                    //
-                    PrecoUnitarioBox.Text = $"{produto.Preco}";
-                    SubTotalBox.Text = TotalItem.ToString();
-                    //
-                    PagamentoTotal += TotalItem;
-                    PagamentoTotal = Math.Round(PagamentoTotal, 2);
-                    //
-                    SetPagamentoTotalBox();
-                    //
-                    EstadoCaixa.Produtos = Produtos; // Aqui refletimos
-                                                     // Atualizamos o estado Caixa do Banco de dados
-                    UpdateEstadoCaixa();
-                }
-                else
-                {
-                    Modais.MostrarAviso("Produto Não Cadastrado no Estoque!");
-                }
+                // só prosseguimos com a adição na lista de venda, caso o produto exista
+                // no banco de dados
+                //
+                // Alteramos a quantidade porque não queremos vender o estoque inteiro de uma vez só KKK
+                int QTD = int.Parse(QuantidadeBox.Text);
+                if (QTD > produto.Quantidade) { Modais.MostrarAviso("A quantidade passada é maior que a contida no estoque!"); return; } // caso a quantidade que estamos passando for maior que a disponível no estoque;
+                                                                                                                                         //
+                produto.Quantidade = int.Parse(QuantidadeBox.Text);
+                AddProduto(produto, out double TotalItem);
+                // Ao Adicionar o produto na lista, limpamos o código de barras e resetamos a quantidade para somente 1 (para evitar de replicar a quantidade anterior);
+                CodBarrasInput.Text = null;
+                QuantidadeBox.Text = "1";
+                //
+                PrecoUnitarioBox.Text = $"{produto.Preco}";
+                SubTotalBox.Text = TotalItem.ToString();
+                //
+                PagamentoTotal += TotalItem;
+                PagamentoTotal = Math.Round(PagamentoTotal, 2);
+                //
+                SetPagamentoTotalBox();
+                //
+                EstadoCaixa.Produtos = Produtos; // Aqui refletimos
+                                                 // Atualizamos o estado Caixa do Banco de dados
+                UpdateEstadoCaixa();
+            }
+            else
+            {
+                Modais.MostrarAviso("Não foi Possível Encontrar o Produto");
             }
         }
         private void OnCodBarrasKeyUp(object sender, KeyEventArgs e)
@@ -465,10 +462,9 @@ namespace Labs.Janelas.LabsPDV
             AbrirJanelaDePesquisa();
 		}
 
-		private void ProdutoPesquisado(string CodBarras, PesquisaProdutos app)
+		private void ProdutoPesquisado(string ID, PesquisaProdutos app)
 		{
-            CodBarrasInput.Text = CodBarras;
-            OnAddProduto();
+            OnAddProduto(ID);
             //Desatrelamos o evento assim que a janela for encerrada
             app.OnProdutoSelect -= ProdutoPesquisado;
 		}

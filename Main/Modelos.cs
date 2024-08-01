@@ -583,7 +583,8 @@ namespace Labs.Main
 	double PCredSN = 0,
 	int BaseDeCalculoICMS = 0,
 	int BaseDeCalculoICMSST = 0,
-	int MotivoDesoneracaoICMS = 0)
+	int MotivoDesoneracaoICMS = 0,
+	bool PossuiInfosFiscais = false)
 	{
 		//Identificador na database
 		[BsonId]
@@ -707,7 +708,7 @@ namespace Labs.Main
 		/// </summary>
 		public bool ComDefeito { get; set; } = ComDefeito;
 		///
-		public bool PossuiInfosFiscais { get; set; } = false;
+		public bool PossuiInfosFiscais { get; set; } = PossuiInfosFiscais;
 	}
 	/// <summary>
 	/// Objeto de Endereço Interno do Sistema

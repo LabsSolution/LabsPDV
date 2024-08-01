@@ -428,8 +428,8 @@ namespace Labs.Main
 					NItem = i + 1,// Iteração começa do 1 (na nota obviamente).
 					Prod = new Prod
 					{
-						CProd = "000000",//Produto.CodInterno,
-						CEAN = "SEM GTIN",//Produto.CodBarras,
+						CProd = Produto.CodInterno,
+						CEAN = Produto.CodBarras,
 						XProd = Produto.Descricao,
 						NCM = Produto.NCM,
 						CFOP = Produto.CFOP,
@@ -437,7 +437,7 @@ namespace Labs.Main
 						QCom = 1,
 						VUnCom = (decimal)Produto.Preco,
 						VProd = Produto.Preco,
-						CEANTrib = "SEM GTIN",//Produto.CodBarras,
+						CEANTrib = Produto.CodBarras,
 						UTrib = Produto.UnidadeDeMedida.Unidade,
 						QTrib = 1,
 						VUnTrib = (decimal)Produto.Preco,
@@ -609,11 +609,6 @@ namespace Labs.Main
 				}
 			}
 			};
-
-			//
-			Modais.MostrarInfo($"VtotProdutos: {vTotProdutos} | vtotTroco{vTotTroco}");
-			//
-
 			//Config Para Emissão
 			var configNFCe = new Configuracao
 			{

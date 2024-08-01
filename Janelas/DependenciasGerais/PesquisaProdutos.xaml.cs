@@ -24,7 +24,7 @@ namespace Labs.Janelas.DependenciasGerais
 		//
 		List<Produto> Produtos = [];
 		//
-		public delegate void ProdutoSelecionado(string CodBarras,PesquisaProdutos janela);
+		public delegate void ProdutoSelecionado(string ID,PesquisaProdutos janela);
 		/// <summary>
 		/// Esse Evento Retorna o Código de Banco de Dados do produto selecionado. "ID".
 		/// </summary>
@@ -50,7 +50,7 @@ namespace Labs.Janelas.DependenciasGerais
 		{
 			if (ListaProdutosCadastrados.SelectedItem is not Produto prod) { return; }
 			//Invocamos o evento baseado no produto Selecionado.
-			OnProdutoSelect?.Invoke(prod.CodBarras,this);
+			OnProdutoSelect?.Invoke(prod.ID,this);
 			//Após invocarmos o evento, simplesmente fechamos
 			this.Close();
 		}

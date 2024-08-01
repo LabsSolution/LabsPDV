@@ -24,16 +24,25 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <!--Conteúdo-->
-                <Label Content="Cadastro de Produto(s)" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
+                <DockPanel Grid.Row="0" Grid.ColumnSpan="2">
+                    <Label Content="Atualizar Produto:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
+                    <Button Name="AtualizarInfoFiscal" HorizontalAlignment="Right" Content="Atualizar Informações Fiscais" Width="200" Height="30" Background="#FFA000" Style="{StaticResource RoundButton5px}" Click="AtualizarInfoFiscal_Click"/>
+                </DockPanel>
                 <!--Conteúdo-->
                 <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="0,5,0,5">
                     <Label Content="Descrição:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
                     <TextBox Margin="5,0,5,0" x:Name="DescricaoInputBox" FontFamily="Segoe UI" FontSize="16" Style="{StaticResource RoundTextBox10px}"/>
                 </StackPanel>
 
-                <!--Código do Produto-->
-                <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Margin="0,5,0,5">
-                    <Label Content="Código do Produto:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
+                <!--Código Interno do Produto-->
+                <StackPanel Grid.Row="2" Grid.ColumnSpan="1" Margin="0,5,5,5" ToolTip="O Código Interno é o identificador interno do produto utilizado no PDV (Também pode ser um Código GTIN))">
+                    <Label Content="Código Interno do Produto:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
+                    <TextBox Name="CodInternoInputBox" VerticalContentAlignment="Center" FontSize="16" Style="{StaticResource RoundTextBox10px}" HorizontalAlignment="Stretch" Height="25"/>
+                </StackPanel>
+
+                <!--Código GTIN do Produto-->
+                <StackPanel Grid.Row="2" Grid.Column="2" Margin="5,5,0,5" ToolTip="O Código GTIN é o Código de Barras do Produto (Aqui é Obrigatório que seja um código GTIN válido. caso Não tenha ou não saiba, deixe em Branco)">
+                    <Label Content="Código GTIN do Produto:" FontFamily="Segoe UI Black" Foreground="#f0f0f0" FontSize="18"/>
                     <TextBox Name="CodBarrasInputBox" VerticalContentAlignment="Center" FontSize="16" Style="{StaticResource RoundTextBox10px}" HorizontalAlignment="Stretch" Height="25"/>
                 </StackPanel>
 

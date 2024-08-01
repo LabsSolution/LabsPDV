@@ -128,7 +128,7 @@ namespace Labs
 			if (!await VerifyDataBases()) { ModoSeguranca = true; Modais.MostrarAviso("MODO DE SEGURANÇA HABILITADO!\nPara Sair Desse Modo, Os Conflitos Devem ser Resolvidos\ne Logo Após o Sistema Deve Ser Reiniciado!"); return; }
             DataBaseAndInternetChecker();
             // Desabilitado somente para debug
-			VerificacoesPreventivas();
+			//VerificacoesPreventivas();
 		}
         /// <summary>
         /// Indexa Produtos utilizando o novo motor de busca.
@@ -229,6 +229,8 @@ namespace Labs
 		{
             if (ModoSeguranca) { Modais.MostrarAviso("Sem Conexão Primária com o Banco de Dados!\nSe o problema persistir, entre em contato com o nosso suporte."); return; }
             LabsMain.IniciarApp<LabsClientesWPF>(true,false,true);
+            
+            
             //t();
             //LabsNFe.EmitirNotaFiscalDeConsumidorEletronica("VENDA TESTE DO ESTABELECIMENTO", "6546372625437", 
             //    [

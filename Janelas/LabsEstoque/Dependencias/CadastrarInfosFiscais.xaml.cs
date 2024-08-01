@@ -33,6 +33,26 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 		{
 			InitializeComponent();
 		}
+		private void LoadInfos(Produto Produto)
+		{
+			NCMInputBox.Text = Produto.NCM;
+			CSTInputBox.Text = Produto.CST;
+			CFOPInputBox.Text = Produto.CFOP;
+			CBENEFInputBox.Text = Produto.CBENEF;
+			VICMSDESONInputBox.Text = $"{Produto.VICMSDESON}";
+			PICMSInputBox.Text = $"{Produto.PICMS}";
+			PICMSSTInputBox.Text = $"{Produto.PICMSST}";
+			PMVASTInputBox.Text = $"{Produto.PMVAST}";
+			PFCPInputBox.Text = $"{Produto.PFCP}";
+			PRedBCInputBox.Text = $"{Produto.PRedBC}";
+			PRedBCSTInputBox.Text = $"{Produto.PRedBCST}";
+			PICMSDifInputBox.Text = $"{Produto.PICMSDIF}";
+			PCredSNInputBox.Text = $"{Produto.PCredSN}";
+			//
+			BaseCalculoICMS_ComboBox.SelectedIndex = Produto.BaseDeCalculoICMS;
+			BaseCalculoICMSST_ComboBox.SelectedIndex = Produto.BaseDeCalculoICMSST;
+			MotivoDesoneracaoICMS_ComboBox.SelectedIndex = Produto.MotivoDesoneracaoICMS;
+		}
 		/// <summary>
 		/// Atualiza o Nome do Produto que está sendo editado na Janela
 		/// </summary>
@@ -62,6 +82,8 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 			{
 				MotivoDesoneracaoICMS_ComboBox.Items.Add(Motivo);
 			}
+			//Carregamos as infos do produto se ele tiver infos
+			if (produto.PossuiInfosFiscais) { LoadInfos(produto); }
 		}
 		public void InitMany(List<Produto> produtos)
 		{
@@ -185,40 +207,37 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 			//
 			if(Produtos != null)
 			{
-				if(Produtos.Count > 0)
+				if(Produtos.Count > 0 && iterador < Produtos.Count)
 				{
 					var prod = Produtos[iterador];
 					//
-					prod.NCM = NCMInputBox.Text;
-					prod.CST = CSTInputBox.Text;
-					prod.CFOP = CFOPInputBox.Text;
-					prod.CBENEF = !CBENEFInputBox.Text.IsNullOrEmpty() ? CBENEFInputBox.Text : "";
-					prod.VICMSDESON = !VICMSDESONInputBox.Text.IsNullOrEmpty() ? double.Parse(VICMSDESONInputBox.Text) : 0;
-					prod.PICMS = !PICMSInputBox.Text.IsNullOrEmpty() ? double.Parse(PICMSInputBox.Text) : 0;
-					prod.PICMSST = !PICMSSTInputBox.Text.IsNullOrEmpty() ? double.Parse(PICMSSTInputBox.Text) : 0;
-					prod.PMVAST = !PMVASTInputBox.Text.IsNullOrEmpty() ? double.Parse(PMVASTInputBox.Text) : 0;
-					prod.PFCP = !PFCPInputBox.Text.IsNullOrEmpty() ? double.Parse(PFCPInputBox.Text) : 0;
-					prod.PRedBC = !PRedBCInputBox.Text.IsNullOrEmpty() ? double.Parse(PRedBCInputBox.Text) : 0;
-					prod.PRedBCST = !PRedBCSTInputBox.Text.IsNullOrEmpty() ? double.Parse(PRedBCSTInputBox.Text) : 0;
-					prod.PICMSDIF = !PICMSDifInputBox.Text.IsNullOrEmpty() ? double.Parse(PICMSDifInputBox.Text) : 0;
-					prod.PCredSN = !PCredSNInputBox.Text.IsNullOrEmpty() ? double.Parse(PCredSNInputBox.Text) : 0;
+					Produtos[iterador].NCM = NCMInputBox.Text;
+					Produtos[iterador].CST = CSTInputBox.Text;
+					Produtos[iterador].CFOP = CFOPInputBox.Text;
+					Produtos[iterador].CBENEF = !CBENEFInputBox.Text.IsNullOrEmpty() ? CBENEFInputBox.Text : "";
+					Produtos[iterador].VICMSDESON = !VICMSDESONInputBox.Text.IsNullOrEmpty() ? double.Parse(VICMSDESONInputBox.Text) : 0;
+					Produtos[iterador].PICMS = !PICMSInputBox.Text.IsNullOrEmpty() ? double.Parse(PICMSInputBox.Text) : 0;
+					Produtos[iterador].PICMSST = !PICMSSTInputBox.Text.IsNullOrEmpty() ? double.Parse(PICMSSTInputBox.Text) : 0;
+					Produtos[iterador].PMVAST = !PMVASTInputBox.Text.IsNullOrEmpty() ? double.Parse(PMVASTInputBox.Text) : 0;
+					Produtos[iterador].PFCP = !PFCPInputBox.Text.IsNullOrEmpty() ? double.Parse(PFCPInputBox.Text) : 0;
+					Produtos[iterador].PRedBC = !PRedBCInputBox.Text.IsNullOrEmpty() ? double.Parse(PRedBCInputBox.Text) : 0;
+					Produtos[iterador].PRedBCST = !PRedBCSTInputBox.Text.IsNullOrEmpty() ? double.Parse(PRedBCSTInputBox.Text) : 0;
+					Produtos[iterador].PICMSDIF = !PICMSDifInputBox.Text.IsNullOrEmpty() ? double.Parse(PICMSDifInputBox.Text) : 0;
+					Produtos[iterador].PCredSN = !PCredSNInputBox.Text.IsNullOrEmpty() ? double.Parse(PCredSNInputBox.Text) : 0;
 					//
-					prod.BaseDeCalculoICMS = BaseCalculoICMS_ComboBox.SelectedIndex;
-					prod.BaseDeCalculoICMSST = BaseCalculoICMSST_ComboBox.SelectedIndex;
-					prod.MotivoDesoneracaoICMS = MotivoDesoneracaoICMS_ComboBox.SelectedIndex;
+					Produtos[iterador].BaseDeCalculoICMS = BaseCalculoICMS_ComboBox.SelectedIndex;
+					Produtos[iterador].BaseDeCalculoICMSST = BaseCalculoICMSST_ComboBox.SelectedIndex;
+					Produtos[iterador].MotivoDesoneracaoICMS = MotivoDesoneracaoICMS_ComboBox.SelectedIndex;
 					//
-					prod.PossuiInfosFiscais = true;
+					Produtos[iterador].PossuiInfosFiscais = true;
 					// Seta a descrição para o próximo produto e incrementa o iterador
-					if(iterador < Produtos.Count)
-					{ 
-						iterador++;
-						DescricaoProdutoBox.Text = Produtos[iterador].Descricao + $"{iterador + 1}/{Produtos.Count} Restantes";
-					}
-					else
+					DescricaoProdutoBox.Text = Produtos[iterador].Descricao + $"{iterador + 1}/{Produtos.Count} Restantes";
+					//
+					iterador++; // Realiza a iteração
+					if (iterador >= Produtos.Count-1) // se não tem mais nada para iterar, dispara o evento
 					{
 						//Disparo
 						OnInfosApplied?.Invoke(this, null!, Produtos);
-						Modais.MostrarInfo($"Informações Aplicadas Para ({Produtos.Count}) Com Sucesso!");
 						this.Close();
 					}
 				}

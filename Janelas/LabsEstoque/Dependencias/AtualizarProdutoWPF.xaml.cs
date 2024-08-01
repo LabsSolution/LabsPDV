@@ -75,15 +75,18 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 			//
 			DescricaoInputBox.Text = Produto.Descricao;
             CodBarrasInputBox.Text = Produto.CodBarras;
+			CodInternoInputBox.Text = Produto.CodInterno;
             EstoqueMinimoInputBox.Text = $"{Produto.QuantidadeMin}";
         }
-        private async void AtualizarProduto(string Desc, int QTD,UnidadeDeMedida Uni, Fornecedor fornecedor, string CodBarras,int CorrecaoDeEstoque = 0)
+		//
+        private async void AtualizarProduto(string Desc, int QTD,UnidadeDeMedida Uni, Fornecedor fornecedor,string CodInterno ,string CodBarras,int CorrecaoDeEstoque = 0)
         {
             Produto.Descricao = Desc;
             Produto.QuantidadeMin = QTD;
             Produto.UnidadeDeMedida = Uni;
             Produto.Fornecedor = fornecedor;
             Produto.CodBarras = CodBarras;
+			Produto.CodInterno = CodInterno;
 			Produto.Quantidade = CorrecaoDeEstoque > 0 ? CorrecaoDeEstoque : Produto.Quantidade;
             //
             if (LabsMain.Cliente.PossuiPlanoCloud)
@@ -105,6 +108,7 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
             var isQTD = Utils.TryParseToInt(EstoqueMinimoInputBox.Text, out int QTD);
 			var isCorrEst = Utils.TryParseToInt(CorrigirEstoqueInputBox.Text, out int Corr);
             string CodBarras = CodBarrasInputBox.Text;
+			string CodInterno = CodInternoInputBox.Text;
 			//Validação dos Campos
 			if (UnidadeDeMedidaComboBox.SelectedItem is not UnidadeDeMedida Uni) { Modais.MostrarAviso("Não é possível registrar um produto sem Unidade de Medida!"); return; }
 			if (FornecedorComboBox.SelectedItem is not Fornecedor fornecedor) { Modais.MostrarAviso("Você não selecionou um fornecedor para o produto."); return; }
@@ -112,11 +116,13 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 			if (!CorrigirEstoqueInputBox.Text.IsNullOrEmpty() && !isCorrEst) { Modais.MostrarAviso("Você deve inserir uma quantidade válida para a correção de estoque!"); return; }
 			if (Desc.IsNullOrEmpty()) { Modais.MostrarAviso("Não é possível Atualizar um produto sem nome!"); return; }
             if (!isQTD || QTD < 0) { Modais.MostrarAviso("Você deve inserir uma quantidade válida"); return; }
-            if (!Utils.IsValidBarCode(CodBarras)) { Modais.MostrarAviso("Você deve inserir um código válido"); return; }
+            if (!Utils.IsValidBarCode(CodInterno)) { Modais.MostrarAviso("Você deve inserir um código Interno válido"); return; }
+			if (!Utils.IsValidGtin13(CodBarras) && !CodBarrasInputBox.Text.IsNullOrEmpty()) { Modais.MostrarAviso("Código GTIN Inválido!"); return; }
+			if (CodBarrasInputBox.Text.IsNullOrEmpty()) { CodBarras = "SEM GTIN"; }
 			//Passou em todos os validadores?
 			if (CorrigirEstoqueInputBox.Text.IsNullOrEmpty() && !isCorrEst)
 			{
-				AtualizarProduto(Desc, QTD,Uni,fornecedor,CodBarras);
+				AtualizarProduto(Desc, QTD,Uni,fornecedor,CodInterno,CodBarras);
 			}
 			else
 			{
@@ -128,7 +134,7 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
 					"Tendo conhecimento das condições, Deseja prosseguir?");
 				if(r == MessageBoxResult.Yes)
 				{
-					AtualizarProduto(Desc,QTD,Uni,fornecedor,CodBarras,Corr);
+					AtualizarProduto(Desc,QTD,Uni,fornecedor,CodInterno,CodBarras,Corr);
 				}
 			}
 			//
@@ -138,5 +144,20 @@ namespace Labs.Janelas.LabsEstoque.Dependencias
         {
             this.Close();
         }
-    }
+
+		private void AtualizarInfoFiscal_Click(object sender, RoutedEventArgs e)
+		{
+			LabsMain.IniciarDependencia<CadastrarInfosFiscais>(app =>
+			{
+				app.InitSingle(Produto);
+				app.OnInfosApplied += OnInfos;
+			});
+		}
+
+		private void OnInfos(CadastrarInfosFiscais Janela, Produto produto, List<Produto> Produtos)
+		{
+			this.Produto = produto;
+			Janela.Close();
+		}
+	}
 }

@@ -428,6 +428,7 @@ namespace Labs.Janelas.LabsEstoque
 				return;
 			}
 			//
+			//
 			ListaRegistroDeSaidas.Items.Clear();
 			//
 			//
@@ -506,12 +507,13 @@ namespace Labs.Janelas.LabsEstoque
 		private async static void ImprimirDANFE(VendaRealizada Venda)
 		{
 			bool parcelado = false;
-			bool InfosFiscaisOk = true;
+			List<Produto> nFiscProds = [];
+			//
 			foreach (PagamentoEfetuado pe in Venda.PagamentosEfetuados) { if(pe.Parcelas > 1) { parcelado = true; } }
 			//
-			foreach (Produto prod in Venda.Produtos) { if (!prod.PossuiInfosFiscais) { InfosFiscaisOk = false; } }
+			foreach (Produto prod in Venda.Produtos) { if (prod.PossuiInfosFiscais == false) { Modais.MostrarInfo($"PRODUTO: {prod.Descricao} POSSUI?: {prod.PossuiInfosFiscais}"); nFiscProds.Add(prod); } }
 			//
-			if (!InfosFiscaisOk) 
+			if (nFiscProds.Count > 0)
 			{ 
 				Modais.MostrarAviso("Não foi possível imprimir a DANFE!\nUm ou mais produtos não estão com suas informações fiscais registradas!");
 				var r = Modais.MostrarPergunta("Deseja Corrigir as Informações para a Impressão?");
@@ -519,17 +521,24 @@ namespace Labs.Janelas.LabsEstoque
 
 				LabsMain.IniciarDependencia<CadastrarInfosFiscais>(app => 
 				{
-					app.InitMany([..Venda.Produtos]);
+					app.InitMany(nFiscProds);
 					app.OnInfosApplied += UpdateProdutos; // Atrelamos a função local de atualização
 				});
 				//Função local disparada pelo Evento da janela de cadastro
-				void UpdateProdutos(CadastrarInfosFiscais Janela, Produto produto, List<Produto> Produtos)
+				async void UpdateProdutos(CadastrarInfosFiscais Janela, Produto produto, List<Produto> Produtos)
 				{
 					Janela.OnInfosApplied -= UpdateProdutos;
 					//
-					if(Produtos == null) { return; }
+					if (Produtos == null) { return; }
 					//
-					Venda.Produtos = [..Produtos]; // Atualizamos os produtos da venda
+					for (int i = 0; i < Venda.Produtos.Length; i++)
+					{
+						Produto? match = Produtos.Find(x => x.ID == Venda.Produtos[i].ID);
+						if (match != null) { Venda.Produtos[i] = match; }
+					}
+					// Atualizamos os produtos da venda
+					// Disparamos a nota fiscal com os produtos atualizados
+					await LabsNFe.EmitirNotaFiscalDeConsumidorEletronicaAsync("Venda para consumidor final.", Venda.IDVenda, Venda.Troco, parcelado, [.. Venda.Produtos], [.. Venda.PagamentosEfetuados]);
 				}
 				//
 				return; 
